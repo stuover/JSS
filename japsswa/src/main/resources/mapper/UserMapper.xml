@@ -8,5 +8,6 @@
   	<select id="getUser" resultType="UserVO">
   		select * from t_user a join t_user_role b on(a.id = b.user_id) join t_role c on(b.user_id = c.id)  where login_id = #{loginId}
   	</select>
+
   	
   </mapper>
