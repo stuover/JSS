@@ -15,7 +15,7 @@ public class CustomLoginSuccessHandler  implements AuthenticationSuccessHandler{
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-
+		
 		HttpSession session = request.getSession();
 		session.setAttribute("loginId", authentication.getName());
 		// 사용자 롤이면 admin

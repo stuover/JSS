@@ -6,7 +6,7 @@
   <mapper namespace="com.mes.jss.user.mapper.UserMapper">
   
   	<select id="getUser" resultType="UserVO">
-  		select * from t_user where login_id = #{loginId}
+  		select * from t_user a join t_user_role b on(a.id = b.user_id) join t_role c on(b.user_id = c.id)  where login_id = #{loginId}
   	</select>
   	
   </mapper>
