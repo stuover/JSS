@@ -41,6 +41,13 @@ public class HomeController {
 		return "home";
 	}
 	
+	@GetMapping("/index")
+	public String hom() {
+		
+		return "layout/index";
+	}
+
+	
 	@GetMapping("/login")
 	public String login() {
 		
@@ -53,11 +60,7 @@ public class HomeController {
 		return "top";
 	}
 	
-	@GetMapping("/home")
-	public String hom() {
-		
-		return "home";
-	}
+
 	@GetMapping("/user/user")
 	public String user(/* @AuthenticationPrincipal Principal uservo, */ HttpSession session) {
 		
