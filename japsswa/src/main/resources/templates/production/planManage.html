@@ -6,8 +6,9 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <th:block layout:fragment="content">
-<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
 <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
 <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
@@ -27,7 +28,7 @@
                   
                   <div class="row">
                   	<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
-                  	<button  class="btn btn-info">저장</button>
+                  	<button  class="btn btn-primary">저장</button>
                   	<button class="btn btn-danger">삭제</button>
                   </div>
                   
@@ -161,15 +162,7 @@
   		  };
   		  
   		  
-	  		var searchModal = new bootstrap.Modal(document.getElementById('searchModal'), {
-	  		  keyboard: false
-	  		});
-	  		
-	  		searchModal.show();
-  		  
-  	        
-  			// 모달창 
-  			// 모달창id얻기
+
   		    
   		</script>
     
