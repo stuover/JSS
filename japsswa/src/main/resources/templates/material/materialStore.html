@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+	#movebtn{
+		margin : 0px;
+	}
+</style>
+
+</head>
+<body>
+
+<th:block layout:fragment="content">
+
+	<button id="movebtn" type="submit" >등록 </button>
+
+	<div id="grid" style="margin-top: 50px;"></div>
+	<div id="grid1" style="margin-top: 270px;"></div>
+
+
+	<script>
+		/*$(document).ready(function() {
+
+			$.ajax({
+				url : "/mrlistAjax",
+
+				method : "GET",
+				detaType : "json",
+
+				success : function(result) {
+					grid.resetData(result);
+					
+
+				}
+
+			})
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				scollX : false,
+				scollY : false,
+				columns : [ {
+					header : 'lot',
+					name : 'mrLotNumber'
+				}, {
+					header : 'test',
+					name : 'testCode'
+				}, {
+					header : 'store',
+					name : 'storeDate'
+				}, {
+					header : 'inven',
+					name : 'inventory'
+				}, {
+					header : 'Name',
+					name : 'empNo'
+				},
+				{
+					header : 'Performance',
+					name : 'performanceId'
+				}
+				]
+			})
+		
+		});*/
+	</script>
+
+	<script>
+	
+	$(document).ready(function() {
+	$.ajax({
+		url : "/mrlistAjax",
+
+		method : "GET",
+		detaType : "json",
+
+		success : function(result) {
+			grid.resetData(result);
+			
+
+		}
+
+	})
+	
+	
+	 var gridData = [
+      {
+    	  
+			lot : 'mrLotNumber'	,
+			test : 'testCode'	,
+			store : 'storeDate'	,
+			inven : 'inventory'	,
+			Name : 'empNo'	,
+			Performance : 'performanceId'
+				
+      },
+      {
+    	  lot : 'mrLotNumber'	,
+			test : 'testCode'	,
+			store : 'storeDate'	,
+			inven : 'inventory'	,
+			Name : 'empNo'	,
+			Performance : 'performanceId',
+        _attributes: {
+          disabled: true // A current row is disabled
+        }
+      },
+      {
+    	  lot : 'mrLotNumber'	,
+			test : 'testCode'	,
+			store : 'storeDate'	,
+			inven : 'inventory'	,
+			Name : 'empNo'	,
+			Performance : 'performanceId',
+			_attributes: {
+          checkDisabled: true // A checkbox is disabled only
+        }
+      },
+      {
+    	  lot : 'mrLotNumber'	,
+			test : 'testCode'	,
+			store : 'storeDate'	,
+			inven : 'inventory'	,
+			Name : 'empNo'	,
+			Performance : 'performanceId',
+        _attributes: {
+          checked: true, // A checkbox is already checked while rendering
+          className: { 
+            // Add class name on a row
+            row: ['red']
+          }
+        }
+      },
+      {
+    	  lot : 'mrLotNumber'	,
+			test : 'testCode'	,
+			store : 'storeDate'	,
+			inven : 'inventory'	,
+			Name : 'empNo'	,
+			Performance : 'performanceId'
+      },
+      {
+    	  lot : 'mrLotNumber'	,
+			test : 'testCode'	,
+			store : 'storeDate'	,
+			inven : 'inventory'	,
+			Name : 'empNo'	,
+			Performance : 'performanceId'
+      },
+      {
+    	  lot : 'mrLotNumber'	,
+			test : 'testCode'	,
+			store : 'storeDate'	,
+			inven : 'inventory'	,
+			Name : 'empNo'	,
+			Performance : 'performanceId',
+        _attributes: {
+          className: {
+            // Add class name on each columns
+            column: {
+              type: ['blue'],
+              genre: ['blue']
+            }
+          }
+        }
+      }
+    ];
+
+    var grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      data: gridData,
+      scrollX: false,
+      scrollY: false,
+      
+      columns: [ {
+			header : 'lot',
+			name : 'mrLotNumber'
+		}, {
+			header : 'test',
+			name : 'testCode'
+		}, {
+			header : 'store',
+			name : 'storeDate'
+		}, {
+			header : 'inven',
+			name : 'inventory'
+		}, {
+			header : 'Name',
+			name : 'empNo'
+		},
+		{
+			header : 'Performance',
+			name : 'performanceId'
+		}
+		]
+    });
+	});
+	
+    </script>
+	
+	
+	
+	
+	
+
+
+
+
+
+</th:block>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
