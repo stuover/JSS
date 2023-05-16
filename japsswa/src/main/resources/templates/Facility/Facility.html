@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+    <style>
+        button {
+            width: 100px;
+            margin-right: 550px;
+            border-radius: 20px;
+        }
+
+        #cenLbtn {
+            margin-right: 20px;
+        }
+
+        h4 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+        <h4>전체 설비 리스트</h4>
+        <div id="grid"></div>
+        <br>
+        <form><button type="submit">비가동</button></form>
+        <br>
+        <h4>비가동 설비 리스트</h4>
+        <div id="downgrid"></div>
+        <br>
+        <div>
+            <button type="submit">가동</button><button id="cenLbtn" type="submit">수정</button><button id="cenRbtn"
+                type="submit">삭제</button>
+        </div>
+        <script>
+            window.onload = function () {
+                $.ajax({
+                    url: "/Facilityajax",
+                    method: "GET",
+                    dataType: "JSON",
+                    success: function (result) {
+                        grid.resetData(result);
+                        
+                    }
+                });
+
+                var gridData = [{
+                    facName: 'Beautiful Lies',
+                    facCode: 'Birdy',
+                    facManager: '2016.03.26',
+                    facStatus: 'Deluxe'
+                }, {
+                    facName: 'Beautiful Lies',
+                    facCode: 'Birdy',
+                    facManager: '2016.03.26',
+                    facStatus: 'Deluxe'
+                }, {
+                    facName: 'Beautiful Lies',
+                    facCode: 'Birdy',
+                    facManager: '2016.03.26',
+                    facStatus: 'Deluxe'
+                }, {
+                    facName: 'Beautiful Lies',
+                    facCode: 'Birdy',
+                    facManager: '2016.03.26',
+                    facStatus: 'Deluxe',
+                    _attributes: {
+                        checked: true, // A checkbox is already checked while rendering
+                        className: {
+                            // Add class name on a row
+                            row: ['red']
+                        }
+                    }
+                }, {
+                    facName: 'Beautiful Lies',
+                    facCode: 'Birdy',
+                    facManager: '2016.03.26',
+                    facStatus: 'Deluxe',
+                    _attributes: {
+                        rowSpan: {
+                            // Merge rows
+                            artist: 3,
+                            genre: 2
+                        }
+                    }
+                }, {
+                    facName: 'Beautiful Lies',
+                    facCode: 'Birdy',
+                    facManager: '2016.03.26',
+                    facStatus: 'Deluxe',
+                    _attributes: {
+                        className: {
+                            // Add class name on each columns
+                            column: {
+                                type: ['blue'],
+                                genre: ['blue']
+                            }
+                        }
+                    }
+                }];
+
+                var grid = new tui.Grid({
+                    el: document.getElementById('grid'),
+                    data: gridData,
+                    scrollX: false,
+                    scrollY: false,
+                    rowHeaders: ['checkbox'],
+                    columns: [{
+                        header: '설비명',
+                        name: 'facName'
+                    }, {
+                        header: '설비코드',
+                        name: 'facCode'
+                    }, {
+                        header: '관리자',
+                        name: 'facManager'
+                    }, {
+                        header: '가동상태',
+                        name: 'facStatus'
+                    }]
+                });
+
+
+                // 하단 시작
+
+
+              /*   var downgridData = [{
+                        facName: 'facName',
+                        facCode: 'facCode',
+                        downReason: 'downReason',
+                        stopTime: 'stopTime',
+                        downManager: 'downManager'
+                    },
+                    {
+                    	facName: 'facName',
+                        facCode: 'facCode',
+                        downReason: 'downReason',
+                        stopTime: 'stopTime',
+                        downManager: 'downManager',
+                        _attributes: {
+                            disabled: true // A current row is disabled
+                        }
+                    },
+                    {
+                    	facName: 'facName',
+                        facCode: 'facCode',
+                        downReason: 'downReason',
+                        stopTime: 'stopTime',
+                        downManager: 'downManager',
+                        _attributes: {
+                            checkDisabled: true // A checkbox is disabled only
+                        }
+                    },
+                    {
+                    	facName: 'facName',
+                        facCode: 'facCode',
+                        downReason: 'downReason',
+                        stopTime: 'stopTime',
+                        downManager: 'downManager',
+                        _attributes: {
+                            checked: true, // A checkbox is already checked while rendering
+                            className: {
+                                // Add class name on a row
+                                row: ['red']
+                            }
+                        }
+                    },
+                    {
+                    	facName: 'facName',
+                        facCode: 'facCode',
+                        downReason: 'downReason',
+                        stopTime: 'stopTime',
+                        downManager: 'downManager',
+                        _attributes: {
+                            rowSpan: {
+                                // Merge rows
+                                artist: 3,
+                                genre: 2
+                            }
+                        }
+                    },
+                    {
+                    	facName: 'facName',
+                        facCode: 'facCode',
+                        downReason: 'downReason',
+                        stopTime: 'stopTime',
+                        downManager: 'downManager'
+                    },
+                    {
+                        facName: 'facName',
+                        facCode: 'facCode',
+                        downReason: 'downReason',
+                        stopTime: 'stopTime',
+                        downManager: 'downManager',
+                        _attributes: {
+                            className: {
+                                // Add class name on each columns
+                                column: {
+                                    type: ['blue'],
+                                    genre: ['blue']
+                                }
+                            }
+                        }
+                    }
+                ];
+
+                const downgrid = new tui.Grid({
+                    el: document.getElementById('downgrid'),
+                    data: downgridData,
+                    scrollX: false,
+                    scrollY: false,
+                    rowHeaders: ['checkbox'],
+                    columns: [{
+                            header: '설비명',
+                            name: 'facName'
+                        },
+                        {
+                            header: '설비코드',
+                            name: 'facCode'
+                        },
+                        {
+                            header: '비가동 사유',
+                            name: 'downReason'
+                        },
+                        {
+                            header: '설비 정지시간(시/분)',
+                            name: 'stopTime'
+                        },
+                        {
+                            header: '관리자',
+                            name: 'downManager'
+                        }
+                    ]
+                }); */
+            }
+        </script>
+    </th:block>
+</body>
+
+</html>

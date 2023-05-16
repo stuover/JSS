@@ -18,6 +18,17 @@ public class FacilityVO {
 	String insCycle;
 	Date lastInspection;
 	String facManager;
+	
+	// 조인할때 필요
+	String downCode;
+	String stopTime;
+	String downReason;
+	String downManager;
+
+//	facName
+//	facCode
+//	facManager
+//	facStatus
 		
 //	fac_code varchar2(20) PRIMARY KEY,
 //	fac_name varchar2(25) not null,
