@@ -1,5 +1,7 @@
 package com.mes.jss.facility.user;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -12,6 +14,12 @@ public class DowntimeVO {
 	String downManager;
 	String remark;
 	String facCode;
+
+//	facName
+//	facCode
+//	downReason
+//	stopTime
+//	downManager
 	
 //	down_code varchar2(20) PRIMARY KEY,
 //	start_time varchar2(20) not null,

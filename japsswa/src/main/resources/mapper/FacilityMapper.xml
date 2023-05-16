@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.mes.jss.facility.mapper.FacilityMapper">
+  
+  	<select id="getFacility" resultType="FacilityVO">
+  		select * from facility where fac_code = #{facCode}
+  	</select>
+  	
+  	<select id="getList" resultType="FacilityVO">
+  		select f.fac_name, f.fac_code, f.fac_manager, f.fac_status,d.down_reason,d.stop_time,d.down_manager 
+  		from facility f join downtime d on (f.fac_code = d.fac_code)
+  	</select>
+  </mapper>
