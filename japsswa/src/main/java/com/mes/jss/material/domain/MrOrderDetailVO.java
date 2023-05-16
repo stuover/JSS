@@ -1,4 +1,4 @@
-package com.mes.jss.meterial.domain;
+package com.mes.jss.material.domain;
 
 import java.util.Date;
 

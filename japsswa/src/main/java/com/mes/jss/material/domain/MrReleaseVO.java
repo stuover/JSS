@@ -1,11 +1,11 @@
-package com.mes.jss.meterial.domain;
+package com.mes.jss.material.domain;
 
 import lombok.Data;
 
 @Data
 public class MrReleaseVO {
 	private String mrRealCode;
-	private String lotNumber;
+	private String mrLotNumber;
 	private String performanceId;
 	private String itemCode;
 	private String adjustmentCode;
