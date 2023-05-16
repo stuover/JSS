@@ -2,24 +2,27 @@ package com.mes.jss.sale.domain;
 
 import java.util.Date;
 
+import lombok.Data;
+
+@Data
 public class OrderVO {
-	String ordId;
-	String ordName;
-	int totalPrice;
-	String ordStatus;
-	String customerId;
-	Date ordDate;
-	int empNo;
+	private String ordId;
+	private String ordName;
+	private int totalPrice;
+	private String ordStatus;
+	private String customerId;
+	private Date ordDate;
+	private int empNo;
 	
-	String ordDetailId;
-	int ordCount;
-	Date outDate;
-	String itemCode;
+	private String ordDetailId;
+	private int ordCount;
+	private Date outDate;
+	private String itemCode;
 	
-	String customerName;
-	String custAddr;
-	String custMail;
-	String custTel;
-	String itemName;
-	String itemPrice;
+	private String customerName;
+	private String custAddr;
+	private String custMail;
+	private String custTel;
+	private String itemName;
+	private String itemPrice;
 }

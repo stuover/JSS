@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block layout:fragment="content">
+	<head>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+	</head>
+
+	<div>
+		<label for="ordid">주문코드</label>
+  		<input type="text" id="ordid" name="ordid"><br><br>
+  		<label for="cust">거래처</label>
+  		<input type="text" id="cust" name="cust">
+  		<label for="tel">연락처</label>
+  		<input type="text" id="tel" name="tel"><br><br>
+  		<label for="addr">주소</label>
+  		<input type="text" id="addr" name="addr">
+  		<label for="mail">메일주소</label>
+  		<input type="email" id="mail" name="mail">
+	</div>
+
+	<div id="grid2"></div>
+	
+	<div>
+		<label for="total">총 가격</label>
+	  	<input type="text" id="total" name="total">
+	</div>
+	
+	<button type="button">등록</button>
+	
+	<script>
+	
+	
+	const Grid = tui.Grid;
+	
+		let gridData2 = [{}];
+		
+		const grid2 = new Grid({
+	      el: document.getElementById('grid2'),
+	      data: gridData2,
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	         {
+		      header: '주문 상세 코드',
+		      name: 'orderdetail',
+		      editor: 'text'
+		     },
+		     {
+			  header: '주문명',
+			  name: 'ordername',
+			  editor: 'text'
+			 },
+			 {
+			  header: '품목명',
+			  name: 'itemname',
+			  editor: 'text'
+		     },
+		     {
+		      header: '주문날짜',
+		      name: 'orderdate',
+		      editor: 'datePicker'
+		     },
+		     {
+			  header: '납부예정날짜',
+			  name: 'outdate',
+			  editor: 'datePicker'
+			 }, 
+		     {
+		      header: '단가',
+		      name: 'itemprice',
+		      editor: 'text'
+		     },	
+		     {
+			  header: '수량',
+			  name: 'itemcount',
+			  editor: 'text'
+			 },
+			 {
+		      header: '수량가격',
+			  name: 'countprice',
+			  editor: 'text'
+		      }
+	      ]
+	    });
+		
+	    grid2.on('check', ev => {
+  		      console.log('check!', ev);
+  		    });
+
+		    grid2.on('uncheck', ev => {
+		      console.log('uncheck!', ev);
+		    });
+		    
+		    grid2.on('focusChange', ev => {
+		      console.log('change focused cell!', ev);
+		    });
+ 		
+ 		</script>
+
+
+
+
+</th:block>
+
+</html>
