@@ -5,6 +5,11 @@
   
   <mapper namespace="com.mes.jss.production.mapper.PlanMapper">
   
-  	
+  	<!-- 생산계획관리 페이지에서 제품별 주문수량 정보 리스트 -->
+  	<select id="planOrderInfo" resultType="PlanVO">
+		select d.item_code, i.item_name, d.ord_count
+		from orddetail d join itemlist i on(d.item_code = i.item_code)
+		ORDER BY 1
+  	</select>
   	
   </mapper>
