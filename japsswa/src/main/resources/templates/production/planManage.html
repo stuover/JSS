@@ -1,14 +1,178 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Production Plan Management</title>
-</head>
-<body>
-    <h5>생산 계획 관리</h5>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/index}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<th:block layout:fragment="content">
+<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+	
+ 		<div class="container-fluid page-body-wrapper">
+
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">생산 계획 관리</h4>
+                  
+                  <div class="row">
+                  	<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+                  	<button  class="btn btn-info">저장</button>
+                  	<button class="btn btn-danger">삭제</button>
+                  </div>
+                  
+                  <div id="grid2"></div>
+                  
+                  <div class="row">
+                  	
+                  </div>
+                  
+                  <div id="grid"></div>
+				                  
+                </div>
+              
+              </div>
+            </div>
+
+  		</div>
+  		
+  		
+  		
+		<!-- Vertically centered modal -->
+		<div id="searchModal" class="modal-dialog modal-dialog-centered">
+		생산계획 조회
+		</div>		
+  		
+  		
+  		
+  		<script>
+  		const Grid = tui.Grid;
+		
+  		let gridData2 = [{}];
+  		
+  		const grid2 = new Grid({
+		      el: document.getElementById('grid2'),
+		      data: gridData2,
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+		        {
+  		      header: '계획명',
+  		      name: 'planAmount',
+  		      editor: 'text'
+  		     },
+    		     {
+    		      header: '계획날짜',
+    		      name: 'planEnd',
+    		      editor: 'datePicker'
+    		     },    		        
+    		     {
+    		      header: '담당자',
+    		      name: 'planPriority',
+    		      editor: 'text'
+    		     }	   
+		      ]
+		    });
+  		
+		    grid2.on('check', ev => {
+	  		      console.log('check!', ev);
+	  		    });
+
+  		    grid2.on('uncheck', ev => {
+    		      console.log('uncheck!', ev);
+    		    });
+  		    
+  		    grid2.on('focusChange', ev => {
+    		      console.log('change focused cell!', ev);
+    		    });
+  		
+  		
+  		  let gridData = [];
+  		 
+  		 const grid = new Grid({
+  		      el: document.getElementById('grid'),
+  		      data: gridData,
+  		      rowHeaders: ['checkbox'],
+  		      scrollX: false,
+  		      scrollY: false,
+  		      columns: [
+  		        {
+  		          header: '제품코드',
+  		          name: 'itemCode'
+  		        },
+  		        {
+  		          header: '제품명',
+  		          name: 'itemName'
+  		        },
+  		        {
+  		          header: '주문수량',
+  		          name: 'ordCount'
+  		        },
+  		        {
+    		      header: '계획수량',
+    		      name: 'planAmount',
+    		      editor: 'text'
+    		     },
+      		     {
+      		      header: '완료날짜',
+      		      name: 'planEnd',
+      		      editor: 'datePicker'
+      		     },    		        
+      		     {
+      		      header: '작업우선순위',
+      		      name: 'planPriority',
+      		      editor: 'text'
+      		     }	   
+  		      ]
+  		    });
+
+  		    grid.on('check', ev => {
+  		      console.log('check!', ev);
+  		    });
+
+  		    grid.on('uncheck', ev => {
+  		      console.log('uncheck!', ev);
+  		    });
+
+  		    grid.on('focusChange', ev => {
+  		      console.log('change focused cell!', ev);
+  		    });
+  		  
+  		    
+  		  window.onload = function(){
+	  		    $.ajax({
+	  		        url : "/planManageAjax",
+	  		        method :"GET",
+	  		        dataType : "JSON",
+	  		        success : function(result){
+	  		            grid.resetData(result);
+	  		        } 
+	  		    });
+  		  };
+  		  
+  		  
+	  		var searchModal = new bootstrap.Modal(document.getElementById('searchModal'), {
+	  		  keyboard: false
+	  		});
+	  		
+	  		searchModal.show();
+  		  
+  	        
+  			// 모달창 
+  			// 모달창id얻기
+  		    
+  		</script>
     
-    <div>
-    	
-    </div>
-</body>
+	</th:block>
+
 </html>
