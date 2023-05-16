@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head lang="en">
+	<meta charset="UTF-8">
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+	
+	<link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
+	<script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+	
+</head>
+
+	<th:block layout:fragment="content">
+	<div class="container-fluid page-body-wrapper">
+          <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">사원 정보</h4>
+	<div id="grid"></div>
+	</div></div></div></div>
+	<script>
+        // GRID 를 생성한다.
+        // 나이는 수정할 수 있도록 설정한다.
+        window.onload = function(){
+		    $.ajax({
+		        url : "/employee",
+		        method :"GET",
+		        dataType : "JSON",
+		        success : function(result){
+		            grid.resetData(result);
+		        } 
+    		});
+		    
+			var grid = new tui.Grid( {
+				el: document.getElementById('grid'),
+				columns: [
+			
+					{
+						header: '사원번호',
+						name: 'empNo',
+						sortingType: 'desc',
+				        sortable: true
+					}
+					,
+					{
+						header: '직책',
+						name: 'position',
+						sortingType: 'desc',
+					    sortable: true
+					}
+					,
+					{
+						header: '부서',
+						name: 'deptName',
+						sortingType: 'desc',
+					    sortable: true
+					}
+					,
+					{
+						header: '연락처',
+						name: 'phoneNum',
+						sortingType: 'desc',
+					    sortable: true
+					}
+					,
+					{
+						header: 'e-mail',
+						name: 'email',
+						sortingType: 'desc',
+					    sortable: true
+					},
+
+					{
+						header: '입사일',
+						name: 'hireDate',
+						sortingType: 'desc',
+					    sortable: true
+					}
+				]
+			} );
+        }
+        
+
+	</script>
+	</th:block>
+	
+</html>

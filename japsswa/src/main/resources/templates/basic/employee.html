@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head lang="en">
+<meta charset="UTF-8">
+
+<link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+</head>
+
+<th:block layout:fragment="content">
+	<div class="container-fluid page-body-wrapper">
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h1 class="card-title">사원 정보</h1>
+					<form id="test">
+						<button>수정</button>
+						<button>수정</button>
+						<button id="addEmpBtn">등록</button>
+					</form>
+					<div id="grid"></div>
+					<!-- 페이징 시작 -->
+
+					<!-- 페이지 끝 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		$('#addEmpBtn').on('click', function(e){
+			e.preventDefault();
+			self.location = '/employee/ragister';
+		})
+	</script>
+
+	<script>
+		// GRID 를 생성한다.
+		// 나이는 수정할 수 있도록 설정한다.
+		window.onload = function() {
+			$.ajax({
+				url : "/employeeAjax",
+				method : "GET",
+				dataType : "JSON",
+				success : function(result) {
+					grid.resetData(result);
+				}
+			});
+
+		    class RowNumberRenderer {
+		      constructor(props) {
+		        var el = document.createElement('span');
+		        el.innerHTML = `No.${props.formattedValue}`;
+		        this.el = el;
+		      }
+
+		      getElement() {
+		        return this.el;
+		      }
+
+		      render(props) {
+		        this.el.innerHTML = `No.${props.formattedValue}`;
+		      }
+		    }
+		    
+		    class CheckboxRenderer {
+		        constructor(props) {
+		          var { grid, rowKey } = props;
+
+		          var label = document.createElement('label');
+		          label.className = 'checkbox tui-grid-row-header-checkbox';
+		          label.setAttribute('for', String(rowKey));
+
+		          var hiddenInput = document.createElement('input');
+		          hiddenInput.className = 'hidden-input';
+		          hiddenInput.id = String(rowKey);
+
+		          var customInput = document.createElement('span');
+		          customInput.className = 'custom-input';
+
+		          label.appendChild(hiddenInput);
+		          label.appendChild(customInput);
+
+		          hiddenInput.type = 'checkbox';
+		          label.addEventListener('click', (ev) => {
+		            ev.preventDefault();
+
+		            if (ev.shiftKey) {
+		              grid[!hiddenInput.checked ? 'checkBetween' : 'uncheckBetween'](rowKey);
+		              return;
+		            }
+
+		            grid[!hiddenInput.checked ? 'check' : 'uncheck'](rowKey);
+		          });
+
+		          this.el = label;
+
+		          this.render(props);
+		        }
+
+		        getElement() {
+		          return this.el;
+		        }
+
+		        render(props) {
+		          var hiddenInput = this.el.querySelector('.hidden-input');
+		          var checked = Boolean(props.value);
+
+		          hiddenInput.checked = checked;
+		        }
+		      }
+		    
+
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				scrollX:true,
+				scrollY:true,
+				rowHeaders: [
+			        {
+			          type: 'rowNum',
+			          renderer: {
+			            type: RowNumberRenderer
+			          }
+			        },
+			        {
+			          type: 'checkbox',
+			          header: `
+			          <label for="all-checkbox" class="checkbox">
+			            <input type="checkbox" id="all-checkbox" class="hidden-input" name="_checked" />
+			            <span class="custom-input"></span>
+			          </label>
+			        `,
+			          renderer: {
+			            type: CheckboxRenderer
+			          }
+			        }
+			      ],
+				columns : [
+
+				{
+					header : '사원번호',
+					name : 'empNo',
+					sortingType : 'desc',
+					sortable : true
+				}, {
+					header : '직책',
+					name : 'position',
+					sortingType : 'desc',
+					sortable : true
+				}, {
+					header : '부서',
+					name : 'deptName',
+					sortingType : 'desc',
+					sortable : true
+				}, {
+					header : '연락처',
+					name : 'phoneNum',
+					sortingType : 'desc',
+					sortable : true
+				}, {
+					header : 'e-mail',
+					name : 'email',
+					sortingType : 'desc',
+					sortable : true
+				},
+
+				{
+					header : '입사일',
+					name : 'hireDate',
+					sortingType : 'desc',
+					sortable : true
+				} ]
+			});
+		}
+		
+
+	</script>
+</th:block>
+
+</html>
