@@ -7,5 +7,6 @@ import com.mes.jss.production.PlanVO;
 public interface PlanMapper {
 
 	List<PlanVO> planOrderInfo();
+	List<PlanVO> modalPlanList();
 	
 }
