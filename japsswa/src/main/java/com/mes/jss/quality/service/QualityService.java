@@ -7,6 +7,7 @@ import com.mes.jss.quality.domain.QualityVO;
 
 public interface QualityService {
 
-	public int mrStore(MrVO vo);
-public List<QualityVO> qlList();
+	//품질 검사 리스트
+	
+	public List<QualityVO> qlList();
 }

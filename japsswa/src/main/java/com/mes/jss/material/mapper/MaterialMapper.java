@@ -9,7 +9,9 @@ public interface MaterialMapper {
 	
 	public int insert(MrVO vo);
 	
-	public List<MrVO> getList();
+	// 자재 조회
+	
+	public List<MrVO> getList();	
 	
 	
 }

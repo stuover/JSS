@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class MrAdjustmentVO {
+public class MrAdjustmentVO {	// 자재 조정
 	private String adjustmentCode;
 	private String mrLotNumber;
 	private Date registerDate;

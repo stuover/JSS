@@ -3,7 +3,7 @@ package com.mes.jss.material.domain;
 import lombok.Data;
 
 @Data
-public class MrReleaseVO {
+public class MrReleaseVO {   // 자재 출고
 	private String mrRealCode;
 	private String mrLotNumber;
 	private String performanceId;

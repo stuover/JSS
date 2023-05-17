@@ -8,7 +8,8 @@ import com.mes.jss.material.domain.MrVO;
 public interface MaterialService {
 
 	public int mrStore(MrVO vo);
-
+	
+	// 자재 조회
 	public List<MrVO> mrlist();
 	
 	
