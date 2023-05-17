@@ -8,5 +8,5 @@ public interface PlanMapper {
 
 	List<PlanVO> planOrderInfo();
 	List<PlanVO> modalPlanList();
-	
+	List<PlanVO> pdetailSearchResult(String id);
 }

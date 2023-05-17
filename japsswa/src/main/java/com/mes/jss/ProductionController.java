@@ -50,6 +50,14 @@ public class ProductionController {
 		return inputData;
 	}
 	
+	@RequestMapping("/searchResultPdetailAjax")
+	@ResponseBody
+	public List<PlanVO> searchResultPdetailAjax(String id) {
+		List<PlanVO> inputData = new ArrayList<>();
+		inputData = planService.pdetailSearchResult(id);
+	
+		return inputData;
+	}
 	
 	
 	
