@@ -132,31 +132,29 @@
 		
 		$('#modifyBtn').on('click', function(e){
 			e.preventDefault();
+			let empNo = null;
 			$('input:checkbox').each(function (index) {
+				
 				if($(this).is(":checked")==true){
 			    	let checkd = $(this).parent().parent().data('row-key');
-					var empNo =$('td[data-row-key='+checkd+']').children(':eq(2)').text();
-					console.log(empNo);
-					$('#empNo').val(empNo)
+					empNo =$('td[data-row-key='+checkd+']').children(':eq(2)').text();
 					
-			    	$.ajax({
-						url : "/serchEmpAjax",
-						method : "GET",
-						data : { empNo : $('td[data-row-key='+checkd+']').children(':eq(2)').text() },
-						dateType:"JSON",
-						success : function(result) {
-							
-							
-						}
-					});
-			    	
-			    	$('.modal').modal('show');
-			    }else {
-
 			    }
-				
+
 				
 			}) 
+			console.log(empNo);
+	    	$.ajax({
+				url : "/serchEmpAjax",
+				method : "GET",
+				data : { empNo : empNo },
+				dateType:"JSON",
+				success : function(result) {
+					
+					$('.modal').modal('show');
+					
+				}
+			});
 	    	
 		})
 	</script>
