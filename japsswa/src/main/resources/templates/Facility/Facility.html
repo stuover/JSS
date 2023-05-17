@@ -20,6 +20,10 @@
         h4 {
             text-align: center;
         }
+
+        .tui-grid-cell-content {
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -27,17 +31,59 @@
     <th:block layout:fragment="content">
         <h4>전체 설비 리스트</h4>
         <div id="grid"></div>
-        <br>
-        <form><button type="submit">비가동</button></form>
-        <br>
+
+        <!-- 모달 시작-->
+
+        <button id="stopBtn" type="button"  data-toggle="modal" data-target="#exampleModalCenter">비가동</button>
+
+        <!-- Modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">비가동 사유</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- 드롭다운 -->
+        
+        <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    비가동 사유
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">세척</a>
+    <a class="dropdown-item" href="#">정비</a>
+    <a class="dropdown-item" href="#">점검</a>
+  </div>
+</div>
+        
+        <!-- 드롭다운 끝 -->
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <!-- /.modal -->
+
         <h4>비가동 설비 리스트</h4>
         <div id="downgrid"></div>
-        <br>
         <div>
             <button type="submit">가동</button><button id="cenLbtn" type="submit">수정</button><button id="cenRbtn"
                 type="submit">삭제</button>
         </div>
         <script>
+        
             window.onload = function () {
                 $.ajax({
                     url: "/Facilityajax",
@@ -45,68 +91,55 @@
                     dataType: "JSON",
                     success: function (result) {
                         grid.resetData(result);
-                        
                     }
                 });
 
-                var gridData = [{
-                    facName: 'Beautiful Lies',
-                    facCode: 'Birdy',
-                    facManager: '2016.03.26',
-                    facStatus: 'Deluxe'
-                }, {
-                    facName: 'Beautiful Lies',
-                    facCode: 'Birdy',
-                    facManager: '2016.03.26',
-                    facStatus: 'Deluxe'
-                }, {
-                    facName: 'Beautiful Lies',
-                    facCode: 'Birdy',
-                    facManager: '2016.03.26',
-                    facStatus: 'Deluxe'
-                }, {
-                    facName: 'Beautiful Lies',
-                    facCode: 'Birdy',
-                    facManager: '2016.03.26',
-                    facStatus: 'Deluxe',
-                    _attributes: {
-                        checked: true, // A checkbox is already checked while rendering
-                        className: {
-                            // Add class name on a row
-                            row: ['red']
-                        }
-                    }
-                }, {
-                    facName: 'Beautiful Lies',
-                    facCode: 'Birdy',
-                    facManager: '2016.03.26',
-                    facStatus: 'Deluxe',
-                    _attributes: {
-                        rowSpan: {
-                            // Merge rows
-                            artist: 3,
-                            genre: 2
-                        }
-                    }
-                }, {
-                    facName: 'Beautiful Lies',
-                    facCode: 'Birdy',
-                    facManager: '2016.03.26',
-                    facStatus: 'Deluxe',
-                    _attributes: {
-                        className: {
-                            // Add class name on each columns
-                            column: {
-                                type: ['blue'],
-                                genre: ['blue']
-                            }
-                        }
-                    }
-                }];
 
                 var grid = new tui.Grid({
                     el: document.getElementById('grid'),
-                    data: gridData,
+                    scrollX: false,
+                    scrollY: false,
+                    data: {
+                        api: {
+                            readData: {
+                                url: '/api/readData',
+                                method: 'GET'
+                            }
+                        }
+                    },
+                    rowHeaders: ['checkbox'],
+                    columns: [{
+                        header: '설비명',
+                        name: 'facName'
+                    }, {
+                        header: '설비 코드',
+                        name: 'facCode'
+                    }, {
+                        header: '관리자',
+                        name: 'facManager'
+                    }, {
+                        header: '설비 가동일시',
+                        name: 'startDate'
+                    }, {
+                        header: '가동 상태',
+                        name: 'facStatus'
+                    }]
+                });
+
+                // 하단 시작
+
+
+                $.ajax({
+                    url: "/Downtimeajax",
+                    method: "GET",
+                    dataType: "JSON",
+                    success: function (result) {
+                        downgrid.resetData(result);
+                    }
+                });
+
+                var downgrid = new tui.Grid({
+                    el: document.getElementById('downgrid'),
                     scrollX: false,
                     scrollY: false,
                     rowHeaders: ['checkbox'],
@@ -114,130 +147,38 @@
                         header: '설비명',
                         name: 'facName'
                     }, {
-                        header: '설비코드',
+                        header: '설비 코드',
                         name: 'facCode'
                     }, {
-                        header: '관리자',
-                        name: 'facManager'
+                        header: '비가동 코드',
+                        name: 'downCode'
                     }, {
-                        header: '가동상태',
-                        name: 'facStatus'
+                        header: '비가동 사유',
+                        name: 'downReason'
+                    }, {
+                        header: '설비 비가동일시',
+                        name: 'stopDate'
+                    }, {
+                        header: '관리자',
+                        name: 'downManager'
                     }]
                 });
-
-
-                // 하단 시작
-
-
-              /*   var downgridData = [{
-                        facName: 'facName',
-                        facCode: 'facCode',
-                        downReason: 'downReason',
-                        stopTime: 'stopTime',
-                        downManager: 'downManager'
-                    },
-                    {
-                    	facName: 'facName',
-                        facCode: 'facCode',
-                        downReason: 'downReason',
-                        stopTime: 'stopTime',
-                        downManager: 'downManager',
-                        _attributes: {
-                            disabled: true // A current row is disabled
-                        }
-                    },
-                    {
-                    	facName: 'facName',
-                        facCode: 'facCode',
-                        downReason: 'downReason',
-                        stopTime: 'stopTime',
-                        downManager: 'downManager',
-                        _attributes: {
-                            checkDisabled: true // A checkbox is disabled only
-                        }
-                    },
-                    {
-                    	facName: 'facName',
-                        facCode: 'facCode',
-                        downReason: 'downReason',
-                        stopTime: 'stopTime',
-                        downManager: 'downManager',
-                        _attributes: {
-                            checked: true, // A checkbox is already checked while rendering
-                            className: {
-                                // Add class name on a row
-                                row: ['red']
-                            }
-                        }
-                    },
-                    {
-                    	facName: 'facName',
-                        facCode: 'facCode',
-                        downReason: 'downReason',
-                        stopTime: 'stopTime',
-                        downManager: 'downManager',
-                        _attributes: {
-                            rowSpan: {
-                                // Merge rows
-                                artist: 3,
-                                genre: 2
-                            }
-                        }
-                    },
-                    {
-                    	facName: 'facName',
-                        facCode: 'facCode',
-                        downReason: 'downReason',
-                        stopTime: 'stopTime',
-                        downManager: 'downManager'
-                    },
-                    {
-                        facName: 'facName',
-                        facCode: 'facCode',
-                        downReason: 'downReason',
-                        stopTime: 'stopTime',
-                        downManager: 'downManager',
-                        _attributes: {
-                            className: {
-                                // Add class name on each columns
-                                column: {
-                                    type: ['blue'],
-                                    genre: ['blue']
-                                }
-                            }
-                        }
-                    }
-                ];
-
-                const downgrid = new tui.Grid({
-                    el: document.getElementById('downgrid'),
-                    data: downgridData,
-                    scrollX: false,
-                    scrollY: false,
-                    rowHeaders: ['checkbox'],
-                    columns: [{
-                            header: '설비명',
-                            name: 'facName'
-                        },
-                        {
-                            header: '설비코드',
-                            name: 'facCode'
-                        },
-                        {
-                            header: '비가동 사유',
-                            name: 'downReason'
-                        },
-                        {
-                            header: '설비 정지시간(시/분)',
-                            name: 'stopTime'
-                        },
-                        {
-                            header: '관리자',
-                            name: 'downManager'
-                        }
-                    ]
-                }); */
-            }
+              
+                var check = $('.tui-grid-row-header-checkbox');
+                
+                $(function(){
+                	check.on('click', function(){
+                		if($('#stopBtn').show()){
+                			
+                		}else(){
+                			$('#stopBtn').hide();
+                		}
+                	})	
+                })
+                
+                $('#stopBtn').hide();
+                 
+            } 
         </script>
     </th:block>
 </body>

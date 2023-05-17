@@ -1,4 +1,4 @@
-package com.mes.jss.facility.user;
+package com.mes.jss.facility.domain;
 
 import java.util.Date;
 
@@ -8,12 +8,16 @@ import lombok.Data;
 public class DowntimeVO {
 
 	String downCode;
-	String startTime;
-	String stopTime;
+	String startDate;
+	String stopDate;
 	String downReason;
 	String downManager;
 	String remark;
 	String facCode;
+	
+	// 조인
+	String facName;
+	
 
 //	facName
 //	facCode
