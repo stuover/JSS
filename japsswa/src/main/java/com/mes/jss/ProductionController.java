@@ -11,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.mes.jss.production.PlanVO;
 import com.mes.jss.production.mapper.PlanMapper;
+import com.mes.jss.production.service.PlanService;
+import com.mes.jss.production.serviceImpl.PlanServiceImpl;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -20,23 +22,34 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class ProductionController {
 	
-	@Autowired PlanMapper plan;
+
+	@Autowired PlanService planService = new PlanServiceImpl();
 	
 	@RequestMapping("/planManage")
 	public String orderInfo() {
 		return "production/planManage";
 	}
 
-	@RequestMapping(value = "/planManageAjax")
+	@RequestMapping("/planManageAjax")
 	@ResponseBody
 	public List<PlanVO> orderInfoAjax() {
 		List<PlanVO> inputData = new ArrayList<>();
-		inputData = plan.planOrderInfo();
+		inputData = planService.planOrderInfo();
 		log.info("inputData" + inputData);
 	
 		
 		return inputData;
 	}
+	
+	@RequestMapping("/modalPlanListAjax")
+	@ResponseBody
+	public List<PlanVO> modalPlanListAjax() {
+		List<PlanVO> inputData = new ArrayList<>();
+		inputData = planService.modalPlanList();
+	
+		return inputData;
+	}
+	
 	
 	
 	

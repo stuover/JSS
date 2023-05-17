@@ -10,6 +10,6 @@ public class MrVO {
 	private String testCode;
 	private Date storeDate;
 	private int inventory;
-	private int empNo;
+	private long empNo;
 	private String performanceId;
 }

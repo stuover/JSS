@@ -24,12 +24,16 @@
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">생산 계획 관리</h4>
+                  <h4 class="page-title">생산 계획 관리</h4>
                   
-                  <div class="row">
-                  	<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
-                  	<button  class="btn btn-primary">저장</button>
-                  	<button class="btn btn-danger">삭제</button>
+
+                  <div class="btn-group">
+                  	<div>
+                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+                  	<button id="saveBtn" class="btn btn-primary">저장</button>
+                  	<button id="deleteBtn" class="btn btn-danger">삭제</button>
+                  	</div>
+
                   </div>
                   
                   <div id="grid2"></div>
@@ -49,10 +53,22 @@
   		
   		
   		
-		<!-- Vertically centered modal -->
-		<div id="searchModal" class="modal-dialog modal-dialog-centered">
-		생산계획 조회
-		</div>		
+	    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">생산계획 조회</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	            <div id="modalGrid"></div>
+	            </div>
+	            <div class="modal-footer">
+	            <button type="button" class="btn btn-primary">선택</button>
+	            </div>
+	        </div>
+	        </div>
+	    </div>
   		
   		
   		
@@ -72,16 +88,16 @@
   		      name: 'planAmount',
   		      editor: 'text'
   		     },
-    		     {
-    		      header: '계획날짜',
-    		      name: 'planEnd',
-    		      editor: 'datePicker'
-    		     },    		        
-    		     {
-    		      header: '담당자',
-    		      name: 'planPriority',
-    		      editor: 'text'
-    		     }	   
+    		    {
+    		     header: '계획날짜',
+    		     name: 'planDate',
+    		     editor: 'datePicker'
+    		    }, 		    
+    		    {
+    		     header: '담당자',
+    		     name: 'empName',
+    		     editor: 'text'
+    		    }	   
 		      ]
 		    });
   		
@@ -108,10 +124,6 @@
   		      scrollY: false,
   		      columns: [
   		        {
-  		          header: '제품코드',
-  		          name: 'itemCode'
-  		        },
-  		        {
   		          header: '제품명',
   		          name: 'itemName'
   		        },
@@ -125,10 +137,15 @@
     		      editor: 'text'
     		     },
       		     {
-      		      header: '완료날짜',
-      		      name: 'planEnd',
-      		      editor: 'datePicker'
-      		     },    		        
+        		  header: '계획시작날짜',
+        		  name: 'planStart',
+        		  editor: 'datePicker'
+        		 },
+        		 {
+           		  header: '계획완료날짜',
+           		  name: 'planEnd',
+           		  editor: 'datePicker'
+           		 },    		        
       		     {
       		      header: '작업우선순위',
       		      name: 'planPriority',
@@ -159,11 +176,71 @@
 	  		            grid.resetData(result);
 	  		        } 
 	  		    });
+	  		    
+	  		  $('#searchModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					setTimeout(()=> modalGrid.refreshLayout(), 300);
+	  			})
   		  };
   		  
-  		  
+ 		 let modalGridData = [];
+  		 
+  		 const modalGrid = new Grid({
+  		      el: document.getElementById('modalGrid'),
+  		      data: modalGridData,
+  		      rowHeaders: ['checkbox'],
+  		      scrollX: false,
+  		      scrollY: false,
+  		      columns: [
+  		        {
+  		          header: '생산계획코드',
+  		          name: 'planId'
+  		        },
+  		        {
+  		          header: '계획명',
+  		          name: 'planName'
+  		        },
+  		        {
+  		          header: '담당자',
+  		          name: 'empName'
+  		        }     
+  		      ]
+  		    });
 
-  		    
+  			modalGrid.on('check', ev => {
+  		      console.log('check!', ev);
+  		    });
+
+  			modalGrid.on('uncheck', ev => {
+  		      console.log('uncheck!', ev);
+  		    });
+
+  			modalGrid.on('focusChange', ev => {
+  		      console.log('change focused cell!', ev);
+  		    });
+  			
+  		   
+  		  
+  		    $('#searchBtn').click(function (){
+  											$.ajax({
+  												url : "/modalPlanListAjax",
+  												method :"GET",
+  												dataType : "JSON",
+  												success : function(result){
+  													modalGrid.resetData(result);
+  												}
+  											});
+  		  									});
+  		
+
+  			
+  			$('#saveBtn').click(function (){
+  											grid2.finishEditing();
+  											grid2.getData();
+  											grid.finishEditing();
+  											grid.getCheckedRows();
+  			})
+
   		</script>
     
 	</th:block>

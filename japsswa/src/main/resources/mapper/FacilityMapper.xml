@@ -10,7 +10,13 @@
   	</select>
   	
   	<select id="getList" resultType="FacilityVO">
-  		select f.fac_name, f.fac_code, f.fac_manager, f.fac_status,d.down_reason,d.stop_time,d.down_manager 
-  		from facility f join downtime d on (f.fac_code = d.fac_code)
+  		select f.fac_name, f.fac_code, f.fac_manager,f.fac_status, start_date
+		from facility f left outer join downtime d on f.fac_code = d.fac_code
+  	</select>
+  	
+  	<select id="getdownList" resultType="DowntimeVO">
+  		select f.fac_name, f.fac_code, f.fac_status, d.down_code, d.down_reason, stop_date, d.down_manager
+		from facility f right outer join downtime d 
+		on f.fac_code = d.fac_code
   	</select>
   </mapper>
