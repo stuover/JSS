@@ -5,12 +5,27 @@
   
   <mapper namespace="com.mes.jss.basic.mapper.EmployeesMapper">
 
-  	
+  	<!-- 사원 전체 리스트 -->
   	<select id="getList" resultType="EmpVO">
-  		select emp_no "empNo", emp_name "empName", hire_date "hireDate", phone_num "phoneNum", dept_name "deptName", position "position", email "email"
+  		select rownum, emp_no "empNo", emp_name "empName", hire_date "hireDate", phone_num "phoneNum", dept_name "deptName", position "position", email "email"
   	    from emp
+  	    order by rownum
 
   	</select>
-
+	
+	<!-- 사원번호 시퀀스 -->
+	<select id="getNextSeq" resultType="String">
+			select lpad(emp_seq.nextval, 4, '0') from dual
+	</select>
+	
+	<!-- 사원등록 -->  	
+	<insert id="insertEmp" parameterType="EmpVO">
+		insert into emp (emp_no, emp_name, phone_num, email, hire_date, password, role_id)
+		       values(#{empNo}, #{empName}, #{phoneNum}, #{email}, to_date(#{hireDate},'yyyy/MM/DD'), #{password}, 'ROLE_USER')
+	</insert>
+	
+	<select id="selectEmp" parameterType="EmpVO" resultType="EmpVO">
+		select * from emp where emp_no = #{empNo}
+	</select>
   	
   </mapper>
