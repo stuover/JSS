@@ -17,29 +17,8 @@
 		FROM plan p JOIN emp e 
 					ON(p.emp_no = e.emp_no)  		
   	</select>
-  	
-	<select id="palnSave" parameterType="PlanVO" resultType="PlanVO" statementType="CALLABLE">
-	    { 
-	    	call plan_insert(
-	                 #{plan_name, mode=IN, jdbcType=VARCHAR}
-	                 , #{plan_date, mode=IN, jdbcType=DATE}
-	                 , #{e_no, mode=OUT, jdbcType=INTEGER }
-	                 , #{plan_code, mode= IN OUT, jdbcType=VARCHAR}
-	             )
-	    }
-	</select>  
+
 	
-	<select id="palnDetailSave" parameterType="PlanVO" resultType="PlanVO" statementType="CALLABLE">
-	    { 
-	    	call plan_insert(
-	                 #{i_name, mode=IN, jdbcType=VARCHAR}
-	                 , #{plan_amount, mode=IN, jdbcType=DATE}
-	                 , #{plan_end, mode=OUT, jdbcType=INTEGER }
-	                 , #{plan_start, mode= IN, jdbcType=VARCHAR}
-	             )
-	    }
-	</select> 
-  	
 
   	
   </mapper>
