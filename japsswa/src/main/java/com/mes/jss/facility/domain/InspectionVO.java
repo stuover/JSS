@@ -1,4 +1,4 @@
-package com.mes.jss.facility.user;
+package com.mes.jss.facility.domain;
 
 import java.util.Date;
 
