@@ -5,13 +5,6 @@
   
 <mapper namespace="com.mes.jss.sale.mapper.OrderMapper">
 
-<select id="insertOrder", parameterType="OrderVO", resultType="OrderVO" statementType="callable">
-	{ 
-            CALL insert_order(
-                #{result, mode=OUT, jdbcType=CURSOR},
-                
-            )
-        }
-</select>
+
 
 </mapper>
