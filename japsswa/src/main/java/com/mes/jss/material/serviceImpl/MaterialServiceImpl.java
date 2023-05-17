@@ -2,6 +2,7 @@ package com.mes.jss.material.serviceImpl;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import com.mes.jss.material.mapper.MaterialMapper;
 import com.mes.jss.material.service.MaterialService;
 
 @Service
-public class MaterialServiceImpl implements MaterialService{
+public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
 	private MaterialMapper meterialMapper;
@@ -23,13 +24,10 @@ public class MaterialServiceImpl implements MaterialService{
 
 	@Override
 	public List<MrVO> mrlist() {
-		
+
 		return meterialMapper.getList();
 	}
+
 	
-	
-	
-	
-	
-	
+
 }

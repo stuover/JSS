@@ -2,11 +2,14 @@ package com.mes.jss.facility.mapper;
 
 import java.util.List;
 
-import com.mes.jss.facility.user.FacilityVO;
+import com.mes.jss.facility.domain.DowntimeVO;
+import com.mes.jss.facility.domain.FacilityVO;
 
 public interface FacilityMapper {
 
-	List<FacilityVO> getList();
+	List<FacilityVO> getList();	// 전체 설비 리스트
 	FacilityVO getFacility(FacilityVO vo);
+	
+	List<DowntimeVO> getdownList();	// 비가동 리스트
 	
 }

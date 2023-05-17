@@ -10,6 +10,9 @@ public interface EmployeesService {
 	// 사원 List
 	public List<EmpVO> getEmpList();
 	public int getTotalCount(Criteria cri);
+	public String getNextSeq();
+	public boolean ragisterEmp(EmpVO vo);
+	public EmpVO getEmp(EmpVO vo);
 
 
 }

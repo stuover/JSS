@@ -5,8 +5,13 @@
   
 <mapper namespace="com.mes.jss.sale.mapper.OrderMapper">
 
-<insert id = "insertOrder" parameterType="com.mes.jss.sale.domain.OrderVO">
-	insert into orddetail (orddetail_id, ord_count, out_date)
-</insert>
+<select id="insertOrder", parameterType="OrderVO", resultType="OrderVO" statementType="callable">
+	{ 
+            CALL insert_order(
+                #{result, mode=OUT, jdbcType=CURSOR},
+                
+            )
+        }
+</select>
 
 </mapper>

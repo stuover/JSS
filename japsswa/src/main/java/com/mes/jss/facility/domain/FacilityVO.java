@@ -1,4 +1,4 @@
-package com.mes.jss.facility.user;
+package com.mes.jss.facility.domain;
 
 import java.util.Date;
 
@@ -21,7 +21,8 @@ public class FacilityVO {
 	
 	// 조인할때 필요
 	String downCode;
-	String stopTime;
+	String startDate;
+	String stopDate;
 	String downReason;
 	String downManager;
 

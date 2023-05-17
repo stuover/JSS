@@ -12,4 +12,10 @@ public interface EmployeesMapper {
 
 	public int getTotalCountj(Criteria cri);
 
+	public String getNextSeq();
+
+	public int insertEmp(EmpVO vo);
+
+	public EmpVO selectEmp(EmpVO vo);
+
 }

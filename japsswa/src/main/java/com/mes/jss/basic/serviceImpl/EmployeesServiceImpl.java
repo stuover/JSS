@@ -25,5 +25,23 @@ public class EmployeesServiceImpl implements EmployeesService{
 	public int getTotalCount(Criteria cri) {
 		return mapper.getTotalCountj(cri);
 	}
+
+	@Override
+	public String getNextSeq() {
+		// TODO Auto-generated method stub
+		return mapper.getNextSeq();
+	}
+
+	@Override
+	public boolean ragisterEmp(EmpVO vo) {
+
+		return mapper.insertEmp(vo) > 0;
+	}
+
+	@Override
+	public EmpVO getEmp(EmpVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.selectEmp(vo);
+	}
 	
 }

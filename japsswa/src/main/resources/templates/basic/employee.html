@@ -19,26 +19,39 @@
 			<div class="card">
 				<div class="card-body">
 					<h1 class="card-title">사원 정보</h1>
-					<form id="test">
-						<button>수정</button>
-						<button>수정</button>
+					<form id="controller">
+					 	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+						<button type="button" id="modifyBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">수정</button>
 						<button id="addEmpBtn">등록</button>
 					</form>
-					<div id="grid"></div>
-					<!-- 페이징 시작 -->
 
-					<!-- 페이지 끝 -->
+					<div id="grid"></div>
+					
 				</div>
 			</div>
 		</div>
 	</div>
 	
-	<script>
-		$('#addEmpBtn').on('click', function(e){
-			e.preventDefault();
-			self.location = '/employee/ragister';
-		})
-	</script>
+	
+       <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+           <div class="modal-dialog modal-dialog-centered">
+           <div class="modal-content">
+               <div class="modal-header">
+               <h5 class="modal-title" id="searchModalLabel">사원정보 조회</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              
+               </div>
+               <div class="modal-body">
+                <input id="empNo" name="empNo" value="ddd" readonly>
+                
+               </div>
+               <div class="modal-footer">
+               <button type="button" class="btn btn-primary">선택</button>
+               </div>
+           </div>
+           </div>
+       </div>
+
 
 	<script>
 		// GRID 를 생성한다.
@@ -53,106 +66,34 @@
 				}
 			});
 
-		    class RowNumberRenderer {
-		      constructor(props) {
-		        var el = document.createElement('span');
-		        el.innerHTML = `No.${props.formattedValue}`;
-		        this.el = el;
-		      }
-
-		      getElement() {
-		        return this.el;
-		      }
-
-		      render(props) {
-		        this.el.innerHTML = `No.${props.formattedValue}`;
-		      }
-		    }
-		    
-		    class CheckboxRenderer {
-		        constructor(props) {
-		          var { grid, rowKey } = props;
-
-		          var label = document.createElement('label');
-		          label.className = 'checkbox tui-grid-row-header-checkbox';
-		          label.setAttribute('for', String(rowKey));
-
-		          var hiddenInput = document.createElement('input');
-		          hiddenInput.className = 'hidden-input';
-		          hiddenInput.id = String(rowKey);
-
-		          var customInput = document.createElement('span');
-		          customInput.className = 'custom-input';
-
-		          label.appendChild(hiddenInput);
-		          label.appendChild(customInput);
-
-		          hiddenInput.type = 'checkbox';
-		          label.addEventListener('click', (ev) => {
-		            ev.preventDefault();
-
-		            if (ev.shiftKey) {
-		              grid[!hiddenInput.checked ? 'checkBetween' : 'uncheckBetween'](rowKey);
-		              return;
-		            }
-
-		            grid[!hiddenInput.checked ? 'check' : 'uncheck'](rowKey);
-		          });
-
-		          this.el = label;
-
-		          this.render(props);
-		        }
-
-		        getElement() {
-		          return this.el;
-		        }
-
-		        render(props) {
-		          var hiddenInput = this.el.querySelector('.hidden-input');
-		          var checked = Boolean(props.value);
-
-		          hiddenInput.checked = checked;
-		        }
-		      }
-		    
-
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
 				scrollX:true,
 				scrollY:true,
-				rowHeaders: [
-			        {
-			          type: 'rowNum',
-			          renderer: {
-			            type: RowNumberRenderer
-			          }
-			        },
-			        {
-			          type: 'checkbox',
-			          header: `
-			          <label for="all-checkbox" class="checkbox">
-			            <input type="checkbox" id="all-checkbox" class="hidden-input" name="_checked" />
-			            <span class="custom-input"></span>
-			          </label>
-			        `,
-			          renderer: {
-			            type: CheckboxRenderer
-			          }
-			        }
-			      ],
+				rowHeaders:['checkbox'],
 				columns : [
+					{
+						header : 'No.',
+						name : 'rownum',
+						sortingType : 'desc',
+						sortable : true
+					},
 
 				{
 					header : '사원번호',
 					name : 'empNo',
 					sortingType : 'desc',
 					sortable : true
+				},	{
+					header : '이름',
+					name : 'empName',
+					sortingType : 'desc',
+					sortable : true
 				}, {
 					header : '직책',
 					name : 'position',
 					sortingType : 'desc',
-					sortable : true
+					sortable : true, 
 				}, {
 					header : '부서',
 					name : 'deptName',
@@ -180,6 +121,42 @@
 		}
 		
 
+	</script>
+	
+		
+	<script>
+		$('#addEmpBtn').on('click', function(e){
+			e.preventDefault();
+			self.location = '/employee/ragister';
+		})
+		
+		$('#modifyBtn').on('click', function(e){
+			e.preventDefault();
+			let empNo = null;
+			$('input:checkbox').each(function (index) {
+				
+				if($(this).is(":checked")==true){
+			    	let checkd = $(this).parent().parent().data('row-key');
+					empNo =$('td[data-row-key='+checkd+']').children(':eq(2)').text();
+					
+			    }
+
+				
+			}) 
+			console.log(empNo);
+	    	$.ajax({
+				url : "/serchEmpAjax",
+				method : "GET",
+				data : { empNo : empNo },
+				dateType:"JSON",
+				success : function(result) {
+					
+					$('.modal').modal('show');
+					
+				}
+			});
+	    	
+		})
 	</script>
 </th:block>
 
