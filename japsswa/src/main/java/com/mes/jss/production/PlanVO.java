@@ -16,8 +16,14 @@ public class PlanVO {
 	Date planStart;
 	Date planEnd;
 	
-//	생산계획관리 페이지에서 제품별 주문정보 리스트
+	
+	//	생산계획관리 페이지에서 제품별 주문정보 리스트
 	String itemName;
 	int ordCount;
+	
+	// 생산계획 관리 페이지 : modal 계획 리스트
+	String empName;
+	
+
 	
 }
