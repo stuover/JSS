@@ -21,7 +21,9 @@ public class MaterialServiceImpl implements MaterialService {
 
 		return meterialMapper.insert(vo);
 	}
-
+	
+	// 자재 조회
+	
 	@Override
 	public List<MrVO> mrlist() {
 

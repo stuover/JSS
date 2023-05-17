@@ -16,16 +16,16 @@ public class QualityServiceImpl implements QualityService{
 	@Autowired
 	private QualityMapper qualityMapper;
 	
-
+	
+	
+	// 품질 검사 리스트
+	
+	
 	@Override
 	public List<QualityVO> qlList() {
 		
 		return qualityMapper.getList();
 	}
 
-	@Override
-	public int mrStore(MrVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 }

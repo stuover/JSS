@@ -31,7 +31,8 @@ public class MaterialReceive {
 	MaterialService materialService;
 	
 	
-	@GetMapping("/mslist")
+	
+	@GetMapping("/mslist")     // 자재 조회 페이지
 	public String mrList(Model model, MrVO vo) {
 	
 		
@@ -40,7 +41,7 @@ public class MaterialReceive {
 	}
 	
 	@ResponseBody
-	@GetMapping("/mslistAjax")
+	@GetMapping("/mslistAjax")   // 자재 조회 아작스
 	public List<MrVO> mrList() {
 						
 		List<MrVO> list = materialService.mrlist();

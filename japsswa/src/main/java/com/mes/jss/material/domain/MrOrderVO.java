@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class MrOrderVO {
+public class MrOrderVO {	// 자재 발주
 	private String mrOrderCode;
 	private String customerId;
 	private int empNo;
