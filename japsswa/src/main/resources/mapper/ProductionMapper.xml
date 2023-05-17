@@ -7,8 +7,9 @@
   
   	<!-- 생산계획관리 페이지에서 제품별 주문수량 정보 리스트 -->
   	<select id="planOrderInfo" resultType="PlanVO">
-		select d.item_code, i.item_name, d.ord_count
+		SELECT d.item_code, item_name, SUM(ord_count)
 		from orddetail d join itemlist i on(d.item_code = i.item_code)
+		GROUP BY d.item_code, item_name, ord_count
 		ORDER BY 1
   	</select>
   	
@@ -18,7 +19,13 @@
 					ON(p.emp_no = e.emp_no)  		
   	</select>
 
-	
-
+	<select id="pdetailSearchResult" parameterType="PlanVO" resultType="PlanVO">
+		SELECT  item_name, SUM(ord_count), plan_amount ,plan_start, plan_end, plan_priority 
+		FROM orddetail d LEFT JOIN itemlist i ON(d.item_code = i.item_code)
+		                        LEFT JOIN plan_detail p ON(d.item_code = p.item_code)
+		WHERE plan_id=#{planId}
+		GROUP BY item_name, ord_count, plan_amount ,plan_start, plan_end, plan_priority
+		ORDER BY 1	
+	</select>
   	
   </mapper>
