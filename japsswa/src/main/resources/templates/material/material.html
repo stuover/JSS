@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
@@ -21,17 +20,11 @@
 <body>
 
 <th:block layout:fragment="content">
-	<h3>자재 입고</h3>
+	<h3>자재 조회</h3>
 	 
-	 <!--  <form name="procedureForm" id="procedureForm" method="post" action="/mrProcedure.do">
-	     <intput type="text" value="합격" id="test" name="test">
-	 </form>-->
-	 <!--  <div>
-            
-            <button class="tui-app-loader" id="loaderBtn" style="float:right;">입고</button>
-        </div>-->
+	<p>자재명 : <input type=text> <button id="search">검색</button></p>
 	
-	<button type="button" id="storeBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">입고</button>
+
 	<div id="grid" style="margin-top: 50px;"></div>
 	<div id="grid1" style="margin-top: 270px;"></div>
 	
@@ -41,13 +34,16 @@
 
 	<script>
 	
+	
+	
+	
 		
 	
 	
 		$(document).ready(function() {
 
 			$.ajax({
-				url : "/mrlistAjax",
+				url : "/mslistAjax",
 
 				method : "GET",
 				detaType : "json",
@@ -63,50 +59,51 @@
 				el : document.getElementById('grid'),
 				scollX : false,
 				scollY : false,
-				rowHeaders: ['checkbox'],
+				
 				
 				columns : [ {
-					header : '테스트코드',
-					name : 'testCode'
+					header : '자재lot번호',
+					name : 'mrLotNumber',
+					
 				}, {
 					header : '품목코드',
 					name : 'itemCode'
 				}, {
-					header : '발주 상세',
-					name : 'mrOrderDetail'
+					header : '테스트코드',
+					name : 'testCode'
 				}, {
-					header : '상태',
-					name : 'situation'
+					header : '입고날짜',
+					name : 'storeDate'
 				}, {
-					header : '테스트 결과',
-					name : 'testResult'
+					header : '입고 수량',
+					name : 'inventory'
 				},
 				{
-					header : '테스트날',
-					name : 'testDate'
+					header : '담당자번호',
+					name : 'empNo'
 				},
 				{
-					header : '수량',
-					name : 'mrCount'
-				},
-				{
-					header : '유통기한',
-					name : 'exDate'
-				},
-				{
-					header : '검사항목코드',
-					name : 'checklistCode'
+					header : '생산실적코드',
+					name : 'performanceId'
 				}
+				
 				]
 			})
 		
 		});
 		
-			    
+		
+		
+	    
 	    
 	 
+	    
 	</script>
 
+	
+	
+	
+	
 	
 	
 
@@ -120,13 +117,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
