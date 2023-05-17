@@ -9,49 +9,60 @@
 <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="jquery/jquery-3.6.4.min.js"></script>
 
 	</head>
 
 	<div>
-		<label for="ordid">주문코드</label>
-  		<input type="text" id="ordid" name="ordid"><br><br>
-  		<label for="cust">거래처</label>
-  		<input type="text" id="cust" name="cust">
-  		<label for="tel">연락처</label>
-  		<input type="text" id="tel" name="tel"><br><br>
-  		<label for="addr">주소</label>
-  		<input type="text" id="addr" name="addr">
-  		<label for="mail">메일주소</label>
-  		<input type="email" id="mail" name="mail">
+		<table class="customer">
+		<tr>
+  		<td>거래처</td>
+  		<td><input type="text" id="cust" name="cust"></td>
+  		</tr>
+  		<tr>
+  		<td>연락처</td>
+  		<td><input type="text" id="tel" name="tel"></td>
+  		</tr>
+  		<tr>
+  		<td>주소</td>
+  		<td><input type="text" id="addr" name="addr"></td>
+  		</tr>
+  		<tr>
+  		<td>메일주소</td>
+  		<td><input type="email" id="mail" name="mail"></td>
+  		</tr>
+  		</table>
 	</div>
+	
 
 	<div id="grid2"></div>
 	
-	<div>
-		<label for="total">총 가격</label>
-	  	<input type="text" id="total" name="total">
-	</div>
 	
-	<button type="button">등록</button>
+	<div>
+		<form >
+			<button id="insertBtn" type="button">등록</button>
+		</form>		
+	</div>	
+	
 	
 	<script>
 	
+	$.ajax({
+		
+	})
 	
 	const Grid = tui.Grid;
 	
-		let gridData2 = [{}];
+		let gridData2 = [{},{},{},{},{},{},{},{}];
 		
 		const grid2 = new Grid({
 	      el: document.getElementById('grid2'),
 	      data: gridData2,
 	      scrollX: false,
 	      scrollY: false,
+	      rowHeaders: ['checkbox'],
 	      columns: [
-	         {
-		      header: '주문 상세 코드',
-		      name: 'orderdetail',
-		      editor: 'text'
-		     },
+	        
 		     {
 			  header: '주문명',
 			  name: 'ordername',
@@ -87,7 +98,23 @@
 			  name: 'countprice',
 			  editor: 'text'
 		      }
-	      ]
+	      ],
+	      summary: {
+	          height: 40,
+	          position: 'bottom', // or 'top'
+	          columnContent: {
+	            c2: {
+	              template: function(valueMap) {
+	                return `MAX: ${valueMap.max}<br>MIN: ${valueMap.min}`;
+	              }
+	            },
+	            countprice: {
+	              template: function(valueMap) {
+	                return `TOTAL: ${valueMap.sum}`;
+	              }
+	            }
+	          }
+	        }
 	    });
 		
 	    grid2.on('check', ev => {
@@ -102,6 +129,10 @@
 		      console.log('change focused cell!', ev);
 		    });
  		
+		    
+		    
+
+			
  		</script>
 
 
