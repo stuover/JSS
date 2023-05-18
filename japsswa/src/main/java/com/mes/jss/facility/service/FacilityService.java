@@ -9,11 +9,11 @@ import com.mes.jss.facility.domain.InspectionVO;
 public interface FacilityService {
 
 	public FacilityVO getFacility(FacilityVO vo);
-	public List<FacilityVO> getList();		// 전체 설비 리스트
+	public List<FacilityVO> getList();		// 전체 설비 리스트 조회
 	
 	public DowntimeVO getDowntime(DowntimeVO vo);
-	public List<DowntimeVO> getDownList();		// 비가동 리스트
-	public boolean registerDown(DowntimeVO vo);		// 비가동 사유 등록
+	public List<DowntimeVO> getDownList();		// 비가동 리스트 조회
+	public boolean registerDown(DowntimeVO vo);		// 비가동 리스트 등록
 	
 	public InspectionVO getInspection(InspectionVO vo);
 }

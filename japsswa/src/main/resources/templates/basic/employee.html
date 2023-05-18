@@ -148,6 +148,15 @@
 				} ]
 			});
 
+			 grid.on('check', function (e) {
+             	var checkRows = grid.getCheckedRowKeys();
+             	checkRows.forEach(function( key, idx){                		
+             		if(key != e.rowKey){
+             			grid.uncheck(key);
+             		}
+             	});
+             });
+			 
 			$('#addEmpBtn').on('click', function(e) {
 				e.preventDefault();
 				self.location = '/employee/ragister';
