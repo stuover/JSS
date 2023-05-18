@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
     <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
     <link rel="stylesheet" href="https://uicdn.toast.com/select-box/latest/toastui-select-box.css" />
-	<script src="https://uicdn.toast.com/select-box/latest/toastui-select-box.js"></script>
+    <script src="https://uicdn.toast.com/select-box/latest/toastui-select-box.js"></script>
     <style>
         button {
             width: 100px;
             margin-right: 550px;
             border-radius: 20px;
+        }
+        .modal-header{
+        	text-align: center;
         }
 
         #cenLbtn {
@@ -26,6 +29,7 @@
         .tui-grid-cell-content {
             text-align: center;
         }
+        
     </style>
 </head>
 
@@ -36,47 +40,39 @@
 
         <!-- 모달 시작-->
 
-        <button id="stopBtn" type="button"  data-toggle="modal" data-target="#exampleModalCenter">비가동</button>
+        <button id="stopBtn" type="button" data-toggle="modal" data-target="#modal">비가동</button>
 
         <!-- Modal -->
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">비가동 사유</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        
-        <!-- 드롭다운 -->
-        <div id="container"></div>
-        <!-- <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    비가동 사유
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">세척</a>
-    <a class="dropdown-item" href="#">정비</a>
-    <a class="dropdown-item" href="#">점검</a>
-  </div>
-</div> -->
-        
-        <!-- 드롭다운 끝 -->
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary">추가</button>
-      </div>
-    </div>
-  </div>
-</div>
-    <!-- /.modal -->
+        <!-- Modal -->
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalTitle">비가동 사유</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <!-- 드롭다운 -->
+
+                        <!-- <div id="container"></div> -->
+                        <div id="modalgrid"></div>
+                        <!-- 드롭다운 끝 -->
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-primary">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
 
         <h4>비가동 설비 리스트</h4>
         <div id="downgrid"></div>
@@ -85,7 +81,6 @@
                 type="submit">삭제</button>
         </div>
         <script>
-        
             window.onload = function () {
                 $.ajax({
                     url: "/Facilityajax",
@@ -124,7 +119,8 @@
                         name: 'startDate'
                     }, {
                         header: '가동 상태',
-                        name: 'facStatus'
+                        name: 'facStatus',
+                        filter: 'select'
                     }]
                 });
 
@@ -164,14 +160,39 @@
                         header: '관리자',
                         name: 'downManager'
                     }]
+                });                
+
+                /* $('#stopBtn').hide(); 
+				grid.on('uncheck', function () {
+                    $('#stopBtn').hide();
+                }); */
+             
+                /* 체크 한개만 */
+                
+                grid.on('check', function (e) {
+                	var checkRows = grid.getCheckedRowKeys();
+                	checkRows.forEach(function( key, idx){
+                		console.log(key);
+                		console.log(idx);
+                		if(key != e.rowKey){
+                			grid.uncheck(key);
+                		}
+                	});
                 });
-              
-                var check = $('.tui-grid-row-header-checkbox');
                 
+                /* 체크 한개만 끝 */
+                            
+
+                /* 선택한 데이터 가져오기 */
+                var Row = grid.getCheckedRows();
+                $('#stopBtn').on('click', function () {
+                	modalgrid.getCheckedRows()
+                });
                 
-                
-                /* $('#stopBtn').hide(); */
-                var SelectBox = tui.SelectBox;
+                /* 선택한 데이터 가져오기 끝*/
+
+                /* 비가동 사유 드롭다운 */
+                /* var SelectBox = tui.SelectBox;
                 
                 const container = document.getElementById('container');
 
@@ -184,12 +205,96 @@
                     }
                   ],
                   
-                });
+                }); */
+
+
 
                 /* console.log(selectBox.getSelectedItem().getLabel()); // 'Apple' */
+
+                /* 비가동 사유 드롭다운 */
+
+                class CustomTextEditor {
+				      constructor(props) {
+				        const el = document.createElement('input');
+				        const { maxLength } = props.columnInfo.editor.options;
+				
+				        el.type = 'text';
+				        el.maxLength = maxLength;
+				        el.value = String(props.value);
+				
+				        this.el = el;
+				      }
+				
+				      getElement() {
+				        return this.el;
+				      }
+				
+				      getValue() {
+				        return this.el.value;
+				      }
+				
+				      mounted() {
+				        this.el.select();
+				      }
+				    }
                 
-                // tui-select-box-item 셀렉트박스 li 클래스
-            } 
+                $(function () {
+                     $('#modal').on('shown.bs.modal', function () {
+                     	modalgrid.refreshLayout();
+                     })
+                 })
+                                 
+                
+                 var modalgrid = new tui.Grid({
+                     el: document.getElementById('modalgrid'),
+                     scrollX: false,
+                     scrollY: false,
+                     data: Row,
+                     width:480,
+                     rowHeight: 130,
+                     columns: [
+                    	 {
+                             header: '설비명',
+                             name: 'name',
+                             editor:'text',
+                             width:70,
+                             rowSpan: true 
+                           },
+                           {
+                               header: '설비 코드',
+                               name: 'name',
+                               editor:'text',
+                               width:70,
+                               rowSpan: true 
+                             },
+                    	 
+                    	 {
+                         header: '비가동 사유',
+                         name: 'name',
+                         editor:'text',
+                         width:90,
+                         rowSpan: true 
+                       },
+                       {
+                         header: '관리자',
+                         name: 'artist',
+                         editor:'text',
+                         width:70,
+                         rowSpan: true 
+                       },
+                       {
+                    	   header: '비고',
+                           name: 'type',
+                           editor:'text',
+                           width:180,
+                           rowSpan: true,
+                           whiteSpace: 'pre-wrap'
+                       }
+                     ]
+                   });
+
+                 
+            }
         </script>
     </th:block>
 </body>
