@@ -6,6 +6,8 @@
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
     <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
     <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/select-box/latest/toastui-select-box.css" />
+	<script src="https://uicdn.toast.com/select-box/latest/toastui-select-box.js"></script>
     <style>
         button {
             width: 100px;
@@ -52,8 +54,8 @@
       <div class="modal-body">
         
         <!-- 드롭다운 -->
-        
-        <div class="dropdown">
+        <div id="container"></div>
+        <!-- <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     비가동 사유
   </button>
@@ -62,14 +64,14 @@
     <a class="dropdown-item" href="#">정비</a>
     <a class="dropdown-item" href="#">점검</a>
   </div>
-</div>
+</div> -->
         
         <!-- 드롭다운 끝 -->
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">추가</button>
       </div>
     </div>
   </div>
@@ -166,18 +168,27 @@
               
                 var check = $('.tui-grid-row-header-checkbox');
                 
-                $(function(){
-                	check.on('click', function(){
-                		if($('#stopBtn').show()){
-                			
-                		}else(){
-                			$('#stopBtn').hide();
-                		}
-                	})	
-                })
                 
-                $('#stopBtn').hide();
-                 
+                
+                /* $('#stopBtn').hide(); */
+                var SelectBox = tui.SelectBox;
+                
+                const container = document.getElementById('container');
+
+
+                const selectBox = new SelectBox(container, {
+                  data: [
+                    {
+                      label: '비가동 사유',
+                      data: [ { label: '세척', value: '세척' }, { label: '정비', value: '정비' }, { label: '점검', value: '점검' } ]
+                    }
+                  ],
+                  
+                });
+
+                /* console.log(selectBox.getSelectedItem().getLabel()); // 'Apple' */
+                
+                // tui-select-box-item 셀렉트박스 li 클래스
             } 
         </script>
     </th:block>
