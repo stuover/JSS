@@ -13,5 +13,10 @@ public interface MaterialMapper {
 	
 	public List<MrVO> getList();	
 	
+	// 코드 검색
+	public List<MrVO> codeList(String keyword);
+	
+	// 자재명 검색
+	public List<MrVO> mrCountList(String keyword);
 	
 }
