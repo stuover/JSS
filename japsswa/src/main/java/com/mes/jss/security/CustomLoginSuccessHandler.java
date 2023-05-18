@@ -17,7 +17,7 @@ public class CustomLoginSuccessHandler  implements AuthenticationSuccessHandler{
 			Authentication authentication) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
-		session.setAttribute("loginId", authentication.getName());
+		session.setAttribute("empNo", authentication.getName());
 		// 사용자 롤이면 admin
 		response.sendRedirect(request.getContextPath() + "/top");
 	}

@@ -27,5 +27,21 @@
 	<select id="selectEmp" parameterType="EmpVO" resultType="EmpVO">
 		select * from emp where emp_no = #{empNo}
 	</select>
-  	
+	
+	<update id="updateEmp" parameterType="EmpVO">
+		update emp
+		set position = #{position} ,
+		    dept_name = #{deptName} ,
+		    role_id = #{roleId}
+	    where emp_no = #{empNo}
+	</update>
+	
+	<delete id="deleteEmp">
+		delete from emp where emp_no = #{empNo}
+	</delete>
+	
+	<select id="getUser" resultType="EmpVO">
+		select * from emp where emp_no = #{empNo}
+	</select>
+	
   </mapper>
