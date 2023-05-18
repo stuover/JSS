@@ -14,12 +14,12 @@ import com.mes.jss.material.service.MaterialService;
 public class MaterialServiceImpl implements MaterialService {
 
 	@Autowired
-	private MaterialMapper meterialMapper;
+	private MaterialMapper materialMapper;
 
 	@Override
 	public int mrStore(MrVO vo) {
 
-		return meterialMapper.insert(vo);
+		return materialMapper.insert(vo);
 	}
 	
 	// 자재 조회
@@ -27,7 +27,19 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public List<MrVO> mrlist() {
 
-		return meterialMapper.getList();
+		return materialMapper.getList();
+	}
+
+	@Override
+	public List<MrVO> searchList(String keyword) {
+		
+		return materialMapper.codeList(keyword);
+	}
+
+	@Override
+	public List<MrVO> mrCount(String keyword) {
+		
+		return materialMapper.mrCountList(keyword);
 	}
 
 	
