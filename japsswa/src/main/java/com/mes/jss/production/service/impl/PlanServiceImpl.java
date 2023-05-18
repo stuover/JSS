@@ -1,4 +1,4 @@
-package com.mes.jss.production.serviceImpl;
+package com.mes.jss.production.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mes.jss.production.PlanVO;
+import com.mes.jss.production.domain.PlanVO;
 import com.mes.jss.production.mapper.PlanMapper;
 import com.mes.jss.production.service.PlanService;
 

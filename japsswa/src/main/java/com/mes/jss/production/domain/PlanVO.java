@@ -1,4 +1,4 @@
-package com.mes.jss.production;
+package com.mes.jss.production.domain;
 
 import java.util.Date;
 

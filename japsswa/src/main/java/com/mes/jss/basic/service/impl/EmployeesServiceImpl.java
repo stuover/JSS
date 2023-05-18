@@ -1,14 +1,14 @@
-package com.mes.jss.basic.serviceImpl;
+package com.mes.jss.basic.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.mes.jss.DTO.Criteria;
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.mapper.EmployeesMapper;
 import com.mes.jss.basic.service.EmployeesService;
@@ -48,10 +48,6 @@ public class EmployeesServiceImpl implements EmployeesService, UserDetailsServic
 		return mapper.getList();
 	}
 
-	@Override
-	public int getTotalCount(Criteria cri) {
-		return mapper.getTotalCountj(cri);
-	}
 
 	@Override
 	public String getNextSeq() {

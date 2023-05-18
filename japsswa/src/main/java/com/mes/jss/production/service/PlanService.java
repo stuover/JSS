@@ -2,7 +2,7 @@ package com.mes.jss.production.service;
 
 import java.util.List;
 
-import com.mes.jss.production.PlanVO;
+import com.mes.jss.production.domain.PlanVO;
 
 public interface PlanService {
 	

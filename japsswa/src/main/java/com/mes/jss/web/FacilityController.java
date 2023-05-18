@@ -1,4 +1,4 @@
-package com.mes.jss;
+package com.mes.jss.web;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.service.FacilityService;
-import com.mes.jss.facility.serviceimpl.FacilityServiceimpl;
+import com.mes.jss.facility.service.impl.FacilityServiceimpl;
 
 @Controller
 public class FacilityController {

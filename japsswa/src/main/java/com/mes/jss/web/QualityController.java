@@ -1,4 +1,4 @@
-package com.mes.jss.quality.control;
+package com.mes.jss.web;
 
 import java.util.List;
 

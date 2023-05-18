@@ -1,4 +1,4 @@
-package com.mes.jss.quality.serviceImpl;
+package com.mes.jss.quality.service.impl;
 
 import java.util.List;
 

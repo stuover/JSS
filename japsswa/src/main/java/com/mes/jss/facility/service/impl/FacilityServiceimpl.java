@@ -1,4 +1,4 @@
-package com.mes.jss.facility.serviceimpl;
+package com.mes.jss.facility.service.impl;
 
 import java.util.List;
 

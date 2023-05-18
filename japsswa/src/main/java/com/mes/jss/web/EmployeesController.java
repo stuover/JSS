@@ -1,4 +1,4 @@
-package com.mes.jss;
+package com.mes.jss.web;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mes.jss.DTO.Criteria;
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.service.EmployeesService;
-import com.mes.jss.basic.serviceImpl.EmployeesServiceImpl;
+import com.mes.jss.basic.service.impl.EmployeesServiceImpl;
 
 @Controller
 public class EmployeesController {
@@ -34,7 +33,7 @@ public class EmployeesController {
 	// 전체 리스트
 	@ResponseBody
 	@GetMapping("/employeeAjax")
-	public List<EmpVO> employees(Model model, Criteria cri) {
+	public List<EmpVO> employees(Model model) {
 		List<EmpVO> list = service.getEmpList();
 
 		return list;
@@ -109,7 +108,7 @@ public class EmployeesController {
 
 	}
 
-	// 사원정보 수정
+	// 사원정보 삭제
 	@ResponseBody
 	@RequestMapping("/removeEmpAjax")
 	public String removeEmp(EmpVO vo, Model model) {

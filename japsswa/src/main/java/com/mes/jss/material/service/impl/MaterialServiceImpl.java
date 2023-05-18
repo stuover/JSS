@@ -1,4 +1,4 @@
-package com.mes.jss.material.serviceImpl;
+package com.mes.jss.material.service.impl;
 
 import java.util.List;
 

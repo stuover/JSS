@@ -1,4 +1,4 @@
-package com.mes.jss.sale.control;
+package com.mes.jss.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

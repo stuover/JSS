@@ -1,4 +1,4 @@
-package com.mes.jss;
+package com.mes.jss.web;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.mes.jss.production.PlanVO;
+import com.mes.jss.production.domain.PlanVO;
 import com.mes.jss.production.mapper.PlanMapper;
 import com.mes.jss.production.service.PlanService;
-import com.mes.jss.production.serviceImpl.PlanServiceImpl;
+import com.mes.jss.production.service.impl.PlanServiceImpl;
 
 import lombok.extern.log4j.Log4j2;
 
