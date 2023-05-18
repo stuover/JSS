@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,7 +32,7 @@ public class ProductionController {
 		return "production/planManage";
 	}
 
-	@RequestMapping("/planManageAjax")
+	@RequestMapping("/orderInfoAjax")
 	@ResponseBody
 	public List<PlanVO> orderInfoAjax() {
 		List<PlanVO> inputData = new ArrayList<>();
@@ -49,16 +51,18 @@ public class ProductionController {
 	
 		return inputData;
 	}
+
 	
-	@RequestMapping("/searchResultPdetailAjax")
-	@ResponseBody
-	public List<PlanVO> searchResultPdetailAjax(String id) {
-		List<PlanVO> inputData = new ArrayList<>();
-		inputData = planService.pdetailSearchResult(id);
-	
-		return inputData;
+	@RequestMapping("/savePlanAjax")
+	@ResponseBody	
+	public ResponseEntity<HttpStatus> savePlanAjax(PlanVO vo){
+		System.out.println("------------------------------------------------------------");
+		System.out.println(vo);
+		System.out.println("------------------------------------------------------------");
+		planService.planSave(vo);
+		
+		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 	}
-	
 	
 	
 }
