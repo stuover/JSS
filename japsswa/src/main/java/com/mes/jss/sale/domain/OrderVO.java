@@ -18,11 +18,14 @@ public class OrderVO {
 	private int ordCount;
 	private Date outDate;
 	private String itemCode;
+	private int unitPrice;
+	private int eachPrice;
 	
 	private String customerName;
 	private String custAddr;
 	private String custMail;
 	private String custTel;
 	private String itemName;
-	private String itemPrice;
+	private String empName;
+
 }

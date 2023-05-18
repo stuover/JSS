@@ -11,11 +11,18 @@ import com.mes.jss.sale.service.SaleService;
 public class SaleServiceImpl implements SaleService {
 	
 	@Autowired OrderMapper orderMapper;
-	
+
 	@Override
-	public void orderReceipt(OrderVO order) {
+	public boolean orderInsert(OrderVO order) {
 		
-		orderMapper.insertOrder(order);
+		return orderMapper.insertOrder(order)==1;
 	}
 
+	@Override
+	public boolean orddetailInsert(OrderVO order) {
+		
+		return orderMapper.insertOrdDetail(order)==1;
+	}
+	
+	
 }
