@@ -5,6 +5,38 @@
   
 <mapper namespace="com.mes.jss.sale.mapper.OrderMapper">
 
-
+	<select id="insertOrder" parameterType="OrderVO" resultType="OrderVO" statementType="CALLABLE">
+        { 
+            CALL insert_order(
+                #{ordId, mode=INOUT, jdbcType=VARCHAR},
+                #{customerName, mode=INOUT, jdbcType=VARCHAR},
+                #{custAddr, mode=INOUT, jdbcType=VARCHAR},
+                #{custTel, mode=INOUT, jdbcType=VARCHAR},
+                #{custMail, mode=INOUT, jdbcType=VARCHAR},
+                #{ordName, mode=INOUT, jdbcType=VARCHAR},
+                #{ordDate, mode=INOUT, jdbcType=VARCHAR}, 
+                #{totalPrice, mode=INOUT, jdbcType=VARCHAR},
+                #{empName, mode=INOUT, jdbcType=VARCHAR},
+                #{customerId, mode=INOUT, jdbcType=VARCHAR},
+                #{empNo, mode=INOUT, jdbcType=VARCHAR}
+                
+            )
+        }
+    </select>
+    
+    <select id="insertOrdDetail" parameterType="OrderVO" resultType="OrderVO" statementType="CALLABLE">
+        { 
+            CALL insert_orddetail(
+                #{ordDetailId, mode=INOUT, jdbcType=VARCHAR},
+				#{itemName, mode=INOUT, jdbcType=VARCHAR},
+				#{itemCode, mode=INOUT, jdbcType=VARCHAR},
+				#{unitPrice, mode=INOUT, jdbcType=VARCHAR},
+				#{eachPrice, mode=INOUT, jdbcType=VARCHAR},
+				#{outDate, mode=INOUT, jdbcType=VARCHAR},
+				#{ordCount, mode=INOUT, jdbcType=VARCHAR}
+                
+            )
+        }
+    </select>
 
 </mapper>

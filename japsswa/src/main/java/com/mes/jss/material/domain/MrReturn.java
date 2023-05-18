@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class MrReturn {
+public class MrReturn {    // 자재 반품
 	private String returnCode;
 	private String testCode;
 	private int allCount;

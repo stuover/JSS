@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class MrErrorVO {
+public class MrErrorVO {	// 불량 자재
 	private String mrErrorCode;
 	private String mrLotNumber;
 	private String performanceId;

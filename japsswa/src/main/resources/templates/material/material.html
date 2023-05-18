@@ -22,7 +22,7 @@
 <th:block layout:fragment="content">
 	<h3>자재 조회</h3>
 	 
-	<p>자재명 : <input type=text> <button id="search">검색</button></p>
+	<p>자재 재고 검색 : <input type=text id="mrName"> <button id="search">검색</button></p>
 	
 
 	<div id="grid" style="margin-top: 50px;"></div>
@@ -69,17 +69,17 @@
 					header : '품목코드',
 					name : 'itemCode'
 				}, {
-					header : '테스트코드',
+					header : '검사코드',
 					name : 'testCode'
 				}, {
-					header : '입고날짜',
+					header : '입고 날짜',
 					name : 'storeDate'
 				}, {
 					header : '입고 수량',
 					name : 'inventory'
 				},
 				{
-					header : '담당자번호',
+					header : '사원 번호',
 					name : 'empNo'
 				},
 				{
@@ -93,7 +93,39 @@
 		});
 		
 		
+		$('#search').on('click',function(){
+			  
+			  const result= $("#mrName").val();
+			  $('#mrName').val('');
+				
+			  $.ajax({
+					url:"/mrCountAjax",
+					method:"GET",
+					data:{'result':result},
+					dataType:"json",
+				
+				success : function(result) {
+					grid.resetData(result);
+					grid.refreshLayout();
+					
+				}
+				
+					
+		     });
+			})
+			
+			 
 		
+			
+			
+		
+		
+		$(function(){
+	    	$('#store').on('shown.bs.modal', function(){
+	    		grid.refreshLayout();
+	    	})
+	    })
+	   
 	    
 	    
 	 

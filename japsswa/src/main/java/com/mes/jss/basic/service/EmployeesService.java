@@ -13,6 +13,9 @@ public interface EmployeesService {
 	public String getNextSeq();
 	public boolean ragisterEmp(EmpVO vo);
 	public EmpVO getEmp(EmpVO vo);
+	public boolean modifyEmp(EmpVO vo);
+	public boolean removeEmp(EmpVO vo);
+	EmpVO gerUser(EmpVO vo);
 
 
 }

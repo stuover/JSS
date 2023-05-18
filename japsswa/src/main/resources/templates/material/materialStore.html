@@ -12,50 +12,81 @@
 <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
 
 <style>
-	#movebtn{
-		margin : 0px;
-	}
 </style>
 
 </head>
 <body>
 
-<th:block layout:fragment="content">
-	<h3>자재 입고</h3>
-	 
-	 <!--  <form name="procedureForm" id="procedureForm" method="post" action="/mrProcedure.do">
-	     <intput type="text" value="합격" id="test" name="test">
-	 </form>-->
-	 <!--  <div>
-            
-            <button class="tui-app-loader" id="loaderBtn" style="float:right;">입고</button>
-        </div>-->
-	
-	<button type="button" id="storeBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">입고</button>
-	<div id="grid" style="margin-top: 50px;"></div>
-	<div id="grid1" style="margin-top: 270px;"></div>
-	
-	 
-   
-	
+	<th:block layout:fragment="content">
+		<h3 style="font-weight: bold;">&emsp;자재 입고</h3>
 
-	<script>
-	
-		
-	
-	
+
+		<div>
+			<button type="button" id="storeBtn" class="btn btn-success"
+				data-bs-toggle="modal" data-bs-target="#searchModal"
+				style="float: right; height: 30px; width: 50px; padding: 10px; margin-bottom: 10px; margin-right: 20px;">입고</button>
+			<button type="button" id="checkBtn" class="btn btn-primary"
+				data-toggle="modal" data-target=".bd-example-modal-lg"
+				data-bs-target="#searchModal"
+				style="float: right; height: 30px; width: 80px; padding: 10px; margin-bottom: 10px; margin-right: 8px;">입고확인</button>
+
+		</div>
+
+
+		<!-- Large modal -->
+
+
+		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+			<div class="modal-dialog modal-lg">
+
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="exampleModalLabel"
+							style="font-weight: bold; margin-left: 760px;">입고 처리 확인</h4>
+
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+					</div>
+					<div>
+						<h6 style="font-weight: bold; text-align: center;">
+							검사 코드 :<input type=text id="searchcode"
+								style="margin-left: 15px; padding: 1px;">
+							<button type="button" class="btn btn-dark" id="searchBtn"
+								style="padding: 8px; margin-left: 15px;">검색</button>
+						</h6>
+					</div>
+					<div id="grid1"></div>
+					<div>
+						<button type="button" id="closeBtn" class="btn btn-dark" data-dismiss="modal"
+							style="width: 50px; height: 30px; margin-left: 830px; padding: 8px;">닫기</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+		<div id="grid"></div>
+
+
+		<script>
+
 		$(document).ready(function() {
 
 			$.ajax({
 				url : "/mrlistAjax",
 
 				method : "GET",
-				detaType : "json",
+				dataType : "json",
 
 				success : function(result) {
 					grid.resetData(result);
 					
-
 				}
 
 			})
@@ -66,27 +97,27 @@
 				rowHeaders: ['checkbox'],
 				
 				columns : [ {
-					header : '테스트코드',
+					header : '검사코드',
 					name : 'testCode'
 				}, {
 					header : '품목코드',
 					name : 'itemCode'
 				}, {
-					header : '발주 상세',
+					header : '주문 상세 코드',
 					name : 'mrOrderDetail'
 				}, {
 					header : '상태',
 					name : 'situation'
 				}, {
-					header : '테스트 결과',
+					header : '검사결과',
 					name : 'testResult'
 				},
 				{
-					header : '테스트날',
+					header : '검사일자',
 					name : 'testDate'
 				},
 				{
-					header : '수량',
+					header : '입고 수량',
 					name : 'mrCount'
 				},
 				{
@@ -99,34 +130,120 @@
 				}
 				]
 			})
-		
+
 		});
 		
-			    
+			
+		
+		$.ajax({
+			url : "/mslistAjax",
+			method : "GET",
+			dataType : "json",
+			success : function(result) {
+				modalgrid.resetData(result);
+			}
+
+		});
+
+		var modalgrid = new tui.Grid({
+			el : document.getElementById('grid1'),
+			scollX : false,
+			scollY : false,	
+			columns : [ {
+				header : '자재lot번호',
+				name : 'mrLotNumber',
+				
+			}, {
+				header : '품목코드',
+				name : 'itemCode'
+			}, {
+				header : '검사코드',
+				name : 'testCode'
+			}, {
+				header : '입고 날짜',
+				name : 'storeDate'
+			}, {
+				header : '입고 수량',
+				name : 'inventory'
+			},
+			{
+				header : '사원 번호',
+				name : 'empNo'
+			},
+			{
+				header : '생산실적코드',
+				name : 'performanceId'
+			}
+			
+			]
+		})
+
+		
+		$('#searchBtn').on('click',function(){
+			  
+			  const result= $("#searchcode").val();
+			  $('#searchcode').val('');
+				
+			  $.ajax({
+					url:"/searchListAjax",
+					method:"GET",
+					data:{'result':result},
+					dataType:"json",
+				
+				success : function(result) {
+					modalgrid.resetData(result);
+					modalgrid.refreshLayout();
+					console.log(result);
+				}
+				
+					
+		     });
+			  
+			 $('#closeBtn').on('click',function(){
+				 $.ajax({
+						url : "/mslistAjax",
+						method : "GET",
+						dataType : "json",
+						success : function(result) {
+							modalgrid.resetData(result);
+						}
+
+					});
+				})
+ 
+			 }) 		
+		
+			
+			
+		
+		
+		$(function(){
+	    	$('#store').on('shown.bs.modal', function(){
+	    		modalgrid.refreshLayout();
+	    	})
+	    })
+	   
+
+		   
+	       
+             
+		
+		
 	    
-	 
+		
 	</script>
 
-	
-	
 
 
 
 
 
-</th:block>
+
+
+	</th:block>
 
 
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
 

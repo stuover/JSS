@@ -19,10 +19,13 @@ public class SaleController {
 		return "sale/OrderReceipt";
 	}
 	
-	//등록처리
+	//등록처리(주문)
 	@RequestMapping(value="/sale/insertorder", method=RequestMethod.POST)
 	public String ordRegister(OrderVO order) {
-		saleService.orderReceipt(order);
+		saleService.orderInsert(order);
+		saleService.orddetailInsert(order);
 		return "sale/OrderReceipt";
 	}
+	
+	
 }

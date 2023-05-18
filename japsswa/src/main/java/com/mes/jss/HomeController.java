@@ -41,22 +41,14 @@ public class HomeController {
 		return "home";
 	}
 	
-	@GetMapping("/index")
-	public String hom() {
-		
-		return "layout/index";
-	}
-
-	
+	//로그인 페이지
 	@GetMapping("/login")
 	public String login() {
-		
-		return "login";
+		return "/login";
 	}
-	
+
 	@GetMapping("/top")
 	public String top() {
-		
 		return "top";
 	}
 	
@@ -64,14 +56,14 @@ public class HomeController {
 	@GetMapping("/user/user")
 	public String user(/* @AuthenticationPrincipal Principal uservo, */ HttpSession session) {
 		
-		String sessionLoginId = (String) session.getAttribute("loingId");
+		String sessionLoginId = (String) session.getAttribute("empNo");
 		System.out.println(sessionLoginId);
 		
 		UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();		
 		System.out.println(userDetails.getUsername());
 		
 //		System.out.println(uservo.getName());		// userId
-		return "user/user";
+		return "/top";
 	}
 	
 	@GetMapping("/admin/admin")

@@ -7,10 +7,19 @@
   		<select id="getList" resultType="MrVO">
   		
   		select * from material
+  		
   		</select>  
   		
+  		<select id="codeList" resultType="MrVO">
   		
-	
+  		select * from material where test_code = #{keyword}
+  		
+  		</select>
+		
+		<select id="mrCountList" resultType="MrVO">
+		
+		select i.item_name,i.item_type from material m join itemlist i on(m.item_code = i.item_code) where i.item_name = #{keyword}
+		</select>
 	
   	
   </mapper>

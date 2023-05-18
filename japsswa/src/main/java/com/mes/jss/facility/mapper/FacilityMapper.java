@@ -7,9 +7,10 @@ import com.mes.jss.facility.domain.FacilityVO;
 
 public interface FacilityMapper {
 
-	List<FacilityVO> getList();	// 전체 설비 리스트
-	FacilityVO getFacility(FacilityVO vo);
+	public List<FacilityVO> getList();	// 전체 설비 리스트
+	public FacilityVO getFacility(FacilityVO vo);
 	
-	List<DowntimeVO> getdownList();	// 비가동 리스트
-	
+	public List<DowntimeVO> getdownList();	// 비가동 리스트
+	public int insertDownFac(DowntimeVO vo);
+		
 }

@@ -5,7 +5,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class QualityVO {
+public class QualityVO {	// 품질 VO
 	private String testCode;
 	private String itemCode;
 	private String mrOrderDetail;

@@ -19,4 +19,6 @@
 		from facility f right outer join downtime d 
 		on f.fac_code = d.fac_code
   	</select>
+  	
+  	
   </mapper>

@@ -4,6 +4,8 @@ import com.mes.jss.sale.domain.OrderVO;
 
 public interface SaleService {
 	
-	public void orderReceipt(OrderVO order);
+	public boolean orderInsert(OrderVO order);
+	
+	public boolean orddetailInsert(OrderVO order);
 	
 }

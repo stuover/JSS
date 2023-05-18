@@ -18,4 +18,10 @@ public interface EmployeesMapper {
 
 	public EmpVO selectEmp(EmpVO vo);
 
+	public boolean updateEmp(EmpVO vo);
+
+	public boolean deleteEmp(EmpVO vo);
+
+	public EmpVO getUser(EmpVO vo);
+
 }

@@ -33,12 +33,11 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests((requests) -> 
 
-			requests.antMatchers("/top", "/login", "/logout","/index","/**").permitAll()
-
-						.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+			requests.antMatchers("/top", "/login", "/logout","/employeeAjax").permitAll()
+						.antMatchers("/**").hasAuthority("ROLE_ADMIN")
 						.anyRequest().authenticated())
 			     .formLogin(login-> login.loginPage("/login")
-			    		 							.usernameParameter("userid")
+			    		 							.usernameParameter("empNo")
 			    		 							.successHandler(successHandler()))			     									
 			     .logout(logout-> logout.logoutUrl("/logout").logoutSuccessUrl("/top"))
 				 // .csrf().disable()
@@ -50,6 +49,6 @@ public class SecurityConfig {
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 	
-		return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/css/**");
+		return (web) -> web.ignoring().antMatchers("/static/**","/fonts/**","/partials/**","/scss/**","/vendors/**", "/images/**", "/js/**", "/css/**");
 	}
 }

@@ -23,6 +23,8 @@ public class QualityController {
 	QualityService qualityService;
 	
 	
+	// 품질 검사 페이지
+	
 	@GetMapping("/mrlist")
 	public String mrList(Model model, QualityVO vo) {
 	
@@ -30,6 +32,8 @@ public class QualityController {
 		return "/material/materialStore";
 						
 	}
+	
+	// 품질 검사 아작스
 	
 	@ResponseBody
 	@GetMapping("/mrlistAjax")
