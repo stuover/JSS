@@ -7,7 +7,7 @@
   
   	<!-- 생산계획관리 페이지에서 제품별 주문수량 정보 리스트 -->
   	<select id="planOrderInfo" resultType="PlanVO">
-		SELECT d.item_code, item_name, SUM(ord_count)
+		SELECT d.item_code, item_name, SUM(ord_count) as ordSum
 		from orddetail d join itemlist i on(d.item_code = i.item_code)
 		GROUP BY d.item_code, item_name, ord_count
 		ORDER BY 1
@@ -19,13 +19,30 @@
 					ON(p.emp_no = e.emp_no)  		
   	</select>
 
-	<select id="pdetailSearchResult" parameterType="PlanVO" resultType="PlanVO">
-		SELECT  item_name, SUM(ord_count), plan_amount ,plan_start, plan_end, plan_priority 
-		FROM orddetail d LEFT JOIN itemlist i ON(d.item_code = i.item_code)
-		                        LEFT JOIN plan_detail p ON(d.item_code = p.item_code)
-		WHERE plan_id=#{planId}
-		GROUP BY item_name, ord_count, plan_amount ,plan_start, plan_end, plan_priority
-		ORDER BY 1	
+
+	<select id="planSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">
+	   
+	   {call PLAN_INSERT(        
+	           #{planName, mode=IN,  jdbcType=VARCHAR},
+	           #{planDate, mode=IN,  jdbcType=VARCHAR},
+	           #{empNo, mode=IN,  jdbcType=VARCHAR},
+	           #{planCode, mode=INOUT,  jdbcType=VARCHAR, javaType=String}
+	         )
+	   }
+	   
+	</select> 
+
+	<select id="commonSearchResult" resultType="PlanVO">
+		select plan_name, plan_date, emp_name
+		from plan p join emp e on(p.emp_no =  e.emp_no)
+		where plan_id = #{planId}
 	</select>
+	
+	<select id="detailSearchResult" resultType="PlanVO">
+		select  item_name, plan_amount, plan_start, plan_end, plan_priority
+		from plan_detail d join itemlist i on (d.item_code = i.item_code)
+		where plan_id = #{planId}
+	</select>
+
   	
   </mapper>

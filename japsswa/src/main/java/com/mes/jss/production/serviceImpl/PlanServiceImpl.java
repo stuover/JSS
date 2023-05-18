@@ -31,12 +31,28 @@ public class PlanServiceImpl implements PlanService {
 		return list;
 	}
 
+
+
 	@Override
-	public List<PlanVO> pdetailSearchResult(String id) {
-		List<PlanVO> list = new ArrayList<>();
-		list = planMapper.pdetailSearchResult(id);
+	public PlanVO planSave(PlanVO vo) {
 		
+		return planMapper.planSave(vo);
+	}
+
+	@Override
+	public PlanVO commonSearchResult(PlanVO vo) {
+		PlanVO result = new PlanVO();
+		result = planMapper.commonSearchResult(vo);
+		return result;
+	}
+
+	@Override
+	public List<PlanVO> detailSearchResult(PlanVO vo) {
+		List<PlanVO> list = new ArrayList<>();
+		list = planMapper.detailSearchResult(vo);
 		return list;
 	}
+
+
 
 }

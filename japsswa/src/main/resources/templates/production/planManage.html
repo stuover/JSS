@@ -18,7 +18,6 @@
 
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-
 	
  		<div class="container-fluid page-body-wrapper">
 
@@ -44,7 +43,8 @@
                   </div>
                   
                   <div id="grid"></div>
-				                  
+                  
+				            
                 </div>
               
               </div>
@@ -52,7 +52,7 @@
 
   		</div>
   		
-  		
+		
   		
 	    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	        <div class="modal-dialog modal-dialog-centered">
@@ -73,6 +73,8 @@
   		
   		
   		
+  		
+  		
   		<script>
   		const Grid = tui.Grid;
 		
@@ -86,7 +88,7 @@
 		      columns: [
 		        {
   		      header: '계획명',
-  		      name: 'planAmount',
+  		      name: 'planName',
   		      editor: 'text'
   		     },
     		    {
@@ -129,14 +131,10 @@
   		          name: 'itemName'
   		        },
   		        {
-  		          header: '주문수량',
-  		          name: 'ordCount'
+  		          header: '계획 수량',
+  		          name: 'planAmount',
+      		      editor: 'text'
   		        },
-  		        {
-    		      header: '계획수량',
-    		      name: 'planAmount',
-    		      editor: 'text'
-    		     },
       		     {
         		  header: '계획시작날짜',
         		  name: 'planStart',
@@ -169,12 +167,14 @@
   		  
   		    
   		  window.onload = function(){
+
 	  		    $.ajax({
-	  		        url : "/planManageAjax",
+	  		        url : "/orderInfoAjax",
 	  		        method :"GET",
 	  		        dataType : "JSON",
 	  		        success : function(result){
 	  		            grid.resetData(result);
+	  		            console.log(result);
 	  		        } 
 	  		    });
 	  		    
@@ -184,45 +184,46 @@
 	  			})
   		  };
   		  
- 		 let modalGridData = [];
-  		 
-  		 const modalGrid = new Grid({
-  		      el: document.getElementById('modalGrid'),
-  		      data: modalGridData,
-  		      rowHeaders: ['checkbox'],
-  		      scrollX: false,
-  		      scrollY: false,
-  		    pageOptions: { 
-  		    	useClient: true,
-  		    	perPage: 5 
-  		    	},
-  		      columns: [
-  		        {
-  		          header: '생산계획코드',
-  		          name: 'planId'
-  		        },
-  		        {
-  		          header: '계획명',
-  		          name: 'planName'
-  		        },
-  		        {
-  		          header: '담당자',
-  		          name: 'empName'
-  		        }     
-  		      ]
-  		    });
+          let modalGridData = [];
+          
+          const modalGrid = new Grid({
+               el: document.getElementById('modalGrid'),
+               data: modalGridData,
+               rowHeaders: ['checkbox'],
+               scrollX: false,
+               scrollY: false,
+             pageOptions: { 
+                useClient: true,
+                perPage: 5 
+                },
+               columns: [
+                 {
+                   header: '생산계획코드',
+                   name: 'planId'
+                 },
+                 {
+                   header: '계획명',
+                   name: 'planName'
+                 },
+                 {
+                   header: '담당자',
+                   name: 'empName'
+                 }     
+               ]
+             });
 
-  			modalGrid.on('check', ev => {
-  		      console.log('check!', ev);
-  		    });
+            modalGrid.on('check', ev => {
+               console.log('check!', ev);
+             });
 
-  			modalGrid.on('uncheck', ev => {
-  		      console.log('uncheck!', ev);
-  		    });
+            modalGrid.on('uncheck', ev => {
+               console.log('uncheck!', ev);
+             });
 
-  			modalGrid.on('focusChange', ev => {
-  		      console.log('change focused cell!', ev);
-  		    });
+            modalGrid.on('focusChange', ev => {
+               console.log('change focused cell!', ev);
+             });
+
   			
   		   
   		  
@@ -232,26 +233,62 @@
   												method :"GET",
   												dataType : "JSON",
   												success : function(result){
+  													console.log(result);
   													modalGrid.resetData(result);
   												}
   											});
+  											
   														
   		  									});
-  		
+  		    
+			let planCode = '';
+			$('#modalSelectBtn').click(function () {
+				planCode = modalGrid.getCheckedRows()[0].planId;
+				 console.log(planCode);
+				 
+				 $('#searchModal').modal('hide');
+				 
+				 $('#searchModal').on('hidden.bs.modal', function (e) {
+					 $.ajax({
+							url : "/",
+							data : {planCode : planId},
+							method :"GET",
+							dataType : "JSON",
+							success : function(result){
+								console.log(result);
+								
+							}
+						});
+				 });	
 
+			})
+		
   			
+
   			$('#saveBtn').click(function (){
   											grid2.finishEditing();
   											grid2.getData();
-  											grid.finishEditing();
-  											grid.getCheckedRows();
+  											
+  											
+  											console.log(grid2.getData());
+  											
+  											
+  											$.ajax({
+  												url : "/savePlanAjax",
+  												data : grid2.getData()[0],
+  												method :"GET",
+  												dataType : "JSON",
+  												success : function(result){
+  													console.log(result);
+  													
+  												}
+  											});
+
   			})
+  			
   			
 		
 
-  			
-
-			
 			
   		</script>
     
