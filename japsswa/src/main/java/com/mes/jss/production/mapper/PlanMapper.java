@@ -11,7 +11,10 @@ public interface PlanMapper {
 
 	List<PlanVO> modalPlanList();
 	
+	// 
 	public PlanVO planSave(PlanVO vo);
+	
+	public PlanVO planDetailSave(PlanVO vo);
 	
 	
 	// 생산계획관리 페이지 : 검색해서 찾은 생산 계획 세부

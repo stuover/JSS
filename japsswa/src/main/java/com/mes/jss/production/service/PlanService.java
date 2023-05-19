@@ -11,7 +11,9 @@ public interface PlanService {
 
 	List<PlanVO> modalPlanList();
 	
-	public PlanVO planSave(PlanVO vo); 
+	
+	public void planSave(PlanVO head, List<PlanVO> detail); 
+	
 	
 		
 	// 생산계획관리 페이지 : 검색해서 찾은 생산 계획 세부
