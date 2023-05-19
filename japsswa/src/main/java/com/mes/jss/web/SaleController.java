@@ -1,9 +1,13 @@
 package com.mes.jss.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.sale.domain.OrderVO;
 import com.mes.jss.sale.service.SaleService;
@@ -19,13 +23,25 @@ public class SaleController {
 		return "sale/OrderReceipt";
 	}
 	
-	//등록처리(주문)
-	@RequestMapping(value="/sale/insertorder", method=RequestMethod.POST)
-	public String ordRegister(OrderVO order) {
-		saleService.orderInsert(order);
-		saleService.orddetailInsert(order);
-		return "sale/OrderReceipt";
+	@RequestMapping("/itemNamelist")
+	@ResponseBody
+	public List<OrderVO> itemNamelistAjax(){
+		List<OrderVO> item = new ArrayList<>();
+		item = saleService.itemNamelist();
+		
+		return item;
 	}
 	
+	@RequestMapping("/custList")
+	@ResponseBody
+	public List<OrderVO> custListAjax(@RequestParam String result){
+		List<OrderVO> cust = saleService.custList(result);
+		System.out.println(result);
+		return cust;
+	}
+	
+
+	
+
 	
 }

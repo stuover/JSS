@@ -1,11 +1,15 @@
 package com.mes.jss.sale.mapper;
 
+import java.util.List;
+
 import com.mes.jss.sale.domain.OrderVO;
 
 public interface OrderMapper {
 
-	public int insertOrder(OrderVO order);
+	List<OrderVO> itemNamelist();
 
-	public int insertOrdDetail(OrderVO order);
+	List<OrderVO> custList(String custname);
+
+	
 
 }
