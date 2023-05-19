@@ -96,18 +96,12 @@
 				el : document.getElementById('grid'),
 				scrollX : true,
 				scrollY : true,
-				rowHeaders : [ 'checkbox' ],
+				rowHeaders : [ {type : 'checkbox', header:" "},{type :'rowNum'} ],
 				pageOptions : {
 					useClient : true,
 					perPage : 10
 				},
-				columns : [ {
-					header : 'No.',
-					name : 'rownum',
-					sortingType : 'desc',
-					sortable : true
-				},
-
+				columns : [ 
 				{
 					header : '사원번호',
 					name : 'empNo',
@@ -148,159 +142,95 @@
 				} ]
 			});
 
+			
+			grid.on('check', function (e) {
+                var checkRows = grid.getCheckedRowKeys();
+                checkRows.forEach(function( key, idx){                      
+                   if(key != e.rowKey){
+                      grid.uncheck(key);
+                   }
+                });
+             });
+			
 			$('#addEmpBtn').on('click', function(e) {
 				e.preventDefault();
 				self.location = '/employee/ragister';
 			})
 
-			$('#modifyBtn')
-					.on(
-							'click',
-							function(e) {
-								e.preventDefault();
-								var empNo = null;
-								var checkd = null;
-								$('input:checkbox')
-										.each(
-												function(index) {
+			$('#modifyBtn').on('click',function(e) {
+				e.preventDefault();
+				var empNo = null;
+				var checkd = null;
+				$('input:checkbox').each(function(index) {
 
-													if ($(this).is(":checked") == true) {
-														checkd = $(this)
-																.parent()
-																.parent()
-																.data('row-key');
-														empNo = $(
-																'td[data-row-key='
-																		+ checkd
-																		+ ']')
-																.children(
-																		':eq(2)')
-																.text();
+					if ($(this).is(":checked") == true) {
+						checkd = $(this).parent().parent().data('row-key');
+						empNo = $('td[data-row-key='+ checkd+ ']').children(':eq(2)').text();
+						}
+				})
+				console.log(empNo);
 
-													}
+				$.ajax({
+					url : "/serchEmpAjax",
+					method : "GET",
+					data : {empNo : empNo},
+					dataType : "JSON",
+					success : function(result) {
+						$('.modal-title #selNo').text(result.empNo);
+						$('.modal-title #selName').text(result.empName);
+						
+						if (result.position != null) {
+							$('.modal-body #position').text("현재 직책 : "+ result.position+ '　　　변경할 직책');
+						} else {
+							$('.modal-body #position').text("직책이 없습니다.　　　　변경할 직책");
+						}
 
-												})
-								console.log(empNo);
+						if (result.deptName != null) {
+							$('.modal-body #deptName').text("현재 부서 : "+ result.deptName + '　　변경할 부서');
+						} else {
+							$('.modal-body #deptName').text("직책이 없습니다.　　　　변경할 부서")
+						}
 
-								$.ajax({
-									url : "/serchEmpAjax",
-									method : "GET",
-									data : {
-										empNo : empNo
-									},
-									dateType : "JSON",
-									success : function(result) {
-										$('.modal-title #selNo').text(
-												result.empNo)
-										$('.modal-title #selName').text(
-												result.empName);
-										if (result.position != null) {
-											$('.modal-body #position').text(
-													"현재 직책 : "
-															+ result.position
-															+ '　　　변경할 직책')
-										} else {
-											$('.modal-body #position').text(
-													"직책이 없습니다.　　　　변경할 직책")
-										}
+						$('.modal').modal('show');
 
-										if (result.deptName != null) {
-											$('.modal-body #deptName').text(
-													"현재 부서 : "
-															+ result.deptName
-															+ '　　변경할 부서')
-										} else {
-											$('.modal-body #deptName').text(
-													"직책이 없습니다.　　　　변경할 부서")
-										}
+						}
+				});
 
-										$('.modal').modal('show');
+				$('#finBtn').on('click',function(e) {
+					e.preventDefault();
+					$.ajax({
+						url : "/modifyEmpAjax",
+						method : "get",
+						data : {empNo : $('.modal-title #selNo').text(),
+								position : $('#selPosi').val(),
+								deptName : $('#selDept').val()
+								},
+						dateType : "json",
+						success : function(result) {
+							$('td[data-row-key='+ checkd+ ']').children(':eq(4)').text($('#selPosi').val());
+							$('td[data-row-key='+ checkd+ ']').children(':eq(5)').text($('#selDept').val());
+							$('#searchModal').modal('hide');
+						}
+					});
+							
+				})
 
-									}
-								});
+				$('#delBtn').on('click',function(e) {
+					e.preventDefault();
+					$.ajax({
+						url : "/removeEmpAjax",
+						method : "get",
+						data : {empNo : $('.modal-title #selNo').text()},
+						dateType : "JSON",
+						success : function(result) {
+							grid.removeCheckedRows(false);
+							grid.blur();
+							$('#searchModal').modal('hide');									
+						}												
+					});												
+				})
+			})
 
-								$('#finBtn')
-										.on(
-												'click',
-												function(e) {
-													e.preventDefault();
-													$
-															.ajax({
-																url : "/modifyEmpAjax",
-																method : "get",
-																data : {
-																	empNo : $(
-																			'.modal-title #selNo')
-																			.text(),
-																	position : $(
-																			'#selPosi')
-																			.val(),
-																	deptName : $(
-																			'#selDept')
-																			.val()
-																},
-																dateType : "json",
-																success : function(
-																		result) {
-																	$(
-																			'td[data-row-key='
-																					+ checkd
-																					+ ']')
-																			.children(
-																					':eq(4)')
-																			.text(
-																					$(
-																							'#selPosi')
-																							.val());
-																	$(
-																			'td[data-row-key='
-																					+ checkd
-																					+ ']')
-																			.children(
-																					':eq(5)')
-																			.text(
-																					$(
-																							'#selDept')
-																							.val());
-																	$(
-																			'#searchModal')
-																			.modal(
-																					'hide');
-																}
-															});
-
-												})
-
-								$('#delBtn')
-										.on(
-												'click',
-												function(e) {
-													e.preventDefault();
-													$
-															.ajax({
-																url : "/removeEmpAjax",
-																method : "get",
-																data : {
-																	empNo : $(
-																			'.modal-title #selNo')
-																			.text()
-																},
-																dateType : "JSON",
-																success : function(
-																		result) {
-																	grid
-																			.removeCheckedRows(false);
-																	grid.blur();
-																	$(
-																			'#searchModal')
-																			.modal(
-																					'hide');
-
-																}
-															});
-
-												})
-							})
 		}
 	</script>
 </th:block>
