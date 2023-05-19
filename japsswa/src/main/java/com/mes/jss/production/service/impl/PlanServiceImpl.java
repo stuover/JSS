@@ -16,9 +16,9 @@ public class PlanServiceImpl implements PlanService {
 	@Autowired PlanMapper planMapper;
 	
 	@Override
-	public List<PlanVO> planOrderInfo() {
+	public List<PlanVO> itemListInfo() {
 		List<PlanVO> list = new ArrayList<>();
-		list = planMapper.planOrderInfo();
+		list = planMapper.itemListInfo();
 		
 		return list;
 	}
@@ -39,17 +39,11 @@ public class PlanServiceImpl implements PlanService {
 		return planMapper.planSave(vo);
 	}
 
-	@Override
-	public PlanVO commonSearchResult(PlanVO vo) {
-		PlanVO result = new PlanVO();
-		result = planMapper.commonSearchResult(vo);
-		return result;
-	}
 
 	@Override
-	public List<PlanVO> detailSearchResult(PlanVO vo) {
+	public List<PlanVO> planSearchResult(String id) {
 		List<PlanVO> list = new ArrayList<>();
-		list = planMapper.detailSearchResult(vo);
+		list = planMapper.planSearchResult(id);
 		return list;
 	}
 
