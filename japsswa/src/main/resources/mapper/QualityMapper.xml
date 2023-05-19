@@ -6,7 +6,8 @@
   <mapper namespace="com.mes.jss.quality.mapper.QualityMapper">
   		<select id="getList" resultType="QualityVO">
   		
-  		select * from quality_test
+  		select * from quality_test where note IS NULL
+  		
   		</select>  
   		
   

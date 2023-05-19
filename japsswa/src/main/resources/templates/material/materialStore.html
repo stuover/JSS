@@ -20,17 +20,19 @@
 	<th:block layout:fragment="content">
 		<h3 style="font-weight: bold;">&emsp;자재 입고</h3>
 
-
+		<form action="/test" method="post">
 		<div>
 			<button type="button" id="storeBtn" class="btn btn-success"
 				data-bs-toggle="modal" data-bs-target="#searchModal"
 				style="float: right; height: 30px; width: 50px; padding: 10px; margin-bottom: 10px; margin-right: 20px;">입고</button>
+				<input type="hidden" value="" id="sotre" name="testCode">
 			<button type="button" id="checkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target=".bd-example-modal-lg"
 				data-bs-target="#searchModal"
 				style="float: right; height: 30px; width: 80px; padding: 10px; margin-bottom: 10px; margin-right: 8px;">입고확인</button>
 
 		</div>
+		</form>
 
 
 		<!-- Large modal -->
@@ -77,7 +79,31 @@
 		<script>
 
 		$(document).ready(function() {
+			
+			
+			$('#storeBtn').on('click',function(){
+		    	console.log(grid.getCheckedRows()[0].testCode);
 
+		    	$.ajax({
+		    		url : "/mrStore",
+					method : "GET",
+					data : {testCode : grid.getCheckedRows()[0].testCode},
+					dataType : "json",
+					success : function(result) {
+					}
+		    	})
+				grid.removeCheckedRows(false);
+
+		    	
+		    })
+			
+			
+			
+			
+			
+			
+			
+			
 			$.ajax({
 				url : "/mrlistAjax",
 
@@ -89,11 +115,13 @@
 					
 				}
 
-			})
+			});
+
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
 				scollX : false,
 				scollY : false,
+				
 				rowHeaders: ['checkbox'],
 				
 				columns : [ {
@@ -130,10 +158,13 @@
 				}
 				]
 			})
-
+			
 		});
 		
-			
+
+
+		 
+		
 		
 		$.ajax({
 			url : "/mslistAjax",
@@ -164,7 +195,7 @@
 				name : 'storeDate'
 			}, {
 				header : '입고 수량',
-				name : 'inventory'
+				name : 'mrCount'
 			},
 			{
 				header : '사원 번호',
@@ -177,7 +208,13 @@
 			
 			]
 		})
-
+	
+		
+		
+		
+		
+		
+		
 		
 		$('#searchBtn').on('click',function(){
 			  
@@ -223,6 +260,9 @@
 	    	})
 	    })
 	   
+	   
+	    
+	    
 	</script>
 
 

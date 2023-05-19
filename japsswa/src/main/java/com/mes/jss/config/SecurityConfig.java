@@ -33,7 +33,7 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests((requests) -> 
 
-			requests.antMatchers("/top", "/login", "/logout","/employeeAjax").permitAll()
+			requests.antMatchers("/top", "/login", "/logout","/**").permitAll()
 						.antMatchers("/**").hasAuthority("ROLE_ADMIN")
 						.anyRequest().authenticated())
 			     .formLogin(login-> login.loginPage("/login")

@@ -42,6 +42,12 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.mrCountList(keyword);
 	}
 
+	@Override
+	public MrVO mrIn(String testCode) {
+		
+		return materialMapper.StoreIn(testCode);
+	}
+
 	
 
 }

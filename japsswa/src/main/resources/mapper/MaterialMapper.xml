@@ -18,8 +18,19 @@
 		
 		<select id="mrCountList" resultType="MrVO">
 		
-		select i.item_name,i.item_type from material m join itemlist i on(m.item_code = i.item_code) where i.item_name = #{keyword}
+			select i.item_name,i.item_type,
+			(select sum(store_count) from material m join itemlist i on(m.item_code = i.item_code)
+			 where i.item_name = #{keyword}) total
+           	from material m join itemlist i on(m.item_code = i.item_code) where i.item_name = #{keyword} 
 		</select>
-	
+		
+		<select id="StoreIn" statementType="CALLABLE">
+			{call MR_INSERT(
+				#{testCode, mode=IN, jdbcType=VARCHAR}
+			
+			)
+		}
+				
+		</select>	
   	
   </mapper>
