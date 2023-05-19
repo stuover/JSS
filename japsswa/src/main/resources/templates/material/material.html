@@ -20,17 +20,80 @@
 <body>
 
 <th:block layout:fragment="content">
-	<h3>자재 조회</h3>
-	 
-	<p>자재 재고 검색 : <input type=text id="mrName"> <button id="search">검색</button></p>
 	
+ 		<div class="container-fluid page-body-wrapper">
 
-	<div id="grid" style="margin-top: 50px;"></div>
-	<div id="grid1" style="margin-top: 270px;"></div>
-	
-	 
-   
-	
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  
+					<h3 style="font-weight:bold;">&ensp;자재 조회</h3>
+						
+						<div class="btn-group">
+						   <!-- Button trigger modal -->
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+						  버튼
+						</button>
+						</div>
+						 
+						<h5 style="font-weight:bold; margin-top:20px;">&ensp;자재 재고 검색 &emsp;:&emsp; <input type=text id="mrName"> <button type="button" class="btn btn-dark" id="searchBtn"
+													style="padding: 8px; margin-left: 15px;">검색</button></h5>
+						
+						<div id="searchGrid">
+							<div id="grid3"></div>
+						</div>
+						<div id="hide">
+							<div id="grid" style="margin-top: 20px;"></div>
+						</div>
+						<div id="grid1" style="margin-top: 270px;"></div>
+						
+					
+					<!-- Modal -->
+					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					      </div>
+					      <div class="modal-body">
+					        ...
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					        <button type="button" class="btn btn-primary">Save changes</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>             
+				            
+                </div>
+              
+              </div>
+            </div>
+
+  		</div>
+  		
+		
+  		
+	    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">생산계획 조회</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	            <div id="modalGrid"></div>
+	            </div>
+	            <div class="modal-footer">
+	            <button id="modalSelectBtn" type="button" class="btn btn-primary">선택</button>
+	            </div>
+	        </div>
+	        </div>
+	    </div>
 
 	<script>
 	
@@ -41,7 +104,7 @@
 	
 	
 		$(document).ready(function() {
-
+			$('#searchGrid').css('display', 'none');
 			$.ajax({
 				url : "/mslistAjax",
 
@@ -76,7 +139,7 @@
 					name : 'storeDate'
 				}, {
 					header : '입고 수량',
-					name : 'inventory'
+					name : 'storeCount'
 				},
 				{
 					header : '사원 번호',
@@ -93,20 +156,48 @@
 		});
 		
 		
-		$('#search').on('click',function(){
+		var grid3 = new tui.Grid({
+			el : document.getElementById('grid3'),
+			scollX : false,
+			scollY : false,
+			
+			
+			columns : [ {
+				header : '자재명',
+				name : 'itemName',
+				
+			}, {
+				header : '구분',
+				name : 'itemType'
+			}, {
+				header : '재고량',
+				name : 'total'
+			}
+			
+			]
+		})
+	
+	
+		
+		
+		
+		
+		$('#searchBtn').on('click',function(){
 			  
-			  const result= $("#mrName").val();
+			$('#hide').css('display', 'none');
+			$('#searchGrid').css('display', 'block');
+				
+			  const result1= $("#mrName").val();
 			  $('#mrName').val('');
 				
 			  $.ajax({
 					url:"/mrCountAjax",
 					method:"GET",
-					data:{'result':result},
+					data:{'result':result1},
 					dataType:"json",
-				
 				success : function(result) {
-					grid.resetData(result);
-					grid.refreshLayout();
+					grid3.resetData(result);
+					grid3.refreshLayout();
 					
 				}
 				

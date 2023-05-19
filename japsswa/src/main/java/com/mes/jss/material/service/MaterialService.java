@@ -18,5 +18,8 @@ public interface MaterialService {
 	// 자재 검색
 	public List<MrVO> mrCount(String keyword);
 	
+	// 입고 처리
+	public MrVO mrIn(String testCode);
+	
 	
 }

@@ -28,7 +28,7 @@ public class MaterialReceive {
 	
 	
 	
-	@GetMapping("/mslist")     // 자재 조회 페이지
+	@GetMapping("/mslist")     //  자재 조회 페이지
 	public String mrList(Model model, MrVO vo) {
 	
 		
@@ -62,14 +62,30 @@ public class MaterialReceive {
 	@ResponseBody
 	@RequestMapping("/mrCountAjax")     // 자재 재고 검색
 	public List<MrVO> mrCountSearch(@RequestParam String result){
-		
+		System.out.println("조회 조건 : "+result);
 		List<MrVO> list = materialService.mrCount(result);
+		System.out.println("조회결과 : "+list);
 		
 		return list;
 		
 		
 	}
 	
+	@ResponseBody
+	@RequestMapping("/mrStore")     // 자재 입고 처리
+	public MrVO mrStore(@RequestParam String testCode){
+		
+		System.out.println(testCode);
+		
+		MrVO result = materialService.mrIn(testCode);
+		return result;
+		
+		
+		
+		
+		
+		
+	}
 	
 	
 	

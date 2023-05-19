@@ -19,4 +19,7 @@ public interface MaterialMapper {
 	// 자재명 검색
 	public List<MrVO> mrCountList(String keyword);
 	
+	// 입고 처리
+	public MrVO StoreIn(String testCode);
+	
 }
