@@ -6,15 +6,15 @@
   <mapper namespace="com.mes.jss.production.mapper.PlanMapper">
   
   	<!-- 생산계획관리 페이지에서 제품별 주문수량 정보 리스트 -->
-  	<select id="planOrderInfo" resultType="PlanVO">
-		SELECT d.item_code, item_name, SUM(ord_count) as ordSum
-		from orddetail d join itemlist i on(d.item_code = i.item_code)
-		GROUP BY d.item_code, item_name, ord_count
-		ORDER BY 1
+  	<select id="itemListInfo" resultType="PlanVO">
+		SELECT item_name
+		FROM itemlist
+		WHERE item_type = '완제품'
+		ORDER BY item_code
   	</select>
   	
   	<select id="modalPlanList" resultType="PlanVO">
-		SELECT plan_id, plan_name, e.emp_name
+		SELECT plan_id, plan_name, plan_date, e.emp_name
 		FROM plan p JOIN emp e 
 					ON(p.emp_no = e.emp_no)  		
   	</select>
@@ -32,13 +32,8 @@
 	   
 	</select> 
 
-	<select id="commonSearchResult" resultType="PlanVO">
-		select plan_name, plan_date, emp_name
-		from plan p join emp e on(p.emp_no =  e.emp_no)
-		where plan_id = #{planId}
-	</select>
 	
-	<select id="detailSearchResult" resultType="PlanVO">
+	<select id="planSearchResult" resultType="PlanVO">
 		select  item_name, plan_amount, plan_start, plan_end, plan_priority
 		from plan_detail d join itemlist i on (d.item_code = i.item_code)
 		where plan_id = #{planId}
