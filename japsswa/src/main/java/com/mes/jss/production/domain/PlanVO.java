@@ -12,7 +12,7 @@ public class PlanVO {
 	String planId;
 	String pdetailId;
 	String planName;
-	int empNo;
+	long empNo;
 	String itemCode; 
 	int planAmount; 
 	int planPriority; 

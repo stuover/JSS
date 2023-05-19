@@ -5,6 +5,11 @@
       layout:decorate="~{/layout/index}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
 <th:block layout:fragment="content">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -26,6 +31,7 @@
                 <div class="card-body">
                   <h4 class="page-title">생산 계획 관리</h4>
                   
+                  <input id="afterSearch" type="text" name="selectResult" value="insert">
 
                   <div class="btn-group">
                   	<div>
@@ -73,6 +79,10 @@
   		
 
   		<script>
+  		const token = $("meta[name='_csrf']").attr("content")
+  		const header = $("meta[name='_csrf_header']").attr("content");
+  		
+  		
   		const Grid = tui.Grid;
 		
   		let gridData2 = [{}];
@@ -91,12 +101,19 @@
     		    {
     		     header: '계획날짜',
     		     name: 'planDate',
-    		     editor: {
-    		         type: 'datePicker',
-    		         options: {
-    		           format: 'yyyy-MM-dd'
-    		         }
-    		       }
+    		     formatter: function (e) {
+    		    	 
+    		    	 let result = e.value;
+    		    	 if(result == null) {
+    		    		 result = e.value
+    		    		 return;
+    		    	 }else {
+    		    		 result = e.value.substr(0,10)
+ 		        		return result;
+    		    	 }
+                 	},
+    		     editor:  'datePicker'
+  	             
     		    }, 		    
     		    {
     		     header: '담당자',
@@ -134,28 +151,40 @@
   		        },
   		        {
   		          header: '계획 수량',
-  		          name: 'planAmount',
+  		          name: 'planAmount',   
       		      editor: 'text'
   		        },
       		     {
         		  header: '계획시작날짜',
         		  name: 'planStart',
-        		  editor: {
-        		      type: 'datePicker',
-        		      options: {
-        		        format: 'yyyy-MM-dd'
-        		      }
-        		    }
+      		      formatter: function (e) {
+        		    	 
+    		    	  let result = e.value;
+    		    	  if(result == null) {
+    		    		  result = e.value
+    		    		  return;
+    		    	  }else {
+    		    		  result = e.value.substr(0,10)
+ 		        		  return result;
+						  }
+                  },      		  
+        		  editor: 'datePicker'
         		 },
         		 {
            		  header: '계획완료날짜',
            		  name: 'planEnd',
-           		editor: {
-           	      type: 'datePicker',
-           	      options: {
-           	        format: 'yyyy-MM-dd'
-           	      }
-           	    }
+      		      formatter: function (e) {
+        		    	 
+    		    	  let result = e.value;
+    		    	  if(result == null) {
+    		    		  result = e.value
+    		    		  return;
+    		    	  }else {
+    		    		  result = e.value.substr(0,10)
+ 		        		  return result;
+						  }
+                  },  
+           		  editor:  'datePicker'
            		 },    		        
       		     {
       		      header: '작업우선순위',
@@ -220,7 +249,11 @@
                  },
                  {
                    header: '계획날짜',
-                   name: 'planDate'
+                   name: 'planDate',
+   		           formatter: function (e) {
+ 		        	  return e.value.substr(0,10)
+                   }
+                   
                  },              
                  {
                    header: '담당자',
@@ -289,6 +322,8 @@
 								
 							}
 						});
+					 $('#afterSearch').attr('value', 'modify');
+					 
 				 });	
 
 				 }
@@ -302,21 +337,35 @@
   											grid2.finishEditing();
   											grid2.getData();
   											
+  											grid.finishEditing();
+  											grid.getCheckedRows();
+  											
   											
   											console.log(grid2.getData());
+  											console.log(grid.getData());
   											
-  											
-  											$.ajax({
-  												url : "/savePlanAjax",
-  												data : grid2.getData()[0],
-  												method :"GET",
-  												dataType : "JSON",
-  												success : function(result){
-  													console.log(result);
-  													
-  												}
-  											});
-  											
+  											if( $('#afterSearch').val() == 'insert' ) {
+  												console.log('등록처리 해야 함.');
+	  											$.ajax({
+	  												url : "/savePlanAjax",
+	  												contentType : "application/json", 
+	  												data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
+	  												method :"POST",
+	  												dataType : "JSON",
+	  												beforeSend: function(xhr){
+	  													xhr.setRequestHeader(header, token);
+	  												},
+	  												success : function(result){
+	  													console.log(result);
+	  													alert('등록완료!');
+	  													
+	  												}
+	  											});
+	  											
+  											} else {
+  												console.log('수정처리 해야 함.');
+  											}
+		
 
   			})
   			

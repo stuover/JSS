@@ -1,21 +1,20 @@
 package com.mes.jss.web;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.mes.jss.production.domain.PlanDatasVO;
 import com.mes.jss.production.domain.PlanVO;
-import com.mes.jss.production.mapper.PlanMapper;
 import com.mes.jss.production.service.PlanService;
 import com.mes.jss.production.service.impl.PlanServiceImpl;
 
@@ -58,13 +57,14 @@ public class ProductionController {
 	
 	@RequestMapping("/savePlanAjax")
 	@ResponseBody	
-	public ResponseEntity<HttpStatus> savePlanAjax(PlanVO vo){
-		System.out.println("------------------------------------------------------------");
-		System.out.println(vo);
-		System.out.println("------------------------------------------------------------");
-		planService.planSave(vo);
+	public PlanVO savePlanAjax(@RequestBody PlanDatasVO data, Principal principal){
+		System.out.println(data);
+		PlanVO head =  data.getHead();
+		head.setEmpNo(Long.parseLong(principal.getName()));
 		
-		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+		List<PlanVO> list = data.getDetailList();
+		planService.planSave(head, list);		
+		return head;
 	}
 	
 	

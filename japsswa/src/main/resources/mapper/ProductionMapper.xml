@@ -39,5 +39,21 @@
 		where plan_id = #{planId}
 	</select>
 
+
+
+	<select id="planDetailSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">
+	   
+	   {call PDETAIL_INSERT(        
+	           #{itemName, mode=IN,  jdbcType=VARCHAR},
+	           #{planAmount, mode=IN,  jdbcType=VARCHAR},
+	           #{planEnd, mode=IN,  jdbcType=VARCHAR},
+	           #{planStart, mode=IN,  jdbcType=VARCHAR},
+	           #{planPriority, mode=IN,  jdbcType=VARCHAR},	           	           
+	           #{planCode, mode=IN,  jdbcType=VARCHAR}
+	         )
+	   }
+	   
+	</select> 
+
   	
   </mapper>

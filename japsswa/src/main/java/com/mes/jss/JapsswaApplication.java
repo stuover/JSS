@@ -14,10 +14,7 @@ public class JapsswaApplication {
 		SpringApplication.run(JapsswaApplication.class, args);
 	}
 	
-	@Bean
-	MappingJackson2JsonView jsonView() {
-		return new MappingJackson2JsonView(); 
-	}
+
 
 }
  
