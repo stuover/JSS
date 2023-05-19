@@ -11,6 +11,6 @@ public interface FacilityMapper {
 	public FacilityVO getFacility(FacilityVO vo);
 	
 	public List<DowntimeVO> getdownList();	// 비가동 리스트 조회
-	public int insertDownFac(DowntimeVO vo);		// 비가동 리스트 추가
+	public int insertDownList(DowntimeVO vo);		// 비가동 리스트 추가
 		
 }

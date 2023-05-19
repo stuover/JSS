@@ -20,9 +20,9 @@
 		on f.fac_code = d.fac_code
   	</select>
   	
-  	<insert id="insertDownFac" parameterType="DowntimeVO">
+  	<insert id="insertDownList" parameterType="DowntimeVO">
   		insert into downtime(down_code, stop_date, down_reason, down_manager, remark, fac_code)
-	values (downtime_seq.nextval, sysdate , ${downReason} , ${downManager} , ${remark} , ${facCode})
+		values (downtime_seq.nextval, to_date(sysdate,'yyyy/MM/dd') , #{downReason} , #{downManager} , #{remark} , #{facCode})
   	</insert>
   	
   	

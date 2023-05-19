@@ -13,7 +13,9 @@ public interface FacilityService {
 	
 	public DowntimeVO getDowntime(DowntimeVO vo);
 	public List<DowntimeVO> getDownList();		// 비가동 리스트 조회
-	public boolean registerDown(DowntimeVO vo);		// 비가동 리스트 등록
+	
+	public boolean registerDownList(DowntimeVO vo);		// 비가동 리스트 등록
 	
 	public InspectionVO getInspection(InspectionVO vo);
+	public void setDownTime(DowntimeVO vo);
 }
