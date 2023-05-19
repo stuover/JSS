@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.facility.domain.DowntimeVO;
@@ -18,7 +20,7 @@ public class FacilityController {
 	
 	@Autowired FacilityService service = new FacilityServiceimpl();
 
-	@GetMapping("/Facility")
+	@GetMapping("/facility")		
 	public String  getFacility(Model model) {
 		
 		model.addAttribute("facList", service.getList());
@@ -26,7 +28,7 @@ public class FacilityController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/Facilityajax")
+	@GetMapping("/facilityAjax")		// 설비 리스트 조회
 	public List<FacilityVO> facility(){
 		
 		List<FacilityVO> list = service.getList();				
@@ -35,11 +37,23 @@ public class FacilityController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/Downtimeajax")
+	@GetMapping("/downtimeAjax")		// 비가동리스트 조회
 	public List<DowntimeVO> downtime(){
 			
 		List<DowntimeVO> downlist = service.getDownList();
 		return downlist;	
+		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/downListAjax")
+	public String register(DowntimeVO vo, Model model) {
+		
+		System.err.println(vo);
+		
+		service.setDownTime(vo);
+		
+		return "success";
 		
 	}
 	
