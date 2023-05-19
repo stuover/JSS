@@ -1,5 +1,8 @@
 package com.mes.jss.sale.serviceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +16,20 @@ public class SaleServiceImpl implements SaleService {
 	@Autowired OrderMapper orderMapper;
 
 	@Override
-	public boolean orderInsert(OrderVO order) {
+	public List<OrderVO> itemNamelist() {
+		List<OrderVO> list = new ArrayList<>();
+		list = orderMapper.itemNamelist();
 		
-		return orderMapper.insertOrder(order)==1;
+		return list;
 	}
 
 	@Override
-	public boolean orddetailInsert(OrderVO order) {
+	public List<OrderVO> custList(String custname) {
+		List<OrderVO> clist = orderMapper.custList(custname);
 		
-		return orderMapper.insertOrdDetail(order)==1;
+		return clist;
 	}
+
 	
 	
 }

@@ -91,7 +91,12 @@
     		    {
     		     header: '계획날짜',
     		     name: 'planDate',
-    		     editor: 'datePicker'
+    		     editor: {
+    		         type: 'datePicker',
+    		         options: {
+    		           format: 'yyyy-MM-dd'
+    		         }
+    		       }
     		    }, 		    
     		    {
     		     header: '담당자',
@@ -121,7 +126,7 @@
   		      data: gridData,
   		      rowHeaders: ['checkbox'],
   		      scrollX: false,
-  		      scrollY: false,
+  		      scrollY: true,
   		      columns: [
   		        {
   		          header: '제품명',
@@ -135,12 +140,22 @@
       		     {
         		  header: '계획시작날짜',
         		  name: 'planStart',
-        		  editor: 'datePicker'
+        		  editor: {
+        		      type: 'datePicker',
+        		      options: {
+        		        format: 'yyyy-MM-dd'
+        		      }
+        		    }
         		 },
         		 {
            		  header: '계획완료날짜',
            		  name: 'planEnd',
-           		  editor: 'datePicker'
+           		editor: {
+           	      type: 'datePicker',
+           	      options: {
+           	        format: 'yyyy-MM-dd'
+           	      }
+           	    }
            		 },    		        
       		     {
       		      header: '작업우선순위',
@@ -161,12 +176,13 @@
   		    grid.on('focusChange', ev => {
   		      console.log('change focused cell!', ev);
   		    });
+
   		  
   		    
   		  window.onload = function(){
 
 	  		    $.ajax({
-	  		        url : "/orderInfoAjax",
+	  		        url : "/itemListInfoAjax",
 	  		        method :"GET",
 	  		        dataType : "JSON",
 	  		        success : function(result){
@@ -203,6 +219,10 @@
                    name: 'planName'
                  },
                  {
+                   header: '계획날짜',
+                   name: 'planDate'
+                 },              
+                 {
                    header: '담당자',
                    name: 'empName'
                  }     
@@ -238,25 +258,41 @@
   														
   		  									});
   		    
+  		    let planInfo = [];
 			let planCode = '';
 			$('#modalSelectBtn').click(function () {
 				planCode = modalGrid.getCheckedRows()[0].planId;
-				 console.log(planCode);
+				planInfo = [{planName : modalGrid.getCheckedRows()[0].planName , planDate : modalGrid.getCheckedRows()[0].planDate , empName : modalGrid.getCheckedRows()[0].empName}];
+				 console.log('planId = ' + planCode);
+				 console.log(planInfo);
 				 
+				 if(modalGrid.getCheckedRows().length > 1) {
+					 
+					 alert('수정 및 삭제할 생산계획은 하나만 선택가능합니다.');
+					 
+				 } else {
+					 
 				 $('#searchModal').modal('hide');
 				 
 				 $('#searchModal').on('hidden.bs.modal', function (e) {
+					 gridData2= planInfo;
+					 grid2.resetData(planInfo);
+					 
 					 $.ajax({
-							url : "/",
-							data : {planCode : planId},
+							url : "/planSearchResultAjax",
+							data : {planId : planCode},
 							method :"GET",
 							dataType : "JSON",
 							success : function(result){
-								console.log(result);
+								console.log('result : '+ result);
+								grid.resetData(result);
 								
 							}
 						});
 				 });	
+
+				 }
+				 
 
 			})
 		
@@ -280,6 +316,7 @@
   													
   												}
   											});
+  											
 
   			})
   			

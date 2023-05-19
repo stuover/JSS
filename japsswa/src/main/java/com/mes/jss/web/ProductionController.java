@@ -1,6 +1,9 @@
 package com.mes.jss.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +35,11 @@ public class ProductionController {
 		return "production/planManage";
 	}
 
-	@RequestMapping("/orderInfoAjax")
+	@RequestMapping("/itemListInfoAjax")
 	@ResponseBody
-	public List<PlanVO> orderInfoAjax() {
+	public List<PlanVO> itemListInfoAjax() {
 		List<PlanVO> inputData = new ArrayList<>();
-		inputData = planService.planOrderInfo();
+		inputData = planService.itemListInfo();
 		log.info("inputData" + inputData);
 	
 		
@@ -63,6 +66,17 @@ public class ProductionController {
 		
 		return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 	}
+	
+	
+	@RequestMapping("/planSearchResultAjax")
+	@ResponseBody
+	public List<PlanVO> planSearchResultAjax(String planId) {
+		List<PlanVO> inputData = new ArrayList<>();
+		inputData = planService.planSearchResult(planId);
+	
+		return inputData;
+	}
+	
 	
 	
 }

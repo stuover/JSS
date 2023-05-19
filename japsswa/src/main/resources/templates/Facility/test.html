@@ -1,0 +1,26 @@
+$('#insertBtn').on('click', function(){
+                	 
+                	stopData =modalgrid.getData();
+                	 console.log(stopData);
+                	downgrid.appendRow(stopData);
+                	/*.ajax({
+                		url:"/insertajax",
+                		method:"get",
+                		data:{
+                			facCode: ,
+                			downReason:
+                			downDate:
+                			downManager:
+                		}
+                	})*/
+                 })
+                 
+                 
+                 
+                 $.ajax({
+                		 url:"/facStatusAjax",
+                		 method: "get",
+                		 dataType:"json",
+                		 contentType:"appicaation/json",
+                		 data:
+                	 })

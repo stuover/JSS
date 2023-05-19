@@ -2,41 +2,21 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+
 <mapper namespace="com.mes.jss.sale.mapper.OrderMapper">
 
-	<select id="insertOrder" parameterType="OrderVO" resultType="OrderVO" statementType="CALLABLE">
-        { 
-            CALL insert_order(
-                #{ordId, mode=INOUT, jdbcType=VARCHAR},
-                #{customerName, mode=INOUT, jdbcType=VARCHAR},
-                #{custAddr, mode=INOUT, jdbcType=VARCHAR},
-                #{custTel, mode=INOUT, jdbcType=VARCHAR},
-                #{custMail, mode=INOUT, jdbcType=VARCHAR},
-                #{ordName, mode=INOUT, jdbcType=VARCHAR},
-                #{ordDate, mode=INOUT, jdbcType=VARCHAR}, 
-                #{totalPrice, mode=INOUT, jdbcType=VARCHAR},
-                #{empName, mode=INOUT, jdbcType=VARCHAR},
-                #{customerId, mode=INOUT, jdbcType=VARCHAR},
-                #{empNo, mode=INOUT, jdbcType=VARCHAR}
-                
-            )
-        }
-    </select>
-    
-    <select id="insertOrdDetail" parameterType="OrderVO" resultType="OrderVO" statementType="CALLABLE">
-        { 
-            CALL insert_orddetail(
-                #{ordDetailId, mode=INOUT, jdbcType=VARCHAR},
-				#{itemName, mode=INOUT, jdbcType=VARCHAR},
-				#{itemCode, mode=INOUT, jdbcType=VARCHAR},
-				#{unitPrice, mode=INOUT, jdbcType=VARCHAR},
-				#{eachPrice, mode=INOUT, jdbcType=VARCHAR},
-				#{outDate, mode=INOUT, jdbcType=VARCHAR},
-				#{ordCount, mode=INOUT, jdbcType=VARCHAR}
-                
-            )
-        }
-    </select>
+	<select id="itemNamelist" resultType="OrderVO">
+		select item_name
+		from
+		itemlist
+		where item_type = '완제품'
+	</select>
+
+	<select id="custList" parameterType="OrderVO" resultType="OrderVO">
+		select customer_name, cust_tel, cust_addr, cust_mail
+		from customer
+		where customer_name = #{custname}
+	</select>
+
 
 </mapper>

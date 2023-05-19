@@ -15,10 +15,15 @@
   	</select>
   	
   	<select id="getdownList" resultType="DowntimeVO">
-  		select f.fac_name, f.fac_code, f.fac_status, d.down_code, d.down_reason, stop_date, d.down_manager
+  		select f.fac_name, f.fac_code, f.fac_status, d.down_code, d.down_reason, d.stop_date, d.down_manager
 		from facility f right outer join downtime d 
 		on f.fac_code = d.fac_code
   	</select>
+  	
+  	<insert id="insertDownList" parameterType="DowntimeVO">
+  		insert into downtime(down_code, stop_date, down_reason, down_manager, remark, fac_code)
+		values (downtime_seq.nextval, to_date(sysdate,'yyyy/MM/dd') , #{downReason} , #{downManager} , #{remark} , #{facCode})
+  	</insert>
   	
   	
   </mapper>

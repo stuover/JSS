@@ -45,8 +45,15 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public boolean registerDown(DowntimeVO vo) {
-		return facilityMapper.insertDownFac(vo) > 0;
+	public boolean registerDownList(DowntimeVO vo) {
+		
+		return facilityMapper.insertDownList(vo) > 0;
+	}
+
+	@Override
+	public void setDownTime(DowntimeVO vo) {
+		facilityMapper.insertDownList(vo);
+		
 	}	
 	
 }
