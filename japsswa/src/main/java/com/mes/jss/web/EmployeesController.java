@@ -22,7 +22,7 @@ import com.mes.jss.basic.service.impl.EmployeesServiceImpl;
 public class EmployeesController {
 
 	@Autowired
-	EmployeesService service = new EmployeesServiceImpl();
+	EmployeesService empService = new EmployeesServiceImpl();
 
 	@RequestMapping("/employee")
 	public String testgrid(Model model) {
@@ -34,7 +34,7 @@ public class EmployeesController {
 	@ResponseBody
 	@GetMapping("/employeeAjax")
 	public List<EmpVO> employees(Model model) {
-		List<EmpVO> list = service.getEmpList();
+		List<EmpVO> list = empService.getEmpList();
 
 		return list;
 	}
@@ -51,7 +51,7 @@ public class EmployeesController {
 	public String register(Model model, EmpVO vo) {
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		vo.setPassword(scpwd.encode(vo.getPassword()));
-		service.ragisterEmp(vo);
+		empService.ragisterEmp(vo);
 
 		return "basic/employee";
 	}
@@ -72,7 +72,7 @@ public class EmployeesController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String empNo = strNewDtFormat + service.getNextSeq();
+		String empNo = strNewDtFormat + empService.getNextSeq();
 
 		return empNo;
 	}
@@ -83,8 +83,8 @@ public class EmployeesController {
 	public EmpVO serchEmp(EmpVO vo, Model model) {
 
 		System.out.println(vo.getEmpNo());
-		System.out.println(service.getEmp(vo));
-		return service.getEmp(vo);
+		System.out.println(empService.getEmp(vo));
+		return empService.getEmp(vo);
 
 	}
 
@@ -100,7 +100,7 @@ public class EmployeesController {
 
 		System.out.println(vo);
 
-		if (service.modifyEmp(vo)) {
+		if (empService.modifyEmp(vo)) {
 			return "Success";
 		} else {
 			return "Fail";
@@ -113,7 +113,7 @@ public class EmployeesController {
 	@RequestMapping("/removeEmpAjax")
 	public String removeEmp(EmpVO vo, Model model) {
 
-		if (service.removeEmp(vo)) {
+		if (empService.removeEmp(vo)) {
 			return "success";
 		} else {
 			return "Fail";

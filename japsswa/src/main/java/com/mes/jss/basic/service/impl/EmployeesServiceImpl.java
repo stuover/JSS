@@ -17,13 +17,13 @@ import com.mes.jss.basic.service.EmployeesService;
 @Service("emploeesService")
 public class EmployeesServiceImpl implements EmployeesService, UserDetailsService{
 	
-	@Autowired EmployeesMapper mapper;
+	@Autowired EmployeesMapper empMapper;
 
 	
 	@Override
 	public EmpVO gerUser(EmpVO vo) {
 
-		return mapper.getUser(vo);
+		return empMapper.getUser(vo);
 	}
 	
 	@Override
@@ -32,7 +32,7 @@ public class EmployeesServiceImpl implements EmployeesService, UserDetailsServic
 		// 단건조회
 		EmpVO userVO = new EmpVO();
 		userVO.setEmpNo(username);
-		EmpVO vo =  mapper.getUser(userVO);		
+		EmpVO vo =  empMapper.getUser(userVO);		
 
 		// id 없으면 에러
 		if(vo == null) {
@@ -45,37 +45,37 @@ public class EmployeesServiceImpl implements EmployeesService, UserDetailsServic
 	
 	@Override
 	public List<EmpVO> getEmpList(){
-		return mapper.getList();
+		return empMapper.getList();
 	}
 
 
 	@Override
 	public String getNextSeq() {
 		// TODO Auto-generated method stub
-		return mapper.getNextSeq();
+		return empMapper.getNextSeq();
 	}
 
 	@Override
 	public boolean ragisterEmp(EmpVO vo) {
 
-		return mapper.insertEmp(vo) > 0;
+		return empMapper.insertEmp(vo) > 0;
 	}
 
 	@Override
 	public EmpVO getEmp(EmpVO vo) {
 		// TODO Auto-generated method stub
-		return mapper.selectEmp(vo);
+		return empMapper.selectEmp(vo);
 	}
 
 	@Override
 	public boolean modifyEmp(EmpVO vo) {
-		return mapper.updateEmp(vo);
+		return empMapper.updateEmp(vo);
 	}
 
 	@Override
 	public boolean removeEmp(EmpVO vo) {
 		
-		return mapper.deleteEmp(vo);
+		return empMapper.deleteEmp(vo);
 	}
 	
 	
