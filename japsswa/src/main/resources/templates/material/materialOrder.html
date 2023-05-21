@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+
+</style>
+</head>
+<body>
+
+	<th:block layout:fragment="content">
+		<h3 style="font-weight: bold;">&ensp;자재 발주</h3>
+		
+		<label for="cusname" style=" margin-left:20px">거래처 <button type="button" id="checkBtn" class="btn btn-primary"
+				data-toggle="modal" data-target=".bd-example-modal-lg"
+				data-bs-target="#searchModal"
+				style="height: 35px; width: 100px; padding: 10px; margin-top:3px; margin-bottom: 10px; background-color:black; margin-left:50px;">거래처 찾기</button>
+				<button type="button" id="insertBtn" class="btn btn-primary"
+				
+				style="height: 35px; width: 50px; padding: 10px; margin-top:3px; margin-bottom: 10px; margin-right: 8px; background-color:black; margin-left:15px;">등록</button> 
+			 </label>
+			 <input type=text id="cusname" style="width:180px; margin-left:20px;"> 
+			
+		
+		 <label for="proname" style=" margin-left:20px; margin-top:20px;">품목명 &ensp;</label>	 <input type=text id="proname" style="width:180px; margin-left:20px;"> 
+		
+			<label for="count" style=" margin-left:20px; margin-top:20px;" >수량 &ensp;</label>
+			 <input type=text id="count" style="width:180px; margin-left:20px;" >
+			
+			
+		
+			<label for="delivery" style=" margin-left:20px; margin-top:20px;">납품일 &ensp;</label>
+			 <input type=date id="delivery" style="width:180px; margin-left:20px" >
+			
+			
+		
+		
+	<!-- Large modal -->
+
+
+		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+			<div class="modal-dialog modal-sm">
+
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="exampleModalLabel"
+							style="font-weight: bold; margin-left:70px;">거래처 찾기</h4>
+
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+					</div>
+					<div>
+						<h6 style="font-weight: bold; text-align: center;">
+							거래처명 :<input type=text id="searchcode"
+								style="margin-left: 15px; padding: 1px; width:130Px; ">
+							<button type="button" class="btn btn-dark" id="searchBtn"
+								style="padding: 8px; margin-left:10px;">검색</button>
+						</h6>
+					</div>
+					<div id="grid"></div>
+					<div>
+						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
+							style="width: 50px; height: 30px; margin-left:130px; padding: 8px;">선택</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	
+		
+		<button type="button" id="orderBtn" class="btn btn-dark" style="width: 50px; height: 30px; margin-left:500px; margin-top:50px;padding: 8px;">발주</button>
+		<div id="grid1" style="margin-top:20px;"></div>
+		
+		
+		<script>
+		const token = $("meta[name='_csrf']").attr("content")
+  		const header = $("meta[name='_csrf_header']").attr("content");
+		$(document).ready(function() {
+			
+			$('#checkBtn').on('click',function(){
+				
+			
+			$.ajax({
+				url:"/mrCustomerAjax",
+				method:"GET",
+				dataType : "json",
+				
+				success: function(result){
+					grid.resetData(result);
+					
+				}
+				
+				
+			});
+		
+			});
+			
+			
+			
+			$('#searchBtn').on('click',function(){
+				  
+				  const result= $("#searchcode").val();
+				  $('#searchcode').val('');
+					
+				  $.ajax({
+						url:"/searchCustomerAjax",
+						method:"GET",
+						data:{'result':result},
+						dataType:"json",
+					
+					success : function(result) {
+						grid.resetData(result);
+						grid.refreshLayout();
+						console.log(result);
+					}
+					
+						
+			     });
+				  
+				 
+	 
+				 }) 		
+			
+				 $('#chooseBtn').on('click',function(){
+					 
+					 $('#cusname').val(grid.getCheckedRows()[0].customerName);
+					 $('#proname').val(grid.getCheckedRows()[0].itemName);
+					 console.log(grid.getCheckedRows()[0].customerName);
+					 console.log(grid.getCheckedRows()[0].itemName);
+					 
+					 $.ajax({
+							url : "/mrCustomerAjax",
+							method : "GET",
+							dataType : "json",
+							success : function(result) {
+								grid.resetData(result);
+							}
+
+						});
+					})
+			
+				$('#insertBtn').on('click',function(){
+					
+					let order = {customerName : $('#cusname').val(),
+							itemName : $('#proname').val(),
+							mrCount: $('#count').val(),
+							deliveryDate: $('#delivery').val()};
+					
+						grid1.appendRow(order);
+							
+				
+					
+				})
+			
+				$('#orderBtn').on('click',function(){
+					
+					console.log(grid1.getCheckedRows());
+					$.ajax({
+						url : "/Orders",
+						contentType : "application/json",
+						method : "post",
+						data : JSON.stringify({ list : grid1.getCheckedRows()}),
+						dataType: "json",
+						beforeSend: function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success : function(result){
+							console.log('dsfdsfds')
+						}
+					})
+				})	
+		
+		
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				columns : [ {
+					header : '코드',
+					name : 'customerId'
+				}, {
+					header : '거래처명',
+					name : 'customerName'
+				}, {
+					header : '구분',
+					name : 'custPart'
+				},  
+					{
+					header : '자재명',
+					name : 'itemName'
+					}
+				]
+			});
+			
+			
+			
+			
+			const grid1 = new tui.Grid({
+				el : document.getElementById('grid1'),
+
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				columns : [ {
+					header : '거래처',
+					name : 'customerName'
+				}, {
+					header : '품목명',
+					name : 'itemName'
+				}, {
+					header : '수량',
+					name : 'mrCount'
+				}, {
+					header : '납품일',
+					name : 'deliveryDate'
+					
+				} ]
+			});
+			
+			
+			
+			
+			
+
+			$(function(){
+	    	$('#store').on('shown.bs.modal', function(){
+	    		grid.refreshLayout();
+	    	})
+	    })
+
+		})
+			
+		
+		
+		
+		
+		
+		</script>
+
+	
+		
+
+
+
+
+
+	</th:block>
+
+
+
+
+
+</body>
+</html>
