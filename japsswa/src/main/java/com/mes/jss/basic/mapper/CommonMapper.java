@@ -10,4 +10,10 @@ public interface CommonMapper {
 
 	public List<CommVO> getListDeta(String commCode);
 
+	public int getSearchDeta(String detaCode);
+
+	public void updateDetali(CommVO vo);
+
+	public void insertDetails(CommVO vo);
+
 }
