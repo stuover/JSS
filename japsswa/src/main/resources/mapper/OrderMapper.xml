@@ -13,9 +13,26 @@
 	</select>
 
 	<select id="custList" parameterType="OrderVO" resultType="OrderVO">
-		select customer_name, cust_tel, cust_addr, cust_mail
+		select customer_id, customer_name, cust_tel, cust_addr, cust_mail
 		from customer
 		where customer_name = #{custname}
+	</select>
+	
+	<select id="entRegister" statementType="CALLABLE">
+		{
+			CALL insert_order(
+				#{customerName, mode=IN, jdbcType=VARCHAR},
+				#{custAddr, mode=IN, jdbcType=VARCHAR},
+				#{custTel, mode=IN, jdbcType=VARCHAR},
+				#{custMail, mode=IN, jdbcType=VARCHAR},
+				#{ordName, mode=IN, jdbcType=VARCHAR},
+				#{ordDate, mode=IN, jdbcType=VARCHAR},
+				#{empName, mode=IN, jdbcType=VARCHAR},
+				#{itemName, mode=IN, jdbcType=VARCHAR},
+				#{unitPrice, mode=IN, jdbcType=VARCHAR},
+				#{outDate, mode=IN, jdbcType=VARCHAR},
+				#{ordCount, mode=IN, jdbcType=VARCHAR}
+			)
 	</select>
 
 

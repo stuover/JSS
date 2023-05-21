@@ -3,6 +3,13 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{/layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+	
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+</head>
 <th:block layout:fragment="content">
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -24,7 +31,6 @@
 
 
 	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-
 
 	<div class="container-fluid page-body-wrapper">
 
@@ -101,9 +107,15 @@
 	</div>
 
 	<script>
+	  
 
+		const token = $("meta[name='_csrf']").attr("content")
+		const header = $("meta[name='_csrf_header']").attr("content")
   		const Grid = tui.Grid;
   		
+		
+		var unit;
+		var count;
   		let gridData = [{}];
   		const grid = new Grid({
 		      el: document.getElementById('grid'),
@@ -123,11 +135,6 @@
 					  name: 'itemName'
 				     },
 				     {
-				      header: '주문날짜',
-				      name: 'ordDate',
-				      editor: 'datePicker'
-				     },
-				     {
 					  header: '납부예정날짜',
 					  name: 'outDate',
 					  editor: 'datePicker'
@@ -135,21 +142,23 @@
 				     {
 				      header: '단가',
 				      name: 'unitPrice',
-				    	  editor: 'text'
+				      editor: 'text'
+				    
 				     },	
 				     {
 					  header: '수량',
 					  name: 'ordCount',
 					  editor: 'text'
+					  
 					 },
 					 {
 				      header: '판매가격',
-					  name: 'eachPrice',
-					  editor: 'text'
+				      name : 'eachPrice'
+				     
 				     },
 					 {
 					  header: '담당자',
-				      name: 'empName',
+					  name: 'empName',
 					  editor: 'text'
 					 }
 			      ],
@@ -178,7 +187,6 @@
 		    grid.on('focusChange', ev => {
 		      console.log('change focused cell!', ev);
 		    });
-		
 		    window.onload = function(){
 				$.ajax({
 			    	url : "/itemNamelist",
@@ -196,8 +204,12 @@
 						setTimeout(()=> modalGrid.refreshLayout(), 1);
 		  			});
 				
-				    	
-		    };
+		    }; 
+		    
+		    grid.on('click', function(e){
+		    
+		    	console.log(grid.getRow(e.rowKey).eachPrice[0]);
+		    })
 		    
 			
 				const modalGrid = new Grid({
@@ -210,6 +222,10 @@
 		                perPage: 5 
 		                },
 		               columns: [
+		            	   {
+			                   header: '거래처 코드',
+			                   name: 'customerId'
+			                 },
 		                 {
 		                   header: '거래처명',
 		                   name: 'customerName'
@@ -242,7 +258,9 @@
 		             });
 		            
 		           
-		            
+		        	
+		
+			 
 		            
 		           $('#custSearch').on('click', function(){
 		        	   
@@ -263,7 +281,7 @@
 		        	   })
 		           }) 
 
-		           
+		           var customerId;
 		           $('#chooseBtn').on('click', function(){
 		        	   
 		        	   $('#searchModal').modal('hide');
@@ -284,18 +302,43 @@
 		        		   
 		        	   })
 		        	   
+		        	   customerId = modalGrid.getCheckedRows()[0].customerId;
 		        	   $('#cust').val(modalGrid.getCheckedRows()[0].customerName);
 		        	   $('#tel').val(modalGrid.getCheckedRows()[0].custTel);
 		        	   $('#addr').val(modalGrid.getCheckedRows()[0].custAddr);
 		        	   $('#mail').val(modalGrid.getCheckedRows()[0].custMail);
 		        	   
 		           }) 
+		           
+		           $('#insertBtn').on('click', function(){
+		        	   console.log(grid.getCheckedRows())
+		        	   console.log(customerId)
+		        	   var data = grid.getCheckedRows();
+		        	   $.ajax({
+		        		   url : "/entireRegister",
+		        		   contentType : "application/json",
+		        		   data : JSON.stringify( { code : customerId, list : data  } ),
+		        		   method : "post",
+		        		   dataType:"json",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        			   
+		        		   },
+		        		   success:function(result){
+	
+		        			   alert('등록 완료 되었습니다')
+		        		   }
+		        	   });
+		        	   
+		        	  
+		        		  
+		           })
+		  
 				
 
   			
 
-			
-			
+		
   		</script>
 
 </th:block>
