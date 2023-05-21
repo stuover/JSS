@@ -12,5 +12,7 @@ public interface FacilityMapper {
 	
 	public List<DowntimeVO> getdownList();	// 비가동 리스트 조회
 	public int insertDownList(DowntimeVO vo);		// 비가동 리스트 추가
+	
+	public boolean updateFacStatus(FacilityVO vo);
 		
 }

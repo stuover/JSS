@@ -331,13 +331,12 @@
                  $('#insertBtn').on('click', function(){
              	                 	 
                 	 stopData =modalgrid.getData()[0];
-                	 console.log(stopData);
+                	 //console.log(stopData);
                 	 downgrid.appendRow(stopData);
+                	 
                 	 
                 	 facStatus = grid.getCheckedRows()[0];
                 	 console.log(facStatus);
-                	 
-                	 
                 	 
                 	 $.ajax({
                          url: "/downListAjax",
@@ -359,7 +358,7 @@
                 		 success: function (result) {
 								console.log("상태")
                       }
-                	 })
+                	 });
                 	
                 	 
                 	
