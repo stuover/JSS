@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mes.jss.sale.domain.OrderVO;
+import com.mes.jss.sale.domain.SaleListVO;
 import com.mes.jss.sale.mapper.OrderMapper;
 import com.mes.jss.sale.service.SaleService;
 
@@ -28,6 +29,12 @@ public class SaleServiceImpl implements SaleService {
 		List<OrderVO> clist = orderMapper.custList(custname);
 		
 		return clist;
+	}
+
+	@Override
+	public List<SaleListVO> entRegister(SaleListVO listVo) {
+		List<SaleListVO> slist = orderMapper.entRegister(listVo);
+		return slist;
 	}
 
 	
