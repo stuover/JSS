@@ -57,5 +57,18 @@ public class FacilityController {
 		
 	}
 	
+	@ResponseBody
+	@RequestMapping("/facStatusAjax")
+	public String updateFac(FacilityVO vo, Model model) {
+
+		System.out.println("============");
+		System.out.println(vo);
+		System.out.println("============");
+		service.updateFacList(vo);
+		
+		return "success";
+				
+	}
+	
 	
 }

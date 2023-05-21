@@ -25,5 +25,12 @@
 		values (downtime_seq.nextval, to_date(sysdate,'yyyy/MM/dd') , #{downReason} , #{downManager} , #{remark} , #{facCode})
   	</insert>
   	
-  	
+  	<update id="updateFacStatus" parameterType="FacilityVO">
+  		update facility set fac_status = case
+		when fac_status = 'Y' then 'N'
+		when fac_status = 'N' then 'Y'
+		else fac_status
+		end
+		where fac_code = #{facCode}
+  	</update>
   </mapper>
