@@ -32,5 +32,36 @@
 		}
 				
 		</select>	
-  	
+  		
+  		<select id="customerList" resultType="CustomerVO">
+  			select c.customer_id, c.customer_name, i.item_name,c.cust_part 
+  			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
+  			
+  			
+  		
+  		</select>
+  		
+  		<select id="searchcustomer" resultType="CustomerVO">
+  			select c.customer_id, c.customer_name, i.item_name,c.cust_part 
+  			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
+  			where c.customer_name = #{result}
+  		</select>
+  		
+  		<select id="orderInsert" statementType="CALLABLE">
+  		
+  			{call MR_ORDER(
+  				#{itemName, mode=IN, jdbcType=VARCHAR},
+  				#{mrCount, mode=IN, jdbcType=VARCHAR},
+  				#{mrPrice, mode=IN, jdbcType=VARCHAR},
+  				#{priceTotal, mode=IN, jdbcType=VARCHAR},
+  				#{customerName, mode=IN, jdbcType=VARCHAR},
+  				#{deliveryDate, mode=IN, jdbcType=VARCHAR},
+  				#{allCount, mode=IN, jdbcType=VARCHAR},
+  				#{productCount, mode=IN, jdbcType=VARCHAR},
+  				#{empName, mode=IN, jdbcType=VARCHAR}
+  				)	
+  			}
+  		</select>
+  		
+  		
   </mapper>

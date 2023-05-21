@@ -6,9 +6,13 @@ import lombok.Data;
 
 @Data
 public class MrOrderDetailVO {	// 자재 발주 상세
-	private String mrOrderDetail;
-	private String mrOrderCode;
-	private String itemCode;
-	private int mrCount;
-	private Date deliveryDate;
+	 String mrOrderDetail;
+	 String mrOrderCode;
+	 String itemCode;
+	 String itemName;
+	 String CustomerName;
+	 long mrCount;
+	 long mrPrice;
+	 long priceTotal;
+	 Date deliveryDate;
 }
