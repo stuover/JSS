@@ -16,7 +16,7 @@
   	<select id="modalPlanList" resultType="PlanVO">
 		SELECT plan_id, plan_name, plan_date, e.emp_name
 		FROM plan p JOIN emp e 
-					ON(p.emp_no = e.emp_no)  		
+					ON(p.emp_no = e.emp_no)
   	</select>
 
 

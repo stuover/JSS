@@ -3,27 +3,23 @@
     layout:decorate="~{/layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-<script type="text/javascript"
-	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-<script
-	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+    <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <style>
         button {
             width: 100px;
             margin-right: 550px;
             border-radius: 20px;
         }
-        .modal-header{
-        	text-align: center;
+
+        .modal-header {
+            text-align: center;
         }
 
         #cenLbtn {
@@ -37,7 +33,6 @@
         .tui-grid-cell-content {
             text-align: center;
         }
-        
     </style>
 </head>
 
@@ -51,11 +46,8 @@
         <button id="stopBtn" type="button" data-toggle="modal" data-target="#modal">비가동</button>
 
         <!-- Modal -->
-
-
-        <!-- Modal -->
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-            aria-hidden="true" >
+            aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" style="width:650px" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -67,12 +59,10 @@
                     <div class="modal-body">
 
                         <!-- 드롭다운 -->
-
-                        <!-- <div id="container"></div> -->
                         <div id="modalgrid"></div>
                         <!-- 드롭다운 끝 -->
 
-                    </div>                    
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                         <button type="button" id="insertBtn" class="btn btn-primary">추가</button>
@@ -88,41 +78,25 @@
             <button type="submit">가동</button><button id="cenLbtn" type="submit">수정</button><button id="cenRbtn"
                 type="submit">삭제</button>
         </div>
-        
+
         <script>
-        
             window.onload = function () {
-            	var modalgrid = null;
-            	var stopData = null;
-            	var facStatus = null;
-                $.ajax({
-                    url: "/facilityAjax",
-                    method: "GET",                    
-                    dataType: "JSON",
-                    success: function (result) {
-                        grid.resetData(result);
-                    }
-                });
+
+                var modalgrid = null;
+                var stopData = null;
+                var facStatus = null;
+                var sampleData = null;
 
                 /* contentType:"application/json",
                 dataType: "JSON.stringfy()",  ?????  */
-                
 
                 var grid = new tui.Grid({
                     el: document.getElementById('grid'),
                     scrollX: false,
                     scrollY: false,
-                    pageOptions : {
-    					useClient : true,
-    					perPage : 7
-    				},
-                    data: {
-                        api: {
-                            readData: {
-                                url: '/api/readData',
-                                method: 'GET'
-                            }
-                        }
+                    pageOptions: {
+                        useClient: true,
+                        perPage: 7
                     },
                     rowHeaders: ['checkbox'],
                     columns: [{
@@ -144,8 +118,26 @@
                     }]
                 });
 
-                // 하단 시작
+                function facList() {
 
+                    $.ajax({
+                        url: "/facilityAjax",
+                        method: "GET",
+
+                        success: function (result) {
+                            grid.resetData(result);
+                            //console.log(result);                            
+                        },
+                        error: function (reject) {
+                        	alert("실패");
+                        	console.log(reject);
+                        }
+                    });
+                }
+
+                facList();
+
+                // 하단 시작
 
                 $.ajax({
                     url: "/downtimeAjax",
@@ -153,6 +145,10 @@
                     dataType: "JSON",
                     success: function (result) {
                         downgrid.resetData(result);
+                    },
+                    error: function (reject) {
+                    	alert("실패");
+                    	console.log(reject);
                     }
                 });
 
@@ -160,10 +156,10 @@
                     el: document.getElementById('downgrid'),
                     scrollX: false,
                     scrollY: false,
-                    pageOptions : {
-    					useClient : true,
-    					perPage : 7
-    				},
+                    pageOptions: {
+                        useClient: true,
+                        perPage: 7
+                    },
                     rowHeaders: ['checkbox'],
                     columns: [{
                         header: '설비명',
@@ -183,190 +179,192 @@
                     }, {
                         header: '관리자',
                         name: 'downManager'
+                    }, {
+                        header: '비고',
+                        name: 'remark'
                     }]
-                });                
+                });
 
                 /* $('#stopBtn').hide(); 
 				grid.on('uncheck', function () {
                     $('#stopBtn').hide();
                 }); */
-             
-                
 
-                /* 비가동 사유 드롭다운 */
-                /* var SelectBox = tui.SelectBox;
-                
-                const container = document.getElementById('container');
-
-
-                const selectBox = new SelectBox(container, {
-                  data: [
-                    {
-                      label: '비가동 사유',
-                      data: [ { label: '세척', value: '세척' }, { label: '정비', value: '정비' }, { label: '점검', value: '점검' } ]
-                    }
-                  ],
-                  
-                }); */
-
-
-
-                /* console.log(selectBox.getSelectedItem().getLabel()); // 'Apple' */                
-                
-                
                 /* 체크 한개만 */
-                
-                grid.on('check', function (e) {
-                	var checkRows = grid.getCheckedRowKeys();
-                	checkRows.forEach(function( key, idx){                		
-                		if(key != e.rowKey){
-                			grid.uncheck(key);
-                		}
-                	});
-                });
-                
-                /* 체크 한개만 끝 */
-                            
-			
-                /* 선택한 데이터 가져오기 */
-                                
-                $('#stopBtn').on('click', function () {
-                	
-                	
-                	 var sampleData = [grid.getCheckedRows()[0]]; 
 
-                	 class CustomTextEditor {
-  				      constructor(props) {
-  				        const el = document.createElement('input');
-  				        const { maxLength } = props.columnInfo.editor.options;
-  				
-  				        el.type = 'text';
-  				        el.maxLength = maxLength;
-  				        el.value = String(props.value);
-  				
-  				        this.el = el;
-  				      }
-  				
-  				      getElement() {
-  				        return this.el;
-  				      }
-  				
-  				      getValue() {
-  				        return this.el.value;
-  				      }
-  				
-  				      mounted() {
-  				        this.el.select();
-  				      }
-  				    }
-                  
-                  modalgrid = new tui.Grid({
-                      el: document.getElementById('modalgrid'),
-                      scrollX: false,
-                      scrollY: false,
-                      width:630,
-                      data: sampleData,
-                      rowHeight: 130,
-                      columns: [
-                     	 {
-                              header: '설비명',
-                              name: 'facName',                              
-                              
-                              rowSpan: true 
+                grid.on('check', function (e) {
+                    var checkRows = grid.getCheckedRowKeys();                    
+                    
+                    checkRows.forEach(function (key, idx) {                    	                    
+                        if (key != e.rowKey) {
+                            grid.uncheck(key);
+                        }
+                    });
+                });
+
+                /* 체크 한개만 끝 */
+
+				//sampleData = [grid.getCheckedRows()[0]];
+				
+                	class CustomTextEditor {
+                        constructor(props) {
+                            const el = document.createElement('input');
+                            const {
+                                maxLength
+                            } = props.columnInfo.editor.options;
+
+                            el.type = 'text';
+                            el.maxLength = maxLength;
+                            el.value = String(props.value);
+
+                            this.el = el;
+                        }
+                        getElement() {
+                            return this.el;
+                        }
+                        getValue() {
+                            return this.el.value;
+                        }
+                        mounted() {
+                            this.el.select();
+                        }
+                    }
+                	var modalgrid = new tui.Grid({
+                        el: document.getElementById('modalgrid'),
+                        scrollX: false,
+                        scrollY: false,
+                        width: 630,
+                        rowHeight: 130,
+                        columns: [{
+                                header: '설비명',
+                                name: 'facName',
+                                rowSpan: true
                             },
                             {
                                 header: '설비 코드',
-                                name: 'facCode',                                
-                                
-                                rowSpan: true 
-                              },
-                     	 
-                     	 {
-                          header: '비가동 사유',
-                          name: 'downReason',
-                          editor: {
-                              type: 'select',
-                              options: {
-                                listItems: [
-                                  { text: '세척', value: '세척' },
-                                  { text: '정비', value: '정비' },
-                                  { text: '점검', value: '점검' }
-                                ]
-                              }
+                                name: 'facCode',
+                                rowSpan: true
                             },
-                          
-                          rowSpan: true 
-                        },
-                        {
-                          header: '관리자',
-                          name: 'downManager',
-                          editor:'text',
-                          
-                          rowSpan: true 
-                        },
-                        {
-                     	   header: '비고',
-                            name: 'remark',
-                            editor:'text',
-                            
-                            rowSpan: true,
-                            whiteSpace: 'pre-wrap'
-                        }
-                      ]
+                            {
+                                header: '비가동 사유',
+                                name: 'downReason',
+                                editor: {
+                                    type: 'select',
+                                    options: {
+                                        listItems: [{
+                                                text: '세척',
+                                                value: '세척'
+                                            },
+                                            {
+                                                text: '정비',
+                                                value: '정비'
+                                            },
+                                            {
+                                                text: '점검',
+                                                value: '점검'
+                                            }
+                                        ]
+                                    }
+                                },
+                                rowSpan: true
+                            },
+                            {
+                                header: '관리자',
+                                name: 'downManager',                                
+                                editor: {
+                                    type: CustomTextEditor,
+                                    options: {
+                                        maxLength: 4
+                                    }
+                                },
+                                rowSpan: true
+                            },
+                            {
+                                header: '비고',
+                                name: 'remark',
+                                editor: 'text',
+                                rowSpan: true,
+                                whiteSpace: 'pre-wrap'
+                            }
+                        ]
                     });
-                  
-                  
-                  
+                	
+                /* 선택한 데이터 가져오기 */
+                $('#stopBtn').on('click', function () {
+
+                	modalgrid.resetData([grid.getCheckedRows()[0]]);
+  					                	
+                    facData = [grid.getCheckedRows()[0].facStatus];
+                    //console.log(sampleData);
+
                 });
-                
+
                 /* 선택한 데이터 가져오기 끝*/
-                               
+
                 $(function () {
-                     $('#modal').on('shown.bs.modal', function () {
-                     	modalgrid.refreshLayout();
-                     })
-                 })
-                 
-                 
-                 $('#insertBtn').on('click', function(){
-             	                 	 
-                	 stopData =modalgrid.getData()[0];
-                	 //console.log(stopData);
-                	 downgrid.appendRow(stopData);
-                	 
-                	 
-                	 facStatus = grid.getCheckedRows()[0];
-                	 console.log(facStatus);
-                	 
-                	 $.ajax({
-                         url: "/downListAjax",
-                         method: "get",
-                         dataType:"json",
-                         contentType:"application/json",
-                         data : stopData,
-                         success: function (result) {
-								console.log("fdfdsfd")
-                         }
-                     });
-                	
-                	 $.ajax({
-                		 url:"/facStatusAjax",
-                		 method: "get",
-                		 dataType:"json",
-                		 contentType:"appicaation/json",
-                		 data: facStatus,
-                		 success: function (result) {
-								console.log("상태")
-                      }
-                	 });
-                	
-                	 
-                	
-                 })
-                 
-                 
-                
-                 
+                    $('#modal').on('shown.bs.modal', function () {                        
+                    	modalgrid.refreshLayout();
+                    })
+                })                              
+
+                $('#insertBtn').on('click', function () {
+
+                    stopData = modalgrid.getData()[0];
+                    var status = modalgrid.getData()[0].facStatus;
+                    console.log(stopData);
+                    //console.log(status);
+                    downgrid.appendRow(stopData);                    
+                    
+                    if(status == 'Y'){
+
+                    $.ajax({
+                        url: "/downListAjax",
+                        method: "get",
+                        data: stopData,
+                        success: function (result) {							
+                        	alert("비가동 처리되었습니다");
+                        	$('#modal').modal('hide');
+                            facStatuss();                            
+                        },
+                        error: function (reject) {
+                        	alert("실패");
+                        	console.log(reject);
+                        }
+                    });
+                    
+                    }else{
+                    	$('#modal').modal('hide');
+                    	alert("비가동중인 설비입니다 다시 선택해주세요");
+                    	// 하단의 리스트로 추가됨 , 수정 필요
+                    }
+                })
+
+                function facStatuss() {
+                    facStatus = grid.getCheckedRows()[0];
+                    //console.log(facStatus);
+
+                    var token = $("meta[name='_csrf']").attr("content");
+                    var header = $("meta[name='_csrf_header']").attr("content");
+
+                    $.ajax({
+                        url: "/facStatusAjax",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(facStatus),
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                        success: function (result) {
+                            facList();
+                        },
+                        error: function (reject) {
+                        	alert("실패");
+                            console.log(reject);
+                        }
+                    });
+
+                }
+
             }
         </script>
     </th:block>
