@@ -4,8 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mes.jss.material.domain.DetaiListlVO;
+import com.mes.jss.material.domain.MrAdjustmentVO;
+import com.mes.jss.material.domain.MrOrderDetailVO;
+import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.mapper.MaterialMapper;
 import com.mes.jss.material.service.MaterialService;
@@ -62,14 +66,36 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 
 	@Override
+	@Transactional
 	public void orders(DetaiListlVO vo) {
 
+		materialMapper.mrorderInsert(vo.getList().get(0).getCustomerId());
+		
 		for (int i = 0; i < vo.getList().size(); i++) {
 			materialMapper.orderInsert(vo.getList().get(i));
 			
 			System.err.println(vo.getList().get(i));
 		}
 
+	}
+
+	@Override
+	public List<MrAdjustmentVO> admList() {
+		
+		return materialMapper.admGetList();
+	}
+
+	@Override
+	public List<MrOrderVO> OrderMain() {
+		
+		
+		return materialMapper.OrmGetList();
+	}
+
+	@Override
+	public List<MrOrderDetailVO> OrderDetail() {
+		
+		return materialMapper.OrdGetList();
 	}
 
 }
