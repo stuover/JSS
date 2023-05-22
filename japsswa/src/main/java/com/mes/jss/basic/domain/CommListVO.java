@@ -8,5 +8,6 @@ import lombok.Data;
 public class CommListVO {
 	 List<CommVO> list;
 	 String code;
+	 CommVO comm;
 
 }

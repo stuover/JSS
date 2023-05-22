@@ -17,6 +17,6 @@ public class CommVO {
 	public String detaNote;
 	public String detaInsertDate;
 	public String detaModifyDate;
-	public String detailsIndx;
+	public String detailsIndex;
 
 }
