@@ -32,7 +32,7 @@ public class ProductionController {
 		return "production/planManage";
 	}
 	
-	// 생산계획 조회 모달창 : 생산 계획 리스트(초기값)
+	// 생산계획 조회 모달창 : 생산 계획 리스트 (초기값)
 	@RequestMapping("/modalPlanListAjax")
 	@ResponseBody
 	public List<PlanVO> modalPlanListAjax() {
@@ -43,7 +43,7 @@ public class ProductionController {
 		return inputData;
 	}
 	
-	// 기간 키워드로 생산계획 검색 결과
+	// 생산계획 조회 모달창 : 기간 키워드로 생산계획 검색 결과
 	@RequestMapping("/modalPlanResultAjax")
 	@ResponseBody
 	public List<PlanVO> modalPlanResultAjax(SearchVO vo) {
@@ -64,12 +64,25 @@ public class ProductionController {
 		return inputData;
 	}
 	
-	// 제품명 키워드로 검색 결과
+	
+	
+	// 제품 검색 모달창 : 제품 리스트(초기값)
 	@RequestMapping("/searchItemListAjax")
 	@ResponseBody
-	public List<PlanVO> searchItemListAjax(PlanVO vo) {
+	public List<PlanVO> searchItemListAjax() {
 		List<PlanVO> inputData = new ArrayList<>();
-		inputData = planService.itemList(vo);
+		inputData = planService.itemList();
+	
+		return inputData;
+	}
+	
+	
+	// 제품명 조회 모달창 : 키워드로 검색 결과
+	@RequestMapping("/searchItemResultAjax")
+	@ResponseBody
+	public List<PlanVO> searchItemResultAjax(PlanVO vo) {
+		List<PlanVO> inputData = new ArrayList<>();
+		inputData = planService.itemListResult(vo);
 	
 		return inputData;
 	}
@@ -89,6 +102,18 @@ public class ProductionController {
 		return head;
 	}
 	
+	// 생산계획 및 상세계획 수정.
+		@RequestMapping("/modifyPlanAjax")
+		@ResponseBody	
+		public PlanVO modifyPlanAjax(@RequestBody PlanDatasVO data, Principal principal){
+			System.out.println(data);
+			PlanVO head =  data.getHead();
+			head.setEmpNo(Long.parseLong(principal.getName()));
+			
+			List<PlanVO> list = data.getDetailList();
+			planService.planModify(head, list);		
+			return head;
+		}
 	
 	
 	
