@@ -17,7 +17,7 @@ public class PlanServiceImpl implements PlanService {
 
 	@Autowired PlanMapper planMapper;
 	
-	// 조회 모달창 초기 데이터
+	// 생산계획 조회 모달창 : 생산 계획 리스트(초기값)
 	@Override
 	public List<PlanVO> modalPlanList() {
 		List<PlanVO> list = new ArrayList<>();
@@ -25,7 +25,7 @@ public class PlanServiceImpl implements PlanService {
 		return list;
 	}
 	
-	// 조회 모달창 검색 결과
+	// 생산계획 조회 모달창 : 기간 키워드로 생산계획 검색 결과
 	@Override
 	public List<PlanVO> modalPlanResult(SearchVO vo) {
 		List<PlanVO> list = new ArrayList<>();
@@ -34,7 +34,7 @@ public class PlanServiceImpl implements PlanService {
 		return list;
 	}
 	
-	// 조회 모달창에서 선택한 생산 계획 내용
+	// 생산계획관리 페이지 : 검색해서 찾은 생산 계획 세부
 	@Override
 	public List<PlanVO> planSearchResult(String id) {
 		List<PlanVO> list = new ArrayList<>();
@@ -42,26 +42,56 @@ public class PlanServiceImpl implements PlanService {
 		return list;
 	}
 
+	
+	
+	
 	// 생산 계획 등록.
 	@Override
 	@Transactional
 	public void planSave(PlanVO vo, List<PlanVO> list) {
-		//계획헤더
+		//계획 헤더
 		planMapper.planSave(vo);
 		 
-		//계획세부사항
+		//계획 세부사항
 		for(PlanVO planVO : list) {
 			 planVO.setPlanCode(vo.getPlanCode());
 			 planMapper.planDetailSave(planVO);
 		}
 	}
 
-	// 제품 검색 모달창 : 제품 리스트(
+	
+	
+	// 제품 검색 모달창 : 제품 리스트(초기값)	
 	@Override
-	public List<PlanVO> itemList(PlanVO vo) {
+	public List<PlanVO> itemList() {
 		List<PlanVO> list = new ArrayList<>();
-		list = planMapper.itemList(vo);
+		list = planMapper.itemList();
 		return list;
+	}
+	
+	
+	// 제품 검색 모달창 : 제품 리스트(검색결과)
+	@Override
+	public List<PlanVO> itemListResult(PlanVO vo) {
+		List<PlanVO> list = new ArrayList<>();
+		list = planMapper.itemListResult(vo);
+		return list;
+	}
+	
+	
+	// 생산 계획 수정.
+	@Override
+	@Transactional
+	public void planModify(PlanVO vo, List<PlanVO> list) {
+		//계획 헤더
+		planMapper.planModify(vo);
+		 
+		//계획 세부사항
+		for(PlanVO planVO : list) {
+			 planVO.setPlanCode(vo.getPlanCode());
+			 planMapper.planDetailModify(planVO);
+		}
+		
 	}
 
 
