@@ -1,5 +1,6 @@
 package com.mes.jss.web;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,12 +43,25 @@ public class SaleController {
 		return cust;
 	}
 	
+	@RequestMapping("/custInfo")
+	@ResponseBody
+	public List<OrderVO> custInfoAjax(String customerId){
+		List<OrderVO> info = saleService.custInfo(customerId);
+		
+		return info;
+	}
+	
 	@RequestMapping("/entireRegister")
 	@ResponseBody
-	public OrderVO entRegisterAjax(@RequestBody SaleListVO listVo ) {
-		System.err.println(listVo);
-		OrderVO vo = new OrderVO();
-		return vo;
+	public OrderVO entRegisterAjax(@RequestBody SaleListVO listVo, Principal principal) {
+		
+		OrderVO commInfo = listVo.getCommInfo();
+		commInfo.setEmpNo(Long.parseLong(principal.getName()));
+		
+		
+		List<OrderVO> list = listVo.getList();
+		saleService.entRegister(commInfo, list);
+		return commInfo;
 	}
 	
 

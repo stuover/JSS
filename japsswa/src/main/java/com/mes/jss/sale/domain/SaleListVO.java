@@ -5,6 +5,6 @@ import java.util.List;
 import lombok.Data;
 @Data
 public class SaleListVO {
-	List<OrderVO> list;
-	String code;
+	private List<OrderVO> list;
+	private OrderVO commInfo;
 }
