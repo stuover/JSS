@@ -31,25 +31,33 @@
                 <div class="card-body">
                   <h4 class="page-title">생산 계획 관리</h4>
                   
-                  <input id="afterSearch" type="text" name="selectResult" value="insert">
+                  <input id="afterSearch" type="hidden" name="selectResult" value="insert">
+                  <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
 
                   <div class="btn-group">
                   	<div>
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
                   	<button id="saveBtn" class="btn btn-primary">저장</button>
                   	<button id="deleteBtn" class="btn btn-danger">삭제</button>
+                  	<button id="resetBtn" class="btn btn-danger">초기화</button>
                   	</div>
 
                   </div>
                   
                   <div id="grid2"></div>
                   
+                  <div id="comResultGrid"></div>
+                  
                   <div class="row">
                   	
                   </div>
-                  
+
+	              <button type="button" id="addRow" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#searchItem">추가</button>
+	              <button type="button" id="deleteRow" class="btn btn-warning btn-sm">삭제</button>
+
                   <div id="grid"></div>
                   
+                  <div id="detailResultGrid"></div>
 				            
                 </div>
               
@@ -68,6 +76,8 @@
 	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 	            <div class="modal-body">
+	            <input type="date" id="startDateOption"></input> ~ <input type="date" id="endDateOption"></input>
+	            <button id="dateSearch">검색</button>
 	            <div id="modalGrid"></div>
 	            </div>
 	            <div class="modal-footer">
@@ -76,6 +86,25 @@
 	        </div>
 	        </div>
 	    </div>
+	    
+	    <div class="modal fade" id="searchItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            	<h5 class="modal-title" id="searchModalLabel">제품 선택</h5>
+	            	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	            	<input type="text" id="searchItemResult"></input>
+	            	<button id="searchShow">검색</button>
+	            <div id="itemGrid"></div>
+	            </div>
+	            	<div class="modal-footer">
+	            		<button id="selectItemBtn" type="button" class="btn btn-primary">선택</button>
+	            	</div>
+	        </div>
+	        </div>
+	    </div>	    
   		
 
   		<script>
@@ -84,15 +113,42 @@
   		
   		
   		const Grid = tui.Grid;
-		
-  		let gridData2 = [{}];
   		
+  		 let empName ='';
+  		
+		 // 초기화면 데이터 및 설정.
+		  window.onload = function(){
+			  $('#afterSearch').hide();
+			  $('#empName').hide();
+			  empName = $('#empName').val();
+			  grid2.setValue(0, 'empName', empName, false)
+			  
+	  		   
+	  		    
+	  		  $('#searchModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					setTimeout(()=> modalGrid.refreshLayout(), 300);
+	  			})
+	  		  $('#searchItem').on('shown.bs.modal', function (e) {
+					console.log('open');
+					setTimeout(()=> itemGrid.refreshLayout(), 300);
+	  			})	  		
+		  };  		
+  		
+		
+  		// 생산 계획 공통(초기화면)
+  		let gridData2 = [{}];
   		const grid2 = new Grid({
 		      el: document.getElementById('grid2'),
 		      data: gridData2,
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
+			     {
+			  	header: '계획코드',
+			  	name: 'planId',
+				hidden: true
+				},		    	  
 		        {
   		      header: '계획명',
   		      name: 'planName',
@@ -117,34 +173,31 @@
     		    }, 		    
     		    {
     		     header: '담당자',
-    		     name: 'empName',
-    		     editor: 'text'
+    		     name: 'empName'
     		    }	   
 		      ]
 		    });
   		
-		    grid2.on('check', ev => {
-	  		      console.log('check!', ev);
-	  		    });
-
-  		    grid2.on('uncheck', ev => {
-    		      console.log('uncheck!', ev);
-    		    });
+  
   		    
-  		    grid2.on('focusChange', ev => {
-    		      console.log('change focused cell!', ev);
-    		    });
-  		
-  		
-  		  let gridData = [];
-  		 
-  		 const grid = new Grid({
-  		      el: document.getElementById('grid'),
-  		      data: gridData,
-  		      rowHeaders: ['checkbox'],
-  		      scrollX: false,
-  		      scrollY: true,
-  		      columns: [
+  		    // 생산계획 상세(초기회면)
+			let gridData = [{}];	 
+  		    const grid = new Grid({
+  		    	el: document.getElementById('grid'),
+  		     	data: gridData,
+  		        rowHeaders: ['checkbox'],
+  		     	scrollX: false,
+  		    	scrollY: true,
+  		    	columns: [
+  	  		    {
+  	  		      header: '계획상세코드',
+  	  		      name: 'pdetailId',
+  	  		      hidden: true
+  	  		    },
+  	  		    {
+    	  		  header: '제품코드',
+    	  		  name: 'itemCode'
+    	  		 },
   		        {
   		          header: '제품명',
   		          name: 'itemName'
@@ -193,42 +246,86 @@
       		     }	   
   		      ]
   		    });
-
-  		    grid.on('check', ev => {
-  		      console.log('check!', ev);
-  		    });
-
-  		    grid.on('uncheck', ev => {
-  		      console.log('uncheck!', ev);
-  		    });
-
-  		    grid.on('focusChange', ev => {
-  		      console.log('change focused cell!', ev);
-  		    });
-
-  		  
   		    
-  		  window.onload = function(){
-  			  
-  			  $('#afterSearch').css('display', 'none');
-	  		    $.ajax({
-	  		        url : "/itemListInfoAjax",
-	  		        method :"GET",
-	  		        dataType : "JSON",
-	  		        success : function(result){
-	  		            grid.resetData(result);
-	  		            console.log(result);
-	  		        } 
+    
+  		    
+  		    // 검색
+			let itemGridData = [{}];	 
+  		    const itemGrid = new Grid({
+  		    	el: document.getElementById('itemGrid'),
+  		     	data: gridData,
+  		        rowHeaders: ['checkbox'],
+  		     	scrollX: false,
+  		    	scrollY: true,
+  		    	columns: [
+  	  		    {
+    	  		  header: '제품코드',
+    	  		  name: 'itemCode'
+    	  		 },
+  		        {
+  		          header: '제품명',
+  		          name: 'itemName'
+  		        },
+  		        {
+  		          header: '주문량',
+  		          name: 'itemOrders'
+  		        }   
+  		      ]
+  		    });
+  		    
+  		    
+  			// 검색 버튼 -> 제품명 키워드로 검색내용 출력.
+  		    let item = '';
+  		    $('#searchShow').click(function (){
+  		    	item = $('#searchItemResult').val();
+				console.log(item);
+				
+				 $.ajax({
+						url : "/searchItemListAjax",
+						data : {itemName : item},
+						method :"GET",
+						dataType : "JSON",
+						success : function(result){
+							console.log('result : '+ result);
+							itemGrid.resetData(result);
+						},
+	  					error : function(reject){
+	  						console.log(reject);
+	  					}
+					});				
+				
+  		    })
+  	
+
+  		    
+  		    // 검색 내용 체크 -> 선택 버튼 클릭 -> 모달창 닫기, 새로운 행 추가.
+  		    let itemInfo = [];
+		    $('#selectItemBtn').click(function() {
+	  		    	itemInfo = [{itemCode : itemGrid.getCheckedRows()[0].itemCode , itemName : itemGrid.getCheckedRows()[0].itemName}];
+	  		    	$('#searchItemResult').val('');	 
+	  		    	itemGridData = [{}];
+	  		    	itemGrid.resetData(itemGridData);
+	  		    	
+	  		    	$('#searchItem').modal('hide');
+	  		    	grid.appendRow();
+	  		    	
+	  		    	$('#searchItem').on('hidden.bs.modal', function (e) {
+						grid.resetData(itemInfo);
+	  		    	})
+	  		    	
 	  		    });
-	  		    
-	  		  $('#searchModal').on('shown.bs.modal', function (e) {
-					console.log('open');
-					setTimeout(()=> modalGrid.refreshLayout(), 300);
-	  			})
-  		  };
+  		    
+  		    
+			// 삭제버튼 -> 선택한 row 삭제
+			$('#deleteRow').click(function (){
+				grid.removeCheckedRows(false);
+			})  
+			
+
+
   		  
+  		  // 생산계획 조회 모달창
           let modalGridData = [];
-          
           const modalGrid = new Grid({
                el: document.getElementById('modalGrid'),
                data: modalGridData,
@@ -262,41 +359,62 @@
                  }     
                ]
              });
-
-            modalGrid.on('check', ev => {
-               console.log('check!', ev);
-             });
-
-            modalGrid.on('uncheck', ev => {
-               console.log('uncheck!', ev);
-             });
-
-            modalGrid.on('focusChange', ev => {
-               console.log('change focused cell!', ev);
-             });
-
-  			
+          
+          	   modalGrid.on('check', function (e) {
+	              var checkRows = modalGrid.getCheckedRowKeys();
+	              checkRows.forEach(function( key, idx){                      
+	                 if(key != e.rowKey){
+	                	 modalGrid.uncheck(key);
+	                 }
+	              });
+	           });
+ 		   
   		   
-  		  
+          	// 조회 버튼 -> 현재 날짜를 기준으로 일주일 생산계획 리스트 조회.
   		    $('#searchBtn').click(function (){
-  											$.ajax({
-  												url : "/modalPlanListAjax",
-  												method :"GET",
-  												dataType : "JSON",
-  												success : function(result){
-  													console.log(result);
-  													modalGrid.resetData(result);
-  												}
-  											});
-  											
-  														
-  		  									});
+				$.ajax({
+  					url : "/modalPlanListAjax",
+  					method :"GET",
+  					dataType : "JSON",
+  					success : function(result){
+  						console.log(result);
+  						modalGrid.resetData(result);
+  					},
+  					error : function(reject){
+  						console.log(reject);
+  					}
+  				});		    	
+  		    });
   		    
+          	// 기간 정한 후 검색 ->  기간 내 수립한 생산계획 리스트 
+  		    $('#dateSearch').click(function (){
+			let startTime = $('#startDateOption').val();
+  		    let endTime = $('#endDateOption').val();
+  		    
+  		    console.log(startTime);
+  		    console.log(endTime);
+  		    
+  				$.ajax({
+  					url : "/modalPlanResultAjax",
+  					data : {'startTime' : startTime , 'endTime' : endTime},
+  					method :"GET",
+  					dataType : "JSON",
+  					success : function(result){
+  						console.log(result);
+  						modalGrid.resetData(result);
+  					},
+  					error : function(reject){
+  						console.log(reject);
+  					}
+  				});				 														
+  		  	});
+  		    
+          	// 선택 버튼 -> 모달창 닫기 -> 선택한 생산 계획 및 세부 계획 출력.
   		    let planInfo = [];
 			let planCode = '';
 			$('#modalSelectBtn').click(function () {
 				planCode = modalGrid.getCheckedRows()[0].planId;
-				planInfo = [{planName : modalGrid.getCheckedRows()[0].planName , planDate : modalGrid.getCheckedRows()[0].planDate , empName : modalGrid.getCheckedRows()[0].empName}];
+				planInfo = [{planId : modalGrid.getCheckedRows()[0].planId ,planName : modalGrid.getCheckedRows()[0].planName , planDate : modalGrid.getCheckedRows()[0].planDate , empName : modalGrid.getCheckedRows()[0].empName}];
 				 console.log('planId = ' + planCode);
 				 console.log(planInfo);
 				 
@@ -307,6 +425,7 @@
 				 } else {
 					 
 				 $('#searchModal').modal('hide');
+	  			  
 				 
 				 $('#searchModal').on('hidden.bs.modal', function (e) {
 					 gridData2= planInfo;
@@ -320,10 +439,14 @@
 							success : function(result){
 								console.log('result : '+ result);
 								grid.resetData(result);
-								
-							}
+							},
+		  					error : function(reject){
+		  						console.log(reject);
+		  					}
 						});
+					 
 					 $('#afterSearch').attr('value', 'modify');
+					 $('#')
 					 
 				 });	
 
@@ -331,9 +454,9 @@
 				 
 
 			})
-		
+			
   			
-
+			// 저장 버튼을 클릭 -> 새로운 계획: 등록, 기존 존재하는 계획: 수정.
   			$('#saveBtn').click(function (){
   											grid2.finishEditing();
   											grid2.getData();
@@ -341,9 +464,15 @@
   											grid.finishEditing();
   											grid.getCheckedRows();
   											
-  											
   											console.log(grid2.getData());
   											console.log(grid.getData());
+  											
+  											if(grid2.getData() == null || grid.getCheckedRows() == null) {
+  												alert('값을 입력해주세요!');
+  											} else {
+  												
+  											}
+  											
   											
   											if( $('#afterSearch').val() == 'insert' ) {
   												console.log('등록처리 해야 함.');
@@ -358,9 +487,16 @@
 	  												},
 	  												success : function(result){
 	  													console.log(result);
-	  													alert('등록완료!');
+	  													if (result != null) {
+	  														alert('등록완료!');
+	  													} else {
+	  														alert('값을 입력해주세요!');
+	  													}
 	  													
-	  												}
+	  												},
+	  							  					error : function(reject){
+	  							  						console.log(reject);
+	  							  					}
 	  											});
 	  											
   											} else {
@@ -370,6 +506,11 @@
 
   			})
   			
+  			
+  			$('#resetBtn').click(function () {
+  				grid2.setRow(0, {empName: empName});
+  				
+  			})
   			
 		
 
