@@ -32,7 +32,7 @@ public class FacilityController {
 	public List<FacilityVO> facility(){
 		
 		List<FacilityVO> list = service.getList();				
-		return list;	
+		return list;
 		
 	}
 	
@@ -59,7 +59,8 @@ public class FacilityController {
 	
 	@ResponseBody
 	@RequestMapping("/facStatusAjax")
-	public String updateFac(FacilityVO vo, Model model) {
+	public String updateFac(
+			@RequestBody FacilityVO vo, Model model) {
 
 		System.out.println("============");
 		System.out.println(vo);

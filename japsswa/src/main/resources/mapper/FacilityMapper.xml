@@ -10,14 +10,18 @@
   	</select>
   	
   	<select id="getList" resultType="FacilityVO">
-  		select f.fac_name, f.fac_code, f.fac_manager,f.fac_status, start_date
-		from facility f left outer join downtime d on f.fac_code = d.fac_code
+  		select distinct f.fac_name , f.fac_code, f.fac_manager, f.fac_status
+		from facility f left outer join downtime d on(f.fac_code=d.fac_code)
+		order by fac_code
+                
   	</select>
   	
-  	<select id="getdownList" resultType="DowntimeVO">
-  		select f.fac_name, f.fac_code, f.fac_status, d.down_code, d.down_reason, d.stop_date, d.down_manager
-		from facility f right outer join downtime d 
+  	<select id="getdownList" resultType="DowntimeVO">  		
+		select f.fac_name, f.fac_code, f.fac_status, d.down_code, d.down_reason, d.stop_date, d.down_manager,d.remark
+		from facility f right outer join downtime d
 		on f.fac_code = d.fac_code
+		where f.fac_status = 'N'
+        order by fac_code
   	</select>
   	
   	<insert id="insertDownList" parameterType="DowntimeVO">
@@ -27,8 +31,7 @@
   	
   	<update id="updateFacStatus" parameterType="FacilityVO">
   		update facility set fac_status = case
-		when fac_status = 'Y' then 'N'
-		when fac_status = 'N' then 'Y'
+		when fac_status = 'Y' then 'N'		
 		else fac_status
 		end
 		where fac_code = #{facCode}
