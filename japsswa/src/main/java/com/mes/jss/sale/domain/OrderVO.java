@@ -12,7 +12,7 @@ public class OrderVO {
 	private String ordStatus;
 	private String customerId;
 	private Date ordDate;
-	private int empNo;
+	private Long empNo;
 	
 	private String ordDetailId;
 	private int ordCount;
