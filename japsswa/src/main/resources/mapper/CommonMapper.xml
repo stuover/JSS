@@ -13,26 +13,60 @@
   	</select>
 	
 	<select id="getListDeta" resultType="CommVO">
-			select deta_code, deta_name, deta_note, deta_insert_date, deta_modify_date,details_index
+			select comm_code, deta_code, deta_name, deta_note, deta_insert_date, deta_modify_date, details_index
 			from details_comm
 			where comm_code = #{commCode}
 	</select>
 	
+	<select id="getCommon" resultType="CommVO">
+			select *
+			from common
+			where comm_code = #{commCode}
+	</select>
+	<select id = "searchComm" resultType="int">
+			select count(*)
+			from common
+			where comm_code = #{commCode}
+	
+	</select>
+	
+	<delete id="deleteCommCode" >
+		delete from common where comm_code = #{commCode} 
+	
+	</delete>
+	
 	<select id="getSearchDeta" resultType = "int">
-		select count(deta_code)
+		select count(*)
 		from details_comm
-		where deta_code = #{detaCode}
+		where details_index = #{detailsIndex}
 	</select>
 	
 	<update id="updateDetali" parameterType = "CommVO">
 		update details_comm
-		set deta_code = #{detaCode},
+		set deta_code = upper(#{detaCode}),
 			deta_name = #{detaName},
 			deta_note = #{detaNote},
-			deta_modify_date = to_date(sysdate, 'yyyy/MM/dd')
-		where deta_code = #{detaCode}
+			deta_modify_date = to_char(sysdate, 'yyyy/MM/dd')
+		where details_index = #{detailsIndex}
 	</update>
+	
 	<insert id="insertDetails" parameterType ="CommVO">
-		insert into details_comm values(#{detaCode}, #{detaName}, #{detaNote}, to_date(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'), #{commCode})	
+		insert into details_comm values(uppper(#{detaCode}), #{detaName}, #{detaNote}, to_char(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'), #{commCode},details_comm_seq.nextval)	
+	</insert>
+	
+	<delete id="deleteDetails" >
+		delete from details_comm where deta_code = #{detaCode}
+	</delete>
+	
+	<update id="updateComm" parameterType = "CommVO">
+		update common
+		set comm_name = #{commName},
+			comm_note = #{commNote},
+			modify_date = to_char(sysdate, 'yyyy/MM/dd')
+		where comm_code = #{commCode}
+	</update>
+	
+	<insert id="insertCommCode" parameterType = "CommVO">
+		insert into common values( upper(#{commCode}), #{commName}, #{commNote}, to_char(sysdate, 'yyyy/MM/dd'), to_char(sysdate, 'yyyy/MM/dd'))	
 	</insert>
   </mapper>

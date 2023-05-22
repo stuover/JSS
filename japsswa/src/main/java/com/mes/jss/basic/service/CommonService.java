@@ -13,4 +13,14 @@ public interface CommonService {
 
 	public void modifyDetails(CommListVO listVo);
 
+	public void removeDetails(CommListVO listVo);
+
+	public CommVO getCommCode(String commCode);
+
+	public void addCommCode(CommVO vo);
+
+	public boolean searchComm(String commCode);
+
+	public void removeCommCode(String commCode);
+
 }
