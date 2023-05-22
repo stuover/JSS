@@ -2,6 +2,9 @@ package com.mes.jss.sale.domain;
 
 import java.util.Date;
 
+import lombok.Data;
+
+@Data
 public class CustomerVO {
 	String customerId;
 	String customerName;
@@ -12,7 +15,9 @@ public class CustomerVO {
 	String contractStatus;
 	String custEtc;
 	int empNo;
-	
+	String itemName;
+	String itemCode;
+	long itemPrice;
 	String contractId;
 	String contProd;
 	Date contDate;

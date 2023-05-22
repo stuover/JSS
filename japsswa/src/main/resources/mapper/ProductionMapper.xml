@@ -13,14 +13,14 @@
 		WHERE plan_date >= (sysdate + 3) AND plan_date <= (sysdate - 3)
 		]]>
 	</select>  	
-  	
-  	<!--  -->
+
   	<select id="modalPlanResult" resultType="PlanVO">
 		<![CDATA[ 
 		SELECT plan_id, plan_name, plan_date, emp_name
 		FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
 		WHERE plan_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd') AND plan_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
 		]]>
+
   	</select>
 
 	<!--  -->

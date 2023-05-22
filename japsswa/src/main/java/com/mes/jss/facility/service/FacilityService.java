@@ -18,4 +18,6 @@ public interface FacilityService {
 	
 	public InspectionVO getInspection(InspectionVO vo);
 	public void setDownTime(DowntimeVO vo);
+	
+	public boolean updateFacList(FacilityVO vo);
 }

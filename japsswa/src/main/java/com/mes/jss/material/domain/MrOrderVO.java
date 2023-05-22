@@ -8,8 +8,8 @@ import lombok.Data;
 public class MrOrderVO {	// 자재 발주
 	private String mrOrderCode;
 	private String customerId;
-	private int empNo;
-	private int allCount;
-	private int productCount;
+	private long empNo;
+	private long allCount;
+	private long productCount;
 	private Date mrOrderDate;
 }

@@ -30,6 +30,23 @@ public class SaleServiceImpl implements SaleService {
 		return clist;
 	}
 
+	@Override
+	public void entRegister(OrderVO commInfo, List<OrderVO> list) {
+		orderMapper.entRegister(commInfo);
+		
+		 for(OrderVO Ovo : list) { 
+		 Ovo.setCustomerId(commInfo.getCustomerId());
+		 orderMapper.detRegister(Ovo); }
+		 
+		
+	}
+
+	@Override
+	public List<OrderVO> custInfo(String customerId) {
+		List<OrderVO> cInfo = orderMapper.custInfo(customerId);
+		return cInfo;
+	}
+
 	
 	
 }

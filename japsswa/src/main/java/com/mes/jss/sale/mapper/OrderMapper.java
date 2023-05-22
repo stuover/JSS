@@ -10,6 +10,12 @@ public interface OrderMapper {
 
 	List<OrderVO> custList(String custname);
 
+	public OrderVO entRegister(OrderVO commInfo);
+	
+	public OrderVO detRegister(OrderVO vo);
+
+	List<OrderVO> custInfo(String customerId);
+
 	
 
 }

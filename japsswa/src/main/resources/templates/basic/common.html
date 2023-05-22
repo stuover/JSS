@@ -23,6 +23,15 @@
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<style>
+	.myTr th{
+		background-color : ;
+	}
+	.myTr th, td{
+		 border: 1px solid #444444;
+	}
+	
+</style>
 
 </head>
 
@@ -33,6 +42,12 @@
 			<div class="card">
 				<div class="card-body">
 					<h1 class="card-title">공통 코드 관리</h1>
+					<input id="commCode" name="commCode" type="text" placeholder="공통코드" maxlength='5'>
+					<input id="commName" name="commName" type="text" placeholder="공통코드명">
+					<input id="commNote" name="commNote" type="text" placeholder="비고">
+					<button id="insertBtn" type="button" class="btn btn-primary">등록</button>
+					<button id="deleteBtn" type="button" class="btn btn-primary">삭제</button>
+					
 					
 					<div id="grid"></div>
 					
@@ -43,17 +58,26 @@
 	
 	
 		 <div class="modal fade" id="searchModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
-	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:650px">
+	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:670px">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	            <h5 class="modal-title" id="searchModalLabel">세부코드 조회</h5>
+	            <h5 class="modal-title" style="padding-right:25px;">세부코드 조회</h5>
 	                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
-	            <div class="modal-body">
-	            <div id="modalGrid"></div>
-	            </div>
+
+		        <div id="top">
+		            <div id="detaGrid" style="height:82px"></div>
+		        </div>
+				<div id="body" style="z-index : 9999">
+		            <button id="modalInsBtn" type="button" class="btn btn-primary" style="margin-left:10px">추가</button>
+				</div>
+		        <div id="battom">
+		        	
+		           	<div id="modalGrid"></div>	            
+		        </div>
 	            <div class="modal-footer">
-	            <button id="modalSelectBtn" type="button" class="btn btn-primary">선택</button>
+	            	<button id="modalModBtn" type="button" class="btn btn-primary">저장</button>
+	            	<button id="modalDelBtn" type="button" class="btn btn-primary">삭제</button>
 	            </div>
 	        </div>
 	        </div>
@@ -65,15 +89,9 @@
 
 
 			window.onload = function() {
-				
-				$.ajax({
-					url : "/commAjax",
-					method : "GET",
-					dataType : "JSON",
-					success : function(result) {
-						grid.resetData(result);
-					}
-				});
+				const token = $("meta[name='_csrf']").attr("content")
+		  		const header = $("meta[name='_csrf_header']").attr("content");
+
 				var grid = new tui.Grid({
 					el : document.getElementById('grid'),
 					scrollX : true,
@@ -110,39 +128,154 @@
 					}, {
 						header : '수정일',
 						name : 'modifyDate',
+						formatter : function(e){
+							return e.value.substr(0,10);
+						},
 						sortingType : 'desc',
 						sortable : true
 					} ]
 				});
+				
+				grid.on('check', function (e) {
+	                var checkRows = grid.getCheckedRowKeys();
+	                checkRows.forEach(function( key, idx){                      
+	                   if(key != e.rowKey){
+	                      grid.uncheck(key);
+	                   }
+	                });
+	                $('#commCode').val(grid.getCheckedRows()[0].commCode);
+	                $('#commName').val(grid.getCheckedRows()[0].commName);
+	                $('#commNote').val(grid.getCheckedRows()[0].commNote);
+	             });
+				
+				// 공통코드 LIST
+				function commList(){
+					$.ajax({
+						url : "/commAjax",
+						method : "GET",
+						dataType : "JSON",
+						success : function(result) {
+							grid.resetData(result);
+						},
+						error : function(reject){
+							
+						}
+					});
+				}
+				commList();
+				
+			$('#insertBtn').on('click',function() {
+				let commCode = $('#commCode').val();
+				let commName = $('#commName').val();
+				let commNote = $('#commNote').val();
+				 
+				$.ajax({
+					url : "/addCommCode",
+					method : "get",
+					data : {commCode : commCode, commName : commName, commNote : commNote },
+					success : function(result){
+						console.log(result)
+						if(result == 'success'){
+							alert("등록 성공!")
+							commList();
+						}else if (result == "fail") {
+							alert("이미 있는 코드입니다.")
+						}
+					},
+					error : function(reject){
+						console.log(reject);
+
+					}
+				})
+			});
 			
-		
-			grid.on('check', function (e) {
-                var checkRows = grid.getCheckedRowKeys();
-                checkRows.forEach(function( key, idx){                      
-                   if(key != e.rowKey){
-                      grid.uncheck(key);
-                   }
-                });
-            });
-		  	
+			$('#deleteBtn').on('click', function() {
+				let commCode = $('#commCode').val();
+
+				$.ajax({
+					url : "/removeCommCode",
+					method : "get",
+					data : {commCode : commCode},
+					success : function(result){
+						if(result == 'success'){
+							alert("삭제 성공")
+							$('#commCode').val('');
+			                $('#commName').val('');
+			                $('#commNote').val('');
+							
+							commList();
+						}else if (result == "fail") {
+							alert(commCode + '가(이) 삭제되었습니다.')
+						}
+					},
+					error : function(reject){
+						console.log(reject);
+
+					}
+				})
+			})
+			
+
+			// 모달 그리드 0.3초 후 그리기
 	 		  $('#searchModal').on('shown.bs.modal', function (e) {
 					console.log('open');
+					setTimeout(()=> detaGrid.refreshLayout(), 300);
+
 					setTimeout(()=> modalGrid.refreshLayout(), 300);
+
 	  			})
-	  			
-	  			
-
-
+	
+	 		 var detaGrid = new tui.Grid({
+					el : document.getElementById('detaGrid'),
+					scrollX : true,
+					scrollY : true,
+	
+					columns : [ 
+					{
+						header : '공통코드',
+						name : 'commCode',
+					}, {
+						header : '공통코드명',
+						name : 'commName',
+						editor: 'text'
+					}, {
+						header : '비고',
+						name : 'commNote',
+						editor: 'text',
+					}, {
+						header : '등록일',
+						name : 'insertDate',
+						formatter : function(e){
+							return e.value.substr(0,10);
+						}
+					}, {
+						header : '수정일',
+						name : 'modifyDate',
+						formatter : function(e){
+							return e.value.substr(0,10);
+						}
+					} ]
+				});
+	 	
+	  		
+	  		// 상세 코드 List
 			 var modalGrid = new tui.Grid({
 					el : document.getElementById('modalGrid'),
 					scrollX : true,
 					scrollY : true,
-					rowHeaders : [ {type : 'checkbox', header:" "},{type :'rowNum'} ],
+					rowHeaders : [ {type : 'checkbox', header:" "}],
 					pageOptions : {
 						useClient : true,
 						perPage : 5
 					},
-					columns : [ 
+					columns : [
+						{
+							header : 'No.',
+							name : 'detailsIndex',
+							sortingType : 'desc',
+							width: 20,
+							sortable : true
+						},
 					{
 						header : '세부코드',
 						name : 'detaCode',
@@ -164,43 +297,157 @@
 					}, {
 						header : '등록일',
 						name : 'detaInsertDate',
+						formatter : function(e){
+							if(e.value == null){
+								return;
+							}else{
+								return e.value.substr(0,10);
+							}
+														
+						},
 						sortingType : 'desc',				
 						sortable : true
 					}, {
 						header : '수정일',
 						name : 'detaModifyDate',
 						sortingType : 'desc',
+						formatter : function(e){
+							if(e.value == null){
+								return;
+							}else{
+								return e.value.substr(0,10);
+							}
+						},
 						sortable : true
 					} ]
 			});
+	
 			 
-		  		  
+		
+		
+
 			
-			grid.on('click', function(e){
+	 		var commCode;
+			grid.on('click',function(e){
+				if(e.columnName != "_checked"){
+				commCode = grid.getRow(e.rowKey).commCode;
+				console.log(e.rowKey)
 				 grid.setSelectionRange({
 			            start: [e.rowKey, 0],
 			            end: [e.rowKey, grid.getColumns().length - 1]
 			     	});
-				 console.log(grid.getRow(e.rowKey));
+					getModal(commCode);
+					getComm(commCode);
 					$('#searchModal').modal('show');
-				
+				}
+			});
+			
+			
+			function getComm(commCode){
+					
+		 		 $.ajax({
+						url : "/commSearchAjax",
+						dataType: "json",
+						data : {commCode : commCode },
+						success : function(result) {
+								detaGrid.resetData([result]);
+						},
+						error : function(reject){
+							console.log(reject);
+
+						}					
+				});
+			
+			}
+			// 모달 그리드 데이터 
+	 		 function getModal(commCode){
+		 		
+		 		
 				 $.ajax({
 					url : "/detailAjax",
 					dataType: "json",
-					data : {commCode : grid.getRow(e.rowKey).commCode },
+					data : {commCode : commCode },
 					success : function(result) {
-						console.log(result);
 						if(result != null){
-							modalGrid.resetData(result);					
+							modalGrid.resetData(result);
 						}else {
 							alert("결과 값이 없습니다.")
 						}
+					},
+					error : function(reject){
+						console.log(reject);
+
 					}
+					
 				});
 
+			}
+			
+			
+			$('#modalInsBtn').on('click', function(){
+				modalGrid.prependRow();
+			})
+			
+			
+			$('#modalModBtn').on('click',function(){
+				modalGrid.finishEditing();
+				let commData = detaGrid.getRow(0);
+				let data =  modalGrid.getCheckedRows();
+				
+				$.ajax({
+					url : "/modifyDetailsAjax",
+					contentType : "application/json",
+					data : JSON.stringify( {code: commCode, list : modalGrid.getData(), comm : commData }),
+					method :"post",
+					dataType : "json",
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);    
+					},
+					success : function(result){
+						alert('등록완료!');
+						getComm(commCode);
+						getModal(commCode);
+						commList();
+
+					},
+					error : function(reject){
+						console.log(reject);
+					}
+					
+				});
+			});
+			
+			
+			$('#modalDelBtn').on('click',function(){
+				console.log(modalGrid.getCheckedRows());
+				console.log(commCode);
+				let arr = JSON.stringify( modalGrid.getCheckedRows() );
+				arr = arr.substr(1,arr.length-2)
+				var data =  modalGrid.getCheckedRows();
+				
+				$.ajax({
+					url : "/removeDetailsAjax",
+					contentType : "application/json",
+					data :  JSON.stringify( {code: commCode, list : data }),
+					method :"post",
+					dataType : "json",
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);    
+					},
+					success : function(result){
+						alert('삭제완료!');
+						getModal(commCode);
+
+					},
+					error : function(reject){
+						console.log(reject);
+
+					}
+					
+				});
 			});
 		}
-		
+			  
 	</script>
 
 </th:block>

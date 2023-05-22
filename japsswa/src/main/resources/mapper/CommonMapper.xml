@@ -5,7 +5,6 @@
   
   <mapper namespace="com.mes.jss.basic.mapper.CommonMapper">
 
-  	<!-- 사원 전체 리스트 -->
   	<select id="getListComm" resultType="CommVO">
   		select  comm_code, comm_name, comm_note, insert_date, modify_date
   		from  common
@@ -13,37 +12,61 @@
 
   	</select>
 	
-	<!-- 사원번호 시퀀스 -->
 	<select id="getListDeta" resultType="CommVO">
-			select deta_code, deta_name, deta_note, deta_insert_date, deta_modify_date
+			select comm_code, deta_code, deta_name, deta_note, deta_insert_date, deta_modify_date, details_index
 			from details_comm
 			where comm_code = #{commCode}
 	</select>
 	
-	<!-- 사원등록 -->  	
-	<insert id="insertEmp" parameterType="EmpVO">
-		insert into emp (emp_no, emp_name, phone_num, email, hire_date, password, role_id)
-		       values(#{empNo}, #{empName}, #{phoneNum}, #{email}, to_date(#{hireDate},'yyyy/MM/DD'), #{password}, 'ROLE_USER')
-	</insert>
+	<select id="getCommon" resultType="CommVO">
+			select *
+			from common
+			where comm_code = #{commCode}
+	</select>
+	<select id = "searchComm" resultType="int">
+			select count(*)
+			from common
+			where comm_code = #{commCode}
 	
-	<select id="selectEmp" parameterType="EmpVO" resultType="EmpVO">
-		select * from emp where emp_no = #{empNo}
 	</select>
 	
-	<update id="updateEmp" parameterType="EmpVO">
-		update emp
-		set position = #{position} ,
-		    dept_name = #{deptName} ,
-		    role_id = #{roleId}
-	    where emp_no = #{empNo}
-	</update>
+	<delete id="deleteCommCode" >
+		delete from common where comm_code = #{commCode} 
 	
-	<delete id="deleteEmp">
-		delete from emp where emp_no = #{empNo}
 	</delete>
 	
-	<select id="getUser" resultType="EmpVO">
-		select * from emp where emp_no = #{empNo}
+	<select id="getSearchDeta" resultType = "int">
+		select count(*)
+		from details_comm
+		where details_index = #{detailsIndex}
 	</select>
 	
+	<update id="updateDetali" parameterType = "CommVO">
+		update details_comm
+		set deta_code = upper(#{detaCode}),
+			deta_name = #{detaName},
+			deta_note = #{detaNote},
+			deta_modify_date = to_char(sysdate, 'yyyy/MM/dd')
+		where details_index = #{detailsIndex}
+	</update>
+	
+	<insert id="insertDetails" parameterType ="CommVO">
+		insert into details_comm values(uppper(#{detaCode}), #{detaName}, #{detaNote}, to_char(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'), #{commCode},details_comm_seq.nextval)	
+	</insert>
+	
+	<delete id="deleteDetails" >
+		delete from details_comm where deta_code = #{detaCode}
+	</delete>
+	
+	<update id="updateComm" parameterType = "CommVO">
+		update common
+		set comm_name = #{commName},
+			comm_note = #{commNote},
+			modify_date = to_char(sysdate, 'yyyy/MM/dd')
+		where comm_code = #{commCode}
+	</update>
+	
+	<insert id="insertCommCode" parameterType = "CommVO">
+		insert into common values( upper(#{commCode}), #{commName}, #{commNote}, to_char(sysdate, 'yyyy/MM/dd'), to_char(sysdate, 'yyyy/MM/dd'))	
+	</insert>
   </mapper>

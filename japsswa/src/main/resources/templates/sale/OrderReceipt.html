@@ -3,6 +3,13 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{/layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+</head>
 <th:block layout:fragment="content">
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -25,47 +32,32 @@
 
 	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 
-
 	<div class="container-fluid page-body-wrapper">
 
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="page-title">주문서 작성</h4>
+					<h4 class="page-title">주문서 관리</h4>
+					
 
-
+					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
 					<div>
-						<table class="customer">
-							<tr>
-								<td>거래처</td>
-								<td><input type="text" id="cust" name="cust">
+						
 									<button id="searchBtn" type="button" class="btn btn-success"
-										data-bs-toggle="modal" data-bs-target="#searchModal">찾기</button></td>
-
-							</tr>
-							<tr>
-								<td>연락처</td>
-								<td><input type="text" id="tel" name="tel"></td>
-							</tr>
-							<tr>
-								<td>주소</td>
-								<td><input type="text" id="addr" name="addr"></td>
-							</tr>
-							<tr>
-								<td>메일주소</td>
-								<td><input type="email" id="mail" name="mail"></td>
-							</tr>
-						</table>
+										data-bs-toggle="modal" data-bs-target="#searchModal">거래처 찾기</button>
 					</div>
 
 					<div class="row"></div>
-
+					
+					<div id="grids"></div>
 					<div id="grid"></div>
-
 
 					<div>
 						<form>
-							<button id="insertBtn" type="button">등록</button>
+							<button id="addBtn" type="button" class="btn btn-success">추가</button>
+							<button id="insertBtn" type="button" class="btn btn-success">등록</button>
+							<button id="updateBtn" type="button" class="btn btn-success">수정</button>
+							<button id="delBtn" type="button" class="btn btn-success">삭제</button>
 						</form>
 					</div>
 
@@ -101,9 +93,71 @@
 	</div>
 
 	<script>
+	  
 
+		const token = $("meta[name='_csrf']").attr("content")
+		const header = $("meta[name='_csrf_header']").attr("content")
   		const Grid = tui.Grid;
   		
+		let gridsData = [{}];
+  		const grids = new Grid({
+		      el: document.getElementById('grids'),
+		      data: gridsData,
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+				     {
+					  header: '거래처 명',
+					  name: 'customerName',
+					  editor: 'text'
+					 },
+					 {
+					  header: '주소',
+					  name: 'custAddr',
+					  editor: 'text'
+				     },
+				     {
+					  header: '메일',
+					  name: 'custMail',
+					  editor: 'datePicker'
+					 }, 
+				     {
+				      header: '연락처',
+				      name: 'custTel',
+				      editor: 'text'
+				    
+				     },	
+				     {
+					  header: '주문명',
+					  name: 'ordName',
+					  editor: 'text'
+					  
+					 },
+					 {
+					  header: '담당자',
+					  name: 'empName',
+					  editor: 'text'
+					 }
+			      ],
+			      
+			        
+			    });
+
+			grids.on('check', ev => {
+		      console.log('check!', ev);
+		    });
+
+		    grids.on('uncheck', ev => {
+		      console.log('uncheck!', ev);
+		    });
+
+		    grids.on('focusChange', ev => {
+		      console.log('change focused cell!', ev);
+		    });
+		
+		    
+		var unit;
+		var count;
   		let gridData = [{}];
   		const grid = new Grid({
 		      el: document.getElementById('grid'),
@@ -112,46 +166,29 @@
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
-			        
-				     {
-					  header: '주문명',
-					  name: 'ordName',
+		    	     {
+					  header: '품목명',
+					  name: 'itemName',
 					  editor: 'text'
 					 },
-					 {
-					  header: '품목명',
-					  name: 'itemName'
-				     },
 				     {
-				      header: '주문날짜',
-				      name: 'ordDate',
-				      editor: 'datePicker'
-				     },
-				     {
-					  header: '납부예정날짜',
+					  header: '납부예정일',
 					  name: 'outDate',
 					  editor: 'datePicker'
-					 }, 
-				     {
-				      header: '단가',
-				      name: 'unitPrice',
-				    	  editor: 'text'
-				     },	
+					 },
+					 {
+					  header: '단가',
+					  name: 'unitPrice'
+				     },
 				     {
 					  header: '수량',
 					  name: 'ordCount',
 					  editor: 'text'
-					 },
+					 }, 
 					 {
 				      header: '판매가격',
-					  name: 'eachPrice',
-					  editor: 'text'
-				     },
-					 {
-					  header: '담당자',
-				      name: 'empName',
-					  editor: 'text'
-					 }
+				      name : 'eachPrice'
+				     }
 			      ],
 			      summary: {
 			          height: 40,
@@ -178,8 +215,13 @@
 		    grid.on('focusChange', ev => {
 		      console.log('change focused cell!', ev);
 		    });
-		
+		    
+		    
+	
 		    window.onload = function(){
+		    
+		    	grids.setValue(0, 'empName', $('#name').val(), false);
+		    	
 				$.ajax({
 			    	url : "/itemNamelist",
 			    	method : "GET",
@@ -196,8 +238,16 @@
 						setTimeout(()=> modalGrid.refreshLayout(), 1);
 		  			});
 				
-				    	
-		    };
+		    }; 
+		    
+		    grid.on('editingFinish', function(e){
+		  
+		    	var unit = grid.getRow(e.rowKey).unitPrice;
+		    	var count = grid.getRow(e.rowKey).ordCount;
+		    	
+		    	grid.setValue(e.rowKey, 'eachPrice', unit*count, false);
+
+		    })
 		    
 			
 				const modalGrid = new Grid({
@@ -210,6 +260,10 @@
 		                perPage: 5 
 		                },
 		               columns: [
+		            	   {
+			                   header: '거래처 코드',
+			                   name: 'customerId'
+			                 },
 		                 {
 		                   header: '거래처명',
 		                   name: 'customerName'
@@ -242,7 +296,9 @@
 		             });
 		            
 		           
-		            
+		        	
+		
+			 
 		            
 		           $('#custSearch').on('click', function(){
 		        	   
@@ -263,39 +319,66 @@
 		        	   })
 		           }) 
 
-		           
+		           var custInfo = [];
+		           var custId = '';
 		           $('#chooseBtn').on('click', function(){
+		        	   
+		        	   custId = modalGrid.getCheckedRows()[0].customerId;
+		        	   custInfo = [{customerName : modalGrid.getCheckedRows()[0].customerName, custAddr : modalGrid.getCheckedRows()[0].custAddr, custMail : modalGrid.getCheckedRows()[0].custMail, custTel : modalGrid.getCheckedRows()[0].custTel}]
 		        	   
 		        	   $('#searchModal').modal('hide');
 
-		        	   const result = $('#modalInput').val();
-		        	   $('#modalInput').val('');
-		        	   
-		        	   $.ajax({
-		        		   url : "/custList",
-		        		   method : "GET",
-		        		   data : {'result' : result},
-		        		   dataType : "JSON",
-		        		   success : function(result){
-		        			   modalGrid.resetData(result);
-		        			   modalGrid.refreshLayout();
-		        			  
-		        		   }
-		        		   
+		        	   $('#searchModal').on('hidden.bs.modal', function(e){
+		        		   gridsData = custInfo;
+		        		   grids.resetData(custInfo);
+			        	   $.ajax({
+			        		   url : "/custInfo",
+			        		   method : "GET",
+			        		   data : {customerId : custId},
+			        		   dataType : "JSON",
+			        		   success : function(result){
+			        			   grids.resetData(result);
+			        			   grids.setValue(0, 'empName', $('#name').val(), false);
+			        			   modalGrid.refreshLayout();
+			        			  
+			        		   }
+			        		   
+			        	   })
 		        	   })
-		        	   
-		        	   $('#cust').val(modalGrid.getCheckedRows()[0].customerName);
-		        	   $('#tel').val(modalGrid.getCheckedRows()[0].custTel);
-		        	   $('#addr').val(modalGrid.getCheckedRows()[0].custAddr);
-		        	   $('#mail').val(modalGrid.getCheckedRows()[0].custMail);
+		        	  
 		        	   
 		           }) 
+		         
+		           
+		           $('#insertBtn').on('click', function(){
+		        	   console.log(grid.getCheckedRows())
+		        	   console.log(customerId)
+		        	   var data = grid.getCheckedRows();
+		        	   $.ajax({
+		        		   url : "/entireRegister",
+		        		   contentType : "application/json",
+		        		   data : JSON.stringify( { commInfo : customerId, list : data } ),
+		        		   method : "post",
+		        		   dataType:"json",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        			   
+		        		   },
+		        		   success:function(result){
+	
+		        			   alert('등록 완료 되었습니다')
+		        		   }
+		        	   });
+		        	   
+		        	  
+		        		  
+		           })
+		  
 				
 
   			
 
-			
-			
+		
   		</script>
 
 </th:block>
