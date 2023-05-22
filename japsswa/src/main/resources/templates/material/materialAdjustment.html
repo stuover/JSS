@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+	
+</style>
+
+</head>
+<body>
+
+
+
+<th:block layout:fragment="content">
+	
+	<h3 style="font-weight:bold;">자재 조정 관리</h3>
+	
+	
+	<div id="grid" style="margin-top:100px;"></div>
+	
+	<script>
+	
+	$(document).ready(function(){
+		
+	
+	$.ajax({
+				url : "/mrAdjustmentAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid.resetData(result);
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+
+			});
+
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '조정코드',
+					name : 'adjustmentCode'
+				}, {
+					header : '자재 lot 번호',
+					name : 'mrLotNumber'
+				}, {
+					header : '등록일자',
+					name : 'registerDate'
+				}, {
+					header : '처리',
+					name : 'process'
+				}, {
+					header : '결과',
+					name : 'change'
+				},
+				{
+					header : '조정일자',
+					name : 'adjustmentDate'
+				},
+				{
+					header : '사원 번호',
+					name : 'empNo'
+				}
+				]
+			})
+			
+		});
+
+	
+		</script>
+
+
+</th:block>
+
+
+</body>
+
+</html>	

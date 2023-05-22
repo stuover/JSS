@@ -34,7 +34,7 @@
 		</select>	
   		
   		<select id="customerList" resultType="CustomerVO">
-  			select c.customer_id, c.customer_name, i.item_name,c.cust_part 
+  			select c.customer_id, c.customer_name, i.item_name,i.item_code,i.item_price 
   			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
   			
   			
@@ -42,26 +42,46 @@
   		</select>
   		
   		<select id="searchcustomer" resultType="CustomerVO">
-  			select c.customer_id, c.customer_name, i.item_name,c.cust_part 
+  			select c.customer_id, c.customer_name, i.item_name,i.item_code,i.item_price 
   			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
   			where c.customer_name = #{result}
   		</select>
   		
   		<select id="orderInsert" statementType="CALLABLE">
   		
-  			{call MR_ORDER(
-  				#{itemName, mode=IN, jdbcType=VARCHAR},
+  			{call MR_ORDER_DETAIL(
+  				#{itemCode, mode=IN, jdbcType=VARCHAR},
   				#{mrCount, mode=IN, jdbcType=VARCHAR},
-  				#{mrPrice, mode=IN, jdbcType=VARCHAR},
-  				#{priceTotal, mode=IN, jdbcType=VARCHAR},
-  				#{customerName, mode=IN, jdbcType=VARCHAR},
-  				#{deliveryDate, mode=IN, jdbcType=VARCHAR},
-  				#{allCount, mode=IN, jdbcType=VARCHAR},
-  				#{productCount, mode=IN, jdbcType=VARCHAR},
-  				#{empName, mode=IN, jdbcType=VARCHAR}
+  				#{itemPrice, mode=IN, jdbcType=VARCHAR},
+  				#{deliveryDate, mode=IN, jdbcType=VARCHAR}
   				)	
   			}
   		</select>
   		
+  		<select id="mrorderInsert" statementType="CALLABLE">
+  			{call MR_ORDER(
+  				#{vo.getList().get(0).customerId, mode=IN, jdbcType=VARCHAR}
+  				
+  			
+  			)
+  		}
+  		</select>
+  		
+  		<select id="admGetList" resultType="MrAdjustmentVO">
+  			select * from material_adjustment
+  		
+  		</select>
+  		
+  		<select id="OrmGetList" resultType="MrOrderVO">
+  		
+  			select * from material_order
+  		</select>
+  		
+  		<select id="OrdGetList" resultType="MrOrderDetailVO">
+  		
+  			select * from material_order_detail
+  		
+  		</select>	
+  	
   		
   </mapper>

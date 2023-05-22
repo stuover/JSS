@@ -22,25 +22,36 @@
 	<th:block layout:fragment="content">
 		<h3 style="font-weight: bold;">&ensp;자재 발주</h3>
 		
-		<label for="cusname" style=" margin-left:20px">거래처 <button type="button" id="checkBtn" class="btn btn-primary"
+		<label for="cusId" style=" margin-left:20px; font-weight:bold;">거래처 코드 <button type="button" id="checkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target=".bd-example-modal-lg"
 				data-bs-target="#searchModal"
-				style="height: 35px; width: 100px; padding: 10px; margin-top:3px; margin-bottom: 10px; background-color:black; margin-left:50px;">거래처 찾기</button>
-				<button type="button" id="insertBtn" class="btn btn-primary"
-				
-				style="height: 35px; width: 50px; padding: 10px; margin-top:3px; margin-bottom: 10px; margin-right: 8px; background-color:black; margin-left:15px;">등록</button> 
+				style="height: 60px; width: 120px; padding: 10px; margin-top:3px; margin-bottom: 10px; background-color:green; margin-left:120px;"> 거래처 코드 <br> 찾기</button>
+				 
 			 </label>
-			 <input type=text id="cusname" style="width:180px; margin-left:20px;"> 
+			 
+			 
+			 <input type=text id="cusId" style="width:180px; margin-left:20px;">
+		
+		<label for="cusName" style=" margin-left:20px; margin-top:20px;font-weight:bold;">거래처 &ensp;</label>
+	 
+	   <input type=text id="cusName" style="width:180px; margin-left:20px;">
+			 
+		<label for="proId" style=" margin-left:20px; margin-top:20px;font-weight:bold;">품목 코드 &ensp;</label> 
+			 
+		<input type=text id="proId" style="width:180px; margin-left:20px;">	
+		
+		 <label for="proName" style=" margin-left:20px; margin-top:20px;font-weight:bold;">품목 &ensp;</label>	 
+		 <input type=text id="proName" style="width:180px; margin-left:20px;"> 
 			
-		
-		 <label for="proname" style=" margin-left:20px; margin-top:20px;">품목명 &ensp;</label>	 <input type=text id="proname" style="width:180px; margin-left:20px;"> 
-		
-			<label for="count" style=" margin-left:20px; margin-top:20px;" >수량 &ensp;</label>
+		<label for="proPrice" style=" margin-left:20px; margin-top:20px;font-weight:bold;" >가격 &ensp;</label>
+			 <input type=text id="proPrice" style="width:180px; margin-left:20px;" >	
+			
+			<label for="count" style=" margin-left:20px; margin-top:20px;font-weight:bold;" >수량 &ensp;</label>
 			 <input type=text id="count" style="width:180px; margin-left:20px;" >
 			
 			
 		
-			<label for="delivery" style=" margin-left:20px; margin-top:20px;">납품일 &ensp;</label>
+			<label for="delivery" style=" margin-left:20px; margin-top:20px;font-weight:bold;">납품일 &ensp;</label>
 			 <input type=date id="delivery" style="width:180px; margin-left:20px" >
 			
 			
@@ -82,10 +93,12 @@
 
 			</div>
 		</div>
-	
-		
-		<button type="button" id="orderBtn" class="btn btn-dark" style="width: 50px; height: 30px; margin-left:500px; margin-top:50px;padding: 8px;">발주</button>
-		<div id="grid1" style="margin-top:20px;"></div>
+	<div style="width:200px; margin-left:1500px;">
+		<button type="button" id="insertBtn" class="btn btn-dark"style="height: 30px; width: 50px; padding: 8px;">등록</button>
+		<button type="button" id="deleteBtn" class="btn btn-dark" style="height: 30px; width: 50px; padding: 8px;">삭제</button>
+		<button type="button" id="orderBtn" class="btn btn-dark" style="width: 50px; height: 30px;  padding: 8px;">발주</button>
+		</div>
+		<div id="grid1" style="margin-top:5px;"></div>
 		
 		
 		<script>
@@ -94,8 +107,20 @@
 		$(document).ready(function() {
 			
 			$('#checkBtn').on('click',function(){
-				
 			
+				$('#cusId').val('');
+				 $('#cusName').val('');
+				 $('#proId').val('');
+				 $('#proName').val('');
+				 $('#proPrice').val('');	
+				 $('#count').val('');
+				 $('#delivery').val('');
+			
+			$('#deleteBtn').on('click',function(){
+				grid1.removeCheckedRows(false);
+			})	 
+				 
+				 
 			$.ajax({
 				url:"/mrCustomerAjax",
 				method:"GET",
@@ -139,10 +164,12 @@
 			
 				 $('#chooseBtn').on('click',function(){
 					 
-					 $('#cusname').val(grid.getCheckedRows()[0].customerName);
-					 $('#proname').val(grid.getCheckedRows()[0].itemName);
-					 console.log(grid.getCheckedRows()[0].customerName);
-					 console.log(grid.getCheckedRows()[0].itemName);
+					 $('#cusId').val(grid.getCheckedRows()[0].customerId);
+					 $('#cusName').val(grid.getCheckedRows()[0].customerName);
+					 $('#proId').val(grid.getCheckedRows()[0].itemCode);
+					 $('#proName').val(grid.getCheckedRows()[0].itemName);
+					 $('#proPrice').val(grid.getCheckedRows()[0].itemPrice);
+					 
 					 
 					 $.ajax({
 							url : "/mrCustomerAjax",
@@ -157,8 +184,12 @@
 			
 				$('#insertBtn').on('click',function(){
 					
-					let order = {customerName : $('#cusname').val(),
-							itemName : $('#proname').val(),
+					let order = {
+							customerId : $('#cusId').val(),
+							customerName : $('#cusName').val(),
+							itemCode : $('#proId').val(),
+							itemName : $('#proName').val(),
+							itemPrice : $('#proPrice').val(),
 							mrCount: $('#count').val(),
 							deliveryDate: $('#delivery').val()};
 					
@@ -169,6 +200,15 @@
 				})
 			
 				$('#orderBtn').on('click',function(){
+					
+					$('#cusId').val('');
+					 $('#cusName').val('');
+					 $('#proId').val('');
+					 $('#proName').val('');
+					 $('#proPrice').val('');	
+					 $('#count').val('');
+					 $('#delivery').val('');
+					
 					
 					console.log(grid1.getCheckedRows());
 					$.ajax({
@@ -181,9 +221,10 @@
 							xhr.setRequestHeader(header, token);
 						},
 						success : function(result){
-							console.log('dsfdsfds')
+							
 						}
 					})
+					grid1.removeCheckedRows(false);
 				})	
 		
 		
@@ -194,19 +235,24 @@
 				scrollY : false,
 				rowHeaders: ['checkbox'],
 				columns : [ {
-					header : '코드',
+					header : '코드(거)',
 					name : 'customerId'
 				}, {
-					header : '거래처명',
+					header : '거래처',
 					name : 'customerName'
 				}, {
-					header : '구분',
-					name : 'custPart'
+					header : '코드(품)',
+					name : 'itemCode'
 				},  
 					{
-					header : '자재명',
+					header : '자재',
 					name : 'itemName'
-					}
+				},
+					{
+					header : '가격',
+					name : 'itemPrice'
+				}
+				
 				]
 			});
 			
@@ -220,12 +266,25 @@
 				scrollY : false,
 				rowHeaders: ['checkbox'],
 				columns : [ {
+					header : '거래처 코드',
+					name : 'customerId'
+				},{
 					header : '거래처',
 					name : 'customerName'
-				}, {
-					header : '품목명',
+				},
+				{
+					header : '품목 코드',
+					name : 'itemCode'
+				},
+				
+				{
+					header : '품목',
 					name : 'itemName'
-				}, {
+				},{
+					header : '가격',
+					name : 'itemPrice'
+				},
+				{
 					header : '수량',
 					name : 'mrCount'
 				}, {

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+	
+</style>
+
+</head>
+<body>
+
+
+
+<th:block layout:fragment="content">
+	
+	
+	<h3 style="font-weight:bold; margin-left:30px;">자재 발주 조회</h3>
+	
+	
+	<div id="grid" style="margin-top:100px;"></div>
+	
+	
+	<div id="grid1"></div>
+	
+	<script>
+	
+	$(document).ready(function(){
+		
+	
+	$.ajax({
+				url : "/mrOrderListAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid1.resetData(result);
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+
+			});
+
+			var grid1 = new tui.Grid({
+				el : document.getElementById('grid1'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '발주 코드',
+					name : 'mrOrderCode'
+				}, {
+					header : '거래처 코드',
+					name : 'customerId'
+				}, {
+					header : '사원 코드',
+					name : 'empNo'
+				}, {
+					header : '총 가격',
+					name : 'allCount'
+				}, {
+					header : '품목 수',
+					name : 'productCount'
+				},
+				{
+					header : '발주일자',
+					name : 'mrOrderDate'
+				}
+				
+				]
+			})
+			
+		
+			$.ajax({
+				url : "/mrOrderDetailAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid.resetData(result);
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+
+			});
+
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '발주 상세코드',
+					name : 'mrOrderDetail'
+				}, {
+					header : '발주 코드',
+					name : 'mrOrderCode'
+				}, {
+					header : '품목 코드',
+					name : 'itemCode'
+				}, {
+					header : '수량',
+					name : 'mrCount'
+				}, 
+				{
+					header : ' 가격',
+					name : 'itemPrice'
+				},
+				{
+					header : '총 가격',
+					name : 'priceTotal'
+				},
+				{
+					header : '납품일',
+					name : 'deliveryDate'
+				}
+				
+				]
+			})	
+			
+			
+			
+		});
+
+	
+		</script>
+	
+	
+	
+
+</th:block>
+
+
+</body>
+
+</html>	
