@@ -5,21 +5,41 @@
   
   <mapper namespace="com.mes.jss.production.mapper.PlanMapper">
   
-  	<!-- 생산계획관리 페이지에서 제품별 주문수량 정보 리스트 -->
-  	<select id="itemListInfo" resultType="PlanVO">
-		SELECT item_name
-		FROM itemlist
-		WHERE item_type = '완제품'
-		ORDER BY item_code
-  	</select>
-  	
-  	<select id="modalPlanList" resultType="PlanVO">
-		SELECT plan_id, plan_name, plan_date, e.emp_name
-		FROM plan p JOIN emp e 
-					ON(p.emp_no = e.emp_no)
+  	<!--  -->
+	<select id="modalPlanList" resultType="PlanVO">
+		<![CDATA[ 
+		SELECT plan_id, plan_name, plan_date, emp_name
+		FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
+		WHERE plan_date >= (sysdate + 3) AND plan_date <= (sysdate - 3)
+		]]>
+	</select>  	
+
+  	<select id="modalPlanResult" resultType="PlanVO">
+		<![CDATA[ 
+		SELECT plan_id, plan_name, plan_date, emp_name
+		FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
+		WHERE plan_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd') AND plan_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
+		]]>
+
   	</select>
 
+	<!--  -->
+	<select id="planSearchResult" resultType="PlanVO">
+		select  pdetail_id, item_name, plan_amount, plan_start, plan_end, plan_priority, d.item_code
+		from plan_detail d join itemlist i on (d.item_code = i.item_code)
+		where plan_id = #{planId}
+	</select>
+	
+	<!-- 제품 검색 모달창 :  제품 리스트 -->
+	<select id ="itemList"  resultType="PlanVO">
+		SELECT i.item_code, item_name, sum(ord_count) as "itemOrders"
+		FROM itemlist i join orddetail o on(i.item_code = o.item_code)
+		WHERE item_name = #{itemName}
+		group by i.item_code, item_name	
+	</select>
 
+
+	<!--  -->
 	<select id="planSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">
 	   
 	   {call PLAN_INSERT(        
@@ -31,13 +51,6 @@
 	   }
 	   
 	</select> 
-
-	
-	<select id="planSearchResult" resultType="PlanVO">
-		select  item_name, plan_amount, plan_start, plan_end, plan_priority
-		from plan_detail d join itemlist i on (d.item_code = i.item_code)
-		where plan_id = #{planId}
-	</select>
 
 
 
@@ -54,6 +67,8 @@
 	   }
 	   
 	</select> 
+	
+
 
   	
   </mapper>
