@@ -1,6 +1,7 @@
 package com.mes.jss.web;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Controller
 @Log4j2
-public class ProductionController {
+public class ProductPlanController {
 	
 
 	@Autowired PlanService planService = new PlanServiceImpl();
@@ -32,12 +33,16 @@ public class ProductionController {
 		return "production/planManage";
 	}
 	
+	
+	
 	// 생산계획 조회 모달창 : 생산 계획 리스트 (초기값)
 	@RequestMapping("/modalPlanListAjax")
 	@ResponseBody
 	public List<PlanVO> modalPlanListAjax() {
 		List<PlanVO> inputData = new ArrayList<>();
 		inputData = planService.modalPlanList();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println(sdf.format(inputData.get(0).getPlanDate()));
 		log.info("inputData" + inputData);
 
 		return inputData;
@@ -48,8 +53,7 @@ public class ProductionController {
 	@ResponseBody
 	public List<PlanVO> modalPlanResultAjax(SearchVO vo) {
 		List<PlanVO> inputData = new ArrayList<>();
-		inputData = planService.modalPlanResult(vo);
-	
+		inputData = planService.modalPlanResult(vo);	
 		return inputData;
 	}
 	
@@ -83,7 +87,6 @@ public class ProductionController {
 	public List<PlanVO> searchItemResultAjax(PlanVO vo) {
 		List<PlanVO> inputData = new ArrayList<>();
 		inputData = planService.itemListResult(vo);
-	
 		return inputData;
 	}
 	
@@ -96,7 +99,7 @@ public class ProductionController {
 		System.out.println(data);
 		PlanVO head =  data.getHead();
 		head.setEmpNo(Long.parseLong(principal.getName()));
-		
+			
 		List<PlanVO> list = data.getDetailList();
 		planService.planSave(head, list);		
 		return head;
@@ -112,6 +115,18 @@ public class ProductionController {
 			
 			List<PlanVO> list = data.getDetailList();
 			planService.planModify(head, list);		
+			return head;
+		}
+		
+		
+		// 생산계획 및 상세계획 삭제.
+		@RequestMapping("/deletePlanAjax")
+		@ResponseBody
+		public PlanVO deletePlanAjax(@RequestBody PlanDatasVO data, Principal principal) {
+			PlanVO head = data.getHead();
+			
+			List<PlanVO> list = data.getDetailList();
+			planService.planDelete(head, list);
 			return head;
 		}
 	
