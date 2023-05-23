@@ -35,9 +35,19 @@ public interface PlanMapper {
 	
 	// 생산계획 수정.
 	// 생산계획 공통 내용
-	public PlanVO planModify(PlanVO vo);	
+	public int planModify(PlanVO vo);	
 	// 생산계획 세부 내용
-	public PlanVO planDetailModify(PlanVO vo);
+	public int planDetailModify(PlanVO vo);
+	
+	
+	
+	// 생산계획 삭제.
+	// 생산계획 공통 내용.
+	int planDelete(PlanVO vo);
+	
+	// 생산계획 세부 내용.
+	int planDetailDelete(PlanVO vo);
+	
 	
 	
 }

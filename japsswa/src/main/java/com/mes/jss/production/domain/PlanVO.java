@@ -1,9 +1,7 @@
 package com.mes.jss.production.domain;
 
 import java.util.Date;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import lombok.Data;
 
 @Data
@@ -16,11 +14,11 @@ public class PlanVO {
 	String itemCode; 
 	int planAmount; 
 	int planPriority; 
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern="YYYY-MM-dd") // JSON 무관, 외부에서 값이 입력될 때 정해진 포맷으로 입력받음
 	Date planStart;
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date planEnd;
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date planDate;
 	int itemOrders;
 	
