@@ -69,4 +69,8 @@
 	<insert id="insertCommCode" parameterType = "CommVO">
 		insert into common values( upper(#{commCode}), #{commName}, #{commNote}, to_char(sysdate, 'yyyy/MM/dd'), to_char(sysdate, 'yyyy/MM/dd'))	
 	</insert>
+	
+	<select id="getItemDeta" resultType = "CommVO">
+		select deta_code, deta_name from details_comm where comm_code ='ITE'
+	</select>
   </mapper>
