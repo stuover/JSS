@@ -41,7 +41,7 @@ public interface MaterialMapper {
 	public List<MrOrderVO> OrmGetList();
 	
 	// 발주 상세
-	public List<MrOrderDetailVO> OrdGetList();
+	public List<MrOrderDetailVO> OrdGetList(String keyword);
 	
 	// 자재 조정 리스트
 	public List<MrAdjustmentVO> admGetList();

@@ -6,13 +6,16 @@ import lombok.Data;
 
 @Data
 public class QualityVO {	// 품질 VO
-	private String testCode;
-	private String itemCode;
-	private String mrOrderDetail;
-	private String situation;
-	private String testResult;
-	private Date testDate;
-	private String mrCount;
-	private Date exDate;
-	private int checklistCode;
+	String testCode;
+	String itemCode;
+	String mrOrderDetail;
+	String situation;
+	Date startDate;
+	Date endDate;
+	long empNo;
+	long testQuantity;
+	long errQuantity;
+	long passQuantity;
+	double defectiveRate;
+	String testNote;
 }

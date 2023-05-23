@@ -21,50 +21,67 @@ public class MaterialServiceImpl implements MaterialService {
 	@Autowired
 	private MaterialMapper materialMapper;
 
+	// 자재 조회
+	
+	@Override
+	public List<MrVO> mrlist() {
+		
+		return materialMapper.getList();
+	}
+	
+	// 자재 재고 검색
+	
+	@Override
+	public List<MrVO> mrCount(String keyword) {
+		
+		return materialMapper.mrCountList(keyword);
+	}
+	
+	
+	// 자재 입고
+	
 	@Override
 	public int mrStore(MrVO vo) {
 
 		return materialMapper.insert(vo);
 	}
 
-	// 자재 조회
-
-	@Override
-	public List<MrVO> mrlist() {
-
-		return materialMapper.getList();
-	}
-
+	
+	// 입고 확인 검색
+	
 	@Override
 	public List<MrVO> searchList(String keyword) {
 
 		return materialMapper.codeList(keyword);
 	}
-
-	@Override
-	public List<MrVO> mrCount(String keyword) {
-
-		return materialMapper.mrCountList(keyword);
-	}
-
+	
+	
+	// 자재 입고 
+	
 	@Override
 	public MrVO mrIn(String testCode) {
 
 		return materialMapper.StoreIn(testCode);
 	}
-
+	
+	// 거래처 리스트
+	
 	@Override
 	public List<CustomerVO> cusSearch() {
 
 		return materialMapper.customerList();
 	}
 
+	// 거래처 검색
+	
 	@Override
 	public List<CustomerVO> cusListSearch(String result) {
 
 		return materialMapper.searchcustomer(result);
 	}
-
+	
+	// 자재 발주 
+	
 	@Override
 	@Transactional
 	public void orders(DetaiListlVO vo) {
@@ -78,24 +95,31 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 
 	}
+	
+	// 자재 발주 리스트
+		@Override
+		public List<MrOrderVO> OrderMain() {
+			
+			
+			return materialMapper.OrmGetList();
+		}
+		// 자재 발주 상세 리스트
+		
+		@Override
+		public List<MrOrderDetailVO> OrderDetail(String keyword) {
+			
+			return materialMapper.OrdGetList(keyword);
+		}
+	
 
+	// 자재 조정 리스트
+	
 	@Override
 	public List<MrAdjustmentVO> admList() {
 		
 		return materialMapper.admGetList();
 	}
-
-	@Override
-	public List<MrOrderVO> OrderMain() {
-		
-		
-		return materialMapper.OrmGetList();
-	}
-
-	@Override
-	public List<MrOrderDetailVO> OrderDetail() {
-		
-		return materialMapper.OrdGetList();
-	}
+	
+	
 
 }

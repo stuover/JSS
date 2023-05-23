@@ -4,18 +4,25 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.mes.jss.material.mapper.MaterialMapper">
+  		
+  	<!-- 자재 리스트 -->
   		<select id="getList" resultType="MrVO">
   		
   		select * from material
   		
-  		</select>  
   		
+  		</select>  
+  	
+  	
+  	<!-- 입고 확인 검색 -->	
   		<select id="codeList" resultType="MrVO">
   		
-  		select * from material where test_code = #{keyword}
+  		select * from material where store_reason_code = #{keyword}
   		
   		</select>
-		
+	
+	
+	<!-- 자재 재고 확인 -->	
 		<select id="mrCountList" resultType="MrVO">
 		
 			select i.item_name,i.item_type,
@@ -24,6 +31,8 @@
            	from material m join itemlist i on(m.item_code = i.item_code) where i.item_name = #{keyword} 
 		</select>
 		
+	
+	<!-- 자재 입고 -->	
 		<select id="StoreIn" statementType="CALLABLE">
 			{call MR_INSERT(
 				#{testCode, mode=IN, jdbcType=VARCHAR}
@@ -33,6 +42,8 @@
 				
 		</select>	
   		
+  		
+  	<!-- 거래처 리스트 -->	
   		<select id="customerList" resultType="CustomerVO">
   			select c.customer_id, c.customer_name, i.item_name,i.item_code,i.item_price 
   			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
@@ -41,12 +52,16 @@
   		
   		</select>
   		
+  		
+  	<!-- 거래처 검색 -->	
   		<select id="searchcustomer" resultType="CustomerVO">
   			select c.customer_id, c.customer_name, i.item_name,i.item_code,i.item_price 
   			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
   			where c.customer_name = #{result}
   		</select>
-  		
+  
+  	
+  <!-- 발주 상세 프로시저-->
   		<select id="orderInsert" statementType="CALLABLE">
   		
   			{call MR_ORDER_DETAIL(
@@ -57,7 +72,9 @@
   				)	
   			}
   		</select>
+  
   		
+  	<!-- 발주 프로시저 -->	
   		<select id="mrorderInsert" statementType="CALLABLE">
   			{call MR_ORDER(
   				#{vo.getList().get(0).customerId, mode=IN, jdbcType=VARCHAR}
@@ -66,20 +83,23 @@
   			)
   		}
   		</select>
-  		
+  
+  	<!-- 조정 리스트 -->		
   		<select id="admGetList" resultType="MrAdjustmentVO">
   			select * from material_adjustment
   		
   		</select>
-  		
+  
+  <!-- 발주 리스트 -->		
   		<select id="OrmGetList" resultType="MrOrderVO">
   		
   			select * from material_order
   		</select>
-  		
+  
+  <!-- 발주 상세 리스트 -->		
   		<select id="OrdGetList" resultType="MrOrderDetailVO">
   		
-  			select * from material_order_detail
+  			select * from material_order_detail where mr_order_code = #{keyword}
   		
   		</select>	
   	
