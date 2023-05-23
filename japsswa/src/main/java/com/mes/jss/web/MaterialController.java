@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.material.domain.DetaiListlVO;
+import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
+import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.service.MaterialService;
 import com.mes.jss.sale.domain.CustomerVO;
@@ -25,124 +27,177 @@ import com.mes.jss.sale.domain.CustomerVO;
 @Controller
 @SpringBootApplication
 
-public class MaterialReceive {
+public class MaterialController {
 	
 	@Autowired
 	MaterialService materialService;
 	
 	
+//  자재 조회 페이지
 	
-	@GetMapping("/mslist")     //  자재 조회 페이지
+	@GetMapping("/mslist")     
 	public String mrList(Model model, MrVO vo) {
-	
-		
+			
 		return "/material/material";
 						
 	}
 	
+// 자재 조회 아작스	
+	
 	@ResponseBody
-	@GetMapping("/mslistAjax")   // 자재 조회 아작스
+	@GetMapping("/mslistAjax")   
 	public List<MrVO> mrList() {
 						
 		List<MrVO> list = materialService.mrlist();
-	
-		
 		
 		return list;
 						
 	}
+
+	
+ // 모달창 검사 코드로 검색
 	
 	@ResponseBody
-	@RequestMapping("/searchListAjax")    // 모달창 검사 코드로 검색
+	@RequestMapping("/searchListAjax")   
 	public List<MrVO> mrSearchList(@RequestParam String result){
 		
-		System.out.println(result);
-		
-		
+				
 		List<MrVO> list = materialService.searchList(result);
 		return list;
 	}
+
+	
+ // 자재 재고 검색
 	
 	@ResponseBody
-	@RequestMapping("/mrCountAjax")     // 자재 재고 검색
+	@RequestMapping("/mrCountAjax")    
 	public List<MrVO> mrCountSearch(@RequestParam String result){
-		System.out.println("조회 조건 : "+result);
+		
 		List<MrVO> list = materialService.mrCount(result);
-		System.out.println("조회결과 : "+list);
-		
+			
 		return list;
-		
-		
+			
 	}
+
+// 자재 입고 처리
 	
 	@ResponseBody
-	@RequestMapping("/mrStore")     // 자재 입고 처리
-	public MrVO mrStore(@RequestParam String testCode){
+	@RequestMapping("/mrStore")     
+	public MrVO mrStore(@RequestBody String testCode){
 		
 		System.out.println(testCode);
 		
 		MrVO result = materialService.mrIn(testCode);
+		
 		return result;
 		
-		
-		
 	}
+
+// 자재 발주 화면
 	
 	@GetMapping("/mrOrder")
-	public String mrOrder() {   // 자재 발주 화면
+	public String mrOrder() {   
 		
 		return "/material/materialOrder";
 		
 	}
+
+ // 자재 발주 	
 	
 	@ResponseBody
-	@RequestMapping("/Orders")		 // 자재 발주 
+	@RequestMapping("/Orders")		
 	public MrOrderDetailVO orders(@RequestBody DetaiListlVO vo) {
-		
-		System.err.println(vo);
-		
+						
 		materialService.orders(vo);
-		
-		for(int i = 0; i<vo.getList().size(); i++) {
-			
-			System.err.println(vo.getList().get(i));
-		}
-		
-		
-		
-		/*for(MrOrderDetailVO list : vo.getList()) {
-			System.err.println(list);
-		}*/
-		
-		
+				
 		return null;
 		
 	}
+
+// 거래처 아작스
 	
 	@ResponseBody
-	@GetMapping("/mrCustomerAjax")     // 거래처 아작스
+	@GetMapping("/mrCustomerAjax")     
 	public List<CustomerVO> CustomerList(){
 		
 		List<CustomerVO> list = materialService.cusSearch();
 		return list;
 		
 	}
+
+// 모달창 검사 코드로 검색	
 	
 	@ResponseBody
-	@RequestMapping("/searchCustomerAjax")    // 모달창 검사 코드로 검색
+	@RequestMapping("/searchCustomerAjax")    
 	public List<CustomerVO> CusSearchList(@RequestParam String result){
 		
 		System.out.println(result);
-		
-		
-		
+				
 		List<CustomerVO> list = materialService.cusListSearch(result);
 		return list;
 		
+	}
+
+// 자재 발주 조회 화면창 
+	
+	@GetMapping("/mrOrderList")
+	public String MrOrderList() {
 		
+		
+		return "/material/materialOrderList";
 		
 	}
 	
+// 자재 발주 조회
 	
+	@ResponseBody
+	@GetMapping("/mrOrderListAjax")
+	public List<MrOrderVO> MrOrderMain(){
+		
+		List<MrOrderVO> list = materialService.OrderMain();
+		
+		return list;
+		
+	}
+
+// 자재 발주 상세 조회
+	
+	@ResponseBody
+	@RequestMapping("/mrOrderDetailAjax")
+	public List<MrOrderDetailVO> mrOrderDetail(@RequestParam String result){
+		
+		List<MrOrderDetailVO>  list = materialService.OrderDetail(result);
+		
+		return list;
+	}
+	
+	
+// 자재 조정 화면
+	
+	@GetMapping("/mrAdjustment")
+	public String MrAdjustment(){
+		
+		return "/material/materialAdjustment";
+		
+	}
+
+	
+// 자재 조정 리스트
+	
+	@ResponseBody
+	@GetMapping("/mrAdjustmentAjax")
+	public List<MrAdjustmentVO> MrAdmList(){
+		
+		List<MrAdjustmentVO> list = materialService.admList();
+		
+		return list;
+		
+	}
+
 	
 }
+
+
+
+
+

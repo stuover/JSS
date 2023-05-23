@@ -16,6 +16,8 @@ public class CustomerVO {
 	String custEtc;
 	int empNo;
 	String itemName;
+	String itemCode;
+	long itemPrice;
 	String contractId;
 	String contProd;
 	Date contDate;

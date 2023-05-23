@@ -5,6 +5,8 @@
 	layout:decorate="~{/layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 
@@ -18,18 +20,18 @@
 <body>
 
 	<th:block layout:fragment="content">
-		<h3 style="font-weight: bold;">&emsp;자재 입고</h3>
+		<h3 style="font-weight: bold; margin-top:50px; text-align:center; margin-right:40px;">&emsp;자재 입고</h3>
 
 		<form action="/test" method="post">
 		<div>
 			<button type="button" id="storeBtn" class="btn btn-success"
 				data-bs-toggle="modal" data-bs-target="#searchModal"
-				style="float: right; height: 30px; width: 50px; padding: 10px; margin-bottom: 10px; margin-right: 20px;">입고</button>
+				style="float: right; height: 30px; width: 50px; padding: 8px; margin-bottom: 10px; margin-right: 20px; margin-top:90px;">입고</button>
 				<input type="hidden" value="" id="sotre" name="testCode">
 			<button type="button" id="checkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target=".bd-example-modal-lg"
 				data-bs-target="#searchModal"
-				style="float: right; height: 30px; width: 80px; padding: 10px; margin-bottom: 10px; margin-right: 8px;">입고확인</button>
+				style="float: right; height: 30px; width: 80px; padding: 8px; margin-bottom: 10px; margin-right: 8px; margin-top:90px;">입고확인</button>
 
 		</div>
 		</form>
@@ -46,7 +48,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: bold; margin-left: 700px;">입고 처리 확인</h4>
+							style="font-weight: bold; margin-left: 750px;">입고 처리 확인</h4>
 
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
@@ -56,7 +58,7 @@
 					</div>
 					<div>
 						<h6 style="font-weight: bold; text-align: center;">
-							검사 코드 :<input type=text id="searchcode"
+							입고사유코드 :<input type=text id="searchcode"
 								style="margin-left: 15px; padding: 1px;">
 							<button type="button" class="btn btn-dark" id="searchBtn"
 								style="padding: 8px; margin-left: 15px;">검색</button>
@@ -73,11 +75,15 @@
 		</div>
 
 
-		<div id="grid"></div>
+		<div id="grid" ></div>
 
 
 		<script>
-
+		
+		const token = $("meta[name='_csrf']").attr("content")
+  		const header = $("meta[name='_csrf_header']").attr("content");
+		
+		
 		$(document).ready(function() {
 			
 			
@@ -86,9 +92,13 @@
 
 		    	$.ajax({
 		    		url : "/mrStore",
-					method : "GET",
-					data : {testCode : grid.getCheckedRows()[0].testCode},
+		    		contentType: "application/json",
+					method : "POST",
+					data : JSON.stringify({testCode : grid.getCheckedRows()[0].testCode}),
 					dataType : "json",
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
 					success : function(result) {
 					}
 		    	})
@@ -124,6 +134,7 @@
 				
 				rowHeaders: ['checkbox'],
 				
+				
 				columns : [ {
 					header : '검사코드',
 					name : 'testCode'
@@ -137,33 +148,48 @@
 					header : '상태',
 					name : 'situation'
 				}, {
-					header : '검사결과',
-					name : 'testResult'
+					header : '검사 시작일',
+					name : 'startDate'
+				}, 
+				{
+					header : '검사 완료일',
+					name : 'endDate'
 				},
 				{
-					header : '검사일자',
-					name : 'testDate'
+					header : '사원번호',
+					name : 'empNo'
 				},
 				{
-					header : '입고 수량',
-					name : 'mrCount'
+					header : '검사량',
+					name : 'testQuantity'
 				},
 				{
-					header : '유통기한',
-					name : 'exDate'
+					header : '불량량',
+					name : 'errQuantity'
 				},
 				{
-					header : '검사항목코드',
-					name : 'checklistCode'
+					header : '합격량',
+					name : 'passQuantity'
+				},
+				{
+					header : '불량률',
+					name : 'defectiveRate'
+				},
+				{
+					header : '비고',
+					name : 'testNote'
 				}
+				
 				]
 			})
 			
-		});
+		
 		
 
 
-		 
+		
+			
+		
 		
 		
 		$.ajax({
@@ -172,6 +198,7 @@
 			dataType : "json",
 			success : function(result) {
 				modalgrid.resetData(result);
+				modalgrid.refreshLayout();
 			}
 
 		});
@@ -187,24 +214,34 @@
 			}, {
 				header : '품목코드',
 				name : 'itemCode'
-			}, {
-				header : '검사코드',
-				name : 'testCode'
-			}, {
+			},{
+				header : '사원 번호',
+				name : 'empNo'
+			},  
+			{
 				header : '입고 날짜',
 				name : 'storeDate'
 			}, {
 				header : '입고 수량',
-				name : 'mrCount'
+				name : 'storeCount'
 			},
 			{
-				header : '사원 번호',
-				name : 'empNo'
+				header : '홀드수량',
+				name : 'holdCount'
 			},
 			{
-				header : '생산실적코드',
-				name : 'performanceId'
+				header : '유통기한',
+				name : 'expireDate'
+			},
+			{
+				header : '입고 사유 구분',
+				name : 'storeReasonType'
+			},
+			{
+				header : '입고 사유 코드',
+				name : 'storeReasonCode'
 			}
+			
 			
 			]
 		})
@@ -262,7 +299,7 @@
 	   
 	   
 	    
-	    
+		});
 	</script>
 
 

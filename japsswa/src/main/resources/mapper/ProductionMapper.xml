@@ -5,21 +5,51 @@
   
   <mapper namespace="com.mes.jss.production.mapper.PlanMapper">
   
-  	<!-- 생산계획관리 페이지에서 제품별 주문수량 정보 리스트 -->
-  	<select id="itemListInfo" resultType="PlanVO">
-		SELECT item_name
-		FROM itemlist
-		WHERE item_type = '완제품'
-		ORDER BY item_code
-  	</select>
-  	
-  	<select id="modalPlanList" resultType="PlanVO">
-		SELECT plan_id, plan_name, plan_date, e.emp_name
-		FROM plan p JOIN emp e 
-					ON(p.emp_no = e.emp_no)
+  	 <!-- 생산계획 조회 모달창 : 생산 계획 리스트(초기값) -->
+	<select id="modalPlanList" resultType="PlanVO">
+			<![CDATA[ 
+			SELECT plan_id, plan_name, plan_date, emp_name
+			FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
+			WHERE plan_date >= TO_DATE((SYSDATE - 3), 'yyyy-MM-dd') AND plan_date <= TO_DATE((SYSDATE + 3), 'yyyy-MM-dd')
+		]]>
+	</select>  	
+	
+	<!-- 생산계획 조회 모달창 : 기간 키워드로 생산계획 검색 결과 -->
+  	<select id="modalPlanResult" resultType="PlanVO">
+		<![CDATA[ 
+			SELECT plan_id, plan_name, plan_date, emp_name
+			FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
+			WHERE plan_date >= TO_DATE((SYSDATE - 3), 'yyyy-MM-dd') AND plan_date <= TO_DATE((SYSDATE + 3), 'yyyy-MM-dd')
+		]]>
+
   	</select>
 
+	<!--생산계획관리 페이지 : 생산 계획 세부내용 검색 결과  -->	
+	<select id="planSearchResult" resultType="PlanVO">
+		select  pdetail_id, item_name, plan_amount, plan_start, plan_end, plan_priority, d.item_code
+		from plan_detail d join itemlist i on (d.item_code = i.item_code)
+		where plan_id = #{planId}
+	</select>
+	
+	
+	<!-- 제품명 조회 모달창 : 제품 리스트 (초기값) -->
+	<select id="itemList" resultType="PlanVO">
+		SELECT i.item_code, item_name, sum(ord_count) as "itemOrders"
+		FROM itemlist i join orddetail o on(i.item_code = o.item_code)
+		GROUP BY i.item_code, item_name
+		ORDER BY 3 DESC
+	</select>
+	
+	<!-- 제품 검색 모달창 : 제품 리스트 (검색결과) -->
+	<select id ="itemListResult"  resultType="PlanVO">
+		SELECT i.item_code, item_name, sum(ord_count) as "itemOrders"
+		FROM itemlist i join orddetail o on(i.item_code = o.item_code)
+		WHERE item_name = #{itemName}
+		GROUP BY i.item_code, item_name	
+	</select>
 
+
+	<!-- 생산계획 공통 내용 등록처리 -->	
 	<select id="planSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">
 	   
 	   {call PLAN_INSERT(        
@@ -32,15 +62,8 @@
 	   
 	</select> 
 
-	
-	<select id="planSearchResult" resultType="PlanVO">
-		select  item_name, plan_amount, plan_start, plan_end, plan_priority
-		from plan_detail d join itemlist i on (d.item_code = i.item_code)
-		where plan_id = #{planId}
-	</select>
 
-
-
+	<!-- 생산계획 세부 내용 등록처리 -->	
 	<select id="planDetailSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">
 	   
 	   {call PDETAIL_INSERT(        
@@ -54,6 +77,39 @@
 	   }
 	   
 	</select> 
+	
+	
+	<!-- 생산계획 공통 내용 수정처리 -->
+	<update id="planModify" parameterType="PlanVO">
+		UPDATE plan 
+		set plan_name  = #{planName},
+		     plan_date = #{planDate}
+		WHERE plan_id = #{planId}
+	</update>
+	
+	<!-- 생산계획 세부 내용 수정처리 -->
+	<update id="planDetailModify" parameterType="PlanVO">
+		UPDATE plan_detail
+		SET plan_amount = #{planAmount},
+		       plan_priority = #{planPriority},
+		       plan_start = #{planStart},
+		       plan_end = #{planEnd}
+		WHERE pdetail_id = #{pdetailId}	
+	</update>
+	
+	
+
+	<!-- 생산계획 공통 내용 삭제 -->
+	<select id="planDelete" parameterType="PlanVO">
+		DELETE FROM plan
+		WHERE plan_id = #{planId}
+	</select>
+	
+	<!-- 생산계획 세부 내용 삭제 -->
+	<select id="planDetailDelete" parameterType="PlanVO">
+		DELETE FROM plan_detail
+		WHERE pdetail_id = #{pdetailId}
+	</select>
 
   	
   </mapper>

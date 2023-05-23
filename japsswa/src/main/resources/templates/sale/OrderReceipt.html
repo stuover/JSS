@@ -43,8 +43,11 @@
 					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
 					<div>
 						
-									<button id="searchBtn" type="button" class="btn btn-success"
+									<button id="searchBtn" type="button" class="btn btn-dark"
 										data-bs-toggle="modal" data-bs-target="#searchModal">거래처 찾기</button>
+									<button id="showCust" type="button" class="btn btn-dark"
+										data-bs-toggle="modal" data-bs-target="#showCustModal">거래처 주문 조회</button>
+									<button id="itemSearBtn" type="button" class="btn btn-danger">주문서 삭제</button>
 					</div>
 
 					<div class="row"></div>
@@ -54,10 +57,10 @@
 
 					<div>
 						<form>
-							<button id="addBtn" type="button" class="btn btn-success">추가</button>
-							<button id="insertBtn" type="button" class="btn btn-success">등록</button>
-							<button id="updateBtn" type="button" class="btn btn-success">수정</button>
-							<button id="delBtn" type="button" class="btn btn-success">삭제</button>
+							<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
+							<button id="insertBtn" type="button" class="btn btn-dark">등록</button>
+							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
+							<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
 						</form>
 					</div>
 
@@ -82,18 +85,62 @@
 				</div>
 				<div class="modal-body">
 					<input type="text" id="modalInput" name="cust">
-					<button id="custSearch" type="button" class="btn btn-primary">찾기</button>
+					<button id="custSearch" type="button" class="btn btn-dark">찾기</button>
 					<div id="modalGrid"></div>
 				</div>
 				<div class="modal-footer">
-					<button id="chooseBtn" type="button" class="btn btn-primary">선택</button>
+					<button id="chooseBtn" type="button" class="btn btn-dark">선택</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="itemSearModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="itemSearModalLabel">품목코드 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="itemInput" name="item">
+					<button id="itemSearch" type="button" class="btn btn-dark">찾기</button>
+					<div id="modalGrids"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="itemChooseBtn" type="button" class="btn btn-dark">선택</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="showCustModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="showCustModalLabel">거래처 주문 조회</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="custShowInput" name="sCust">
+					<button id="showCustBtn" type="button" class="btn btn-dark">찾기</button>
+					<div id="CmodalGrid"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="custChooseBtn" type="button" class="btn btn-dark">선택</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<script>
-	  
+	
+	
+	
 
 		const token = $("meta[name='_csrf']").attr("content")
 		const header = $("meta[name='_csrf_header']").attr("content")
@@ -119,7 +166,7 @@
 				     {
 					  header: '메일',
 					  name: 'custMail',
-					  editor: 'datePicker'
+					  editor: 'text'
 					 }, 
 				     {
 				      header: '연락처',
@@ -158,7 +205,7 @@
 		    
 		var unit;
 		var count;
-  		let gridData = [{}];
+  		let gridData = [];
   		const grid = new Grid({
 		      el: document.getElementById('grid'),
 		      data: gridData,
@@ -167,9 +214,12 @@
 		      scrollY: false,
 		      columns: [
 		    	     {
+					  header: '품목코드',
+					  name: 'itemCode'
+					 },
+					 {
 					  header: '품목명',
-					  name: 'itemName',
-					  editor: 'text'
+					  name: 'itemName'
 					 },
 				     {
 					  header: '납부예정일',
@@ -178,7 +228,8 @@
 					 },
 					 {
 					  header: '단가',
-					  name: 'unitPrice'
+					  name: 'unitPrice',
+					  editor: 'text'
 				     },
 				     {
 					  header: '수량',
@@ -222,21 +273,63 @@
 		    
 		    	grids.setValue(0, 'empName', $('#name').val(), false);
 		    	
-				$.ajax({
-			    	url : "/itemNamelist",
-			    	method : "GET",
-			        dataType : "JSON", 
-			        success : function(result){
-			        	grid.resetData(result);
-			        	console.log(result);
-			        }
-				
-			    });	
-				
+		    	 $('#searchBtn').on('click', function(){
+		    		
+		    		 $.ajax({
+		    			 url : "/cModal",
+		    			 method : "GET",
+		    			 dataType : "JSON",
+		    			 success : function(result){
+		    				 modalGrid.resetData(result);
+		    				 modalGrid.refreshLayout();
+		    				 console.log(result);
+		    			 }
+		    		 })
+		    	 })
+		
 				 $('#searchModal').on('shown.bs.modal', function (e) {
 						console.log('open');
 						setTimeout(()=> modalGrid.refreshLayout(), 1);
 		  			});
+		    	 
+		    	 
+		    	 $('#addBtn').on('click', function(){
+	        		   
+		        	   $.ajax({
+		        		   url : "/itemNamelist",
+		        		   method : "GET",
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   modalGrids.resetData(result);
+		        			   modalGrids.refreshLayout();
+		        		   }
+		        	   })
+	        	   })
+	        	   
+	        	   
+	        	   $('#itemSearModal').on('shown.bs.modal', function(e){
+						 console.log('open2');
+						 setTimeout(()=> modalGrids.refreshLayout(), 1);
+					 });
+		    	 
+			       $('#showCust').on('click', function(){
+			    		 
+			    	   $.ajax({
+			    		   url : "/custOrdModal",
+			    		   method : "GET",
+			    		   dataType : "JSON",
+			    		   success : function(result){
+			    			   CmodalGrid.resetData(result);
+			    			   CmodalGrid.refreshLayout();
+			    		   }
+			    	   })
+			       });
+			       
+			       $('#showCustModal').on('shown.bs.modal', function(e){
+						 console.log('open3');
+						 setTimeout(()=> CmodalGrid.refreshLayout(), 1);
+					 });
+					 
 				
 		    }; 
 		    
@@ -255,7 +348,7 @@
 		 		      rowHeaders: ['checkbox'],
 		               scrollX: false,
 		               scrollY: false,
-		             pageOptions: { 
+		              pageOptions: { 
 		                useClient: true,
 		                perPage: 5 
 		                },
@@ -296,7 +389,7 @@
 		             });
 		            
 		           
-		        	
+		           
 		
 			 
 		            
@@ -323,8 +416,10 @@
 		           var custId = '';
 		           $('#chooseBtn').on('click', function(){
 		        	   
+		        	   grid.appendRows(custInfo);
+		        	   
 		        	   custId = modalGrid.getCheckedRows()[0].customerId;
-		        	   custInfo = [{customerName : modalGrid.getCheckedRows()[0].customerName, custAddr : modalGrid.getCheckedRows()[0].custAddr, custMail : modalGrid.getCheckedRows()[0].custMail, custTel : modalGrid.getCheckedRows()[0].custTel}]
+		        	   custInfo = [{customerIdcustomerName : modalGrid.getCheckedRows()[0].customerName, custAddr : modalGrid.getCheckedRows()[0].custAddr, custMail : modalGrid.getCheckedRows()[0].custMail, custTel : modalGrid.getCheckedRows()[0].custTel}]
 		        	   
 		        	   $('#searchModal').modal('hide');
 
@@ -348,12 +443,51 @@
 		        	  
 		        	   
 		           }) 
+		           
+		           
+		          
+		           
+		           const modalGrids = new Grid({
+		               el: document.getElementById('modalGrids'),
+		 		      rowHeaders: ['checkbox'],
+		               scrollX: false,
+		               scrollY: false,
+		             pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+		               columns: [
+		            	     {
+			                   header: '품목코드',
+			                   name: 'itemCode'
+			                 },
+			                 {
+			                   header: '품목명',
+			                   name: 'itemName'
+			                 }   
+		               ]
+		             });
+
+		            modalGrids.on('check', ev => {
+		               console.log('check!', ev);
+		             });
+
+		            modalGrids.on('uncheck', ev => {
+		               console.log('uncheck!', ev);
+		             });
+
+		            modalGrids.on('focusChange', ev => {
+		               console.log('change focused cell!', ev);
+		             });
 		         
 		           
 		           $('#insertBtn').on('click', function(){
-		        	   console.log(grid.getCheckedRows())
-		        	   console.log(customerId)
+
+		        	   grids.finishEditing();
+		        	   var customerId = grids.getData()[0];	
+		        	   grid.finishEditing();
 		        	   var data = grid.getCheckedRows();
+		        	   console.log(data);
 		        	   $.ajax({
 		        		   url : "/entireRegister",
 		        		   contentType : "application/json",
@@ -365,14 +499,131 @@
 		        			   
 		        		   },
 		        		   success:function(result){
-	
+							   
 		        			   alert('등록 완료 되었습니다')
+
 		        		   }
 		        	   });
 		        	   
 		        	  
 		        		  
 		           })
+		           
+		           $('#itemSearch').on('click', function(){
+		        	   
+		        	   const code = $('#itemInput').val();
+		        	   $('#itemInput').val('');
+		        	   
+		        	   $.ajax({
+		        		   url : "/itemSearch",
+		        		   method : "GET",
+		        		   data : { code : code},
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   modalGrids.resetData(result);
+		        			   modalGrids.refreshLayout();
+		        			  
+		        		   }
+		        		   
+		        	   });
+		           })
+		           
+		           
+		           var itemInfo = [];
+		           var itemId = '';
+		           $('#itemChooseBtn').on('click', function(){
+		        	   
+		        	   itemId = modalGrids.getCheckedRows()[0].itemCode;
+		        	   itemInfo = [{itemCode : modalGrids.getCheckedRows()[0].itemCode, itemName : modalGrids.getCheckedRows()[0].itemName}]
+		        	   
+		        	   $('#itemSearModal').modal('hide');
+
+		        	   $('#itemSearModal').on('hidden.bs.modal', function(e){
+		        		   gridData = itemInfo;
+		        		   grid.resetData(itemInfo);
+			        	   $.ajax({
+			        		   url : "/itemInfo",
+			        		   method : "GET",
+			        		   data : {itemCode : itemId},
+			        		   dataType : "JSON",
+			        		   success : function(result){
+			        			   grid.resetData(result);
+			        			   grids.setValue(0, 'empName', $('#name').val(), false);
+			        			   modalGrids.refreshLayout();
+			        			  
+			        		   }
+			        		   
+			        	   })
+		        	   })
+		        	  
+		        	   
+		           }) 
+		           
+		           
+		           const CmodalGrid = new Grid({
+		               el: document.getElementById('CmodalGrid'),
+		 		      rowHeaders: ['checkbox'],
+		               scrollX: false,
+		               scrollY: false,
+		             pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+		               columns: [
+		            	     {
+			                   header: '거래처코드',
+			                   name: 'customerId'
+			                 },
+			                 {
+			                   header: '거래처명',
+			                   name: 'customerName'
+			                 },   
+			                 {
+				               header: '주문코드',
+				               name: 'ordId'
+				             },
+				             {
+					           header: '주문명',
+					           name: 'ordName'
+					         }
+		               ]
+		             });
+
+		            CmodalGrid.on('check', ev => {
+		               console.log('check!', ev);
+		             });
+
+		            CmodalGrid.on('uncheck', ev => {
+		               console.log('uncheck!', ev);
+		             });
+
+		            CmodalGrid.on('focusChange', ev => {
+		               console.log('change focused cell!', ev);
+		             });
+		           
+		            
+		           $('#showCustBtn').on('click', function(){
+		        	   
+		        	   const oCode = $('#custShowInput').val();
+		        	   $('#custShowInput').val('');
+		        	   
+		        	   $.ajax({
+		        		   url : "/custShowModal",
+		        		   method : "GET",
+		        		   data : { oCode : oCode},
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   CmodalGrid.resetData(result);
+		        			   CmodalGrid.refreshLayout();
+		        			  
+		        		   }
+		        		   
+		        	   });
+		           })
+		           
+		           
+		           
+	
 		  
 				
 

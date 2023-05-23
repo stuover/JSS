@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class PlanVO {
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	
 	String planId;
 	String pdetailId;
 	String planName;
@@ -16,9 +16,13 @@ public class PlanVO {
 	String itemCode; 
 	int planAmount; 
 	int planPriority; 
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	Date planStart;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	Date planEnd;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	Date planDate;
+	int itemOrders;
 	
 	
 	//	생산계획관리 페이지 :  제품 리스트

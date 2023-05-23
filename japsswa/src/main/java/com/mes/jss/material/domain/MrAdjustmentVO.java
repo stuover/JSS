@@ -10,7 +10,7 @@ public class MrAdjustmentVO {	// 자재 조정
 	private String mrLotNumber;
 	private Date registerDate;
 	private String process;
-	private int change;
+	private long change;
 	private Date adjustmentDate;
-	private int empNo;
+	private long empNo;
 }

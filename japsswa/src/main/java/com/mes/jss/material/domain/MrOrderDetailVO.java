@@ -10,9 +10,10 @@ public class MrOrderDetailVO {	// 자재 발주 상세
 	 String mrOrderCode;
 	 String itemCode;
 	 String itemName;
+	 String CustomerId;
 	 String CustomerName;
 	 long mrCount;
-	 long mrPrice;
+	 long itemPrice;
 	 long priceTotal;
 	 Date deliveryDate;
 }
