@@ -3,7 +3,7 @@ package com.mes.jss.basic.domain;
 import lombok.Data;
 
 @Data
-public class CustomerVO {
+public class CustomersVO {
 	
 	public String itemCode; 
 	public String itemName; 
