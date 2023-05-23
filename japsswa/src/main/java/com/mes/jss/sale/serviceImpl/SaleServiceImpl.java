@@ -1,6 +1,6 @@
 package com.mes.jss.sale.serviceImpl;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,16 @@ import com.mes.jss.sale.service.SaleService;
 public class SaleServiceImpl implements SaleService {
 	
 	@Autowired OrderMapper orderMapper;
+	
+	@Override
+	public List<OrderVO> custModalList() {
+		List<OrderVO> iList = orderMapper.custModalList();
+		return iList;
+	}
 
 	@Override
 	public List<OrderVO> itemNamelist() {
-		List<OrderVO> list = new ArrayList<>();
-		list = orderMapper.itemNamelist();
+		List<OrderVO> list = orderMapper.itemNamelist();
 		
 		return list;
 	}
@@ -31,6 +36,26 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
+	public List<OrderVO> itemSearch(String code) {
+		List<OrderVO> iSearch = orderMapper.itemSearch(code);
+		
+		return iSearch;
+	}
+	
+	@Override
+	public List<OrderVO> custInfo(String customerId) {
+		List<OrderVO> cInfo = orderMapper.custInfo(customerId);
+		return cInfo;
+	}
+	
+	@Override
+	public List<OrderVO> itemInfo(String itemCode) {
+		List<OrderVO> info = orderMapper.itemInfo(itemCode);
+		
+		return info;
+	}
+	
+	@Override
 	public void entRegister(OrderVO commInfo, List<OrderVO> list) {
 		orderMapper.entRegister(commInfo);
 		
@@ -42,10 +67,19 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
-	public List<OrderVO> custInfo(String customerId) {
-		List<OrderVO> cInfo = orderMapper.custInfo(customerId);
-		return cInfo;
+	public List<OrderVO> custShowModal(String oCode) {
+		List<OrderVO> showList = orderMapper.custShowModal(oCode);
+		return showList;
 	}
+
+	@Override
+	public List<OrderVO> custOrdModal() {
+		List<OrderVO> ordModal = orderMapper.custOrdModal();
+		return ordModal;
+	}
+
+
+
 
 	
 	
