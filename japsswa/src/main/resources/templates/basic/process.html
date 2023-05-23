@@ -32,13 +32,9 @@
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<h1 class="card-title">품목 정보</h1>
+					<h1 class="card-title">공정 정보</h1>
 					
-					<select id="item">
-						<option value="null">전체</option>
-						<option th:each="list : ${list}" th:text="${list.detaName}" th:value="${list.detaCode}">fdd</option>
-					</select>
-					
+
 					<input id="search" name="search" type="text" >
 					<button id="insertBtn" type="button" class="btn btn-primary">검색</button>
 						<div id="grid"></div>
@@ -53,10 +49,10 @@
 	
 	
 		 <div class="modal fade" id="addModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
-	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:670px;">
+	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:300px;">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	            <h5 class="modal-title" style="padding-right:25px;">품목 등록</h5>
+	            <h5 class="modal-title" style="padding-right:25px;">공정 등록</h5>
 	                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 
@@ -76,7 +72,7 @@
 	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:670px;">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	            <h5 class="modal-title" style="padding-right:25px;">품목 수정</h5>
+	            <h5 class="modal-title" style="padding-right:25px;">공정 수정</h5>
 	                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 
@@ -95,7 +91,6 @@
 	
 	
 <script>
-
 const token = $("meta[name='_csrf']").attr("content")
 const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -110,44 +105,24 @@ var grid = new tui.Grid({
 	},
 	columns : [ 
 	{
-		header : '품목코드',
-		name : 'itemCode',
+		header : '공정코드',
+		name : 'proCode',
 		width: 100,
 		sortingType : 'desc',
 		sortable : true
 	}, {
-		header : '품목명',
-		name : 'itemName',
+		header : '공정명',
+		name : 'proName',
 		sortingType : 'desc',
 		sortable : true
 	}, {
-		header : '구분',
-		name : 'itemType',
+		header : '등록일',
+		name : 'insertDate',
 		sortingType : 'desc',
 		sortable : true,
 	}, {
-		header : '규격',
-		name : 'standard',
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '단위',
-		name : 'unit',
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '단가',
-		name : 'unitPrice',	
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '판매가격',
-		name : 'itemPrice',
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '안전재고',
-		name : 'saveMaterial',
+		header : '수정일',
+		name : 'modifyDate',
 		sortingType : 'desc',
 		sortable : true
 	}
@@ -164,9 +139,9 @@ grid.on('check', function (e) {
 
 });
 
-function itemList(){
+function  processList(){
 	$.ajax({
-		url : "/itemAllList",
+		url : "/processList",
 		method: "get",
 		dataType : "json",
 		success: function(result){
@@ -179,115 +154,21 @@ function itemList(){
 	});
 }
 
-itemList();
+processList();
 
-$('#item').on('change', function(){
-	$.ajax({
-		url : "/itemList",
-		method: "get",
-		dataType : "json",
-		data :{ val : $('#item').val() },
-		success: function(result){
-			grid.resetData(result);
-		},
-		error: function(reject){
-			
-		}
-		
-	});
-});
 
 var modalGrid = new tui.Grid({
 	el : document.getElementById('modalGrid'),
 	columns : [ 
-	{
-		header : '품목코드',
-		name : 'itemCode',
-		width: 100
-
-	}, {
-		header : '품목명',
-		name : 'itemName',
-		editor: "text"
-	}, {
-		header : '구분',
-		name : 'itemType',
-		editor: {
-            type: 'select',
-            options: {
-                listItems: [
-               	 	{
-                        text: '완제품',
-                        value: '완제품'
-                    },
-                    {
-                        text: '반제품',
-                        value: '반제품'
-                    },
-                    {
-                        text: '자제',
-                        value: '자제'
-                    }
-                ]
-            }
-		 }
-	}, {
-		header : '규격',
-		name : 'standard',
-		editor: 'text'
-	}, {
-		header : '단위',
-		name : 'unit',
-		 editor: {
-             type: 'select',
-             options: {
-                 listItems: [
-                	 {
-                         text: 'mL',
-                         value: 'ml'
-                     },
-                     {
-                         text: 'L',
-                         value: 'L'
-                     },
-                     {
-                         text: 'Kg',
-                         value: 'Kg'
-                     },
-                     {
-                         text: 'g',
-                         value: 'g'
-                     },
-                     ,
-                     {
-                         text: 'EA',
-                         value: 'EA'
-                     }
-                     ,
-                     {
-                         text: 'm',
-                         value: 'm'
-                     } ,
-                     {
-                         text: 'cm',
-                         value: 'cm'
-                     }
-                 ]
-             }
-		 }
-	},{
-		header : '단가',
-		name : 'unitPrice',	
-		editor: 'text'
-	}, {
-		header : '판매가격',
-		name : 'itemPrice',
-		editor: 'text'
-	}, {
-		header : '안전재고',
-		name : 'saveMaterial',
-		editor: 'text'
-	}
+		{
+			header : '공정코드',
+			name : 'proCode',
+			editor: 'text'
+		},{
+			header : '공정명',
+			name : 'proName',
+			editor: 'text'
+		}
 	]
 });
 
@@ -297,99 +178,26 @@ var modModalGrid = new tui.Grid({
 	el : document.getElementById('modModalGrid'),
 	columns : [ 
 	{
-		header : '품목코드',
-		name : 'itemCode',
+		header : '공정코드',
+		name : 'proCode',
 		width: 100
-
 	}, {
 		header : '품목명',
-		name : 'itemName',
+		name : 'proName',
 		editor: "text"
 	}, {
-		header : '구분',
-		name : 'itemType',
-		editor: {
-            type: 'select',
-            options: {
-                listItems: [
-               	 	{
-                        text: '완제품',
-                        value: '완제품'
-                    },
-                    {
-                        text: '반제품',
-                        value: '반제품'
-                    },
-                    {
-                        text: '자제',
-                        value: '자제'
-                    }
-                ]
-            }
-		 }
+		header : '등록일',
+		name : 'insertDate'
 	}, {
-		header : '규격',
-		name : 'standard',
-		editor: 'text'
-	}, {
-		header : '단위',
-		name : 'unit',
-		 editor: {
-             type: 'select',
-             options: {
-                 listItems: [
-                	 {
-                         text: 'mL',
-                         value: 'ml'
-                     },
-                     {
-                         text: 'L',
-                         value: 'L'
-                     },
-                     {
-                         text: 'Kg',
-                         value: 'Kg'
-                     },
-                     {
-                         text: 'g',
-                         value: 'g'
-                     },
-                     ,
-                     {
-                         text: 'EA',
-                         value: 'EA'
-                     }
-                     ,
-                     {
-                         text: 'm',
-                         value: 'm'
-                     } ,
-                     {
-                         text: 'cm',
-                         value: 'cm'
-                     }
-                 ]
-             }
-		 }
-	},{
-		header : '단가',
-		name : 'unitPrice',	
-		editor: 'text'
-	}, {
-		header : '판매가격',
-		name : 'itemPrice',
-		editor: 'text'
-	}, {
-		header : '안전재고',
-		name : 'saveMaterial',
-		editor: 'text'
+		header : '수정일',
+		name : 'modifyDate'
 	}
 	]
 });
 
 $('#addModalBtn').on('click', function() {
 	$.ajax({
-		url:"/getItemCode",
+		url:"/getProCode",
 		method :"get",
 		dataType : "json",
 		success:function(result){
@@ -407,19 +215,20 @@ $('#addModalBtn').on('click', function() {
 		}
 		
 	})
-})
+});
 
 $('#addBtn').on('click', function(){
 	modalGrid.finishEditing();
 	$.ajax({
-		url : "/addItemAjax",
+		url : "/addProcessAjax",
 		contentType : "application/json",
 		data : JSON.stringify(modalGrid.getData()[0]),
 		method : "post",
 		beforeSend: function(xhr){
 			xhr.setRequestHeader(header, token);    
 		},success : function(result) {
-			itemList();
+			alert("성공")
+			processList();
 			$('#addModal').modal('hide');
 			
 		},error : function(reject) {
@@ -445,15 +254,16 @@ $('#modModalBtn').on('click',function() {
 $('#modBtn').on('click', function(){
 	modModalGrid.finishEditing();
 	$.ajax({
-		url : "/modItemAjax",
+		url : "/modProAjax",
 		contentType : "application/json",
 		data : JSON.stringify(modModalGrid.getData()[0]),
 		method : "post",
 		beforeSend: function(xhr){
 			xhr.setRequestHeader(header, token);    
 		},success : function(result) {
+			
 			$('#addModal').modal('hide');
-			itemList();
+			processList();
 
 		},error : function(reject) {
 			console.log(reject)
@@ -462,16 +272,17 @@ $('#modBtn').on('click', function(){
 })
 
 
+
 $('#delBtn').on('click', function(){
-	console.log(modModalGrid.getData()[0].itemCode)
+	console.log(modModalGrid.getData()[0].proCode)
 	$.ajax({
-		url : "/removeItem",
-		data : {itemCode : modModalGrid.getData()[0].itemCode},
+		url : "/removePro",
+		data : {proCode : modModalGrid.getData()[0].proCode},
 		method : "get",
 		success : function(result) {
 			if (result = "success"){
-				alert( modModalGrid.getData()[0].itemName + "을 삭제!")
-				itemList();
+				alert( modModalGrid.getData()[0].proName + "을 삭제!")
+				processList();
 				$('#modModal').modal('hide');
 			}else {
 				alert("실패!")

@@ -23,4 +23,6 @@ public interface CommonService {
 
 	public void removeCommCode(String commCode);
 
+	public List<CommVO> getItemDeta();
+
 }
