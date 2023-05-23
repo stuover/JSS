@@ -38,7 +38,7 @@ public interface MaterialService {
 	public List<MrOrderVO> OrderMain();
 	
 	// 자재 발주 상세 조회
-	public List<MrOrderDetailVO> OrderDetail();
+	public List<MrOrderDetailVO> OrderDetail(String keyword);
 	
 	// 자재 조정 리스트
 	public List<MrAdjustmentVO> admList();

@@ -83,11 +83,12 @@ public class MaterialController {
 	
 	@ResponseBody
 	@RequestMapping("/mrStore")     
-	public MrVO mrStore(@RequestParam String testCode){
+	public MrVO mrStore(@RequestBody String testCode){
 		
 		System.out.println(testCode);
 		
 		MrVO result = materialService.mrIn(testCode);
+		
 		return result;
 		
 	}
@@ -138,6 +139,7 @@ public class MaterialController {
 	}
 
 // 자재 발주 조회 화면창 
+	
 	@GetMapping("/mrOrderList")
 	public String MrOrderList() {
 		
@@ -147,6 +149,7 @@ public class MaterialController {
 	}
 	
 // 자재 발주 조회
+	
 	@ResponseBody
 	@GetMapping("/mrOrderListAjax")
 	public List<MrOrderVO> MrOrderMain(){
@@ -158,11 +161,12 @@ public class MaterialController {
 	}
 
 // 자재 발주 상세 조회
+	
 	@ResponseBody
-	@GetMapping("/mrOrderDetailAjax")
-	public List<MrOrderDetailVO> mrOrderDetail(){
+	@RequestMapping("/mrOrderDetailAjax")
+	public List<MrOrderDetailVO> mrOrderDetail(@RequestParam String result){
 		
-		List<MrOrderDetailVO>  list = materialService.OrderDetail();
+		List<MrOrderDetailVO>  list = materialService.OrderDetail(result);
 		
 		return list;
 	}
@@ -179,6 +183,7 @@ public class MaterialController {
 
 	
 // 자재 조정 리스트
+	
 	@ResponseBody
 	@GetMapping("/mrAdjustmentAjax")
 	public List<MrAdjustmentVO> MrAdmList(){
@@ -188,8 +193,11 @@ public class MaterialController {
 		return list;
 		
 	}
-	
-	
-	
+
 	
 }
+
+
+
+
+

@@ -19,10 +19,39 @@
 
 
 
+
+
 <th:block layout:fragment="content">
 	
 	
 	<h3 style="font-weight:bold; margin-left:30px;">자재 발주 조회</h3>
+	
+	<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="grid2"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+	
 	
 	
 	<div id="grid" style="margin-top:100px;"></div>
@@ -82,15 +111,34 @@
 				]
 			})
 			
+	
+			
+			
+	grid1.on('dblclick',(ev) =>{
 		
+				if(ev.columnName=='mrOrderCode'){
+					$('#exampleModalLong').modal('show');
+							
+				
+				
+				
+				
+				let result= grid1.getRow(ev.rowKey);
+				console.log(result.mrOrderCode);
+			
+			
+			
+			console.log(result.mrOrderCode);
 			$.ajax({
 				url : "/mrOrderDetailAjax",
 
 				method : "GET",
 				dataType : "json",
-
+				data : {'result':result.mrOrderCode},
+				
 				success : function(result) {
-					grid.resetData(result);
+					grid2.resetData(result);
+					
 					
 				},
 				error:function(reject){
@@ -98,12 +146,16 @@
 				}
 
 			});
-
-			var grid = new tui.Grid({
-				el : document.getElementById('grid'),
+				}
+			});	
+			
+			
+			
+			var grid2 = new tui.Grid({
+				el : document.getElementById('grid2'),
 				scollX : false,
 				scollY : false,
-				
+				width:1000,
 				rowHeaders: ['checkbox'],
 				
 				columns : [ {
@@ -135,6 +187,13 @@
 				]
 			})	
 			
+			
+			
+			$(function(){
+		    	$('#exampleModalLong').on('shown.bs.modal', function(){
+		    		grid2.refreshLayout();
+		    	})
+		    })
 			
 			
 		});
