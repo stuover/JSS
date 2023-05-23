@@ -93,6 +93,22 @@ public class PlanServiceImpl implements PlanService {
 		}
 		
 	}
+	
+	
+	// 생산 계획 삭제.
+	@Override
+	@Transactional
+	public void planDelete(PlanVO head, List<PlanVO> detail) {
+		//계획 헤더
+		planMapper.planDelete(head);
+		 
+		//계획 세부사항
+		for(PlanVO planVO : detail) {
+			 planMapper.planDetailDelete(planVO);
+		}
+		
+		
+	}
 
 
 

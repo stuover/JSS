@@ -7,10 +7,14 @@
   
   	 <!-- 생산계획 조회 모달창 : 생산 계획 리스트(초기값) -->
 	<select id="modalPlanList" resultType="PlanVO">
-			<![CDATA[ 
+		<![CDATA[ 
 			SELECT plan_id, plan_name, plan_date, emp_name
-			FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
-			WHERE plan_date >= TO_DATE((SYSDATE - 3), 'yyyy-MM-dd') AND plan_date <= TO_DATE((SYSDATE + 3), 'yyyy-MM-dd')
+			FROM (
+			      SELECT plan_id, plan_name, plan_date, emp_name
+			      FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
+			      WHERE plan_date >= (SYSDATE - 7)
+			      )
+			WHERE plan_date <= (SYSDATE + 7)
 		]]>
 	</select>  	
 	
@@ -18,8 +22,12 @@
   	<select id="modalPlanResult" resultType="PlanVO">
 		<![CDATA[ 
 			SELECT plan_id, plan_name, plan_date, emp_name
-			FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
-			WHERE plan_date >= TO_DATE((SYSDATE - 3), 'yyyy-MM-dd') AND plan_date <= TO_DATE((SYSDATE + 3), 'yyyy-MM-dd')
+			FROM (
+			      SELECT plan_id, plan_name, plan_date, emp_name
+			      FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
+			      WHERE plan_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
+			      )
+			WHERE plan_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
 		]]>
 
   	</select>
@@ -34,18 +42,21 @@
 	
 	<!-- 제품명 조회 모달창 : 제품 리스트 (초기값) -->
 	<select id="itemList" resultType="PlanVO">
-		SELECT i.item_code, item_name, sum(ord_count) as "itemOrders"
-		FROM itemlist i join orddetail o on(i.item_code = o.item_code)
+		SELECT i.item_code, item_name, sum(nvl(ord_count,0)) as "itemOrders"
+		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
+		WHERE item_type = '완제품'
 		GROUP BY i.item_code, item_name
 		ORDER BY 3 DESC
 	</select>
 	
 	<!-- 제품 검색 모달창 : 제품 리스트 (검색결과) -->
 	<select id ="itemListResult"  resultType="PlanVO">
-		SELECT i.item_code, item_name, sum(ord_count) as "itemOrders"
-		FROM itemlist i join orddetail o on(i.item_code = o.item_code)
-		WHERE item_name = #{itemName}
-		GROUP BY i.item_code, item_name	
+		SELECT i.item_code, item_name, sum(nvl(ord_count,0)) as "itemOrders"
+		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
+		WHERE item_type = '완제품' 
+		               and item_name = #{itemName}
+		GROUP BY i.item_code, item_name
+		ORDER BY 3 DESC
 	</select>
 
 
@@ -83,7 +94,7 @@
 	<update id="planModify" parameterType="PlanVO">
 		UPDATE plan 
 		set plan_name  = #{planName},
-		     plan_date = #{planDate}
+		     plan_date = TO_DATE(TO_CHAR(CAST(#{planDate} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
 		WHERE plan_id = #{planId}
 	</update>
 	
@@ -92,24 +103,24 @@
 		UPDATE plan_detail
 		SET plan_amount = #{planAmount},
 		       plan_priority = #{planPriority},
-		       plan_start = #{planStart},
-		       plan_end = #{planEnd}
+		       plan_start = TO_DATE(TO_CHAR(CAST(#{planStart} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd'),
+		       plan_end = TO_DATE(TO_CHAR(CAST(#{planEnd} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
 		WHERE pdetail_id = #{pdetailId}	
 	</update>
 	
 	
 
 	<!-- 생산계획 공통 내용 삭제 -->
-	<select id="planDelete" parameterType="PlanVO">
+	<delete id="planDelete" parameterType="PlanVO">
 		DELETE FROM plan
 		WHERE plan_id = #{planId}
-	</select>
+	</delete>
 	
 	<!-- 생산계획 세부 내용 삭제 -->
-	<select id="planDetailDelete" parameterType="PlanVO">
+	<delete id="planDetailDelete" parameterType="PlanVO">
 		DELETE FROM plan_detail
 		WHERE pdetail_id = #{pdetailId}
-	</select>
+	</delete>
 
   	
   </mapper>

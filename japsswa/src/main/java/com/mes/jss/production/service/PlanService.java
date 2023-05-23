@@ -34,5 +34,8 @@ public interface PlanService {
 	// 생산계획 수정.
 	public void planModify(PlanVO head, List<PlanVO> detail);
 	
+	// 생산계획 삭제.
+	public void planDelete(PlanVO head, List<PlanVO> detail);
+	
 	
 }
