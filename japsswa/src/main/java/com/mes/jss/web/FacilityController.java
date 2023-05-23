@@ -62,14 +62,43 @@ public class FacilityController {
 	public String updateFac(
 			@RequestBody FacilityVO vo, Model model) {
 
-		System.out.println("============");
 		System.out.println(vo);
-		System.out.println("============");
 		service.updateFacList(vo);
 		
 		return "success";
 				
 	}
+	
+	@ResponseBody
+	@RequestMapping("/newFacStatusAjax")
+	public String newUpdateFac(@RequestBody FacilityVO vo, Model model) {
+		
+		System.out.println(vo);
+		service.newUpdateFacList(vo);
+		
+		return "success";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/startListAjax")
+	public String startList(@RequestBody FacilityVO vo, Model model) {
+		
+		System.out.println(vo);
+		service.updateFacList(vo);
+		return "startSuccess";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/startTimeAjax")
+	public String updateStart(DowntimeVO vo, Model model) {
+		
+		System.err.println(vo);		
+		service.updateStartDate(vo);
+		return null;
+	}
+	
+	
+	
 	
 	
 }

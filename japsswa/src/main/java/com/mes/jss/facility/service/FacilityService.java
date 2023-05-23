@@ -20,4 +20,7 @@ public interface FacilityService {
 	public void setDownTime(DowntimeVO vo);
 	
 	public boolean updateFacList(FacilityVO vo);
+	public boolean newUpdateFacList(FacilityVO vo);
+	
+	public void updateStartDate(DowntimeVO vo);
 }
