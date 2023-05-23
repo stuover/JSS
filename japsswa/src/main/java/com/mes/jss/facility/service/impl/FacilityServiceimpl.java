@@ -60,6 +60,19 @@ public class FacilityServiceimpl implements FacilityService{
 	public boolean updateFacList(FacilityVO vo) {
 		
 		return facilityMapper.updateFacStatus(vo);
-	}	
+	}
+	
+	@Override
+	public boolean newUpdateFacList(FacilityVO vo) {
+
+		return facilityMapper.newUpdateFacStatus(vo);
+	}
+
+	@Override
+	public void updateStartDate(DowntimeVO vo) {
+			facilityMapper.insertStartTime(vo);
+	}
+
+	
 	
 }
