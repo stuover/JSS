@@ -8,18 +8,18 @@ import lombok.Data;
 public class OrderVO {
 	private String ordId;
 	private String ordName;
-	private int totalPrice;
+	private long totalPrice;
 	private String ordStatus;
 	private String customerId;
 	private Date ordDate;
 	private Long empNo;
 	
 	private String ordDetailId;
-	private int ordCount;
+	private long ordCount;
 	private Date outDate;
 	private String itemCode;
-	private int unitPrice;
-	private int eachPrice;
+	private long unitPrice;
+	private long eachPrice;
 	
 	private String customerName;
 	private String custAddr;
