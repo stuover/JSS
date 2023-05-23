@@ -28,4 +28,6 @@ public interface CommonMapper {
 
 	public void deleteCommCode(String commCode);
 
+	public List<CommVO> getItemDeta();
+
 }

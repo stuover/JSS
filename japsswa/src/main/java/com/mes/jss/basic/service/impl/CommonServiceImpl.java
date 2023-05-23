@@ -96,4 +96,12 @@ public class CommonServiceImpl implements CommonService{
 		commMapper.deleteCommCode(commCode);
 	}
 
+
+
+	@Override
+	public List<CommVO> getItemDeta() {
+		// TODO Auto-generated method stub
+		return commMapper.getItemDeta();
+	}
+
 }
