@@ -69,8 +69,21 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public void updateStartDate(DowntimeVO vo) {
-			facilityMapper.insertStartTime(vo);
+	public boolean updateStartDate(DowntimeVO vo) {
+			
+			return facilityMapper.insertStartTime(vo);
+	}
+
+	@Override
+	public List<DowntimeVO> getDownDetail() {
+		
+		return facilityMapper.getDownDetailList();
+	}
+
+	@Override
+	public boolean removeDownTime(String downCode) {
+	
+		return facilityMapper.deleteDownCode(downCode);
 	}
 
 	

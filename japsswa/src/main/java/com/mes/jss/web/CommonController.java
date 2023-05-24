@@ -112,7 +112,7 @@ public class CommonController {
 		
 		if(commService.searchComm(vo.getCommCode())) {
 			return "fail";
-		}else { 
+		}else {
 			return "success";
 		}
 		

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.facility.domain.DowntimeVO;
@@ -20,12 +21,11 @@ public class FacilityController {
 	
 	@Autowired FacilityService service = new FacilityServiceimpl();
 
-	@GetMapping("/facility")		
-	public String  getFacility(Model model) {
+	@GetMapping("/downtime")
+	public String  downtime(Model model) {
 		
-		model.addAttribute("facList", service.getList());
-		return "Facility/Facility";
-	}
+		return "Facility/Downtime";
+	}	
 	
 	@ResponseBody
 	@GetMapping("/facilityAjax")		// 설비 리스트 조회
@@ -92,12 +92,41 @@ public class FacilityController {
 	@RequestMapping("/startTimeAjax")
 	public String updateStart(DowntimeVO vo, Model model) {
 		
-		System.err.println(vo);		
-		service.updateStartDate(vo);
-		return null;
+		if(service.updateStartDate(vo)) {
+			return "success";
+		}else {
+			return "fail";
+		}
 	}
 	
+	@RequestMapping("/downDetail")
+	public String getDowndetail(Model model) {
+				
+		return "Facility/DownDetail";
+	}
 	
+	@ResponseBody
+	@GetMapping("/downDetailAjax")
+	public List<DowntimeVO> downDetail(Model model){
+		
+		List<DowntimeVO> list = service.getDownDetail();
+		return list;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/removeDowntimeAjax")
+	public String removeDownTime(String downCode) {
+		
+		System.out.println(downCode);
+		
+		if(service.removeDownTime(downCode)) {
+			return "success";
+		}else {
+			return "fail";
+		}
+		
+				
+	}
 	
 	
 	
