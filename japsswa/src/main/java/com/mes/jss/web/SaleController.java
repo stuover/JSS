@@ -80,7 +80,7 @@ public class SaleController {
 		return iInfo;
 	}
 	
-	
+	//등록
 	@RequestMapping("/entireRegister")
 	@ResponseBody
 	public OrderVO entRegisterAjax(@RequestBody SaleListVO listVo, Principal principal) {
@@ -112,17 +112,39 @@ public class SaleController {
 		return slist;
 	}
 	
-	//수정할때 기존 입력값 자동 입력
-	/*
-	 * @RequestMapping("/orderShow")
-	 * 
-	 * @ResponseBody public List<OrderVO> orderShowAjax(@RequestBody SaleListVO
-	 * sList){
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
+	//수정할때 기존 입력값 자동 입력(주문)
+	@RequestMapping("/orderShow")
+	@ResponseBody
+	public List<OrderVO> orderShowAjax(OrderVO orderVo){
+		List<OrderVO> oList = saleService.orderShow(orderVo);
+		
+		return oList;
+	}
+	
+	//수정할때 기존 입력값 자동 입력(주문 상세)
+	@RequestMapping("/ordDetShow")
+	@ResponseBody
+	public List<OrderVO> ordDetShowAjax(@RequestParam(name = "ordId") String orderId){
+		List<OrderVO> dList = saleService.ordDetShow(orderId);
+		
+		return dList;
+	}
+	
+	//주문서 삭제
+	@RequestMapping("/entDel")
+	@ResponseBody
+	public OrderVO entDelAjax(@RequestBody SaleListVO slist) {
+		
+		OrderVO delOid = slist.getCommInfo();
+		
+		List<OrderVO> delDet = slist.getList();
+		saleService.entDel(delOid, delDet);
+		
+		return null;
+	}
+	
+	
+	
 	
 	
 

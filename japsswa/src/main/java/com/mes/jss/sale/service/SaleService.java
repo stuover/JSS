@@ -15,5 +15,8 @@ public interface SaleService {
 	public void entRegister(OrderVO commInfo, List<OrderVO> list);
 	List<OrderVO> custShowModal(String oCode);
 	List<OrderVO> custOrdModal();
+	List<OrderVO> orderShow(OrderVO orderVo);
+	List<OrderVO> ordDetShow(String orderId);
+	public void entDel(OrderVO delOid, List<OrderVO> delDet);
 	
 }

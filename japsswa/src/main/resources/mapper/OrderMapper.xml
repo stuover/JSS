@@ -75,6 +75,27 @@
 		on c.customer_id = o.customer_id
 		where ord_status = '접수완료'
 	</select>
+	
+	<select id="orderShow" parameterType="OrderVO" resultType="OrderVO">
+		 select c.customer_name, c.cust_addr, c.cust_mail, c.cust_tel, o.ord_name, e.emp_name
+ 		 from customer c join orders o on( c.customer_id = o.customer_id)
+                         join emp e on( o.emp_no = e.emp_no)
+         where o.ord_id = #{ordId} and c.customer_id = #{customerId}                      
+	</select>
+	
+	<select id="ordDetShow" parameterType="OrderVO" resultType="OrderVO">
+		 select i.item_code, i.item_name, d.out_date, d.unit_price, d.ord_count, d.each_price
+ 		 from orddetail d join itemlist i on (d.item_code = i.item_code)
+ 		 where ord_id = #{orderId} 
+	</select>
+	
+	<delete id="entDel" parameterType="OrderVO">
+		delete from orders where ord_id = #{ordId}
+	</delete>
+	
+	<delete id="entDelDet" parameterType="OrderVO">
+		delete from orddetail where orddetail_id = #{orddetailId}
+	</delete>
 
 
 </mapper>

@@ -26,6 +26,14 @@ public interface OrderMapper {
 
 	List<OrderVO> custOrdModal();
 
+	List<OrderVO> orderShow(OrderVO orderVo);
+
+	List<OrderVO> ordDetShow(String orderId);
+
+	public void entDel(OrderVO delOid);
+
+	public void entDelDet(OrderVO vo);
+
 
 
 
