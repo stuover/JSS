@@ -57,7 +57,7 @@ public class SaleServiceImpl implements SaleService {
 	
 	@Override
 	public void entRegister(OrderVO commInfo, List<OrderVO> list) {
-		orderMapper.entRegister(commInfo);
+		 orderMapper.entRegister(commInfo);
 		
 		 for(OrderVO Ovo : list) { 
 		 Ovo.setCustomerId(commInfo.getCustomerId());
@@ -76,6 +76,29 @@ public class SaleServiceImpl implements SaleService {
 	public List<OrderVO> custOrdModal() {
 		List<OrderVO> ordModal = orderMapper.custOrdModal();
 		return ordModal;
+	}
+
+	@Override
+	public List<OrderVO> orderShow(OrderVO orderVo) {
+		List<OrderVO> ordList = orderMapper.orderShow(orderVo);
+		return ordList;
+	}
+
+	@Override
+	public List<OrderVO> ordDetShow(String orderId) {
+		List<OrderVO> odList = orderMapper.ordDetShow(orderId);
+		return odList;
+	}
+
+	@Override
+	public void entDel(OrderVO delOid, List<OrderVO> delDet) {
+		orderMapper.entDel(delOid);
+		
+		for(OrderVO vo : delDet) {
+			vo.setOrdDetailId(delOid.getOrdDetailId());
+			orderMapper.entDelDet(vo);
+		}
+		
 	}
 
 

@@ -43,24 +43,25 @@
 					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
 					<div>
 						
-									<button id="searchBtn" type="button" class="btn btn-dark"
-										data-bs-toggle="modal" data-bs-target="#searchModal">거래처 찾기</button>
+									
 									<button id="showCust" type="button" class="btn btn-dark"
 										data-bs-toggle="modal" data-bs-target="#showCustModal">거래처 주문 조회</button>
-									<button id="itemSearBtn" type="button" class="btn btn-danger">주문서 삭제</button>
+									<button id="ordDel" type="button" class="btn btn-danger">주문서 삭제</button>
 					</div>
 
 					<div class="row"></div>
 					
 					<div id="grids"></div>
+					<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
+					<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
 					<div id="grid"></div>
 
 					<div>
 						<form>
-							<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
+							
 							<button id="insertBtn" type="button" class="btn btn-dark">등록</button>
 							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
-							<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
+							
 						</form>
 					</div>
 
@@ -201,6 +202,34 @@
 		    grids.on('focusChange', ev => {
 		      console.log('change focused cell!', ev);
 		    });
+		    
+		    grids.on('click', (e) => {
+
+	    		 if(e.columnName == 'customerName'){
+
+	    			 $('#searchModal').modal('show');
+	    			 
+	    			 $.ajax({
+		    			 url : "/cModal",
+		    			 method : "GET",
+		    			 dataType : "JSON",
+		    			 success : function(result){
+		    				 modalGrid.resetData(result);
+		    				 modalGrid.refreshLayout();
+		    				 console.log(result);
+		    			 }
+		    		 })
+	    			 
+	    			 $('#searchModal').on('shown.bs.modal', function (e) {
+							console.log('open');
+							
+
+							
+							setTimeout(()=> modalGrid.refreshLayout(), 1);
+			  			}); 
+	    		 }
+	    		 
+	    	 })
 		
 		    
 		var unit;
@@ -213,6 +242,7 @@
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
+		    	     
 		    	     {
 					  header: '품목코드',
 					  name: 'itemCode'
@@ -273,24 +303,8 @@
 		    
 		    	grids.setValue(0, 'empName', $('#name').val(), false);
 		    	
-		    	 $('#searchBtn').on('click', function(){
-		    		
-		    		 $.ajax({
-		    			 url : "/cModal",
-		    			 method : "GET",
-		    			 dataType : "JSON",
-		    			 success : function(result){
-		    				 modalGrid.resetData(result);
-		    				 modalGrid.refreshLayout();
-		    				 console.log(result);
-		    			 }
-		    		 })
-		    	 })
-		
-				 $('#searchModal').on('shown.bs.modal', function (e) {
-						console.log('open');
-						setTimeout(()=> modalGrid.refreshLayout(), 1);
-		  			});
+	
+				 
 		    	 
 		    	 
 		    	 $('#addBtn').on('click', function(){
@@ -332,6 +346,10 @@
 					 
 				
 		    }; 
+		    
+		    
+		    
+		    
 		    
 		    grid.on('editingFinish', function(e){
 		  
@@ -457,6 +475,7 @@
 		                perPage: 5 
 		                },
 		               columns: [
+		            	     
 		            	     {
 			                   header: '품목코드',
 			                   name: 'itemCode'
@@ -500,6 +519,11 @@
 		        		   },
 		        		   success:function(result){
 							   
+		        			   gridsData = [{}];
+		        			   gridData = [];
+		        			   grids.resetData(gridsData);
+		        			   grid.resetData(gridData);
+		        			   grids.setValue(0, 'empName', $('#name').val(), false);
 		        			   alert('등록 완료 되었습니다')
 
 		        		   }
@@ -620,6 +644,75 @@
 		        		   
 		        	   });
 		           })
+		           
+		           var ordId = '';
+		           var customerId = '';
+		           var orderId = '';
+		           $('#custChooseBtn').on('click', function(){
+		        	   
+		        	   ordId = CmodalGrid.getCheckedRows()[0].ordId;
+		        	   customerId = CmodalGrid.getCheckedRows()[0].customerId;
+		        	   orderId = CmodalGrid.getCheckedRows()[0].ordId;
+		        	   
+		        	   $('#showCustModal').modal('hide');
+		        	   
+		        	   $('#showCustModal').on('hidden.bs.modal',function(e){
+		        		 
+		        		   $.ajax({
+		        			   url : "/orderShow",
+		        			   method : "GET",
+		        			   data : {ordId : ordId, customerId : customerId},
+		        			   dataType : "JSON",
+		        			   //async : false,
+		        			   success : function(result){
+		        				   grids.resetData(result);
+		        				   grids.refreshLayout();
+		        				   
+		        				   $.ajax({
+				        			   url : "/ordDetShow",
+				        			   method : "GET",
+				        			   data : {ordId : orderId},
+				        			   dataType : "JSON",
+				        			   //async : false,
+				        			   success : function(result){
+				        				   grid.resetData(result);
+				        				   grid.refreshLayout();
+				        			   }
+				        		   })
+		        			   }
+		        		   })
+		        		   
+		        		   
+		        	   })
+		           })
+		           
+		           
+		           $('#ordDel').on('click', function(){
+		        	   
+		        	   OrdId = CmodalGrid.getCheckedRows()[0].ordId;
+		        	   
+		        	   $.ajax({
+		        		   url : "/entDel",
+		        		   method : "GET",
+		        		   data : {ordId : OrdId},
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   
+		        			   gridsData = [{}];
+		        			   gridData = [];
+		        			   grids.resetData(gridsData);
+		        			   grid.resetData(gridData);
+		        			   grids.setValue(0, 'empName', $('#name').val(), false);
+		        			   alert('주문서가 삭제되었습니다');
+		        		   }
+		        	   })
+		           })
+		           
+		           
+		           
+		           
+		           
+		           
 		           
 		           
 		           
