@@ -84,7 +84,7 @@
 	</select>
 	
 	<select id="ordDetShow" parameterType="OrderVO" resultType="OrderVO">
-		 select i.item_code, i.item_name, d.out_date, d.unit_price, d.ord_count, d.each_price
+		 select d.orddetail_id, i.item_code, i.item_name, d.out_date, d.unit_price, d.ord_count, d.each_price
  		 from orddetail d join itemlist i on (d.item_code = i.item_code)
  		 where ord_id = #{orderId} 
 	</select>

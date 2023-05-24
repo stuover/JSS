@@ -55,6 +55,7 @@
 					<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
 					<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
 					<div id="grid"></div>
+					<div id="changeGrid"></div>
 
 					<div>
 						<form>
@@ -298,9 +299,79 @@
 		    });
 		    
 		    
+		    
+		    let changeGridData = [];
+	  		const changeGrid = new Grid({
+			      el: document.getElementById('changeGrid'),
+			      data: changeGridData,
+			      rowHeaders: ['checkbox'],
+			      scrollX: false,
+			      scrollY: false,
+			      columns: [
+			    	     {
+						  header: '주문상세코드',
+						  name: 'ordDetailId'
+						 },
+			    	     {
+						  header: '품목코드',
+						  name: 'itemCode'
+						 },
+						 {
+						  header: '품목명',
+						  name: 'itemName'
+						 },
+					     {
+						  header: '납부예정일',
+						  name: 'outDate',
+						  editor: 'datePicker'
+						 },
+						 {
+						  header: '단가',
+						  name: 'unitPrice',
+						  editor: 'text'
+					     },
+					     {
+						  header: '수량',
+						  name: 'ordCount',
+						  editor: 'text'
+						 }, 
+						 {
+					      header: '판매가격',
+					      name : 'eachPrice'
+					     }
+				      ],
+				      summary: {
+				          height: 40,
+				          position: 'bottom', // or 'top'
+				          columnContent: {
+				           
+				        	  eachPrice: {
+				              template: function(valueMap) {
+				                return `TOTAL: ${valueMap.sum}`;
+				              }
+				            }
+				          }
+				        }
+				    });
+
+			    changeGrid.on('check', ev => {
+			      console.log('check!', ev);
+			    });
+
+			    changeGrid.on('uncheck', ev => {
+			      console.log('uncheck!', ev);
+			    });
+
+			    changeGrid.on('focusChange', ev => {
+			      console.log('change focused cell!', ev);
+			    });
+		    
+		    
+		    
+		    
 	
 		    window.onload = function(){
-		    
+		    	$('#changeGrid').modal('hide');
 		    	grids.setValue(0, 'empName', $('#name').val(), false);
 		    	
 	
@@ -462,7 +533,14 @@
 		        	   
 		           }) 
 		           
-		           
+		           modalGrid.on('check', function(e){
+		        	   var checkRows = modalGrid.getCheckedRowKeys();
+		        	   checkRows.forEach(function(key, idx){
+		        		   if(key != e.rowKey){
+		        			   modalGrid.uncheck(key);
+		        		   }
+		        	   })
+		           })
 		          
 		           
 		           const modalGrids = new Grid({
@@ -519,12 +597,17 @@
 		        		   },
 		        		   success:function(result){
 							   
-		        			   gridsData = [{}];
-		        			   gridData = [];
-		        			   grids.resetData(gridsData);
-		        			   grid.resetData(gridData);
-		        			   grids.setValue(0, 'empName', $('#name').val(), false);
-		        			   alert('등록 완료 되었습니다')
+		        			   if(grids.getData() != null && grid.getCheckedRows() != null){
+		        				   console.log(result);
+			        			   gridsData = [{}];
+			        			   gridData = [];
+			        			   grids.resetData(gridsData);
+			        			   grid.resetData(gridData);
+			        			   grids.setValue(0, 'empName', $('#name').val(), false);
+			        			   alert('등록 완료 되었습니다')
+			        			   } else {
+			        				   alert('값을 모두 입력해주세요')
+			        			   }
 
 		        		   }
 		        	   });
@@ -668,6 +751,9 @@
 		        				   grids.resetData(result);
 		        				   grids.refreshLayout();
 		        				   
+		        				   $('#grid').modal('hide');
+		        				   $('#changeGrid').modal('show');
+		        				   
 		        				   $.ajax({
 				        			   url : "/ordDetShow",
 				        			   method : "GET",
@@ -675,8 +761,8 @@
 				        			   dataType : "JSON",
 				        			   //async : false,
 				        			   success : function(result){
-				        				   grid.resetData(result);
-				        				   grid.refreshLayout();
+				        				   changeGrid.resetData(result);
+				        				   changeGrid.refreshLayout();
 				        			   }
 				        		   })
 		        			   }
@@ -687,15 +773,33 @@
 		           })
 		           
 		           
+		           CmodalGrid.on('check', function(e){
+		        	   var checkRows = CmodalGrid.getCheckedRowKeys();
+		        	   checkRows.forEach(function(key, idx){
+		        		   if(key != e.rowKey){
+		        			   CmodalGrid.uncheck(key);
+		        		   }
+		        	   })
+		           })
+		           
+		           
 		           $('#ordDel').on('click', function(){
 		        	   
-		        	   OrdId = CmodalGrid.getCheckedRows()[0].ordId;
+		        	   grids.finishEditing();
+		        	   var ordId = grids.getData()[0];
+		        	   grid.finishEditing();
+		        	   var delData = grid.getCheckedRows();
+		        	   
 		        	   
 		        	   $.ajax({
 		        		   url : "/entDel",
-		        		   method : "GET",
-		        		   data : {ordId : OrdId},
+		        		   contentType : "application/json",
+		        		   method : "POST",
+		        		   data : JSON.stringify({delOid : ordId, delDet : delData}),
 		        		   dataType : "JSON",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        		   }
 		        		   success : function(result){
 		        			   
 		        			   gridsData = [{}];
