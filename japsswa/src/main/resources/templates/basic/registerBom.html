@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head lang="en">
+<meta charset="UTF-8">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<script type="text/javascript"
+	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+
+<th:block layout:fragment="content">
+
+ 		<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                <!-- Body Start -->
+                
+                  <h4 class="page-title">BOM 조회</h4>
+
+                  <div class="m-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+                  	<button id="saveBtn" class="btn btn-primary">등록</button>
+                  </div>
+                  
+                  
+				<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">
+				      <!-- card-body start -->
+
+				      <h5 class="page-title">공정 흐름</h5>
+				        
+	                  <div id="proGrid"></div>
+
+					  <!-- card-body end -->
+				      </div>
+				    </div>
+				  </div>
+				</div>       
+                  
+				<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">
+				      <!-- card-body start -->
+				        <h5 class="page-title">BOM</h5>
+				        
+				        <div id="bomGrid"></div>
+					  <!-- card-body end -->
+				      </div>
+				    </div>
+				  </div>
+				</div>     
+
+				<!-- Body End -->				            
+                </div>
+              </div>
+            </div>
+  		</div>
+  		
+  		
+  		<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">품목 조회</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+		            <div class="modal-body">
+		            	<input type="radio" class="btn-check" name="itemType" id="option1"  value = "all" autocomplete="off" checked>
+						<label class="btn btn-secondary" for="option1" >전체</label>
+						<input type="radio" class="btn-check" name="itemType" id="option2" value="FIN"autocomplete="off">
+						<label class="btn btn-secondary" for="option2">완제품</label>
+						<input type="radio" class="btn-check" name="itemType" id="option3" value="SAM" autocomplete="off">
+						<label class="btn btn-secondary" for="option3">반제품</label>
+						
+						
+			            <div id="modalGrid"></div>
+			            <input type="text" class="btn-serach" name="selectIn" id="selectIn"  >
+			            <button id="selectBtn" type="button" class="btn btn-primary">검색</button>
+		            </div>
+	            <div class="modal-footer">
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+	    
+<script>var bomGrid = new tui.Grid({
+	el : document.getElementById('bomGrid'),
+	pageOptions : {
+		useClient : true,
+		perPage : 5
+	},
+	columns : [ 
+	{
+		header : 'LEVEL',
+		name : 'bomLevel',
+		width: 100,
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '품목코드',
+		name : 'ingCode',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '품목명',
+		name : 'itemName',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '구분',
+		name : 'itemType',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '소요량',
+		name : 'itemCon',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '단위',
+		name : 'unit',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '공정코드',
+		name : 'proCode',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '공정명',
+		name : 'proName',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '단계구분',
+		name : 'levelType',
+		sortingType : 'desc',
+		sortable : true,
+	}
+	]
+});
+
+var proGrid = new tui.Grid({
+	el : document.getElementById('proGrid'),
+	pageOptions : {
+		useClient : true,
+		perPage : 5
+	},
+	columns : [ 
+	{
+		header : '순서',
+		name : 'proOrder',
+		width: 100,
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '공정코드',
+		name : 'proCode',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '공정명',
+		name : 'proName',
+		sortingType : 'desc',
+		sortable : true,
+	}
+	]
+});
+
+
+var modalGrid = new tui.Grid({
+	el : document.getElementById('modalGrid'),
+	pageOptions : {
+		useClient : true,
+		perPage : 5
+	},
+	columns : [ 
+	{
+		header : '품목코드',
+		name : 'itemCode',
+		width: 100,
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '품목명',
+		name : 'itemName',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '구분',
+		name : 'itemType',
+		sortingType : 'desc',
+		sortable : true,
+	}
+	]
+});
+
+
+function itemList(){
+	$.ajax({
+		url : "/getItemList",
+		method : "get",
+		dataType : "json",
+		success : function(result) {
+			modalGrid.resetData(result);
+		},
+		error : function(reject){
+			console.log(reject)
+		}
+	})
+}
+
+
+
+$('#searchBtn').on('click', function(){
+	itemList()
+	$('#searchModal').modal('show');
+	$('#searchModal').on('shown.bs.modal', function (e) {
+		console.log('open');
+		setTimeout(()=> modalGrid.refreshLayout(), 300);	
+	})
+	
+})
+
+$('input[name="itemType"]').on('change', function() {	
+	let itemType = $('input[name="itemType"]:checked').val();
+	if(itemType == "all"){
+		itemList()
+	}else {
+		$.ajax({
+			url : "/getItemDetaList",
+			method : "get",
+			dataType : "json",
+			data : {itemType : itemType},
+			success : function(result) {
+				modalGrid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject)
+			}
+		})
+	}
+})
+
+$('#selectBtn').on('click', function() {
+	console.log($('#search').val());
+	$.ajax({
+		url : "/searchItem",
+		data : {itemName : $('#selectIn').val()},
+		dataType : "json",
+		method : "get",
+		success : function(result) {
+			modalGrid.resetData(result);
+		},error : function(reject){
+			console.log(reject)
+		}
+	})
+
+})
+
+modalGrid.on('click',function(e){
+	itemCode = modalGrid.getRow(e.rowKey).itemCode;
+	
+	$.ajax({
+		url : "/getBomOrd",
+		method : "get",
+		dataType : "json",
+		data : {itemCode : itemCode},
+		success : function(result){
+			console.log(result.process)
+			
+			bomGrid.resetData(result.bom);
+			proGrid.resetData(result.process);
+		},
+		error : function(reject){
+			console.log(reject);
+		}
+	})
+	
+	
+	
+	$('#searchModal').modal('hide');
+	
+});
+
+
+
+
+$('#addBomBtn').on('click', function(e) {
+	e.preventDefault();
+	self.location = '/employee/ragister';
+})
+	
+</script>
+  		
+	</th:block>
+	
+
+
+</html>

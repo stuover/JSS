@@ -18,4 +18,6 @@ public interface ItemMapper {
 
 	boolean deleteItem(String itemCode);
 
+	List<ItemVO> searchItem(String itemName);
+
 }

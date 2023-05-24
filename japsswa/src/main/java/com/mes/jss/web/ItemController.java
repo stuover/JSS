@@ -34,14 +34,13 @@ public class ItemController {
 		}{
 			return itemService.getItemList(val);
 		}
-
 	}
 	
 	// 전체 리스트
 	@ResponseBody
 	@RequestMapping("/itemAllList")
 	public List<ItemVO> itemAllList(){
-
+		System.err.println(itemService.getAllItemList());
 		return itemService.getAllItemList();
 	}
 	

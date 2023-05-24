@@ -25,7 +25,7 @@
   		</select>
   		
   		<insert id = "insertItem">
-  			insert into itemList values(#{itemCode}, #{itemName}, #{item_type}, #{unitPrice}, #{itemPrice}, #{standard}, #{unit}, #{saveMatertal})
+  			insert into itemList values(#{itemCode}, #{itemName}, #{itemType}, #{unitPrice}, #{itemPrice}, #{standard}, #{unit}, #{saveMaterial})
   		</insert>
   		
   		<update id = "updateItem">
@@ -43,4 +43,11 @@
   		<delete id="deleteItem">
   			delete from itemlist where item_code = #{itemCode}
   		</delete>
+  		
+  		<select id="searchItem" resultType="ItemVO">
+  			select item_code,item_name,item_type
+  			from itemlist
+  			where item_Name like '%'||#{itemName}||'%'
+  			order by item_code
+  		</select>
   </mapper>

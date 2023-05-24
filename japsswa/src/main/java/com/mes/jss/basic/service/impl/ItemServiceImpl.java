@@ -47,4 +47,10 @@ public class ItemServiceImpl implements ItemService{
 		// TODO Auto-generated method stub
 		return itemMapper.deleteItem(itemCode);
 	}
+
+	@Override
+	public List<ItemVO> searchItem(String itemName) {
+		// TODO Auto-generated method stub
+		return itemMapper.searchItem(itemName);
+	}
 }

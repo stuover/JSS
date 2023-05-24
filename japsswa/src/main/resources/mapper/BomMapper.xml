@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+  <mapper namespace="com.mes.jss.basic.mapper.BomMapper">
+  	<select id="getBomList" resultType="BomVO">
+  		select bom_code, bom_level, ing_code, item_name, a.item_con, a.unit, b.item_type, c.pro_code, c.pro_name,a.level_type
+		from bom a join itemList b 
+		on (a.ing_code = b.item_code) left outer join process c 
+                                      on(a.pro_code = c.pro_code)
+  		where a.item_code = #{itemCode}
+        start with level_type is not null 
+		connect by bom_level = prior leveL_type
+		order siblings by level_type
+  	</select>
+  </mapper>

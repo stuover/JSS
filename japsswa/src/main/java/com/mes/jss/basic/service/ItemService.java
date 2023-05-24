@@ -18,4 +18,6 @@ public interface ItemService {
 
 	boolean removeItem(String itemCode);
 
+	List<ItemVO> searchItem(String itemName);
+
 }

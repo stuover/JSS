@@ -322,16 +322,12 @@
 					} ]
 			});
 	
-			 
-		
-		
 
-			
 	 		var commCode;
 			grid.on('click',function(e){
+				console.log("22");
 				if(e.columnName != "_checked"){
 				commCode = grid.getRow(e.rowKey).commCode;
-				console.log(e.rowKey)
 				 grid.setSelectionRange({
 			            start: [e.rowKey, 0],
 			            end: [e.rowKey, grid.getColumns().length - 1]

@@ -170,10 +170,11 @@ function itemList(){
 		method: "get",
 		dataType : "json",
 		success: function(result){
+			console.log(result)
 			grid.resetData(result);
 		},
 		error: function(reject){
-			
+			console.log(recjet)
 		}
 		
 	});
@@ -452,7 +453,7 @@ $('#modBtn').on('click', function(){
 		beforeSend: function(xhr){
 			xhr.setRequestHeader(header, token);    
 		},success : function(result) {
-			$('#addModal').modal('hide');
+			$('#modModal').modal('hide');
 			itemList();
 
 		},error : function(reject) {
