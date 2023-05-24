@@ -52,8 +52,8 @@
                   </div>
 
 				<div class="m-3 d-grid gap-2 d-md-flex justify-content-md-end">
-	              <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
 	              <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#searchItem">추가</button>
+	              <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
 				</div>
 
                   <div id="grid"></div>
@@ -68,7 +68,9 @@
   		</div>
   		
 		
+  		<!-- Modal List Start -->
   		
+  		<!-- 생산계획 조회 모달창 -->
 	    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	        <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content">
@@ -88,6 +90,7 @@
 	        </div>
 	    </div>
 	    
+	    <!-- 제품 검색 모달창 -->
 	    <div class="modal fade" id="searchItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	        <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content">
@@ -105,8 +108,9 @@
 	            	</div>
 	        </div>
 	        </div>
-	    </div>	    
-  		
+	    </div>
+	    
+  		<!-- Modal List End -->
 
   		<script>
   		const token = $("meta[name='_csrf']").attr("content")
