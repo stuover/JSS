@@ -35,6 +35,15 @@
                   <input id="afterSearch" type="hidden" name="selectResult" value="insert">
                   <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
 
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+		              <button type="button" id="resetBtn" class="btn btn-dark btn-sm">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+						  <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+						  <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+						</svg>             
+		              </button>
+					</div>
+
                   <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
                   	<button id="saveBtn" class="btn btn-primary">저장</button>
@@ -522,13 +531,15 @@
 					});				
   		    });
   		    
-		    // 선택한 제품의 공정 정보 출력.
+		    // 제품명 더블 클릭 -> 선택한 제품의 공정 정보 출력.
 		    detailGrid.on('dblclick', (ev)=>{
+		    	console.log(ev);
 		    	console.log(ev.columnName);
 		    	if(ev.columnName == 'itemName'){
 		    		console.log('Open ProcessInfo');
 		    	}
 		    })
+		    
   		    
   		    // 검색 내용 체크 -> 선택 버튼 클릭 -> 모달창 닫기, 새로운 행 추가.
   		    let itemInfo = [];
@@ -574,7 +585,27 @@
 		      ]
 		    });			
 		    
-
+		    // 
+		    let iCode = '';
+		    detailGrid.on('check', function() {
+		    	iCode = detailGrid.getCheckedRows()[0].itemCode;
+		    	console.log(iCode);
+		    	
+		    	$.ajax({
+		    		url : "",
+		    		data : {code : iCode},
+		    		method : "GET",
+		    		dataTyep : "JSON",
+		    		success : function(result) {
+		    			console.log(result);
+		    			processGrid.resetData(result);
+		    		},
+		    		error : function(reject) {
+		    			console.log(reject);
+		    		}
+		    	});
+		    	
+		    });
 	    
 			
 			// Hold 자재 정보
