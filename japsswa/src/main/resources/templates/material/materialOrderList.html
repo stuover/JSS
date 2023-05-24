@@ -26,10 +26,7 @@
 	
 	<h3 style="font-weight:bold; margin-left:30px;">자재 발주 조회</h3>
 	
-	<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-  Launch demo modal
-</button>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -45,7 +42,7 @@
         <div id="grid2"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button"id= "closeBtn" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
@@ -87,32 +84,46 @@
 				
 				rowHeaders: ['checkbox'],
 				
-				columns : [ {
-					header : '발주 코드',
+				columns : [ 
+					{
+						header : '발주일자',
+						name : 'mrOrderDate'
+					},
+					{
+					header : '발주코드',
 					name : 'mrOrderCode'
-				}, {
-					header : '거래처 코드',
+				}, 
+					{
+					header : '거래처코드',
 					name : 'customerId'
-				}, {
+				}, 
+				{
+					header : '거래처명',
+					name : 'customerName'
+				},
+				
+				{
 					header : '사원 코드',
 					name : 'empNo'
-				}, {
-					header : '총 가격',
-					name : 'allCount'
-				}, {
-					header : '품목 수',
-					name : 'productCount'
+				}, 
+				{
+					header : '사원명',
+					name : 'empName'
 				},
 				{
-					header : '발주일자',
-					name : 'mrOrderDate'
-				}
+					header : '품목 수',
+					name : 'productCount'
+				},				
+				{
+					header : '총 가격',
+					name : 'allCount'
+				} 
 				
 				]
 			})
 			
 	
-			
+	
 			
 	grid1.on('dblclick',(ev) =>{
 		
@@ -150,30 +161,51 @@
 			});	
 			
 			
-			
+					
 			var grid2 = new tui.Grid({
 				el : document.getElementById('grid2'),
 				scollX : false,
 				scollY : false,
-				width:1000,
+				width:1800,
 				rowHeaders: ['checkbox'],
 				
-				columns : [ {
-					header : '발주 상세코드',
-					name : 'mrOrderDetail'
-				}, {
+				columns : [{
+					header : '발주 일자',
+					name : 'mrOrderDate'
+				} , {
 					header : '발주 코드',
 					name : 'mrOrderCode'
 				}, {
+					header : '발주 상세코드',
+					name : 'mrOrderDetCode'
+				},
+				{
+					header : '담당자',
+					name : 'empName'
+				},
+				{
+					header : '거래처 코드',
+					name : 'customerId'
+				},
+				{
+					header : '거래처명',
+					name : 'customerName'
+				},
+				{
 					header : '품목 코드',
 					name : 'itemCode'
-				}, {
+				},
+				{
+					header : '품목명',
+					name : 'itemName'
+				},
+				{
 					header : '수량',
 					name : 'mrCount'
 				}, 
 				{
 					header : ' 가격',
-					name : 'itemPrice'
+					name : 'mrPrice'
 				},
 				{
 					header : '총 가격',

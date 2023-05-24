@@ -10,4 +10,5 @@ public class MrReleaseVO {   // 자재 출고
 	private String itemCode;
 	private String adjustmentCode;
 	private int mrRealCount;
+	
 }

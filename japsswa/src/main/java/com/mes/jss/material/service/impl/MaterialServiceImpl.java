@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListlVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
@@ -13,6 +14,7 @@ import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.mapper.MaterialMapper;
 import com.mes.jss.material.service.MaterialService;
+import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.sale.domain.CustomerVO;
 
 @Service("materialService")
@@ -27,6 +29,13 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MrVO> mrlist() {
 		
 		return materialMapper.getList();
+	}
+	
+	// 자재 재고 리스트
+	@Override
+	public List<MrVO> mrCountList() {
+		
+		return materialMapper.getMrCount();
 	}
 	
 	// 자재 재고 검색
@@ -59,9 +68,13 @@ public class MaterialServiceImpl implements MaterialService {
 	// 자재 입고 
 	
 	@Override
-	public MrVO mrIn(String testCode) {
-
-		return materialMapper.StoreIn(testCode);
+	@Transactional
+	public void mrIn(QualityListVO vo) {
+		
+		for(int i=0;  i< vo.getList().size(); i++) {
+			materialMapper.StoreIn(vo.getList().get(i).getTestCode());
+		}
+		
 	}
 	
 	// 거래처 리스트
@@ -119,6 +132,18 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.admGetList();
 	}
+
+	
+	
+	
+	// 자재 조정 입고
+	
+	//@Override
+	//public void adInsert(AdjustmentListVO vo) {
+		
+		//for(int i=0; vo.getList().get(i.))
+		
+	//}
 	
 	
 

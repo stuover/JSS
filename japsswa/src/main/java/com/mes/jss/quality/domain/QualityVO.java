@@ -9,6 +9,7 @@ public class QualityVO {	// 품질 VO
 	String testCode;
 	String itemCode;
 	String mrOrderDetail;
+	String itemType;
 	String situation;
 	Date startDate;
 	Date endDate;
@@ -18,4 +19,7 @@ public class QualityVO {	// 품질 VO
 	long passQuantity;
 	double defectiveRate;
 	String testNote;
+	double error;
+	String empName;
+	String itemName;
 }

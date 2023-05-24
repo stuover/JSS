@@ -12,7 +12,11 @@
 
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
-
+  <script type="text/javascript"
+      src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+    
+   <link rel="stylesheet"
+      href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
 <style>
 </style>
 
@@ -94,7 +98,7 @@
 		    		url : "/mrStore",
 		    		contentType: "application/json",
 					method : "POST",
-					data : JSON.stringify({testCode : grid.getCheckedRows()[0].testCode}),
+					data : JSON.stringify({list : grid.getCheckedRows()}),
 					dataType : "json",
 					beforeSend: function(xhr){
 						xhr.setRequestHeader(header, token);
@@ -132,33 +136,36 @@
 				scollX : false,
 				scollY : false,
 				
+				 
+				
 				rowHeaders: ['checkbox'],
 				
 				
 				columns : [ {
 					header : '검사코드',
 					name : 'testCode'
-				}, {
-					header : '품목코드',
-					name : 'itemCode'
-				}, {
-					header : '주문 상세 코드',
-					name : 'mrOrderDetail'
-				}, {
-					header : '상태',
-					name : 'situation'
-				}, {
-					header : '검사 시작일',
-					name : 'startDate'
-				}, 
-				{
+				},{
 					header : '검사 완료일',
 					name : 'endDate'
+				},{
+					header :'담당자 이름',
+					name : 'empName'
+				},{
+					header : '주문 상세 코드',
+					name : 'mrOrderDetail'
+				},{
+					header : '구분',
+					name : 'itemType'
 				},
+			
 				{
-					header : '사원번호',
-					name : 'empNo'
-				},
+					header : '품목코드',
+					name : 'itemCode'
+				},{
+					header : '품목코드명',
+					name : 'itemName'
+				},  
+				 
 				{
 					header : '검사량',
 					name : 'testQuantity'
@@ -173,14 +180,15 @@
 				},
 				{
 					header : '불량률',
-					name : 'defectiveRate'
+					name : 'error'
 				},
 				{
 					header : '비고',
 					name : 'testNote'
 				}
 				
-				]
+				],
+				  
 			})
 			
 		

@@ -18,6 +18,7 @@ import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.service.MaterialService;
+import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.sale.domain.CustomerVO;
 
 
@@ -66,6 +67,17 @@ public class MaterialController {
 		return list;
 	}
 
+ // 자재 재고 리스트
+	@ResponseBody
+	@GetMapping("/mrCount")
+	public List<MrVO> mrCount(){
+		
+		List<MrVO> list = materialService.mrCountList();
+		
+		return list;
+	}
+	
+	
 	
  // 자재 재고 검색
 	
@@ -83,13 +95,13 @@ public class MaterialController {
 	
 	@ResponseBody
 	@RequestMapping("/mrStore")     
-	public MrVO mrStore(@RequestBody String testCode){
+	public MrVO mrStore(@RequestBody QualityListVO vo){
 		
-		System.out.println(testCode);
+		System.err.println(vo);
 		
-		MrVO result = materialService.mrIn(testCode);
+		materialService.mrIn(vo);
 		
-		return result;
+		return null;
 		
 	}
 
@@ -194,6 +206,20 @@ public class MaterialController {
 		
 	}
 
+	
+// 자재 조정 입고
+	/*
+	 * @ResponseBody
+	 * 
+	 * @RequestMapping("/mrAdjustInsert") public List<AdjustmentListVO>
+	 * MrAdmInsert(@RequestBody AdjustmentListVO vo){
+	 * 
+	 * 
+	 * return null;
+	 * 
+	 * 
+	 * }
+	 */
 	
 }
 

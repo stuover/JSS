@@ -8,11 +8,20 @@
   	<!-- 자재 리스트 -->
   		<select id="getList" resultType="MrVO">
   		
-  		select * from material
-  		
+  		select i.item_type,m.mr_lot_number,i.item_name,m.item_code,e.emp_name,m.store_date,m.store_count,m.store_reason_type,m.store_reason_code from emp e join material m on(e.emp_no=m.emp_no) join itemlist i on(m.item_code=i.item_code) 
+  		where to_char(store_date,'dd') = to_char(sysdate,'dd')
   		
   		</select>  
   	
+  	<!-- 자재 재고 리스트 -->
+  	
+  		<select id="getMrCount" resultType="MrVO">
+  		select item_code, item_name, item_type, save_material, sum(store_count) as total from itemlist join material using(item_code) group by item_code, item_name, item_type, save_material
+							
+  		
+  		</select>
+  		 
+  		
   	
   	<!-- 입고 확인 검색 -->	
   		<select id="codeList" resultType="MrVO">
@@ -25,10 +34,11 @@
 	<!-- 자재 재고 확인 -->	
 		<select id="mrCountList" resultType="MrVO">
 		
-			select i.item_name,i.item_type,
+			select distinct i.item_name,i.item_type,
 			(select sum(store_count) from material m join itemlist i on(m.item_code = i.item_code)
 			 where i.item_name = #{keyword}) total
-           	from material m join itemlist i on(m.item_code = i.item_code) where i.item_name = #{keyword} 
+           	 from material m join itemlist i on(m.item_code = i.item_code) 
+           	 where i.item_name = #{keyword} 
 		</select>
 		
 	
@@ -93,13 +103,17 @@
   <!-- 발주 리스트 -->		
   		<select id="OrmGetList" resultType="MrOrderVO">
   		
-  			select * from material_order
+  			select o.mr_order_date,o.mr_order_code,c.customer_id,c.customer_name,e.emp_no,e.emp_name,o.product_count,o.all_count 
+  			from customer c join material_order o on(c.customer_id = o.customer_id) join emp e on(o.emp_no=e.emp_no) 
   		</select>
   
   <!-- 발주 상세 리스트 -->		
   		<select id="OrdGetList" resultType="MrOrderDetailVO">
   		
-  			select * from material_order_detail where mr_order_code = #{keyword}
+  			select m.mr_order_date,m.mr_order_code,d.mr_order_det_code, c.customer_id,c.customer_name,i.item_code,i.item_name,d.mr_count,d.mr_price,d.price_total,d.delivery_date,e.emp_name
+  			from customer c join material_order m on(c.customer_id = m.customer_id)
+         	join emp e on(m.emp_no=e.emp_no) join material_order_detail d on(m.mr_order_code=d.mr_order_code) join itemlist i on(d.item_code=i.item_code)
+         	where d.mr_order_code = #{keyword}
   		
   		</select>	
   	

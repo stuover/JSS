@@ -16,6 +16,11 @@ public class MrVO {              // 자재 vo
 	Date expireDate;
 	String storeReasonType;
 	String storeReasonCode;
-	
+	String testCode;
+	String itemName;
+	String itemType;
+	String total;
+	String empName;
+	String saveMaterial;
 	 
 }
