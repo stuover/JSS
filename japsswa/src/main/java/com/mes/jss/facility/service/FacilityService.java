@@ -13,7 +13,7 @@ public interface FacilityService {
 	
 	public DowntimeVO getDowntime(DowntimeVO vo);
 	public List<DowntimeVO> getDownList();		// 비가동 리스트 조회
-	
+	public List<DowntimeVO> getDownDetail();	// 비가동 내역 조회
 	public boolean registerDownList(DowntimeVO vo);		// 비가동 리스트 등록
 	
 	public InspectionVO getInspection(InspectionVO vo);
@@ -22,5 +22,6 @@ public interface FacilityService {
 	public boolean updateFacList(FacilityVO vo);
 	public boolean newUpdateFacList(FacilityVO vo);
 	
-	public void updateStartDate(DowntimeVO vo);
+	public boolean updateStartDate(DowntimeVO vo);
+	public boolean removeDownTime(String downCode);	// 비가동 삭제
 }

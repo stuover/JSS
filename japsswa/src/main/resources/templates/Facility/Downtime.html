@@ -75,9 +75,33 @@
         <h4>비가동 설비 리스트</h4>
         <div id="downgrid"></div>
         <div>
-            <button id="startBtn" type="button">가동</button><button id="cenLbtn" type="submit">수정</button><button id="cenRbtn"
-                type="submit">삭제</button>
+            <button id="startBtn" type="button">가동</button>
         </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="downModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1200px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="downModalTitle">비가동 내역</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 모달 그리드 시작 -->
+            <div id="downModalGrid"></div>
+        <!-- 모달 그리드 끝 -->
+      </div>
+      <div class="modal-footer">
+        <button id="modifyBtn" type="button" class="btn btn-primary">수정</button>
+        <button id="deleteBtn" type="button" class="btn btn-primary">삭제</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+        <!-- /.modal -->
 
         <script>
             window.onload = function () {
@@ -110,13 +134,13 @@
                     }, {
                         header: '관리자',
                         name: 'facManager'
+                    },{
+                    	header: '설비 가동일시',
+                    	name: 'startDate'
                     }, {
                         header: '가동 상태',
                         name: 'facStatus',
                         filter: 'select'
-                    },{
-                    	header: '설비 가동일시',
-                    	name: 'startDate'
                     }]
                 });
 
@@ -313,7 +337,8 @@
                 	modalgrid.resetData([grid.getCheckedRows()[0]]);
   					                	
                     facData = [grid.getCheckedRows()[0].facStatus];
-                    //console.log(sampleData);
+                    
+                    //console.log(facData);
                     facDownList();
 
                 });
@@ -330,20 +355,19 @@
                 	//var downCheck = downgrid.getCheckedRows()[0];
                 	//console.log(downCheck);
                 	
-                //})
+                //})                
                 
                 $('#startBtn').on('click', function(){
                 	
                 	downCheck = downgrid.getCheckedRows()[0];
-                	console.log(downCheck);
+                	console.log('startBtv', downCheck);
                 	                	                	
 					$.ajax({
 						url: "/startTimeAjax",
 						method: "get",
 						data: downCheck,
 						success: function (result) {
-                        	alert("가동 처리되었습니다");
-                        	downgrid.removeRow(downCheck);
+                        	alert("가동 처리되었습니다");                        	
                         	newcheckfacStatus();
                         	facDownList();
                         },
@@ -363,13 +387,14 @@
                     
                     
                     if(status == 'Y'){
-                    downgrid.appendRow(stopData);
+                    
                     $.ajax({
                         url: "/downListAjax",
                         method: "get",
                         data: stopData,
                         success: function (result) {							
                         	checkfacStatus();
+                        	facDownList();
                         	alert("비가동 처리되었습니다");
                         	$('#modal').modal('hide');                            
                         },
@@ -384,11 +409,11 @@
                     	alert("비가동중인 설비입니다 다시 선택해주세요");
                     	// 하단의 리스트로 추가됨 , 수정 필요
                     }
-                })                               
+                })
 
                 function checkfacStatus() {
                 	facStatus = grid.getCheckedRows()[0];
-                    console.log(facStatus);
+                    //console.log(facStatus);
 
                     var token = $("meta[name='_csrf']").attr("content");
                     var header = $("meta[name='_csrf_header']").attr("content");
@@ -436,7 +461,102 @@
                         }
                     });
                 }
+                
+                
+                // 비가동 설비 더블클릭시 모달 
+                downgrid.on('dblclick', function(e){
+    				if(e.columnName != "_checked"){
+    				downCode = downgrid.getRow(e.rowKey).downCode;
+    				downModalData = downgrid.getRow(e.rowKey);
+    				//console.log(downCode)
+    				//console.log(downModalData)
+    				
+    				
+    				 downgrid.setSelectionRange({
+    			            start: [e.rowKey, 0],
+    			            end: [e.rowKey, grid.getColumns().length - 1]    				 
+    			     	});
+    				
+    					$('#downModal').modal('show');
+    					downModalGrid.resetData([downModalData]);
+    					
+    				}
+    			});
+             
+                const downModalGrid = new tui.Grid({
+                    el: document.getElementById('downModalGrid'),
+                    scrollX: false,
+                    scrollY: false,
+                    width: 1100,
+                    rowHeight: 130,
+                    rowHeaders: ['checkbox'],
+                    columns: [
+                      {
+                        header: '설비명',
+                        name: 'facName'
+                      },
+                      {
+                        header: '설비 코드',
+                        name: 'facCode'
+                      },
+                      {
+                        header: '비가동 코드',
+                        name: 'downCode'
+                      },
+                      {
+                        header: '비가동 사유',
+                        name: 'downReason'
+                      },
+                      
+                      {
+                          header: '설비 비가동일시',
+                          name: 'stopDate'
+                        },                        
+                         {
+                              header: '관리자',
+                              name: 'downManager'
+                            }
+                    ]
+                  });
+                
 
+                
+
+                $('#modifyBtn').on('click', function(){
+                	console.log("수정");
+                	newlist = downModalGrid.getData()[0];
+                	console.log(newlist);
+                })
+                
+                $('#deleteBtn').on('click', function(){
+                	                	
+                	let newlist = downModalGrid.getData()[0].downCode;
+                	console.log(newlist);                	                	                
+                	var returnValue = confirm('안녕하세요?')
+                	let result = alert(returnValue);
+                	console.log(result)
+                	
+                	var token = $("meta[name='_csrf']").attr("content");
+                    var header = $("meta[name='_csrf_header']").attr("content");
+                	
+                	$.ajax({
+                		url:"/removeDowntimeAjax",
+                		method: "POST",                		
+                		data: {downCode: newlist},
+                		beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                        success : function(result){
+                        	
+
+                		},
+                		error : function(reject){
+                			console.log("reject");
+                			console.log(reject);
+                		}
+                	})
+                })
+                
             }
         </script>
     </th:block>

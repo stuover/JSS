@@ -191,7 +191,7 @@
 			
 			$('#deleteBtn').on('click', function() {
 				let commCode = $('#commCode').val();
-
+					console.log(commCode);
 				$.ajax({
 					url : "/removeCommCode",
 					method : "get",

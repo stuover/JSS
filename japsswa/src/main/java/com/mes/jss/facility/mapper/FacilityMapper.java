@@ -12,10 +12,12 @@ public interface FacilityMapper {
 	
 	public List<DowntimeVO> getdownList();	// 비가동 리스트 조회
 	public int insertDownList(DowntimeVO vo);		// 비가동 리스트 추가
+	public List<DowntimeVO> getDownDetailList();
 	
 	public boolean updateFacStatus(FacilityVO vo);
 	public boolean newUpdateFacStatus(FacilityVO vo);
 
-	public void insertStartTime(DowntimeVO vo);
+	public boolean insertStartTime(DowntimeVO vo);
+	public boolean deleteDownCode(String downCode);	// 삭제
 		
 }

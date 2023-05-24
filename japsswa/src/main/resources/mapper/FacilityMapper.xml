@@ -20,13 +20,14 @@
         select f.fac_name,f.fac_code,d.down_code,d.stop_date,d.down_reason,d.down_manager,d.remark
 		from facility f join downtime d 
 		on(f.fac_code = d.fac_code)
-		where f.fac_status ='N'
+		where d.start_date is null
 		order by fac_code
   	</select>
   	
   	<insert id="insertDownList" parameterType="DowntimeVO">
   		insert into downtime(down_code, stop_date, down_reason, down_manager, remark, fac_code)
-		values (downtime_seq.nextval, to_date(sysdate,'yyyy/MM/dd') , #{downReason} , #{downManager} , #{remark} , #{facCode})
+		values (('DOW' || lpad(downtime_seq.nextval, 4, '0')), to_date(sysdate,'yyyy/MM/dd') , 
+		#{downReason} , #{downManager} , #{remark} , #{facCode})
   	</insert>
   	
   	<update id="updateFacStatus" parameterType="FacilityVO">
@@ -48,5 +49,13 @@
   	<update id="insertStartTime" parameterType="DowntimeVO">
   		update downtime set start_date = to_date(sysdate,'yyyy/MM/dd') where fac_code = #{facCode}
   	</update>
+  	
+  	<select id="getDownDetailList" resultType="DowntimeVO">
+  		select * from downtime order by down_code desc
+  	</select>
+  	
+  	<delete id="deleteDownCode">
+  		delete from downtime where down_code = #{downCode}
+  	</delete>
   	
   </mapper>

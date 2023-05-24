@@ -46,9 +46,6 @@
         <button id="stopBtn" type="button" data-toggle="modal" data-target="#modal">비가동</button>
 
         <!-- Modal -->
-
-
-        <!-- Modal -->
         <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
             aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" style="width:650px" role="document">
@@ -62,8 +59,6 @@
                     <div class="modal-body">
 
                         <!-- 드롭다운 -->
-
-                        <!-- <div id="container"></div> -->
                         <div id="modalgrid"></div>
                         <!-- 드롭다운 끝 -->
 
@@ -80,27 +75,45 @@
         <h4>비가동 설비 리스트</h4>
         <div id="downgrid"></div>
         <div>
-            <button type="submit">가동</button><button id="cenLbtn" type="submit">수정</button><button id="cenRbtn"
-                type="submit">삭제</button>
+            <button id="startBtn" type="button">가동</button>
         </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="downModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 모달 그리드 시작 -->
+            <div id="downModalGrid"></div>
+        <!-- 모달 그리드 끝 -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+        <!-- /.modal -->
 
         <script>
             window.onload = function () {
+
                 var modalgrid = null;
                 var stopData = null;
                 var facStatus = null;
-                $.ajax({
-                    url: "/facilityAjax",
-                    method: "GET",
-                    dataType: "JSON",
-                    success: function (result) {
-                        grid.resetData(result);
-                    }
-                });
+                var newfacStatus = null;
+                var sampleData = null;
+                var downCheck = null;
 
                 /* contentType:"application/json",
                 dataType: "JSON.stringfy()",  ?????  */
-
 
                 var grid = new tui.Grid({
                     el: document.getElementById('grid'),
@@ -110,15 +123,7 @@
                         useClient: true,
                         perPage: 7
                     },
-                    /* data: {
-                        api: {
-                            readData: {
-                                url: '/api/readData',
-                                method: 'GET'
-                            }
-                        }
-                    }, */
-                    rowHeaders: ['checkbox'],
+                    rowHeaders: [ {type: 'checkbox', header:" "}],
                     columns: [{
                         header: '설비명',
                         name: 'facName'
@@ -128,9 +133,9 @@
                     }, {
                         header: '관리자',
                         name: 'facManager'
-                    }, {
-                        header: '설비 가동일시',
-                        name: 'startDate'
+                    },{
+                    	header: '설비 가동일시',
+                    	name: 'startDate'
                     }, {
                         header: '가동 상태',
                         name: 'facStatus',
@@ -138,18 +143,27 @@
                     }]
                 });
 
-                // 하단 시작
+                function facList() {
 
+                    $.ajax({
+                        url: "/facilityAjax",
+                        method: "GET",
 
-                $.ajax({
-                    url: "/downtimeAjax",
-                    method: "GET",
-                    dataType: "JSON",
-                    success: function (result) {
-                        downgrid.resetData(result);
-                    }
-                });
+                        success: function (result) {
+                            grid.resetData(result);
+                            //console.log(result);                            
+                        },
+                        error: function (reject) {
+                        	alert("실패");
+                        	console.log(reject);
+                        }
+                    });
+                }
 
+                facList();
+
+                // 하단 시작                
+                
                 var downgrid = new tui.Grid({
                     el: document.getElementById('downgrid'),
                     scrollX: false,
@@ -158,7 +172,7 @@
                         useClient: true,
                         perPage: 7
                     },
-                    rowHeaders: ['checkbox'],
+                    rowHeaders: [ {type: 'checkbox', header:" "}],
                     columns: [{
                         header: '설비명',
                         name: 'facName'
@@ -179,39 +193,57 @@
                         name: 'downManager'
                     }]
                 });
+                
+                function facDownList(){
+                    
+                    $.ajax({
+                        url: "/downtimeAjax",
+                        method: "GET",
+                        dataType: "JSON",
+                        success: function (result) {
+                            downgrid.resetData(result);
+                        },
+                        error: function (reject) {
+                        	alert("실패");
+                        	console.log(reject);
+                        }
+                    });
+                    }
+                    
+                    facDownList();
 
                 /* $('#stopBtn').hide(); 
 				grid.on('uncheck', function () {
                     $('#stopBtn').hide();
                 }); */
 
-
-
-
                 /* 체크 한개만 */
 
                 grid.on('check', function (e) {
-                    var checkRows = grid.getCheckedRowKeys();
-                    checkRows.forEach(function (key, idx) {
+                    var checkRows = grid.getCheckedRowKeys();                    
+                    
+                    checkRows.forEach(function (key, idx) {                    	                    
                         if (key != e.rowKey) {
                             grid.uncheck(key);
+                        }
+                    });
+                });
+                
+                downgrid.on('check', function (e) {
+                    var downcheckRows = downgrid.getCheckedRowKeys();                    
+                    
+                    downcheckRows.forEach(function (key, idx) {                    	                    
+                        if (key != e.rowKey) {
+                        	downgrid.uncheck(key);
                         }
                     });
                 });
 
                 /* 체크 한개만 끝 */
 
-
-                /* 선택한 데이터 가져오기 */
-
-                $('#stopBtn').on('click', function () {
-
-
-
-                    var sampleData = [grid.getCheckedRows()[0]];
-                    console.log(sampleData);
-
-                    class CustomTextEditor {
+				//sampleData = [grid.getCheckedRows()[0]];
+				
+                	class CustomTextEditor {
                         constructor(props) {
                             const el = document.createElement('input');
                             const {
@@ -224,40 +256,33 @@
 
                             this.el = el;
                         }
-
                         getElement() {
                             return this.el;
                         }
-
                         getValue() {
                             return this.el.value;
                         }
-
                         mounted() {
                             this.el.select();
                         }
                     }
-
-                    modalgrid = new tui.Grid({
+                	
+                	var modalgrid = new tui.Grid({
                         el: document.getElementById('modalgrid'),
                         scrollX: false,
                         scrollY: false,
                         width: 630,
-                        data: sampleData,
                         rowHeight: 130,
                         columns: [{
                                 header: '설비명',
                                 name: 'facName',
-
                                 rowSpan: true
                             },
                             {
                                 header: '설비 코드',
                                 name: 'facCode',
-
                                 rowSpan: true
                             },
-
                             {
                                 header: '비가동 사유',
                                 name: 'downReason',
@@ -279,69 +304,110 @@
                                         ]
                                     }
                                 },
-
                                 rowSpan: true
                             },
                             {
                                 header: '관리자',
-                                name: 'downManager',
-                                editor: 'text',
-
+                                name: 'downManager',                                
+                                editor: {
+                                    type: CustomTextEditor,
+                                    options: {
+                                        maxLength: 4
+                                    }
+                                },
                                 rowSpan: true
                             },
                             {
                                 header: '비고',
                                 name: 'remark',
                                 editor: 'text',
-
                                 rowSpan: true,
                                 whiteSpace: 'pre-wrap'
                             }
                         ]
                     });
+                	
+                /* 선택한 데이터 가져오기 */
+                $('#stopBtn').on('click', function () {
 
-
+                	modalgrid.resetData([grid.getCheckedRows()[0]]);
+  					                	
+                    facData = [grid.getCheckedRows()[0].facStatus];
+                    //console.log(sampleData);
+                    facDownList();
 
                 });
 
                 /* 선택한 데이터 가져오기 끝*/
 
                 $(function () {
-                    $('#modal').on('shown.bs.modal', function () {
-                        modalgrid.refreshLayout();
+                    $('#modal').on('shown.bs.modal', function () {                        
+                    	modalgrid.refreshLayout();
                     })
                 })
-
+                
+                //downgrid.on('check', function(){
+                	//var downCheck = downgrid.getCheckedRows()[0];
+                	//console.log(downCheck);
+                	
+                //})
+                
+                $('#startBtn').on('click', function(){
+                	
+                	downCheck = downgrid.getCheckedRows()[0];
+                	console.log('startBtv', downCheck);
+                	                	                	
+					$.ajax({
+						url: "/startTimeAjax",
+						method: "get",
+						data: downCheck,
+						success: function (result) {
+                        	alert("가동 처리되었습니다");                        	
+                        	newcheckfacStatus();
+                        	facDownList();
+                        },
+                        error: function (reject) {
+                        	alert("실패");                        	
+                        	console.log(reject);
+                        }
+					})                	
+                })
 
                 $('#insertBtn').on('click', function () {
 
                     stopData = modalgrid.getData()[0];
-                    //console.log(stopData);
-                    downgrid.appendRow(stopData);
-
+                    status = modalgrid.getData()[0].facStatus;
+                    console.log(stopData);
+                    //console.log(status);
+                    
+                    
+                    if(status == 'Y'){
+                    
                     $.ajax({
                         url: "/downListAjax",
-                        method: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(stopData),
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader(header, token);
-                        },
-                        success: function (result) {
-                            facStatuss();
-                            console.log("fdfdsfd");
+                        method: "get",
+                        data: stopData,
+                        success: function (result) {							
+                        	checkfacStatus();
+                        	facDownList();
+                        	alert("비가동 처리되었습니다");
+                        	$('#modal').modal('hide');                            
                         },
                         error: function (reject) {
-                            console.log(reject);
+                        	alert("실패");
+                        	console.log(reject);
                         }
                     });
+                    
+                    }else{
+                    	$('#modal').modal('hide');
+                    	alert("비가동중인 설비입니다 다시 선택해주세요");
+                    	// 하단의 리스트로 추가됨 , 수정 필요
+                    }
+                })                               
 
-
-
-                })
-
-                function facStatuss() {
-                    facStatus = grid.getCheckedRows()[0];
+                function checkfacStatus() {
+                	facStatus = grid.getCheckedRows()[0];
                     console.log(facStatus);
 
                     var token = $("meta[name='_csrf']").attr("content");
@@ -356,15 +422,92 @@
                             xhr.setRequestHeader(header, token);
                         },
                         success: function (result) {
-                            console.log("상태")
+                            facList();
                         },
                         error: function (reject) {
+                        	alert("실패");
                             console.log(reject);
                         }
                     });
 
                 }
+                
+                function newcheckfacStatus(){
+                	newfacStatus = downgrid.getCheckedRows()[0];
+                	console.log(newfacStatus);
+                	
+                	var token = $("meta[name='_csrf']").attr("content");
+                    var header = $("meta[name='_csrf_header']").attr("content");
 
+                    $.ajax({
+                        url: "/newFacStatusAjax",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(newfacStatus),
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                        success: function (result) {
+                            facList();
+                        },
+                        error: function (reject) {
+                        	alert("실패");
+                            console.log(reject);
+                        }
+                    });
+                }
+                
+                
+                // 비가동 설비 더블클릭시 모달 
+                downgrid.on('dblclick', function(e){
+    				if(e.columnName != "_checked"){
+    				downCode = downgrid.getRow(e.rowKey).downCode;
+    				downModalData = downgrid.getRow(e.rowKey);
+    				//console.log(downCode)
+    				//console.log(downModalData)
+    				
+    				 downgrid.setSelectionRange({
+    			            start: [e.rowKey, 0],
+    			            end: [e.rowKey, grid.getColumns().length - 1]
+    			     	});
+    				
+    					$('#downModal').modal('show');
+    				}
+    			});
+             
+                const downModalGrid = new tui.Grid({
+                    el: document.getElementById('downModalGrid'),
+                    data: downModalData,
+                    scrollX: false,
+                    scrollY: false,
+                    rowHeaders: ['checkbox'],
+                    columns: [
+                      {
+                        header: 'Name',
+                        name: 'name'
+                      },
+                      {
+                        header: 'Artist',
+                        name: 'artist'
+                      },
+                      {
+                        header: 'Type',
+                        name: 'type'
+                      },
+                      {
+                        header: 'Release',
+                        name: 'release'
+                      },
+                      {
+                        header: 'Genre',
+                        name: 'genre'
+                      }
+                    ]
+                  });
+                
+                
+                
+                
 
             }
         </script>
