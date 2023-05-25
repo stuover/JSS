@@ -5,7 +5,7 @@
   
   <mapper namespace="com.mes.jss.production.mapper.WorkMapper">
   
-  	 <select id="processInfo" resultType="WorkVO">
+  	 <select id="processInfo" resultType="ProcessOrderVO">
 		SELECT p.pro_code, pro_name, pro_order
 		FROM process p JOIN process_order o ON(p.pro_code = o.pro_code)
 		WHERE item_code = #{iCode}

@@ -572,7 +572,7 @@
 		      columns: [
 		        {
 		          header: '공정코드',
-		          name: 'proCode;'
+		          name: 'proCode'
 		        },
 		        {
 		          header: '공정명',
@@ -580,7 +580,7 @@
 		        },
 		        {
 		          header: '공정순서',
-		          name: 'proSeq'
+		          name: 'proOrder'
 		        }
 		      ]
 		    });			
@@ -592,7 +592,7 @@
 		    	console.log(iCode);
 		    	
 		    	$.ajax({
-		    		url : "",
+		    		url : "/processInfoAjax",
 		    		data : {code : iCode},
 		    		method : "GET",
 		    		dataTyep : "JSON",

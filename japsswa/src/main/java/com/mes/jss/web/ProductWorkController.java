@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.basic.domain.ProcessOrderVO;
 import com.mes.jss.production.domain.WorkVO;
 import com.mes.jss.production.service.PlanService;
 import com.mes.jss.production.service.WorkService;
@@ -34,8 +35,8 @@ public class ProductWorkController {
 
 	@RequestMapping("/processInfoAjax")
 	@ResponseBody
-	public List<WorkVO> processInfoAjax(String code) {
-		List<WorkVO> inputData = new ArrayList<WorkVO>();
+	public List<ProcessOrderVO> processInfoAjax(String code) {
+		List<ProcessOrderVO> inputData = new ArrayList<ProcessOrderVO>();
 		
 		inputData = workService.processInfo(code);
 		
