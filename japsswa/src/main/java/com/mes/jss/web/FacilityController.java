@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.service.FacilityService;
@@ -41,6 +42,7 @@ public class FacilityController {
 	public List<DowntimeVO> downtime(){
 			
 		List<DowntimeVO> downlist = service.getDownList();
+		
 		return downlist;	
 		
 	}
@@ -48,11 +50,9 @@ public class FacilityController {
 	@ResponseBody
 	@RequestMapping("/downListAjax")
 	public String register(DowntimeVO vo, Model model) {
-		
-		System.err.println(vo);
-		
+
 		service.setDownTime(vo);
-		
+
 		return "success";
 		
 	}
@@ -90,6 +90,7 @@ public class FacilityController {
 	
 	@ResponseBody
 	@RequestMapping("/startTimeAjax")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss a", timezone = "Asia/Seoul")
 	public String updateStart(DowntimeVO vo, Model model) {
 		
 		if(service.updateStartDate(vo)) {
@@ -110,22 +111,20 @@ public class FacilityController {
 	public List<DowntimeVO> downDetail(Model model){
 		
 		List<DowntimeVO> list = service.getDownDetail();
+		
 		return list;
 	}
 	
 	@ResponseBody
 	@RequestMapping("/removeDowntimeAjax")
-	public String removeDownTime(String downCode) {
+	public FacilityVO removeDownTime(FacilityVO vo) {
+		 
+		System.out.println(vo);
 		
-		System.out.println(downCode);
+		service.removeDownTime(vo);
+		service.newUpdateFacList(vo);
 		
-		if(service.removeDownTime(downCode)) {
-			return "success";
-		}else {
-			return "fail";
-		}
-		
-				
+		return vo;			
 	}
 	
 	
