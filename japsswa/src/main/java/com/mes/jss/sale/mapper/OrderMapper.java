@@ -16,8 +16,6 @@ public interface OrderMapper {
 	
 	List<OrderVO> custInfo(String customerId);
 	
-	List<OrderVO> itemInfo(String itemCode);
-	
 	public OrderVO entRegister(OrderVO commInfo);
 	
 	public OrderVO detRegister(OrderVO vo);
@@ -30,9 +28,19 @@ public interface OrderMapper {
 
 	List<OrderVO> ordDetShow(String orderId);
 
-	public void entDel(OrderVO delOid);
+	public void entDel(String delId);
 
-	public void entDelDet(OrderVO vo);
+	public void entDelDet(String delId);
+
+	public void delDet(OrderVO vo);
+
+	//void delDet(String ordDetailId);
+
+	
+
+
+
+
 
 
 

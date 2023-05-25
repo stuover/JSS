@@ -71,15 +71,6 @@ public class SaleController {
 		return info;
 	}
 	
-	//품목코드 자동 입력
-	@RequestMapping("/itemInfo")
-	@ResponseBody
-	public List<OrderVO> itemInfoAjax(String itemCode){
-		List<OrderVO> iInfo = saleService.itemInfo(itemCode);
-		
-		return iInfo;
-	}
-	
 	//등록
 	@RequestMapping("/entireRegister")
 	@ResponseBody
@@ -133,14 +124,24 @@ public class SaleController {
 	//주문서 삭제
 	@RequestMapping("/entDel")
 	@ResponseBody
-	public OrderVO entDelAjax(@RequestBody SaleListVO slist) {
+	public OrderVO entDelAjax(@RequestParam(name = "ordId") String delId) {
 		
-		OrderVO delOid = slist.getCommInfo();
-		
-		List<OrderVO> delDet = slist.getList();
-		saleService.entDel(delOid, delDet);
+		saleService.entDel(delId);
 		
 		return null;
+	}
+	
+	//주문서 품목 삭제
+	@RequestMapping("/delDet")
+	@ResponseBody
+	public OrderVO delDetAjax(@RequestBody SaleListVO svo) {
+		
+		//List<OrderVO> lists = saleService.delDet(svo);
+		List<OrderVO> list = svo.getList();
+		saleService.delDet(list);
+		System.err.println(svo);
+		return null;
+		
 	}
 	
 	

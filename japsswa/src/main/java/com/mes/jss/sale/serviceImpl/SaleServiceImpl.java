@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mes.jss.sale.domain.OrderVO;
+import com.mes.jss.sale.domain.SaleListVO;
 import com.mes.jss.sale.mapper.OrderMapper;
 import com.mes.jss.sale.service.SaleService;
 
@@ -49,13 +50,6 @@ public class SaleServiceImpl implements SaleService {
 	}
 	
 	@Override
-	public List<OrderVO> itemInfo(String itemCode) {
-		List<OrderVO> info = orderMapper.itemInfo(itemCode);
-		
-		return info;
-	}
-	
-	@Override
 	public void entRegister(OrderVO commInfo, List<OrderVO> list) {
 		 orderMapper.entRegister(commInfo);
 		
@@ -91,15 +85,30 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
-	public void entDel(OrderVO delOid, List<OrderVO> delDet) {
-		orderMapper.entDel(delOid);
+	public void entDel(String delId) {
+		orderMapper.entDel(delId);
+		orderMapper.entDelDet(delId);
 		
-		for(OrderVO vo : delDet) {
-			vo.setOrdDetailId(delOid.getOrdDetailId());
-			orderMapper.entDelDet(vo);
+		
+	}
+
+	@Override
+	public void delDet(List<OrderVO> list) {
+		for(OrderVO vo : list) {
+			vo.getOrdDetailId();
+			orderMapper.delDet(vo);
 		}
 		
 	}
+
+	/*
+	 * @Override public List<OrderVO> delDet(SaleListVO svo) {
+	 * 
+	 * for(int i=0; i<svo.getList().size(); i++) {
+	 * orderMapper.delDet(svo.getList().get(i).getOrdDetailId()); } return null; }
+	 */
+
+	
 
 
 

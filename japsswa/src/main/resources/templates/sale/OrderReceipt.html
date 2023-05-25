@@ -155,6 +155,11 @@
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
+		    	     {
+					  header: '주문코드',
+					  name: 'ordId',
+					  hidden: true
+					 },
 				     {
 					  header: '거래처 명',
 					  name: 'customerName',
@@ -371,7 +376,7 @@
 		    
 	
 		    window.onload = function(){
-		    	$('#changeGrid').modal('hide');
+		    	$('#changeGrid').hide();
 		    	grids.setValue(0, 'empName', $('#name').val(), false);
 		    	
 	
@@ -508,7 +513,7 @@
 		        	   grid.appendRows(custInfo);
 		        	   
 		        	   custId = modalGrid.getCheckedRows()[0].customerId;
-		        	   custInfo = [{customerIdcustomerName : modalGrid.getCheckedRows()[0].customerName, custAddr : modalGrid.getCheckedRows()[0].custAddr, custMail : modalGrid.getCheckedRows()[0].custMail, custTel : modalGrid.getCheckedRows()[0].custTel}]
+		        	   custInfo = [{ordId : modalGrid.getCheckedRows()[0].ordId, customerName : modalGrid.getCheckedRows()[0].customerName, custAddr : modalGrid.getCheckedRows()[0].custAddr, custMail : modalGrid.getCheckedRows()[0].custMail, custTel : modalGrid.getCheckedRows()[0].custTel}]
 		        	   
 		        	   $('#searchModal').modal('hide');
 
@@ -637,32 +642,15 @@
 		           
 		           
 		           var itemInfo = [];
-		           var itemId = '';
 		           $('#itemChooseBtn').on('click', function(){
-		        	   
-		        	   itemId = modalGrids.getCheckedRows()[0].itemCode;
+
 		        	   itemInfo = [{itemCode : modalGrids.getCheckedRows()[0].itemCode, itemName : modalGrids.getCheckedRows()[0].itemName}]
 		        	   
 		        	   $('#itemSearModal').modal('hide');
 
-		        	   $('#itemSearModal').on('hidden.bs.modal', function(e){
 		        		   gridData = itemInfo;
-		        		   grid.resetData(itemInfo);
-			        	   $.ajax({
-			        		   url : "/itemInfo",
-			        		   method : "GET",
-			        		   data : {itemCode : itemId},
-			        		   dataType : "JSON",
-			        		   success : function(result){
-			        			   grid.resetData(result);
-			        			   grids.setValue(0, 'empName', $('#name').val(), false);
-			        			   modalGrids.refreshLayout();
-			        			  
-			        		   }
-			        		   
-			        	   })
-		        	   })
-		        	  
+		        		   grid.appendRows(itemInfo);
+
 		        	   
 		           }) 
 		           
@@ -751,8 +739,8 @@
 		        				   grids.resetData(result);
 		        				   grids.refreshLayout();
 		        				   
-		        				   $('#grid').modal('hide');
-		        				   $('#changeGrid').modal('show');
+		        				   $('#grid').hide();
+		        				   $('#changeGrid').show();
 		        				   
 		        				   $.ajax({
 				        			   url : "/ordDetShow",
@@ -786,29 +774,52 @@
 		           $('#ordDel').on('click', function(){
 		        	   
 		        	   grids.finishEditing();
-		        	   var ordId = grids.getData()[0];
-		        	   grid.finishEditing();
-		        	   var delData = grid.getCheckedRows();
+		        	   var ordId = grids.getData()[0].ordId;
+		        	   console.log(ordId);
+		        	  
+		        	   changeGrid.finishEditing();
+		        	  
 		        	   
 		        	   
 		        	   $.ajax({
 		        		   url : "/entDel",
-		        		   contentType : "application/json",
 		        		   method : "POST",
-		        		   data : JSON.stringify({delOid : ordId, delDet : delData}),
+		        		   data : {ordId : ordId},
 		        		   dataType : "JSON",
 		        		   beforeSend : function(xhr){
 		        			   xhr.setRequestHeader(header, token);
-		        		   }
+		        		   },
 		        		   success : function(result){
 		        			   
 		        			   gridsData = [{}];
-		        			   gridData = [];
+		        			   changeGridData = [];
 		        			   grids.resetData(gridsData);
-		        			   grid.resetData(gridData);
+		        			   changeGrid.resetData(changeGridData);
 		        			   grids.setValue(0, 'empName', $('#name').val(), false);
 		        			   alert('주문서가 삭제되었습니다');
 		        		   }
+		        	   })
+		           })
+		           
+		           
+		           $('#delBtn').on('click', function(){
+		        		
+		        	   var delData = grid.getCheckedRows();
+		        	   console.log(delData);
+		        	   
+		        	   $.ajax({
+		        		   url : "/delDet",
+		        		   method : "POST",
+		        		   contentType : "application/json",
+		        		   data : JSON.stringify({list : delData}),
+		        		   dataType : "JSON",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        		   },
+		        		   success : function(result){
+		        			   grid.resetData(result);
+		        		   }
+		        		   
 		        	   })
 		           })
 		           
