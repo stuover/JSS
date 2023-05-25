@@ -5,7 +5,9 @@ import java.util.List;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
+import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
+import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.sale.domain.CustomerVO;
 
 public interface MaterialMapper {
@@ -48,4 +50,11 @@ public interface MaterialMapper {
 	
 	// 자재 조정 리스트
 	public List<MrAdjustmentVO> admGetList();
+	
+	// 자재 반품 품질 리스트
+	public List<QualityVO> retGetList();
+	
+	// 자재 반품 리스트
+	public List<MrReturnVO> returnGetList();
+
 }
