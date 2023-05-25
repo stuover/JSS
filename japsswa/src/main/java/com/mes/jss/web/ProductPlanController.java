@@ -70,7 +70,7 @@ public class ProductPlanController {
 	
 	
 	
-	// 제품 검색 모달창 : 제품 리스트(초기값)
+	// 제품 검색 모달창 : 완제품 리스트(초기값)
 	@RequestMapping("/searchItemListAjax")
 	@ResponseBody
 	public List<PlanVO> searchItemListAjax() {
@@ -81,12 +81,33 @@ public class ProductPlanController {
 	}
 	
 	
-	// 제품명 조회 모달창 : 키워드로 검색 결과
+	// 제품명 조회 모달창 : 키워드로 완제품 검색 결과
 	@RequestMapping("/searchItemResultAjax")
 	@ResponseBody
 	public List<PlanVO> searchItemResultAjax(PlanVO vo) {
 		List<PlanVO> inputData = new ArrayList<>();
 		inputData = planService.itemListResult(vo);
+		return inputData;
+	}
+	
+	
+	// 제품 검색 모달창 : 완제품,반제품 리스트(초기값)
+	@RequestMapping("/searchItemsListAjax")
+	@ResponseBody
+	public List<PlanVO> searchItemsListAjax() {
+		List<PlanVO> inputData = new ArrayList<>();
+		inputData = planService.itemsList();
+	
+		return inputData;
+	}
+	
+	
+	// 제품명 조회 모달창 : 키워드로 완제품,반제품 검색 결과
+	@RequestMapping("/searchItemsResultAjax")
+	@ResponseBody
+	public List<PlanVO> searchItemsResultAjax(PlanVO vo) {
+		List<PlanVO> inputData = new ArrayList<>();
+		inputData = planService.itemsListResult(vo);
 		return inputData;
 	}
 	

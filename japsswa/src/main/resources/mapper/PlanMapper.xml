@@ -40,7 +40,7 @@
 	</select>
 	
 	
-	<!-- 제품명 조회 모달창 : 제품 리스트 (초기값) -->
+	<!-- 제품명 조회 모달창 : 완제품 리스트 (초기값) -->
 	<select id="itemList" resultType="PlanVO">
 		SELECT i.item_code, item_name, sum(nvl(ord_count,0)) as "itemOrders"
 		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
@@ -49,7 +49,7 @@
 		ORDER BY 3 DESC
 	</select>
 	
-	<!-- 제품 검색 모달창 : 제품 리스트 (검색결과) -->
+	<!-- 제품 검색 모달창 : 완제품 리스트 (검색결과) -->
 	<select id ="itemListResult"  resultType="PlanVO">
 		SELECT i.item_code, item_name, sum(nvl(ord_count,0)) as "itemOrders"
 		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
@@ -58,7 +58,28 @@
 		GROUP BY i.item_code, item_name
 		ORDER BY 3 DESC
 	</select>
-
+	
+	
+	<!-- 제품명 조회 모달창 : 완제품,반제품 리스트 (초기값) -->
+	<select id="itemsList" resultType="PlanVO">
+		SELECT i.item_code, item_name
+		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
+		WHERE item_type = '완제품' OR item_type = '반제품'
+		GROUP BY i.item_code, item_name
+		ORDER BY 1 DESC
+	</select>	
+	
+	<!-- 제품 검색 모달창 : 완제품,반제품 리스트 (검색결과) -->
+	<select id ="itemsListResult"  resultType="PlanVO">
+		SELECT item_code, item_name
+		FROM (SELECT i.item_code, item_name
+		      FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
+		      WHERE item_type = '완제품' OR item_type = '반제품'
+		      GROUP BY i.item_code, item_name  
+		      )
+		WHERE item_name = #{itemName}
+		ORDER BY 1 DESC
+	</select>
 
 	<!-- 생산계획 공통 내용 등록처리 -->	
 	<select id="planSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">

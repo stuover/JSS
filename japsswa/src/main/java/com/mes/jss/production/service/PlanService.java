@@ -20,11 +20,18 @@ public interface PlanService {
 	
 	
 	
-	// 제품 검색 모달창 : 제품 리스트(초기값)
+	// 제품 검색 모달창 : 완제품 리스트(초기값)
 	List<PlanVO> itemList();
 	
-	// 제품 검색 모달창 : 제품 리스트(검색결과)
-	List<PlanVO> itemListResult(PlanVO vo);	
+	// 제품 검색 모달창 : 완제품 리스트(검색결과)
+	List<PlanVO> itemListResult(PlanVO vo);
+	
+	
+	// 제품 검색 모달창 : 완제품,반제품 리스트(초기값)
+	List<PlanVO> itemsList();
+	
+	// 제품 검색 모달창 : 완제품,반제품 리스트(검색결과)
+	List<PlanVO> itemsListResult(PlanVO vo);	
 	
 	
 	
