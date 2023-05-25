@@ -465,7 +465,7 @@
   		    const itemSearchGrid = new Grid({
   		    	el: document.getElementById('itemSearchGrid'),
   		     	data: itemSearchGridData,
-  		        rowHeaders: ['checkbox'],
+  		        rowHeaders: [{type: 'checkbox', header: " "}],
   		     	scrollX: false,
   		    	scrollY: true,
                 pageOptions: { 
@@ -497,7 +497,7 @@
           	// 추가 버튼 -> 제품명 모달창 : 제품명 리스트 초기값 (제품코드 순으로 정렬)
   		    $('#addRow').click(function (){
 				$.ajax({
-  					url : "/searchItemListAjax",
+  					url : "/searchItemsListAjax",
   					method :"GET",
   					dataType : "JSON",
   					success : function(result){
@@ -517,7 +517,7 @@
 				console.log(item);
 				
 				 $.ajax({
-						url : "/searchItemResultAjax",
+						url : "/searchItemsResultAjax",
 						data : {itemName : item},
 						method :"GET",
 						dataType : "JSON",
@@ -531,17 +531,8 @@
 					});				
   		    });
   		    
-		    // 제품명 더블 클릭 -> 선택한 제품의 공정 정보 출력.
-		    detailGrid.on('dblclick', (ev)=>{
-		    	console.log(ev);
-		    	console.log(ev.columnName);
-		    	if(ev.columnName == 'itemName'){
-		    		console.log('Open ProcessInfo');
-		    	}
-		    })
-		    
   		    
-  		    // 검색 내용 체크 -> 선택 버튼 클릭 -> 모달창 닫기, 새로운 행 추가.
+  		    // 선택 버튼 클릭 -> 모달창 닫기, 새로운 행 추가.
   		    let itemInfo = [];
 		    $('#selectItemBtn').click(function() {
 	  		    	itemInfo = [{itemCode : itemSearchGrid.getCheckedRows()[0].itemCode , itemName : itemSearchGrid.getCheckedRows()[0].itemName}];
@@ -560,35 +551,41 @@
 				detailGrid.removeCheckedRows(false);
 			});
 		    
-			
+		
 			// 공정 정보
 			let processGridData = [];
 		    const processGrid = new tui.Grid({
 		      el: document.getElementById('processGrid'),
 		      data: processGridData,
-		      rowHeaders: ['checkbox'],
+		      rowHeaders: [{type: 'checkbox', header: " "}],
 		      scrollX: false,
 		      scrollY: true,
 		      columns: [
 		        {
-		          header: '공정코드',
-		          name: 'proCode'
+		          header: '공정순서',
+		          name: 'proOrder',
+		          filter: 'select'
 		        },
 		        {
 		          header: '공정명',
 		          name: 'proName'
 		        },
 		        {
-		          header: '공정순서',
-		          name: 'proOrder'
+		          header: '공정코드',
+		          name: 'proCode'
 		        }
 		      ]
 		    });			
 		    
-		    // 
+		    // 공정 정보 그리드 높이 지정.
+		    processGrid.setBodyHeight(200);
+		    
+		    // 체크한 제품의 공정 순서 출력.
 		    let iCode = '';
-		    detailGrid.on('check', function() {
-		    	iCode = detailGrid.getCheckedRows()[0].itemCode;
+		    detailGrid.on('dblclick', function(e) {
+		    	
+		    	if(e.columnName == 'itemName') {
+		    	iCode = detailGrid.getRow(e.rowKey).itemCode;
 		    	console.log(iCode);
 		    	
 		    	$.ajax({
@@ -604,6 +601,8 @@
 		    			console.log(reject);
 		    		}
 		    	});
+		    		
+				}
 		    	
 		    });
 	    
@@ -657,7 +656,8 @@
 		    });
   			
 		    
-
+		    // 공정 정보 그리드 높이 지정.
+		    holdGrid.setBodyHeight(200);
 		
 
 			

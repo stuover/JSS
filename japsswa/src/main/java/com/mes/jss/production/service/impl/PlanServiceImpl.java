@@ -61,7 +61,7 @@ public class PlanServiceImpl implements PlanService {
 
 	
 	
-	// 제품 검색 모달창 : 제품 리스트(초기값)	
+	// 제품 검색 모달창 : 완제품 리스트(초기값)	
 	@Override
 	public List<PlanVO> itemList() {
 		List<PlanVO> list = new ArrayList<>();
@@ -70,13 +70,30 @@ public class PlanServiceImpl implements PlanService {
 	}
 	
 	
-	// 제품 검색 모달창 : 제품 리스트(검색결과)
+	// 제품 검색 모달창 : 완제품 리스트(검색결과)
 	@Override
 	public List<PlanVO> itemListResult(PlanVO vo) {
 		List<PlanVO> list = new ArrayList<>();
 		list = planMapper.itemListResult(vo);
 		return list;
 	}
+	
+	// 제품 검색 모달창 : 완제품,반제품 리스트(초기값)
+	@Override
+	public List<PlanVO> itemsList() {
+		List<PlanVO> list = new ArrayList<>();
+		list = planMapper.itemsList();
+		return list;
+	}
+	
+	// 제품 검색 모달창 : 완제품,반제품 리스트(검색결과)
+	@Override
+	public List<PlanVO> itemsListResult(PlanVO vo) {
+		List<PlanVO> list = new ArrayList<>();
+		list = planMapper.itemsListResult(vo);
+		return list;
+	}
+	
 	
 	
 	// 생산 계획 수정.
@@ -109,6 +126,7 @@ public class PlanServiceImpl implements PlanService {
 		
 		
 	}
+
 
 
 
