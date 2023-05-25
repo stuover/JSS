@@ -495,7 +495,7 @@
     				downCode = downgrid.getRow(e.rowKey).downCode;
     				downModalData = downgrid.getRow(e.rowKey);
     				//console.log(downCode)
-    				//console.log(downModalData)
+    				console.log(downModalData)
     				
     				
     				 downgrid.setSelectionRange({
@@ -514,8 +514,7 @@
                     scrollX: false,
                     scrollY: false,
                     width: 1100,
-                    rowHeight: 130,
-                    rowHeaders: ['checkbox'],
+                    rowHeight: 130,                    
                     columns: [
                       {
                         header: '설비명',
@@ -531,7 +530,8 @@
                       },
                       {
                         header: '비가동 사유',
-                        name: 'downReason'
+                        name: 'downReason',
+                        editor: 'text',
                       },
                       
                       {
@@ -541,7 +541,12 @@
                          {
                               header: '관리자',
                               name: 'downManager'
-                            }
+                            },                        
+                            {
+                                header: '비고',
+                                name: 'remark',
+                                editor: 'text'
+                              }
                     ]
                   });
                 
@@ -552,11 +557,17 @@
                 	console.log("수정");
                 	newlist = downModalGrid.getData()[0];
                 	console.log(newlist);
+                	
+                	var token = $("meta[name='_csrf']").attr("content");
+                    var header = $("meta[name='_csrf_header']").attr("content");
+                    
+                    
                 })
+                
                 
                 $('#deleteBtn').on('click', function(){
                 	                	
-                	let newlist = downModalGrid.getData()[0].downCode;
+                	let newlist = downModalGrid.getData()[0];
                 	console.log(newlist);
                 	
                 	var token = $("meta[name='_csrf']").attr("content");
@@ -574,27 +585,25 @@
                 	}, function (isConfirm) {
                 		if (!isConfirm) return;
                 		$.ajax({
-                    		url:"/removeDowntimeAjax",
+                    		url:"/removeDowntimeAjax",		// 삭제, 상태 업데이트 예정
                     		method: "POST",                		
-                    		data: {downCode: newlist},
+                    		data: newlist,
                     		beforeSend: function (xhr) {
                                 xhr.setRequestHeader(header, token);
                             },
                 			success : function(data) {
                 				swal("성공", "내역 삭제 완료되었습니다.", "success");
-                				$('#downModal').modal('hide');
-                				facDownList();
-                				
+                				$('#downModal').modal('hide');                				
+                				facDownList();                		
+                				facList();
                 			},
                 			error : function(e) {
                 				swal("실패", "내역 삭제를 실패했습니다.", "error");
                 			}, timeout:100000
                 		});
-                	});
-                    
+                	});                   
                 })
-                // 상단 상태변경 오류, 이미 하단의 내역이 삭제되어서 downmodalgrid의 데이터가 없음 -> 그래서 상태 변경 오류?
-                		// ajax위에 상태변경이있으면 , ajax로 삭제실패가되면 이미 상태변경이 됨 -> ?                				                				               
+                
                 		
                 
                 		

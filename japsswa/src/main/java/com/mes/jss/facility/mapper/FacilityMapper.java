@@ -18,6 +18,6 @@ public interface FacilityMapper {
 	public boolean newUpdateFacStatus(FacilityVO vo);
 
 	public boolean insertStartTime(DowntimeVO vo);
-	public boolean deleteDownCode(String downCode);	// 삭제
+	public boolean deleteDownCode(FacilityVO vo);	// 삭제
 		
 }

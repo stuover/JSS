@@ -81,10 +81,11 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public boolean removeDownTime(String downCode) {
-	
-		return facilityMapper.deleteDownCode(downCode);
+	public boolean removeDownTime(FacilityVO vo) {
+
+		return facilityMapper.deleteDownCode(vo);
 	}
+
 
 	
 	

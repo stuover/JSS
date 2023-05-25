@@ -1,6 +1,10 @@
 package com.mes.jss.facility.domain;
 
+
+
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -21,10 +25,15 @@ public class FacilityVO {
 	
 	// 조인할때 필요
 	String downCode;
+	
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss a", timezone = "Asia/Seoul")
 	String startDate;
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss a", timezone = "Asia/Seoul")
 	String stopDate;
+	
 	String downReason;
 	String downManager;
+	String remark;
 
 //	facName
 //	facCode

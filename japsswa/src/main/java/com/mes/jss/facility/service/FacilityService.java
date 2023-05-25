@@ -23,5 +23,5 @@ public interface FacilityService {
 	public boolean newUpdateFacList(FacilityVO vo);
 	
 	public boolean updateStartDate(DowntimeVO vo);
-	public boolean removeDownTime(String downCode);	// 비가동 삭제
+	public boolean removeDownTime(FacilityVO vo);	// 비가동 삭제
 }

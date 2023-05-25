@@ -24,22 +24,22 @@
 		order by fac_code
   	</select>
   	
-  	<insert id="insertDownList" parameterType="DowntimeVO">
-  		insert into downtime(down_code, stop_date, down_reason, down_manager, remark, fac_code)
-		values (('DOW' || lpad(downtime_seq.nextval, 4, '0')), to_date(sysdate,'yyyy/MM/dd') , 
+  	<insert id="insertDownList" parameterType="DowntimeVO">  				
+		insert into downtime(down_code, stop_date, down_reason, down_manager, remark, fac_code)
+		values (('DOW' || lpad(downtime_seq.nextval, 4, '0')), current_date , 
 		#{downReason} , #{downManager} , #{remark} , #{facCode})
   	</insert>
   	
   	<update id="updateFacStatus" parameterType="FacilityVO">
   		update facility set fac_status = case
-		when fac_status = 'Y' then 'N'        
+		when fac_status = 'Y' then 'N'
 		else fac_status
 		end
 		where fac_code = #{facCode}
   	</update>
   	
   	<update id="newUpdateFacStatus" parameterType="FacilityVO">
-  		update facility set fac_status = case		
+  		update facility set fac_status = case
         when fac_status = 'N' then 'Y'
 		else fac_status
 		end
@@ -47,7 +47,7 @@
   	</update>
   	
   	<update id="insertStartTime" parameterType="DowntimeVO">
-  		update downtime set start_date = to_date(sysdate,'yyyy/MM/dd') where fac_code = #{facCode}
+  		update downtime set start_date = current_date where fac_code = #{facCode}
   	</update>
   	
   	<select id="getDownDetailList" resultType="DowntimeVO">
