@@ -11,10 +11,13 @@ import com.mes.jss.material.domain.DetaiListlVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
+import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
+import com.mes.jss.material.domain.ReturnListVO;
 import com.mes.jss.material.mapper.MaterialMapper;
 import com.mes.jss.material.service.MaterialService;
 import com.mes.jss.quality.domain.QualityListVO;
+import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.sale.domain.CustomerVO;
 
 @Service("materialService")
@@ -133,6 +136,27 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.admGetList();
 	}
 
+	@Override
+	public List<QualityVO> retList() {
+		
+		return materialMapper.retGetList();
+	}
+
+	@Override
+	public List<MrReturnVO> returnList() {
+		
+		return materialMapper.returnGetList();
+	}
+
+	@Override
+	public void returnIn(ReturnListVO vo) {
+		
+			
+		}
+		
+		
+	}
+
 	
 	
 	
@@ -147,4 +171,4 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	
 
-}
+
