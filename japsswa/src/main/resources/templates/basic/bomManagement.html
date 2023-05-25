@@ -34,29 +34,17 @@
                 <div class="card-body">
                 <!-- Body Start -->
                 
-                  <h4 class="page-title">BOM 조회</h4>
+                  <h4 class="page-title">BOM 관리</h4>
+                   
 
                   <div class="m-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                    <input type = "text" id="itemCode">
+                  	<input type="text" id="itemName">
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
-                  	<button id="saveBtn" class="btn btn-primary">등록</button>
+                  	<button id="saveBtn" class="btn btn-primary">저장</button>
                   </div>
                   
-                  
-				<div class="p-2 row">
-				  <div class="col-sm-12">
-				    <div class="card">
-				      <div class="card-body">
-				      <!-- card-body start -->
-
-				      <h5 class="page-title">공정 흐름</h5>
-				        
-	                  <div id="proGrid"></div>
-
-					  <!-- card-body end -->
-				      </div>
-				    </div>
-				  </div>
-				</div>       
+               
                   
 				<div class="p-2 row">
 				  <div class="col-sm-12">
@@ -64,7 +52,7 @@
 				      <div class="card-body">
 				      <!-- card-body start -->
 				        <h5 class="page-title">BOM</h5>
-				        
+				        <button id="inBomBtn" class="btn btn-primary">추가</button>
 				        <div id="bomGrid"></div>
 					  <!-- card-body end -->
 				      </div>
@@ -79,6 +67,9 @@
   		</div>
   		
   		
+  		
+  		
+  		<!-- 아아템 리스트 조회 -->
   		<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	        <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content">
@@ -105,7 +96,29 @@
 	        </div>
 	    </div>
 	    
-<script>var bomGrid = new tui.Grid({
+	    
+	    
+	    <!-- 공정 흐름 추가 모달 -->
+	    <div class="modal fade" id="proModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">품목 조회</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+		            <div class="modal-body">
+			            <div id="proModalGrid"></div>
+			            <input type="text" class="btn-serach" name="selectIn" id="selectIn"  >
+			            <button id="selectBtn" type="button" class="btn btn-primary">검색</button>
+		            </div>
+	            <div class="modal-footer">
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+	    
+<script>
+var bomGrid = new tui.Grid({
 	el : document.getElementById('bomGrid'),
 	pageOptions : {
 		useClient : true,
@@ -115,13 +128,13 @@
 	{
 		header : 'LEVEL',
 		name : 'bomLevel',
-		width: 100,
+		editor: 'text',
 		sortingType : 'desc',
 		sortable : true
 	}, {
 		header : '품목코드',
 		name : 'ingCode',
-		sortingType : 'desc',
+		editor: 'text',
 		sortable : true
 	}, {
 		header : '품목명',
@@ -136,16 +149,25 @@
 	}, {
 		header : '소요량',
 		name : 'itemCon',
+		editor: 'text',
 		sortingType : 'desc',
 		sortable : true,
 	}, {
 		header : '단위',
 		name : 'unit',
+		editor: 'text',
 		sortingType : 'desc',
 		sortable : true,
 	}, {
+		header : '공정순서',
+		name : 'proCode',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true,
+	},{
 		header : '공정코드',
 		name : 'proCode',
+		editor: 'text',
 		sortingType : 'desc',
 		sortable : true,
 	}, {
@@ -156,33 +178,7 @@
 	}, {
 		header : '단계구분',
 		name : 'levelType',
-		sortingType : 'desc',
-		sortable : true,
-	}
-	]
-});
-
-var proGrid = new tui.Grid({
-	el : document.getElementById('proGrid'),
-	pageOptions : {
-		useClient : true,
-		perPage : 5
-	},
-	columns : [ 
-	{
-		header : '순서',
-		name : 'proOrder',
-		width: 100,
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '공정코드',
-		name : 'proCode',
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '공정명',
-		name : 'proName',
+		editor: 'text',
 		sortingType : 'desc',
 		sortable : true,
 	}
@@ -200,7 +196,6 @@ var modalGrid = new tui.Grid({
 	{
 		header : '품목코드',
 		name : 'itemCode',
-		width: 100,
 		sortingType : 'desc',
 		sortable : true
 	}, {
@@ -212,9 +207,9 @@ var modalGrid = new tui.Grid({
 		header : '구분',
 		name : 'itemType',
 		sortingType : 'desc',
-		sortable : true,
+		sortable : true
 	}
-	]
+	],
 });
 
 
@@ -280,39 +275,66 @@ $('#selectBtn').on('click', function() {
 
 })
 
+
 modalGrid.on('click',function(e){
 	itemCode = modalGrid.getRow(e.rowKey).itemCode;
+	itemName = modalGrid.getRow(e.rowKey).itemName;
 	
+	$('#itemName').val(itemName);
+	$('#itemCode').val(itemCode);
+	
+	console.log(itemName)
 	$.ajax({
 		url : "/getBomOrd",
 		method : "get",
 		dataType : "json",
 		data : {itemCode : itemCode},
 		success : function(result){
-			console.log(result.process)
-			
-			bomGrid.resetData(result.bom);
-			proGrid.resetData(result.process);
+			bomGrid.resetData(result);
 		},
 		error : function(reject){
 			console.log(reject);
 		}
 	})
-	
-	
-	
-	$('#searchModal').modal('hide');
-	
+	$('#searchModal').modal('hide');	
 });
 
 
 
 
-$('#addBomBtn').on('click', function(e) {
-	e.preventDefault();
-	self.location = '/employee/ragister';
-})
+$('#inProBtn').on('click', function(){
+	$('#proModal').modal('show');
 	
+	$('#proModal').on('shown.bs.modal', function (e) {
+		console.log('open');
+		setTimeout(()=> proModalGrid.refreshLayout(), 300);	
+	})
+	
+	$.ajax({
+		url : "/getProcess",
+		method : "get",
+		dataType : "json",
+		success : function(result){
+			proModalGrid.resetData(result);
+		
+		},error : function(reject){
+			console.log(reject)
+		}
+	})
+
+	
+})
+
+
+$('#inBomBtn').on('click', function(){
+	bomGrid.appendRow();
+})
+
+
+bomGrid.on('dblclick', function (e){
+	console.log(e)
+})
+
 </script>
   		
 	</th:block>

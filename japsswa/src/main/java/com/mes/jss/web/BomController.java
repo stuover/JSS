@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.basic.domain.ItemVO;
+import com.mes.jss.basic.domain.ProcessVO;
 import com.mes.jss.basic.service.BomService;
 import com.mes.jss.basic.service.ItemService;
 import com.mes.jss.basic.service.ProcessOrderService;
+import com.mes.jss.basic.service.ProcessService;
 import com.mes.jss.basic.service.impl.BomServiceImpl;
 import com.mes.jss.basic.service.impl.ItemServiceImpl;
 import com.mes.jss.basic.service.impl.ProcessOrderServiceImpl;
+import com.mes.jss.basic.service.impl.ProcessServiceImpl;
 
 @Controller
 public class BomController {
 	@Autowired ProcessOrderService proOrdSv = new ProcessOrderServiceImpl();
+	@Autowired ProcessService proService = new ProcessServiceImpl();
 	@Autowired BomService bomService = new BomServiceImpl();
 	@Autowired ItemService itemService = new ItemServiceImpl();
 	
@@ -44,18 +48,14 @@ public class BomController {
 			return itemService.getItemList(itemType);
 	}
 	
-	
-	
+
 	@ResponseBody
 	@RequestMapping("/getBomOrd")
-	public Map<String, List<Object>> getBomOrd(@RequestParam String itemCode){
+	public List<ItemVO>getBomOrd(@RequestParam String itemCode){
 		
-		Map<String, List<Object>> map = new HashMap<>();
-		System.err.println(itemCode);
-		map.put("bom", bomService.getBomList(itemCode));
-		map.put("process", proOrdSv.getProList(itemCode));
-		System.err.println(map);
-		return map;
+
+
+		return bomService.getBomList(itemCode);
 	}
 	
 	@ResponseBody
@@ -65,10 +65,17 @@ public class BomController {
 		return itemService.searchItem(itemName);
 	}
 	
-	@GetMapping("/bom/register")
+	@GetMapping("/bomManage")
 	public String register() {
-
-		return "basic/registerBom";
+		return "basic/bomManagement";
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/getProcess")
+	public List<ProcessVO> getProcess(){
+		
+		return proService.getProcess();
 	}
 
 

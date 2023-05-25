@@ -6,7 +6,7 @@
   
   <mapper namespace="com.mes.jss.basic.mapper.BomMapper">
   	<select id="getBomList" resultType="BomVO">
-  		select bom_code, bom_level, ing_code, item_name, a.item_con, a.unit, b.item_type, c.pro_code, c.pro_name,a.level_type
+  		select bom_code, bom_level, ing_code, item_name, a.item_con, a.unit, b.item_type, c.pro_code, c.pro_name,a.level_type,a.pro_order
 		from bom a join itemList b 
 		on (a.ing_code = b.item_code) left outer join process c 
                                       on(a.pro_code = c.pro_code)

@@ -41,4 +41,10 @@ public class ProcessServiceImpl implements ProcessService{
 		return proMapper.deleteProcess(proCode);
 	}
 
+	@Override
+	public List<ProcessVO> getProcess() {
+		// TODO Auto-generated method stub
+		return proMapper.getList();
+	}
+
 }

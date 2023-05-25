@@ -37,26 +37,13 @@
                   <h4 class="page-title">BOM 조회</h4>
 
                   <div class="m-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                   <input type = "text" id="itemCode">
+                  <input type="text" id="itemName">
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
-                  	<button id="addBomBtn" class="btn btn-primary">등록</button>
                   </div>
+                 
                   
-                  
-				<div class="p-2 row">
-				  <div class="col-sm-12">
-				    <div class="card">
-				      <div class="card-body">
-				      <!-- card-body start -->
-
-				      <h5 class="page-title">공정 흐름</h5>
-				        
-	                  <div id="proGrid"></div>
-
-					  <!-- card-body end -->
-				      </div>
-				    </div>
-				  </div>
-				</div>       
+				
                   
 				<div class="p-2 row">
 				  <div class="col-sm-12">
@@ -106,11 +93,6 @@
 	    </div>
 	    
 <script>
-$('#addBomBtn').on('click', function(e) {
-	e.preventDefault();
-	self.location = '/bom/register';
-})
-
 var bomGrid = new tui.Grid({
 	el : document.getElementById('bomGrid'),
 	pageOptions : {
@@ -168,32 +150,7 @@ var bomGrid = new tui.Grid({
 	]
 });
 
-var proGrid = new tui.Grid({
-	el : document.getElementById('proGrid'),
-	pageOptions : {
-		useClient : true,
-		perPage : 5
-	},
-	columns : [ 
-	{
-		header : '순서',
-		name : 'proOrder',
-		width: 100,
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '공정코드',
-		name : 'proCode',
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '공정명',
-		name : 'proName',
-		sortingType : 'desc',
-		sortable : true,
-	}
-	]
-});
+
 
 
 var modalGrid = new tui.Grid({
@@ -288,6 +245,10 @@ $('#selectBtn').on('click', function() {
 
 modalGrid.on('click',function(e){
 	itemCode = modalGrid.getRow(e.rowKey).itemCode;
+	itemName = modalGrid.getRow(e.rowKey).itemName;
+	
+	$('#itemName').val(itemName);
+	$('#itemCode').val(itemCode);
 	
 	$.ajax({
 		url : "/getBomOrd",
@@ -295,17 +256,16 @@ modalGrid.on('click',function(e){
 		dataType : "json",
 		data : {itemCode : itemCode},
 		success : function(result){
-			console.log(result.process)
 			
-			bomGrid.resetData(result.bom);
-			proGrid.resetData(result.process);
+			bomGrid.resetData(result);
+			
+
 		},
 		error : function(reject){
 			console.log(reject);
 		}
 	})
-	$('#searchModal').modal('hide');
-	
+	$('#searchModal').modal('hide');	
 });
 
 

@@ -16,4 +16,6 @@ public interface ProcessService {
 
 	boolean removePro(String proCode);
 
+	List<ProcessVO> getProcess();
+
 }
