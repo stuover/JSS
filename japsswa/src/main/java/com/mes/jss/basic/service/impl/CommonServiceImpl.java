@@ -39,7 +39,7 @@ public class CommonServiceImpl implements CommonService{
 		CommVO commVo = listVo.getComm();
 		
 		commMapper.updateComm(commVo);
-		
+	
 		for(CommVO vo :list) {
 			boolean result = commMapper.getSearchDeta(vo.getDetailsIndex()) > 0;
 			if(result) {

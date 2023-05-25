@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mes.jss.basic.domain.ItemVO;
 import com.mes.jss.basic.mapper.BomMapper;
 import com.mes.jss.basic.service.BomService;
 
@@ -13,7 +14,7 @@ public class BomServiceImpl implements BomService{
 	@Autowired BomMapper bomMapper;
 
 	@Override
-	public List<Object> getBomList(String itemCode) {
+	public List<ItemVO> getBomList(String itemCode) {
 		// TODO Auto-generated method stub
 		return bomMapper.getBomList(itemCode);
 	}

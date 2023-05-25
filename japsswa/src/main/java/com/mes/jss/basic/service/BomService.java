@@ -2,8 +2,10 @@ package com.mes.jss.basic.service;
 
 import java.util.List;
 
+import com.mes.jss.basic.domain.ItemVO;
+
 public interface BomService {
 
-	List<Object> getBomList(String itemCode);
+	List<ItemVO> getBomList(String itemCode);
 
 }
