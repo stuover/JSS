@@ -14,6 +14,7 @@ public class BomVO {
 	public String levelType;
 	public String itemCode;
 	public String ingCode;
+	public String proOrder;
 	
 	// 품목
 	public String itemName;
