@@ -8,7 +8,7 @@
   		
   		select q.test_code, e.emp_name,q.item_code,q.mr_order_det_code,i.item_type,i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity,((q.err_quantity/(q.test_quantity))*100) error,q.test_note 
   		from itemlist i join quality_test q on(i.item_code = q.item_code) join emp e on(q.emp_no=e.emp_no) 
-  		where test_note is null or test_note not like '입고완료'
+  		where test_note is null 
   		
   		</select>  
   		

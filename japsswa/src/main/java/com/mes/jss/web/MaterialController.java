@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListlVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
@@ -70,7 +71,8 @@ public class MaterialController {
 		return list;
 	}
 
- // 자재 재고 리스트
+ 
+	// 자재 재고 리스트
 	@ResponseBody
 	@GetMapping("/mrCount")
 	public List<MrVO> mrCount(){
@@ -196,6 +198,18 @@ public class MaterialController {
 		
 	}
 
+
+// 자재 조정 대상 리스트
+	
+	@ResponseBody
+	@GetMapping("/mrAdmAjax")
+	public List<MrAdjustmentVO> MrAdList(){
+		
+		List<MrAdjustmentVO> list = materialService.adList();
+		
+		return list;
+	}
+	
 	
 // 자재 조정 리스트
 	
@@ -209,6 +223,18 @@ public class MaterialController {
 		
 	}
 
+	//자재 조정 등록
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmInsert")
+	public MrAdjustmentVO MrAdmInsert(@RequestBody AdjustmentListVO vo) {
+		
+		materialService.admIn(vo);
+		
+		return null;
+		
+	}
+	
 // 자재 반품 화면
 	
 	@GetMapping("/mrReturn")
@@ -248,6 +274,9 @@ public class MaterialController {
 		return null;
 		
 	}
+
+	
+	
 	
 // 자재 조정 입고
 	/*

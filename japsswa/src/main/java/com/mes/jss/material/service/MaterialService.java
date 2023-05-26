@@ -2,6 +2,7 @@ package com.mes.jss.material.service;
 
 import java.util.List;
 
+import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListlVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
@@ -49,6 +50,12 @@ public interface MaterialService {
 	
 	// 자재 조정 리스트
 	public List<MrAdjustmentVO> admList();
+	
+	// 자재 조정 될 리스트
+	public List<MrAdjustmentVO> adList();
+	
+	// 자재 조정 등록
+	public void admIn(AdjustmentListVO vo);
 	
 	// 자재 반품 품질 리스트
 	public List<QualityVO> retList();
