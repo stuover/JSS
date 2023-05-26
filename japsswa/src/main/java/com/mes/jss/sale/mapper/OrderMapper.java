@@ -3,6 +3,7 @@ package com.mes.jss.sale.mapper;
 import java.util.List;
 
 import com.mes.jss.sale.domain.OrderVO;
+import com.mes.jss.sale.domain.SaleListVO;
 
 public interface OrderMapper {
 
@@ -33,6 +34,8 @@ public interface OrderMapper {
 	public void entDelDet(String delId);
 
 	public void delDet(OrderVO vo);
+
+	public void ordUpdate(OrderVO vo);
 
 	//void delDet(String ordDetailId);
 

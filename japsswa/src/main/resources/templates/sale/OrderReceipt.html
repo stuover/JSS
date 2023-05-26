@@ -62,6 +62,7 @@
 							
 							<button id="insertBtn" type="button" class="btn btn-dark">등록</button>
 							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
+							<input id="sortBtn" type="hidden" value="insert">
 							
 						</form>
 					</div>
@@ -370,6 +371,15 @@
 			    changeGrid.on('focusChange', ev => {
 			      console.log('change focused cell!', ev);
 			    });
+			    
+
+			     changeGrid.on('editingFinish', function(ev){
+			       	  let row = changeGrid.getRow(ev.rowKey);
+			       	  if((ev.columnName=="unitPrice" || ev.columnName=="ordCount")&&row.unitPrice&&row.ordCount){
+			       		  changeGrid.setValue(ev.rowKey, "eachPrice", row.unitPrice*row.ordCount, false)
+			       	  }
+			       	  
+			         }) 
 		    
 		    
 		    
@@ -603,7 +613,6 @@
 		        		   success:function(result){
 							   
 		        			   if(grids.getData() != null && grid.getCheckedRows() != null){
-		        				   console.log(result);
 			        			   gridsData = [{}];
 			        			   gridData = [];
 			        			   grids.resetData(gridsData);
@@ -642,17 +651,36 @@
 		           
 		           
 		           var itemInfo = [];
+		           
+		        	   
+		        	   
+		        	   
 		           $('#itemChooseBtn').on('click', function(){
-
-		        	   itemInfo = [{itemCode : modalGrids.getCheckedRows()[0].itemCode, itemName : modalGrids.getCheckedRows()[0].itemName}]
 		        	   
-		        	   $('#itemSearModal').modal('hide');
-
-		        		   gridData = itemInfo;
-		        		   grid.appendRows(itemInfo);
-
-		        	   
+			           if($('#sortBtn').val()=='insert'){
+	
+			        	   itemInfo = [{itemCode : modalGrids.getCheckedRows()[0].itemCode, itemName : modalGrids.getCheckedRows()[0].itemName}]
+			        	   
+			        	   $('#itemSearModal').modal('hide');
+	
+			        		   gridData = itemInfo;
+			        		   grid.appendRows(itemInfo);
+			           }else if($('#sortBtn').val()=='update'){
+	
+			        		   itemInfo = [{itemCode : modalGrids.getCheckedRows()[0].itemCode, itemName : modalGrids.getCheckedRows()[0].itemName}]
+				        	   
+				        	   $('#itemSearModal').modal('hide');
+								   
+				        		
+				        		   changeGrid.appendRows(itemInfo); 
+			           }
+		           
 		           }) 
+		           
+		           
+		        	   
+		        	   
+		           
 		           
 		           
 		           const CmodalGrid = new Grid({
@@ -721,6 +749,7 @@
 		           var orderId = '';
 		           $('#custChooseBtn').on('click', function(){
 		        	   
+		        	   $('#sortBtn').val('update');
 		        	   ordId = CmodalGrid.getCheckedRows()[0].ordId;
 		        	   customerId = CmodalGrid.getCheckedRows()[0].customerId;
 		        	   orderId = CmodalGrid.getCheckedRows()[0].ordId;
@@ -734,7 +763,6 @@
 		        			   method : "GET",
 		        			   data : {ordId : ordId, customerId : customerId},
 		        			   dataType : "JSON",
-		        			   //async : false,
 		        			   success : function(result){
 		        				   grids.resetData(result);
 		        				   grids.refreshLayout();
@@ -747,7 +775,6 @@
 				        			   method : "GET",
 				        			   data : {ordId : orderId},
 				        			   dataType : "JSON",
-				        			   //async : false,
 				        			   success : function(result){
 				        				   changeGrid.resetData(result);
 				        				   changeGrid.refreshLayout();
@@ -812,17 +839,52 @@
 		        		   method : "POST",
 		        		   contentType : "application/json",
 		        		   data : JSON.stringify({list : delData}),
-		        		   dataType : "JSON",
 		        		   beforeSend : function(xhr){
 		        			   xhr.setRequestHeader(header, token);
 		        		   },
 		        		   success : function(result){
 		        			   grid.resetData(result);
-		        		   }
+		        			   console.log('삭제 성공');
+		        		   },
+		        		   error : function(reject){
+		        			   console.log(reject);		        		   }
 		        		   
 		        	   })
 		           })
 		           
+		          
+		           
+		           $('#updateBtn').on('click', function(){
+		        	   console.log(grids.getData()[0].ordId);
+		        	   changeGrid.finishEditing();
+		        	   var data = changeGrid.getData();
+		        	   console.log(data);
+		        	   $.ajax({
+		        		   url : "/ordUpdate",
+		        		   contentType : "application/json",
+		        		   data : JSON.stringify( { list : data, commInfo : grids.getData()[0].ordId}),
+		        		   method : "post",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        			   
+		        		   },
+		        		   success:function(result){
+							   console.log('성공');
+		        			  /*  if(changeGrids.getData() != null){
+			        			   changeGridData = [{}];
+			        			   changeGrid.resetData(changeGridData);
+			        			   grids.setValue(0, 'empName', $('#name').val(), false);
+			        			   alert('수정 완료 되었습니다')
+			        			   } else {
+			        				   alert('값을 모두 입력해주세요')
+			        			   } */
+
+		        		   },
+		        		   error : function(reject){
+		        			   console.log(reject);
+		        		   }
+						})
+		           }) 
 		           
 		           
 		           

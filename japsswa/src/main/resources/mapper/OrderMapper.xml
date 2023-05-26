@@ -94,6 +94,18 @@
 	<delete id="delDet" parameterType="OrderVO">
 		delete from orddetail where orddetail_id = #{ordDetailId}
 	</delete>
+	
+	<select id="ordUpdate" statementType="CALLABLE">
+		{
+			CALL update_order(
+				#{itemCode, mode=IN, jdbcType=VARCHAR},
+				#{outDate, mode=IN, jdbcType=VARCHAR},
+				#{unitPrice, mode=IN, jdbcType=VARCHAR},
+				#{ordCount, mode=IN, jdbcType=VARCHAR},
+				#{ordId, mode=IN, jdbcType=VARCHAR}
+				)
+				}
+	</select>
 
 
 </mapper>
