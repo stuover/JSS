@@ -5,12 +5,22 @@
   
   <mapper namespace="com.mes.jss.production.mapper.WorkMapper">
   
-  	 <select id="processInfo" resultType="ProcessOrderVO">
-		SELECT p.pro_code, pro_name, pro_order
-		FROM process p JOIN process_order o ON(p.pro_code = o.pro_code)
+  	 <select id="processInfo" resultType="BomVO">
+		SELECT DISTINCT b.pro_code, p.pro_name,  pro_order
+		FROM bom b JOIN process p ON(b.pro_code = p.pro_code)
 		WHERE item_code = #{iCode}
-		ORDER BY pro_order
+		ORDER BY 3
   	 </select>
+  	 
+	<select id="bomInfo" resultType="BomVO">
+		SELECT item_con, pro_name, item_name, mr_lot_number
+		FROM bom b JOIN itemlist i ON(b.ing_code = i.item_code)
+		           JOIN process p ON(b.pro_code = p.pro_code)
+		           JOIN material m ON(b.ing_code = m.item_code)
+		WHERE b.item_code = #{itemCode} 
+		     and b.pro_code = #{proCode}
+		ORDER BY pro_order 
+	</select>
 
   	
   </mapper>

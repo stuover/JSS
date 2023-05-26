@@ -25091,7 +25091,6 @@ div.tagsinput span.tag a {
 
 .navbar-breadcrumb {
   background: #00c8bf;
-  margin-top: 4.625rem;
 }
 
 .navbar-breadcrumb .navbar-links-wrapper {
@@ -25940,5 +25939,8 @@ div.tagsinput span.tag a {
     display: none;
   }
 }
+.tui-grid-cell.cell-color {
+         background-color: #CEE3F6;
+      }
 
 /*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */

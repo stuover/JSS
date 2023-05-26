@@ -23,9 +23,13 @@ public class BomVO {
 	public long saveMaterial;
 	
 	//공정정보
-	
 	public String proName;
 	public String insertDate;
 	public String modifyDate;
+	public String proOrder;
 
+	//자재정보
+	public String mrLotNumber;
+	
+	
 }

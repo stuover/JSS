@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mes.jss.basic.domain.BomVO;
 import com.mes.jss.basic.domain.ProcessOrderVO;
 import com.mes.jss.production.domain.WorkVO;
 import com.mes.jss.production.mapper.WorkMapper;
@@ -18,11 +19,19 @@ public class WorkServiceImpl implements WorkService {
 	
 	
 	@Override
-	public List<ProcessOrderVO> processInfo(String code) {
-		List<ProcessOrderVO> list = new ArrayList<>();
+	public List<BomVO> processInfo(String code) {
+		List<BomVO> list = new ArrayList<>();
 		list = workmapper.processInfo(code);
-		
 
+		return list;
+	}
+
+
+	@Override
+	public List<BomVO> bomInfo(BomVO vo) {
+		List<BomVO> list = new ArrayList<>();
+		list = workmapper.bomInfo(vo);
+		
 		return list;
 	}
 
