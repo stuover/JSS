@@ -101,6 +101,16 @@ public class SaleServiceImpl implements SaleService {
 		
 	}
 
+	@Override
+	public void ordUpdate(OrderVO uvo, List<OrderVO> slist) {
+		
+		for(OrderVO vo : slist) {
+			vo.setOrdId(uvo.getOrdId());
+			orderMapper.ordUpdate(vo);
+		}
+		
+	}
+
 	/*
 	 * @Override public List<OrderVO> delDet(SaleListVO svo) {
 	 * 

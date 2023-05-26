@@ -144,6 +144,17 @@ public class SaleController {
 		
 	}
 	
+	//주문서 수정
+	@RequestMapping("/ordUpdate")
+	@ResponseBody
+	public OrderVO ordUpdate(@RequestBody SaleListVO slist) {		
+		OrderVO commiInfo = slist.getCommInfo();
+		List<OrderVO> ulist = slist.getList();
+		saleService.ordUpdate(commiInfo,ulist);
+		return null;
+		
+	}
+	
 	
 	
 	
