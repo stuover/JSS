@@ -5,6 +5,8 @@
   
   <mapper namespace="com.mes.jss.facility.mapper.FacilityMapper">
   
+  	<!-- 비가동 페이지 -->
+  
   	<select id="getFacility" resultType="FacilityVO">
   		select * from facility where fac_code = #{facCode}
   	</select>
@@ -48,14 +50,33 @@
   	
   	<update id="insertStartTime" parameterType="DowntimeVO">
   		update downtime set start_date = current_date where fac_code = #{facCode}
-  	</update>
-  	
-  	<select id="getDownDetailList" resultType="DowntimeVO">
-  		select * from downtime order by down_code desc
-  	</select>
+  	</update>  	 
   	
   	<delete id="deleteDownCode">
   		delete from downtime where down_code = #{downCode}
   	</delete>
   	
+  	<update id="updateDownTime" parameterType="DowntimeVO">
+  		update downtime set down_reason = #{downReason} , down_manager = #{downManager} , 
+  		remark = #{remark} where down_code = #{downCode}
+  	</update>
+  	
+  	<!-- 비가동 내역 페이지 -->
+  	
+  	<select id="getDownDetailList" resultType="DowntimeVO">
+  		select f.fac_name, f.fac_code , d.down_code, d.start_date, d.stop_date, d.down_reason, d.down_manager, d.remark
+		from facility f join downtime d on (f.fac_code = d.fac_code) order by down_code desc
+  	</select>
+  	
+  	<select id="searchlist" parameterType="FacilityVO" resultType="FacilityVO">
+  		select d.down_code, f.fac_code, f.fac_name, d.start_date, d.stop_date, d.down_reason, d.down_manager, d.remark
+		from downtime d join facility f on (f.fac_code = d.fac_code)
+		where fac_name = #{facName}
+  	</select>
+  	
+  	<!-- 설비 페이지 -->
+  	
+  	<select id="getAllList" resultType="FacilityVO">
+  		select * from facility
+  	</select>
   </mapper>
