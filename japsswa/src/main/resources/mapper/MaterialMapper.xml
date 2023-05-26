@@ -93,13 +93,37 @@
   			)
   		}
   		</select>
-  
+  	
+  	<!-- 조정 될 리스트 -->	
+  		<select id="mrAdGetList" resultType="MrAdjustmentVO">
+  		
+  		  select i.item_code,i.item_name,m.store_count, sum(r.mr_real_count) as totalRel,m.mr_lot_number,i.save_material
+			from itemlist i join material m on(i.item_code = m.item_code) join material_release r on(m.mr_lot_number=r.mr_lot_number)
+			where m.hold_count = m.store_count  
+			group by i.item_code, i.item_name, m.store_count, m.mr_lot_number, i.save_material
+			
+  		 
+  		</select>
+  	
+  	 	
+  	
+  	
   	<!-- 조정 리스트 -->		
   		<select id="admGetList" resultType="MrAdjustmentVO">
   			select * from material_adjustment
-  		
+  			where to_char(register_date,'dd') = to_char(sysdate,'dd')
   		</select>
   
+  	<!-- 조정 등록 -->
+  		<select id="adjInsert" statementType="CALLABLE">
+  			{call ad_insert(
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+  			
+  			)
+  			}
+  		</select>
+  	
+  	
   <!-- 발주 리스트 -->		
   		<select id="OrmGetList" resultType="MrOrderVO">
   		
@@ -119,9 +143,9 @@
   	
   	<!-- 반품 품질 리스트 -->
   		<select id="retGetList" resultType="QualityVO">
-  			select q.test_code, e.emp_name,q.item_code,q.mr_order_det_code,i.item_type,i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity,((q.err_quantity/(q.test_quantity))*100) error,q.test_note 
+  			select q.test_code, e.emp_name,q.item_code,q.mr_order_det_code,i.item_type,i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity,(q.err_quantity/q.test_quantity)*100 as error,q.test_note 
   			from itemlist i join quality_test q on(i.item_code = q.item_code) join emp e on(q.emp_no=e.emp_no) 
-  			where (test_note is null or test_note not like '입고완료') and ((q.err_quantity/(q.test_quantity))*100) >= 10 
+           where test_note is null and (q.err_quantity/q.test_quantity)*100 between 10 and 100
   		
   		</select>
   	
@@ -132,5 +156,20 @@
   		
   		
   		</select>
+  	
+  	<!-- 반품 등록 -->	
+  		<select id="returnInsert" statementType="CALLABLE">
+  			{call MR_RETURN(
+  				#{testCode, mode=IN, jdbcType=VARCHAR},
+  				#{itemCode, mode=IN, jdbcType=VARCHAR},
+  				#{mrReturnCount, mode=IN, jdbcType=VARCHAR},
+  				#{mrReturnReason, mode=IN, jdbcType=VARCHAR}
+  				
+  			)
+  		}
+  		</select>
+  		
+  
+  		
   		
   </mapper>

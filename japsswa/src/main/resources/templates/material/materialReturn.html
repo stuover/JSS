@@ -4,6 +4,8 @@
 	layout:decorate="~{/layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
@@ -21,18 +23,28 @@
 
 <th:block layout:fragment="content">
 	
-	<h3 style="text-align:center; font-weight:bold;margin-top:50px;"> 자재 반품 </h3>
+	<h3 style="text-align:center; font-weight:bold;margin-top:30px;"> 자재 반품 </h3>
 	<div>
-	<button type="button" id="moveBtn" class="btn btn-info" style="float:right; margin-top:70px; margin-bottom:10px; margin-right:20px; width:50px; padding:10px;">이동</button>
+	<button type="button" id="moveBtn" class="btn btn-info" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px; width:50px; padding:10px;">이동</button>
 	</div>
 	<div id="grid" style=""></div>
 	
 	<h3 style="text-align:center; font-weight:bold; margin-top:50px;"> 반품 </h3>
-	<div>
-	<button type="button" id="insertBtn" class="btn btn-success" style="float:right; margin-top:70px; margin-bottom:10px; margin-right:20px; width:50px; padding:10px;">등록</button>
-	</div>
+	<div style="width:200px; margin-left:1540px;">
+		
+		<button type="button" id="deleteBtn" class="btn btn-dark" style="margin-top:30px; margin-bottom:10px;  margin-left:50px; width:50px; padding:10px;">삭제</button>
+		
+		</div>
+	
 	<div id="grid1" style=""></div>
+	<div>
+	<button type="button" id="insertBtn" class="btn btn-success" style="float:right; margin-bottom:10px; margin-right:20px; width:50px; padding:10px;">등록</button>
+	</div>
 	<script>
+	
+		const token = $("meta[name='_csrf']").attr("content")
+		const header = $("meta[name='_csrf_header']").attr("content");
+	
 	
 	$(document).ready(function(){
 
@@ -186,7 +198,8 @@
 			
 		$('#insertBtn').on('click',function(){
 			
-					
+			grid1.finishEditing();
+			
 			let insertReturn = {
 				testCode : grid1.getCheckedRows()[0].testCode,
 				itemCode : grid1.getCheckedRows()[0].itemCode,
@@ -194,7 +207,7 @@
 		}
 			
 			$.ajax({
-			url:"",
+			url:"/mrReturnInsert",
 			contentType : "application/json",
 			method: "post",
 			data : JSON.stringify({list : grid1.getCheckedRows()}),
@@ -203,8 +216,11 @@
 				xhr.setRequestHeader(header, token);
 			},
 				success : function(result){
+					console.log(result);
 					
-					
+				},
+				error : function(reject){
+					console.log(reject);
 				}
 				
 			})
@@ -219,6 +235,10 @@
 		
 		
 		
+		
+		$('#deleteBtn').on('click',function(){
+				grid1.removeCheckedRows(false);
+			})
 		
 		
 		

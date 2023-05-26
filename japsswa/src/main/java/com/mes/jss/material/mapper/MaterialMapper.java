@@ -51,10 +51,19 @@ public interface MaterialMapper {
 	// 자재 조정 리스트
 	public List<MrAdjustmentVO> admGetList();
 	
+	// 자재 조정 될 리스트
+	public List<MrAdjustmentVO> mrAdGetList();
+	
+	// 자재 조정 등록
+	public void adjInsert(MrAdjustmentVO vo);
+	
 	// 자재 반품 품질 리스트
 	public List<QualityVO> retGetList();
 	
 	// 자재 반품 리스트
 	public List<MrReturnVO> returnGetList();
+	
+	// 자재 반품 등록
+	public List<MrReturnVO> returnInsert(MrReturnVO vo);
 
 }

@@ -135,27 +135,53 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.admGetList();
 	}
-
+	
+	// 자재 조정 될 리스트
+	@Override
+	public List<MrAdjustmentVO> adList() {
+		
+		return materialMapper.mrAdGetList();
+	}
+	
+	
+	
+	// 반품 품질 리스트
 	@Override
 	public List<QualityVO> retList() {
 		
 		return materialMapper.retGetList();
 	}
-
+	
+	// 반품 리스트
 	@Override
 	public List<MrReturnVO> returnList() {
 		
 		return materialMapper.returnGetList();
 	}
-
+	
+	// 반품 등록
 	@Override
 	public void returnIn(ReturnListVO vo) {
 		
+		for(int i=0; i<vo.getList().size(); i++) {
 			
+			materialMapper.returnInsert(vo.getList().get(i));
 		}
 		
 		
 	}
+
+	@Override
+	public void admIn(AdjustmentListVO vo) {
+		for(int i=0; i<vo.getList().size(); i++) {
+			
+			materialMapper.adjInsert(vo.getList().get(i));
+		}
+		
+	}
+
+	
+}
 
 	
 	
