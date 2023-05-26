@@ -7,9 +7,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.basic.domain.BomVO;
 import com.mes.jss.basic.domain.ProcessOrderVO;
 import com.mes.jss.production.domain.WorkVO;
 import com.mes.jss.production.service.PlanService;
@@ -35,10 +37,19 @@ public class ProductWorkController {
 
 	@RequestMapping("/processInfoAjax")
 	@ResponseBody
-	public List<ProcessOrderVO> processInfoAjax(String code) {
-		List<ProcessOrderVO> inputData = new ArrayList<ProcessOrderVO>();
+	public List<BomVO> processInfoAjax(String code) {
+		List<BomVO> inputData = new ArrayList<BomVO>();
 		
 		inputData = workService.processInfo(code);
+		
+		return inputData;
+	}
+	
+	@RequestMapping("/bomInfoAjax")
+	@ResponseBody
+	public List<BomVO> bomInfoAjax(BomVO vo) {
+		List<BomVO> inputData = new ArrayList<BomVO>();
+		inputData = workService.bomInfo(vo);
 		
 		return inputData;
 	}

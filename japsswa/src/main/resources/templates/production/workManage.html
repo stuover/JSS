@@ -11,18 +11,7 @@
 </head>
 
 <th:block layout:fragment="content">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-
-
-<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 	
  		<div class="container-fluid page-body-wrapper">
  			<div class="col-12 grid-margin stretch-card">
@@ -177,6 +166,63 @@
   		
 
   		<script>
+  		
+  	    // =============================== 객체 시작
+  	    let holdList = {
+  	      // Hold 된 LOT별 자재 목록
+  	      rowList: [],
+
+  	      // Hold 된 LOT별 자재정보 등록
+  	      insertHold: function (head, row) {
+  	        row.rowKey = head;
+  	        this.rowList.push(row);
+  	      },
+
+  	      // LOT별 Hold수량 목록
+  	      getLotHoldVal: function () {
+  	        let holds = {};
+  	        this.rowList.forEach((obj, idx) => {
+  	          if (holds[obj.lot] === undefined) {
+  	            holds[obj.lot] = Number(obj.val);
+  	          } else {
+  	            let preVal = holds[obj.lot];
+  	            holds[obj.lot] = preVal + Number(obj.val);
+  	          }
+  	        });
+
+  	        return holds;
+  	      },
+
+  	      // 해당 제품(지시제품이 등록된 Grid의 해당 RowKey)의 
+  	      // Hold 된 LOT별 자재 목록
+  	      getRowData(rowKey){
+  	        let dataList = [];
+  	        this.rowList.forEach((obj, idx) => {
+  	          if(Number(obj.rowKey) == rowKey){
+  	            dataList.push(obj);
+  	          }
+  	        });
+  	        return dataList;
+  	      },
+
+  	      // 해당 제품(지시제품이 등록된 Grid의 해당 RowKey)의 
+  	      // Hold 된 LOT별 자재 목록 삭제
+  	      delRowData(rowKey){
+  	        let idxList = [];
+  	        this.rowList.forEach((obj, idx) => {
+  	          if(Number(obj.rowKey) == rowKey){
+  	            idxList.push(idx);
+  	          }
+  	        });
+
+  	        for(let i = idxList.length-1; i > -1; i--){
+  	          this.rowList.splice(i, 1);
+  	        };
+  	      }
+  	    };
+  	    // =============================== 객체 끝	
+  		
+  		
   		const token = $("meta[name='_csrf']").attr("content")
   		const header = $("meta[name='_csrf_header']").attr("content");
   		const Grid = tui.Grid;
@@ -445,7 +491,12 @@
 		        header: '지시수량',
 		        name: 'workAmount',
 				editor: 'text'
-		      }
+		      },
+		      {
+			    header: 'hold 정보',
+			    name: 'holdInfo',
+			    hidden: true
+			   }
 		     ]
 		   });
 		
@@ -557,7 +608,6 @@
 		    const processGrid = new tui.Grid({
 		      el: document.getElementById('processGrid'),
 		      data: processGridData,
-		      rowHeaders: [{type: 'checkbox', header: " "}],
 		      scrollX: false,
 		      scrollY: true,
 		      columns: [
@@ -580,13 +630,31 @@
 		    // 공정 정보 그리드 높이 지정.
 		    processGrid.setBodyHeight(200);
 		    
-		    // 체크한 제품의 공정 순서 출력.
-		    let iCode = '';
+			// 공정 정보 검색 결과 하나만 체크할 수 있게 설정.
+        	processGrid.on('check', function (e) {
+	            var checkRows = processGrid.getCheckedRowKeys();
+	            checkRows.forEach(function( key, idx){                      
+	                if(key != e.rowKey){
+	                	processGrid.uncheck(key);
+	                }
+	            });
+	        }); 
+			
+		    // 더블클릭한 제품의 공정 순서 출력.
+		    var iCode = '';
+		    let keyNumber = '';
 		    detailGrid.on('dblclick', function(e) {
+
+		    	if(e.rowKey != keyNumber){
+		    		detailGrid.removeRowClassName(keyNumber, 'cell-color');
+		    	}
+		    	detailGrid.addRowClassName(e.rowKey, 'cell-color');
+		    	keyNumber = e.rowKey;
 		    	
 		    	if(e.columnName == 'itemName') {
 		    	iCode = detailGrid.getRow(e.rowKey).itemCode;
 		    	console.log(iCode);
+		    	
 		    	
 		    	$.ajax({
 		    		url : "/processInfoAjax",
@@ -604,8 +672,10 @@
 		    		
 				}
 		    	
+		    	
 		    });
-	    
+		    
+
 			
 			// Hold 자재 정보
 			let holdGridData = [];
@@ -622,19 +692,19 @@
 				  hidden: true
 		        },
 		        {
-		          header: '제품명',
+		          header: '자재명',
 		          name: 'itemName'
 		        },
 		        {
-		          header: '자재LOT',
-		          name: 'mrLotNumber'
+		          header: '소요량',
+		          name: 'itemCon'
 		        },   
 		        {
-		          header: '현 재고',
-		          name: 'column6'
+		          header: '자재LOT',
+		          name: 'mrLotNumber'
 		        },
 		        {
-		          header: '소요량',
+		          header: '현 재고',
 		          name: 'itemCon'
 		        },
 		        {
@@ -658,6 +728,40 @@
 		    
 		    // 공정 정보 그리드 높이 지정.
 		    holdGrid.setBodyHeight(200);
+		    
+		    // 더블클릭한 제품의 공정 순서 출력.
+		    let pCode = '';
+		    let keyNumber2 = '';
+		    processGrid.on('dblclick', function(e) {
+
+		    	if(e.rowKey != keyNumber2){
+		    		processGrid.removeRowClassName(keyNumber2, 'cell-color');
+		    	}
+		    	processGrid.addRowClassName(e.rowKey, 'cell-color');
+		    	keyNumber2 = e.rowKey;
+		    	
+		    	if(e.columnName == 'proName') {
+		    	pCode = processGrid.getRow(e.rowKey).proCode;
+		    	console.log(iCode);
+		    	
+		    	
+		    	$.ajax({
+		    		url : "/bomInfoAjax",
+		    		data : { itemCode : iCode, proCode : pCode},
+		    		method : "get",
+		    		success : function(result) {
+		    			console.log(result);
+		    			holdGrid.resetData(result);
+		    		},
+		    		error : function(reject) {
+		    			console.log(reject);
+		    		}
+		    	});
+		    		
+				}
+		    	
+		    });
+	    
 		
 
 			
