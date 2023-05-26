@@ -16,6 +16,8 @@ public class FacilityServiceimpl implements FacilityService{
 
 	@Autowired FacilityMapper facilityMapper;
 
+	// 비가동 페이지
+	
 	@Override
 	public FacilityVO getFacility(FacilityVO vo) {
 		
@@ -72,8 +74,22 @@ public class FacilityServiceimpl implements FacilityService{
 	public boolean updateStartDate(DowntimeVO vo) {
 			
 			return facilityMapper.insertStartTime(vo);
+	}	
+
+	@Override
+	public boolean removeDownTime(FacilityVO vo) {
+
+		return facilityMapper.deleteDownCode(vo);
 	}
 
+	@Override
+	public boolean modifyDownTime(DowntimeVO vo) {
+
+		return facilityMapper.updateDownTime(vo);
+	}
+
+	// 비가동 내역 페이지
+	
 	@Override
 	public List<DowntimeVO> getDownDetail() {
 		
@@ -81,9 +97,17 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public boolean removeDownTime(FacilityVO vo) {
+	public List<FacilityVO> searchList(String facName) {
 
-		return facilityMapper.deleteDownCode(vo);
+		return facilityMapper.searchlist(facName);
+	}
+
+	// 설비 페이지
+	
+	@Override
+	public List<FacilityVO> getAllList() {
+		
+		return facilityMapper.getAllList();
 	}
 
 
