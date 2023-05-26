@@ -15,4 +15,9 @@
 		connect by bom_level = prior leveL_type
 		order siblings by level_type
   	</select>
+  	<insert id="insertBom" parameterType="BomVO">
+  		insert into bom (bom_code, bom_level, ing_code, item_con, unit, pro_order, pro_code, level_type, item_code, item_type)
+  				values( (select NVL(MAX(bom_code),0)+1 from bom)+1, #{bomLevel}, #{ingCode}, #{itemCon}, #{unit}, #{proOrder}, #{proCode}, #{levelType}, #{itemCode}, #{itemType})
+  	
+  	</insert>
   </mapper>

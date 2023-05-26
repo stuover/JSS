@@ -1,16 +1,16 @@
 package com.mes.jss.web;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.basic.domain.BomListVO;
 import com.mes.jss.basic.domain.ItemVO;
 import com.mes.jss.basic.domain.ProcessVO;
 import com.mes.jss.basic.service.BomService;
@@ -78,5 +78,71 @@ public class BomController {
 		return proService.getProcess();
 	}
 
+	@ResponseBody
+	@RequestMapping ("/saveBom")
+	public String saveBom(@RequestBody BomListVO save){
+		System.err.println(save);
+		bomService.saveBom(save);
+		return "success";
+		
+	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

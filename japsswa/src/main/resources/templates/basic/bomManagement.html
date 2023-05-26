@@ -52,7 +52,9 @@
 				      <div class="card-body">
 				      <!-- card-body start -->
 				        <h5 class="page-title">BOM</h5>
-				        <button id="inBomBtn" class="btn btn-primary">추가</button>
+				        <button id="inBomBtn" class="btn btn-primary" style="display:none;">추가</button>
+				        <button id="delBomBtn" class="btn btn-primary" style="display:none">삭제</button>
+				        
 				        <div id="bomGrid"></div>
 					  <!-- card-body end -->
 				      </div>
@@ -84,6 +86,7 @@
 						<label class="btn btn-secondary" for="option2">완제품</label>
 						<input type="radio" class="btn-check" name="itemType" id="option3" value="SAM" autocomplete="off">
 						<label class="btn btn-secondary" for="option3">반제품</label>
+					
 						
 						
 			            <div id="modalGrid"></div>
@@ -96,10 +99,8 @@
 	        </div>
 	    </div>
 	    
-	    
-	    
-	    <!-- 공정 흐름 추가 모달 -->
-	    <div class="modal fade" id="proModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	    <!-- 아아템 리스트 조회 -->
+  		<div class="modal fade" id="itemPix" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	        <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content">
 	            <div class="modal-header">
@@ -107,7 +108,18 @@
 	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 		            <div class="modal-body">
-			            <div id="proModalGrid"></div>
+		            	<input type="radio" class="btn-check" name="itemTypeModal" id="option4"  value = "all" autocomplete="off" checked>
+						<label class="btn btn-secondary" for="option4" >전체</label>
+						<input type="radio" class="btn-check" name="itemTypeModal" id="option5" value="FIN"autocomplete="off">
+						<label class="btn btn-secondary" for="option5">완제품</label>
+						<input type="radio" class="btn-check" name="itemTypeModal" id="option6" value="SAM" autocomplete="off">
+						<label class="btn btn-secondary" for="option6">반제품</label>
+						<input type="radio" class="btn-check" name="itemTypeModal" id="option7" value="MAT" autocomplete="off">
+						<label class="btn btn-secondary" for="option7">자재</label>
+						
+						
+			            <div id="itemGrid"></div>
+			            
 			            <input type="text" class="btn-serach" name="selectIn" id="selectIn"  >
 			            <button id="selectBtn" type="button" class="btn btn-primary">검색</button>
 		            </div>
@@ -117,72 +129,130 @@
 	        </div>
 	    </div>
 	    
+	    
+	    <div class="modal fade" id="proPix" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">공정 조회</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+		            <div class="modal-body">
+
+			            <div id="proGrid"></div>
+			            
+			            <input type="text" class="btn-serach" name="selectIn" id="selectIn"  >
+			            <button id="selectBtn" type="button" class="btn btn-primary">검색</button>
+		            </div>
+	            <div class="modal-footer">
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+	    
+	    
+	    
+	
+	    
 <script>
+const token = $("meta[name='_csrf']").attr("content")
+	const header = $("meta[name='_csrf_header']").attr("content");
+
+
 var bomGrid = new tui.Grid({
 	el : document.getElementById('bomGrid'),
-	pageOptions : {
-		useClient : true,
-		perPage : 5
-	},
+	rowHeaders: ['checkbox'],
+	
 	columns : [ 
+		{
+			header : 'BOM번호',
+			name : 'bomCode',
+			editor: 'text',
+			sortingType : 'desc',
+		},
+		
 	{
 		header : 'LEVEL',
 		name : 'bomLevel',
 		editor: 'text',
 		sortingType : 'desc',
-		sortable : true
 	}, {
 		header : '품목코드',
 		name : 'ingCode',
-		editor: 'text',
-		sortable : true
 	}, {
 		header : '품목명',
 		name : 'itemName',
 		sortingType : 'desc',
-		sortable : true,
 	}, {
 		header : '구분',
 		name : 'itemType',
 		sortingType : 'desc',
-		sortable : true,
 	}, {
 		header : '소요량',
 		name : 'itemCon',
 		editor: 'text',
 		sortingType : 'desc',
-		sortable : true,
 	}, {
 		header : '단위',
 		name : 'unit',
-		editor: 'text',
-		sortingType : 'desc',
-		sortable : true,
+		editor: {
+            type: 'select',
+            options: {
+                listItems: [
+               	 {
+                        text: 'mL',
+                        value: 'ml'
+                    },
+                    {
+                        text: 'L',
+                        value: 'L'
+                    },
+                    {
+                        text: 'Kg',
+                        value: 'Kg'
+                    },
+                    {
+                        text: 'g',
+                        value: 'g'
+                    },
+                    ,
+                    {
+                        text: 'EA',
+                        value: 'EA'
+                    }
+                    ,
+                    {
+                        text: 'm',
+                        value: 'm'
+                    } ,
+                    {
+                        text: 'cm',
+                        value: 'cm'
+                    }
+                ]
+            }
+		 }
 	}, {
 		header : '공정순서',
-		name : 'proCode',
+		name : 'proOrder',
 		editor: 'text',
 		sortingType : 'desc',
-		sortable : true,
-	},{
+	}, {
 		header : '공정코드',
 		name : 'proCode',
-		editor: 'text',
 		sortingType : 'desc',
-		sortable : true,
 	}, {
 		header : '공정명',
 		name : 'proName',
 		sortingType : 'desc',
-		sortable : true,
 	}, {
 		header : '단계구분',
 		name : 'levelType',
 		editor: 'text',
 		sortingType : 'desc',
-		sortable : true,
 	}
-	]
+	],
+	draggable : true
 });
 
 
@@ -209,7 +279,7 @@ var modalGrid = new tui.Grid({
 		sortingType : 'desc',
 		sortable : true
 	}
-	],
+	]
 });
 
 
@@ -290,6 +360,9 @@ modalGrid.on('click',function(e){
 		dataType : "json",
 		data : {itemCode : itemCode},
 		success : function(result){
+			$('#inBomBtn').css('display','inline');
+			$('#delBomBtn').css('display','inline');
+
 			bomGrid.resetData(result);
 		},
 		error : function(reject){
@@ -325,19 +398,194 @@ $('#inProBtn').on('click', function(){
 	
 })
 
-
+var ingCode=null;
+	var itemName=null;
+	var itemType=null;
+	var proCode=null;
+	var proName=null;
 $('#inBomBtn').on('click', function(){
-	bomGrid.appendRow();
+	 bomGrid.appendRow();
+	 ingCode=null;
+	 itemName=null;
+	 itemType=null;
+	 proCode=null;
+ 	 proName=null;
 })
 
 
+var itemGrid = new tui.Grid({
+	el : document.getElementById('itemGrid'),
+	pageOptions : {
+		useClient : true,
+		perPage : 5
+	},
+	columns : [ 
+	{
+		header : '품목코드',
+		name : 'itemCode',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '품목명',
+		name : 'itemName',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '구분',
+		name : 'itemType',
+		sortingType : 'desc',
+		sortable : true
+	}
+	]
+});
+
+var proGrid = new tui.Grid({
+	el : document.getElementById('proGrid'),
+	pageOptions : {
+		useClient : true,
+		perPage : 5
+	},
+	columns : [ 
+	{
+		header : '품목코드',
+		name : 'proCode',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '품목명',
+		name : 'proName',
+		sortingType : 'desc',
+		sortable : true
+	}
+	]
+});
+
+
+
+var bomKey = null;
 bomGrid.on('dblclick', function (e){
-	console.log(e)
+	
+	bomKey = e.rowKey;
+	if(e.columnName == "ingCode" || e.columnName == "itemName"){
+		console.log(e.rowKey)
+		$('#itemPix').modal('show');
+		$('#itemPix').on('shown.bs.modal', function (e) {
+			console.log('open');
+			setTimeout(()=> itemGrid.refreshLayout(), 300);	
+		})
+		$.ajax({
+			url : "/getItemList",
+			method : "get",
+			dataType : "json",
+			success : function(result) {
+				itemGrid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject)
+			}
+		})
+		
+	}else if(e.columnName == "proCode" || e.columnName == "proName"){
+		$('#proPix').modal('show');
+		$('#proPix').on('shown.bs.modal', function (e) {
+			console.log('open');
+			setTimeout(()=> proGrid.refreshLayout(), 300);	
+		})
+		$.ajax({
+			url : "/processList",
+			method : "get",
+			dataType : "json",
+			success : function(result) {
+				proGrid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject)
+			}
+		})
+	}
 })
 
+
+$('#itemPix input[name="itemTypeModal"]').on('change', function() {
+	let itemType = $('input[name="itemTypeModal"]:checked').val();
+	if(itemType == "all"){
+		$.ajax({
+			url : "/getItemList",
+			method : "get",
+			dataType : "json",
+			success : function(result) {
+				itemGrid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject)
+			}
+		})
+	}else {
+		$.ajax({
+			url : "/getItemDetaList",
+			method : "get",
+			dataType : "json",
+			data : {itemType : itemType},
+			success : function(result) {
+				itemGrid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject)
+			}
+		})
+	}
+})
+
+
+
+itemGrid.on('dblclick', function(e){
+	 ingCode = itemGrid.getRow(e.rowKey).itemCode;
+	 itemName = itemGrid.getRow(e.rowKey).itemName;
+	 itemType = itemGrid.getRow(e.rowKey).itemType;
+	 console.log(bomGrid)
+	 bomGrid.setRow(bomKey, {ingCode, itemName, itemType, proCode, proName}  ) 
+	 $('#itemPix').modal('hide')
+})
+
+
+proGrid.on('dblclick', function(e){
+	proCode = proGrid.getRow(e.rowKey).proCode;
+	proName = proGrid.getRow(e.rowKey).proName;
+	bomGrid.setRow(bomKey, {proCode, proName, ingCode, itemName, itemType } ) 
+	$('#proPix').modal('hide')
+})
+
+
+$('#delBomBtn').on('click',function(){
+	console.log(bomGrid.getCheckedRows().remove)
+	bomGrid.removeCheckedRows(false);
+})
+
+
+$('#saveBtn').on('click', function(){
+	console.log( $('#itemCode').val())
+	let data = JSON.stringify(bomGrid.getData());
+	$.ajax({
+		url : "/saveBom",
+		method : "post",
+		contentType: "application/json",
+		dataType : "json",
+		data: JSON.stringify( { itemCode: $('#itemCode').val(), list : bomGrid.getData() } ),
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},success : function(result){
+			
+			
+		},error : function (reject){
+			console.log(reject)
+		}
+	})
+	
+})
+ 
 </script>
   		
-	</th:block>
+</th:block>
 	
 
 
