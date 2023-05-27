@@ -5,24 +5,6 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="en">
 <meta charset="UTF-8">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-
-<script type="text/javascript"
-	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-<script
-	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 </head>
 
@@ -57,12 +39,14 @@
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<span id="position">현재 직책 : </span> <select id="	">
+					<span id="position">현재 직책 : </span> 
+					<select id="selPosi">
 						<option value="null">선택해주세요</option>
 						<option value="사원">사원</option>
 						<option value="대리">대리</option>
 						<option value="부장">부장</option>
-					</select> <br> <span id="deptName">현재 직책 : </span> <select id="selDept">
+					</select> 
+					<br> <span id="deptName">현재 직책 : </span> <select id="selDept">
 						<option value="null">선택해주세요</option>
 						<option value="인사">인사</option>
 						<option value="영업">영업</option>

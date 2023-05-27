@@ -7,8 +7,19 @@ import com.mes.jss.basic.domain.ItemVO;
 
 public interface BomMapper {
 	
-	List<ItemVO> getBomList(String itemCode);
+	List<BomVO> getBomList(String itemCode);
 
 	void insertBom(BomVO vo);
+
+	String getNumber();
+
+	void deleteBom(BomVO vo);
+
+	void updateBom(BomVO vo);
+
+	List<BomVO> getBomManageList(String itemCode);
+
+	List<BomVO> getSmaBomList(String itemCode);
+
 
 }

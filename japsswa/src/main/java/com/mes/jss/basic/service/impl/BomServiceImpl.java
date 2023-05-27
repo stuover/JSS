@@ -7,18 +7,25 @@ import org.springframework.stereotype.Service;
 
 import com.mes.jss.basic.domain.BomListVO;
 import com.mes.jss.basic.domain.BomVO;
-import com.mes.jss.basic.domain.ItemVO;
 import com.mes.jss.basic.mapper.BomMapper;
+import com.mes.jss.basic.mapper.ItemMapper;
 import com.mes.jss.basic.service.BomService;
 
 @Service("bomService")
 public class BomServiceImpl implements BomService{
 	@Autowired BomMapper bomMapper;
+	@Autowired ItemMapper itemMapper;
 
 	@Override
-	public List<ItemVO> getBomList(String itemCode) {
-		// TODO Auto-generated method stub
-		return bomMapper.getBomList(itemCode);
+	public List<BomVO> getBomList(String itemCode) {
+		
+		String type =itemMapper.getItemType(itemCode);
+		if (type.equals("반제품")) {
+			return bomMapper.getSmaBomList(itemCode);
+		}else{
+			return bomMapper.getBomList(itemCode);
+		}
+		
 	}
 
 
@@ -33,8 +40,45 @@ public class BomServiceImpl implements BomService{
 			System.err.println(vo);
 			if(vo.getBomCode() == null) {
 				bomMapper.insertBom(vo);
+			}else {
+				bomMapper.updateBom(vo);
 			}
 		}
 	}
+
+
+
+
+	@Override
+	public String getNumber() {
+		// TODO Auto-generated method stub
+		return bomMapper.getNumber();
+	}
+
+
+
+
+	@Override
+	public void remove(BomListVO dete) {
+		// TODO Auto-generated method stub
+		for(BomVO vo : dete.getList()) {
+			if(vo.getBomCode() != null) {
+				bomMapper.deleteBom(vo);
+			}
+		}
+	}
+
+
+
+
+	@Override
+	public List<BomVO> getBomManageList(String itemCode) {
+		// TODO Auto-generated method stub
+		return bomMapper.getBomManageList(itemCode);
+	}
+
+
+
+
 
 }

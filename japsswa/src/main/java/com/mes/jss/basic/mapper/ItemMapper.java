@@ -20,4 +20,6 @@ public interface ItemMapper {
 
 	List<ItemVO> searchItem(String itemName);
 
+	String getItemType(String itemCode);
+
 }

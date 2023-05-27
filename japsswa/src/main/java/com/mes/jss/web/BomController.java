@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.basic.domain.BomListVO;
+import com.mes.jss.basic.domain.BomVO;
 import com.mes.jss.basic.domain.ItemVO;
 import com.mes.jss.basic.domain.ProcessVO;
 import com.mes.jss.basic.service.BomService;
@@ -51,7 +52,7 @@ public class BomController {
 
 	@ResponseBody
 	@RequestMapping("/getBomOrd")
-	public List<ItemVO>getBomOrd(@RequestParam String itemCode){
+	public List<BomVO>getBomOrd(@RequestParam String itemCode){
 		
 
 
@@ -85,6 +86,31 @@ public class BomController {
 		bomService.saveBom(save);
 		return "success";
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping ("/removeBom")
+	public String removeBom(@RequestBody BomListVO dete){
+		System.err.println(dete);
+		bomService.remove(dete);
+		return "success";
+		
+	}
+	
+	@ResponseBody
+	@GetMapping("/getNumber")
+	public String getNumber() {
+		
+		String number = bomService.getNumber();
+		return number;
+	}
+	
+	@ResponseBody
+	@GetMapping("/getBomManageList")
+	public List<BomVO> getBomManageList(@RequestParam String itemCode) {
+		
+		
+		return bomService.getBomManageList(itemCode);
 	}
 
 }

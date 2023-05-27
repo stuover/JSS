@@ -6,18 +6,144 @@
   
   <mapper namespace="com.mes.jss.basic.mapper.BomMapper">
   	<select id="getBomList" resultType="BomVO">
-  		select bom_code, bom_level, ing_code, item_name, a.item_con, a.unit, b.item_type, c.pro_code, c.pro_name,a.level_type,a.pro_order
-		from bom a join itemList b 
-		on (a.ing_code = b.item_code) left outer join process c 
-                                      on(a.pro_code = c.pro_code)
-  		where a.item_code = #{itemCode}
-        start with level_type is not null 
-		connect by bom_level = prior leveL_type
-		order siblings by level_type
+  		SELECT 
+    LEVEL,
+    LPAD(' ', 2*LEVEL-1) || SYS_CONNECT_BY_PATH(b.item_name, '/') PATH,
+    bom_code,
+    b.item_name,
+    a.item_code,
+    a.ing_code,
+    a.item_type,
+    level_type,
+    bom_level,
+    a.pro_code,
+    c.pro_name,
+    a.item_type,
+    a.unit,
+    a.item_con,
+    a.pro_order
+FROM bom a left outer join itemlist b
+on a.ing_code = b.item_code
+left outer join process c
+on a.pro_code = c.pro_code 
+START WITH a.ing_code = #{itemCode}
+CONNECT BY  PRIOR a.bom_level = a.level_type
+ORDER SIBLINGS BY a.level_type
   	</select>
   	<insert id="insertBom" parameterType="BomVO">
   		insert into bom (bom_code, bom_level, ing_code, item_con, unit, pro_order, pro_code, level_type, item_code, item_type)
   				values( (select NVL(MAX(bom_code),0)+1 from bom)+1, #{bomLevel}, #{ingCode}, #{itemCon}, #{unit}, #{proOrder}, #{proCode}, #{levelType}, #{itemCode}, #{itemType})
   	
   	</insert>
+  	<select id="getNumber" resultType ="String">
+  		select nvl(MAX(bom_level),0) from bom
+  	</select>
+  	
+  	<delete id="deleteBom">
+  		delete from bom where bom_code = #{bomCode}
+  	</delete>
+  	
+  	<update id="updateBom">
+  		update bom
+  		set
+			BOM_LEVEL = #{bomLevel},
+			ITEM_CON = #{itemCon},
+			UNIT = #{unit},
+			ITEM_TYPE = #{itemType},
+			PRO_CODE = #{proCode},
+			LEVEL_TYPE = #{levelType},
+			ITEM_CODE = #{itemCode},
+			ING_CODE = #{ingCode},
+			PRO_ORDER = #{proOrder}
+		where bom_code = #{bomCode}
+  	</update>
+  	
+  	<select id="getBomManageList" resultType="BomVO">
+  		select bom_code, bom_level, a.ing_code, b.item_name, a.item_type, a.unit, a.item_con, a.pro_order, c.pro_code, c.pro_name, level_type
+		FROM bom a left outer join itemlist b
+		        on a.ing_code = b.item_code
+		left outer join process c
+		on a.pro_code = c.pro_code 
+		where a.item_code = #{itemCode}
+		order by a.bom_code
+  	</select>
+  	
+  	<select id="getSmaBomList" resultType = "BomVO">
+  		SELECT
+				distinct
+			    LEVEL,
+			    LPAD(' ', 2*LEVEL-1) || SYS_CONNECT_BY_PATH(b.item_name, '/') PATH,
+			    b.item_name,
+			    a.ing_code,
+			    a.item_type,
+			    a.pro_code,
+			    c.pro_name,
+			    a.unit,
+			    a.pro_order
+			FROM bom a left outer join itemlist b
+			on a.ing_code = b.item_code
+			left outer join process c
+			on a.pro_code = c.pro_code 
+			START WITH a.ing_code = #{itemCode}
+			CONNECT BY  PRIOR a.bom_level = a.level_type
+			order  by level, pro_order
+  		
+  	</select>
   </mapper>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
