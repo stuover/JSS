@@ -50,4 +50,8 @@
   			where item_Name like '%'||#{itemName}||'%'
   			order by item_code
   		</select>
+  		
+  		<select id="getItemType" resultType ="String">
+  			select item_type  from itemlist where item_code = #{itemCode}
+  		</select>
   </mapper>

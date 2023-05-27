@@ -92,6 +92,7 @@ public class EmployeesController {
 	@ResponseBody
 	@RequestMapping("/modifyEmpAjax")
 	public String modifyEmp(EmpVO vo, Model model) {
+		System.err.println(vo);
 		if (vo.getPosition().equals("대리") || vo.getPosition().equals("부장")) {
 			vo.setRoleId("ROLE_ADMIN");
 		} else {
