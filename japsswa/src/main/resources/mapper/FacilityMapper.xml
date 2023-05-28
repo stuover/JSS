@@ -79,4 +79,8 @@
   	<select id="getAllList" resultType="FacilityVO">
   		select * from facility
   	</select>
+  	
+  	<select id="searchFac" parameterType="FacilityVO" resultType="FacilityVO">
+  		select * from facility where fac_code = #{facName}
+  	</select>
   </mapper>

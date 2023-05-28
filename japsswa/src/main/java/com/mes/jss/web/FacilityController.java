@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.facility.domain.FacilityVO;
@@ -26,10 +27,22 @@ public class FacilityController {
 	
 	@ResponseBody
 	@RequestMapping("/AllfacilityAjax")
-	public List<FacilityVO> AllFacility(){
+	public List<FacilityVO> AllFacility(){	// 설비 조회
 		
 		List<FacilityVO> list = service.getAllList();
 		
 		return list;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/searchFacility")
+	public List<FacilityVO> searchFacility(@RequestParam String facCode){
+		
+		System.out.println(facCode);
+		
+		List<FacilityVO> list = service.searchFacility(facCode);
+		
+		return list;		
+	}
+	
 }

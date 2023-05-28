@@ -27,9 +27,10 @@ public interface FacilityService {
 	public boolean modifyDownTime(DowntimeVO vo);
 
 	public List<DowntimeVO> getDownDetail();	// 비가동 내역 조회
-	public List<FacilityVO> searchList(String facName);
+	public List<FacilityVO> searchList(String facName);	// 비가동 내역 검색
 	
 	// 설비
 	public List<FacilityVO> getAllList();		// 전체 설비 리스트
+	public List<FacilityVO> searchFacility(String facCode);	// 설비 단건 조회
 	
 }

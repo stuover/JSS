@@ -27,5 +27,6 @@ public interface FacilityMapper {
 	
 	// 설비 페이지
 	public List<FacilityVO> getAllList();
+	public List<FacilityVO> searchFac(String facCode);
 	
 }
