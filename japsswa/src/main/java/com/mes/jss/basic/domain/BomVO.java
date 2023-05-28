@@ -33,6 +33,7 @@ public class BomVO {
 
 	//자재정보
 	public String mrLotNumber;
+	public long storeCount;
 	
 	
 }

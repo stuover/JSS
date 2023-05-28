@@ -54,7 +54,7 @@
 		SELECT i.item_code, item_name, sum(nvl(ord_count,0)) as "itemOrders"
 		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
 		WHERE item_type = '완제품' 
-		               and item_name = #{itemName}
+		               and item_name LIKE '%' || #{itemName} || '%'
 		GROUP BY i.item_code, item_name
 		ORDER BY 3 DESC
 	</select>
@@ -77,7 +77,7 @@
 		      WHERE item_type = '완제품' OR item_type = '반제품'
 		      GROUP BY i.item_code, item_name  
 		      )
-		WHERE item_name = #{itemName}
+		WHERE item_name LIKE '%' || #{itemName} || '%'
 		ORDER BY 1 DESC
 	</select>
 
