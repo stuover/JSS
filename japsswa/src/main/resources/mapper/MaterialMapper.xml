@@ -8,7 +8,7 @@
   	<!-- 자재 리스트 -->
   		<select id="getList" resultType="MrVO">
   		
-  		select i.item_type,m.mr_lot_number,i.item_name,m.item_code,e.emp_name,m.store_date,m.store_count,m.store_reason_type,m.store_reason_code from emp e join material m on(e.emp_no=m.emp_no) join itemlist i on(m.item_code=i.item_code) 
+  		select i.item_type,m.mr_lot_number,i.item_name,m.item_code,i.item_name,e.emp_name,m.expire_date,m.store_date,m.store_count,m.store_reason_type,m.store_reason_code from emp e join material m on(e.emp_no=m.emp_no) join itemlist i on(m.item_code=i.item_code) 
   		where to_char(store_date,'dd') = to_char(sysdate,'dd')
   		
   		</select>  
@@ -50,8 +50,36 @@
 			)
 		}
 				
+		</select>
+				
+	<!-- 자재 삭제 -->
+		<select id="deleteMr" statementType="CALLABLE">
+			{call mr_store_delete(
+				#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+			)			
+			}
+				
 		</select>	
   		
+  	<!-- 생산 실적 리스트 -->
+  		<select id="mrPerList" resultType="PerformanceVO">
+  			select * from performance
+  			
+  		
+  		</select>	
+  		
+  	<!-- 반제품 입고 -->	
+  		<select id="halfInsert" statementType="CALLABLE">
+  			{call half_mr_insert(
+  				#{performanceId, mode=IN, jdbcType=VARCHAR},
+  				#{itemCode, mode=IN, jdbcType=VARCHAR},
+  				#{passItem, mode=IN, jdbcType=VARCHAR}
+  				
+  			)
+  		
+  		}
+  		
+  		</select>
   		
   	<!-- 거래처 리스트 -->	
   		<select id="customerList" resultType="CustomerVO">
@@ -124,6 +152,34 @@
   		</select>
   	
   	
+  	<!-- 조정 입고 -->
+  		<select id="admInsert" statementType="CALLABLE">
+  			{call ad_In(
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
+  				#{adjustmentCode, mode=IN, jdbcType=VARCHAR}
+  				
+  			
+  			)
+  			
+  			}
+  			
+  		
+  		</select>
+  		
+  	<!-- 조정 출고 -->	
+  		<select id="adjRelease" statementType="CALLABLE">
+  			{call ad_rel(
+  					#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
+  					#{adjustmentCode, mode=IN, jdbcType=VARCHAR}
+  			
+  			
+  			)
+  			
+  			}
+  			
+  		
+  		</select>
+  		
   <!-- 발주 리스트 -->		
   		<select id="OrmGetList" resultType="MrOrderVO">
   		
@@ -169,7 +225,11 @@
   		}
   		</select>
   		
-  
-  		
-  		
+  	<!-- 자재 불량 리스트 -->
+  		<select id="ErrorGetList" resultType="MrErrorVO">
+  			
+  			select * from material_error
+	  		
+  		</select>
+  			
   </mapper>

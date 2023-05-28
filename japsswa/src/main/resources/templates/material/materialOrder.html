@@ -38,7 +38,7 @@
 	    <button type="button" id="checkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target=".bd-example-modal-lg"
 				data-bs-target="#searchModal"
-				style="height: 60px; width: 120px; padding: 10px; margin-top:3px; margin-bottom: 10px; background-color:green; margin-left:120px;"> 거래처 및 자재 <br> 찾기</button>
+				style="height: 60px; width: 120px; padding: 3px; margin-top:3px; margin-bottom: 10px; background-color:green; margin-left:120px;"> 거래처 및 자재 <br> 찾기</button>
 	   
 	</div>
 
@@ -85,7 +85,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: bold; margin-left:70px;">거래처 및 자재 찾기</h4>
+							style="font-weight: bold; margin-left: 50px;">거래처 및 자재 찾기</h4>
 
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
@@ -104,20 +104,21 @@
 					<div id="grid"></div>
 					<div>
 						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
-							style="width: 50px; height: 30px; margin-left:130px; padding: 8px;">선택</button>
+							style="width: 50px; height: 30px; margin-left:10px; padding: 3px;">선택</button>
 					</div>
 				</div>
 
 			</div>
 		</div>
-	<div style="width:200px; margin-left:1540px;">
-		<button type="button" id="insertBtn" class="btn btn-dark"style="height: 30px; width: 50px; padding: 8px;">등록</button>
-		<button type="button" id="deleteBtn" class="btn btn-dark" style="height: 30px; width: 50px; padding: 8px;">삭제</button>
+	<div style="width:200px; margin-left:1100px;">
+		<button type="button" id="insertBtn" class="btn btn-dark"style="height: 30px; width: 50px; padding: 3px;">등록</button>
+		<button type="button" id="deleteBtn" class="btn btn-dark" style="height: 30px; width: 50px; padding: 3px;">삭제</button>
 		
 		</div>
 		<div id="grid1" style="margin-top:5px;"></div>
-		<button type="button" id="orderBtn" class="btn btn-success" style="width: 100px; height: 30px; padding: 8px;  margin-top:5px; margin-left:1550px;">발주</button>
-		
+		<div style="margin-left:1100px;">
+		<button type="button" id="orderBtn" class="btn btn-success" style="width: 100px; height: 30px; padding: 3px;  margin-top:5px; ">발주</button>
+		</div>
 		<script>
 		const token = $("meta[name='_csrf']").attr("content")
   		const header = $("meta[name='_csrf_header']").attr("content");

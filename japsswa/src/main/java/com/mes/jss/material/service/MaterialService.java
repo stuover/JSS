@@ -5,11 +5,15 @@ import java.util.List;
 import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListlVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
+import com.mes.jss.material.domain.MrErrorVO;
+import com.mes.jss.material.domain.MrListVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.domain.ReturnListVO;
+import com.mes.jss.production.domain.PerformanceListVO;
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.sale.domain.CustomerVO;
@@ -57,6 +61,12 @@ public interface MaterialService {
 	// 자재 조정 등록
 	public void admIn(AdjustmentListVO vo);
 	
+	// 자재 조정 입고
+	public void admInsert(AdjustmentListVO vo);
+	
+	// 자재 조정 출고
+	public void admRelease(AdjustmentListVO vo);
+		
 	// 자재 반품 품질 리스트
 	public List<QualityVO> retList();
 	
@@ -66,6 +76,19 @@ public interface MaterialService {
 	// 자재 반품 등록
 	public void returnIn(ReturnListVO vo);
 	
-	// 자재 조정 입고
-	//public void adInsert(AdjustmentListVO vo);
+	// 자재 불량 리스트
+	public List<MrErrorVO> ErrorList();
+	
+	// 생산 실적 리스트
+	public List<PerformanceVO> mrPerformanceList();
+
+	public void halfIn(PerformanceListVO vo);
+
+	public void mrDelete(MrListVO vo);
+	
+	
+
+	
+	
+	
 }

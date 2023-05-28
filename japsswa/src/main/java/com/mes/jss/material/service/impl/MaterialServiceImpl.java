@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListlVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
+import com.mes.jss.material.domain.MrErrorVO;
+import com.mes.jss.material.domain.MrListVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrReturnVO;
@@ -16,6 +18,8 @@ import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.domain.ReturnListVO;
 import com.mes.jss.material.mapper.MaterialMapper;
 import com.mes.jss.material.service.MaterialService;
+import com.mes.jss.production.domain.PerformanceListVO;
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.sale.domain.CustomerVO;
@@ -57,6 +61,8 @@ public class MaterialServiceImpl implements MaterialService {
 
 		return materialMapper.insert(vo);
 	}
+	
+	
 
 	
 	// 입고 확인 검색
@@ -80,6 +86,35 @@ public class MaterialServiceImpl implements MaterialService {
 		
 	}
 	
+	// 자재 입고 취소
+	@Override
+	public void mrDelete(MrListVO vo) {
+		
+		for(int i=0; i<vo.getList().size(); i++) {
+			materialMapper.deleteMr(vo.getList().get(i).getMrLotNumber());
+		}
+		
+	}
+	
+	// 생산 실적 리스트
+		@Override
+		public List<PerformanceVO> mrPerformanceList() {
+			
+			return materialMapper.mrPerList();
+		}
+	
+	// 반제품 입고	
+		@Override
+		public void halfIn(PerformanceListVO vo) {
+			
+			for(int i=0; i<vo.getList().size(); i++) {
+				materialMapper.halfInsert(vo.getList().get(i));
+			}
+			
+		}	
+		
+		
+		
 	// 거래처 리스트
 	
 	@Override
@@ -143,7 +178,36 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.mrAdGetList();
 	}
 	
+	// 자재 조정 입고
+	@Override
+	public void admIn(AdjustmentListVO vo) {
+		for(int i=0; i<vo.getList().size(); i++) {
+			
+			materialMapper.adjInsert(vo.getList().get(i));
+		}
+		
+	}
 	
+	// 자재 조정 출고
+	@Override
+	public void admRelease(AdjustmentListVO vo) {
+		
+		for(int i=0; i<vo.getList().size(); i++) {
+			
+			materialMapper.adjRelease(vo.getList().get(i));
+		}
+		
+	}
+	
+	// 자재 조정 등록
+	@Override
+	public void admInsert(AdjustmentListVO vo) {
+		
+		for(int i=0; i<vo.getList().size(); i++) {
+			
+			materialMapper.admInsert(vo.getList().get(i));
+		}
+	}
 	
 	// 반품 품질 리스트
 	@Override
@@ -170,15 +234,22 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		
 	}
-
+	// 자재 불량 리스트
 	@Override
-	public void admIn(AdjustmentListVO vo) {
-		for(int i=0; i<vo.getList().size(); i++) {
-			
-			materialMapper.adjInsert(vo.getList().get(i));
-		}
+	public List<MrErrorVO> ErrorList() {
 		
+		return materialMapper.ErrorGetList();
 	}
+
+	
+
+	
+	
+	
+
+	
+
+	
 
 	
 }
@@ -186,14 +257,7 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	
 	
-	// 자재 조정 입고
-	
-	//@Override
-	//public void adInsert(AdjustmentListVO vo) {
-		
-		//for(int i=0; vo.getList().get(i.))
-		
-	//}
+
 	
 	
 

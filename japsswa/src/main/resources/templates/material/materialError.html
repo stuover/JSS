@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+
+</style>
+</head>
+<body>
+	
+	
+	
+	<th:block layout:fragment="content">
+	
+	<h3 style="text-align:center; font-weight:bold; margin-bottom:100px;">불량 자재 관리</h3>
+	
+	<div id="grid"></div>
+	
+	
+	<script>
+	
+	
+	$.ajax({
+		url:"/mrErrorAjax",
+		method:"GET",
+		dataType:"json",
+		success : function(result){
+			grid.resetData(result);
+		},
+		error : function(reject){
+			console.log(reject);
+		}
+		
+	})
+	
+	
+	
+	const grid = new tui.Grid({
+		el : document.getElementById('grid'),
+
+		scrollX : false,
+		scrollY : false,
+		rowHeaders: ['checkbox'],
+		columns : [ {
+			header : '불량 코드',
+			name : 'mrErrorCode'
+		},{
+			header : '불량처리일',
+			name : 'mrErrorDate'
+		},
+		{
+			header : '불량수',
+			name : 'errorCount'
+		},
+		
+		{
+			header : '불량사유',
+			name : 'mrErrorReason'
+		},{
+			header : '출고 코드',
+			name : 'mrRealCode'
+		}
+			
+		 ],
+		pageOptions: { 
+        	useClient: true,
+           	perPage: 5 
+        }
+	});
+	
+	
+	
+	
+	</script>
+	
+	
+	
+	
+	</th:block>
+
+
+
+
+
+</body>
+</html>

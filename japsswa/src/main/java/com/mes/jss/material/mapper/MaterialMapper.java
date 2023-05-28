@@ -3,10 +3,12 @@ package com.mes.jss.material.mapper;
 import java.util.List;
 
 import com.mes.jss.material.domain.MrAdjustmentVO;
+import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.sale.domain.CustomerVO;
 
@@ -29,6 +31,15 @@ public interface MaterialMapper {
 	
 	// 입고 처리
 	public void StoreIn(String testCode);
+	
+	// 입고 취소
+	public void deleteMr(String mrLotNumber);
+	
+	// 생산 실적 리스트
+	public List<PerformanceVO> mrPerList();
+		
+	// 반제품 입고
+	public void halfInsert(PerformanceVO vo);
 	
 	// 거래처 리스트
 	public List<CustomerVO> customerList();
@@ -57,6 +68,12 @@ public interface MaterialMapper {
 	// 자재 조정 등록
 	public void adjInsert(MrAdjustmentVO vo);
 	
+	// 자재 조정 입고
+	public void admInsert(MrAdjustmentVO vo);
+	
+	// 자재 조정 출고
+	public void adjRelease(MrAdjustmentVO vo);
+		
 	// 자재 반품 품질 리스트
 	public List<QualityVO> retGetList();
 	
@@ -65,5 +82,17 @@ public interface MaterialMapper {
 	
 	// 자재 반품 등록
 	public List<MrReturnVO> returnInsert(MrReturnVO vo);
+	
+	
+	// 자재 불량 리스트
+	public List<MrErrorVO> ErrorGetList();
+
+	
+	
+	
+	
+	
+
+	
 
 }

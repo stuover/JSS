@@ -2,14 +2,22 @@ package com.mes.jss.material.domain;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
 public class MrErrorVO {	// 불량 자재
-	private String mrErrorCode;
-	private String mrLotNumber;
-	private String performanceId;
-	private Date mrErrorDate;
-	private String mrErrorReason;
-	private int empNo;
+	String mrErrorCode;
+	String mrLotNumber;
+	String performanceId;
+	@DateTimeFormat(pattern="YYYY-MM-dd")
+	Date mrErrorDate;
+	String mrErrorReason;
+	long empNo;
+	String mrRealCode;
+	long errorCount;
+	
+	
+	
 }

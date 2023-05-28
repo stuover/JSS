@@ -15,12 +15,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListlVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
+import com.mes.jss.material.domain.MrErrorVO;
+import com.mes.jss.material.domain.MrListVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
 import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.domain.ReturnListVO;
 import com.mes.jss.material.service.MaterialService;
+import com.mes.jss.production.domain.PerformanceListVO;
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.sale.domain.CustomerVO;
@@ -109,7 +113,43 @@ public class MaterialController {
 		return null;
 		
 	}
-
+	
+// 자재 입고 취소
+	
+	@ResponseBody
+	@RequestMapping("/mrStoreCancle")
+	public MrVO mrCancle(@RequestBody MrListVO vo) {
+		
+		materialService.mrDelete(vo);
+		
+		return null;
+		
+	}
+	
+// 생산 실적 리스트 
+	
+	@ResponseBody
+	@GetMapping("/mrPerformance")
+	public List<PerformanceVO> mrPerformance(){
+		
+		List<PerformanceVO> list = materialService.mrPerformanceList();
+		
+		return list;
+		
+	}
+	
+// 반제품 입고
+	
+	@ResponseBody
+	@RequestMapping("/halfMrInsert")
+	public MrVO halfMrInsert(@RequestBody PerformanceListVO vo) {
+		
+		materialService.halfIn(vo);
+		
+		return null;
+		
+	}
+	
 // 자재 발주 화면
 	
 	@GetMapping("/mrOrder")
@@ -235,6 +275,31 @@ public class MaterialController {
 		
 	}
 	
+	//자재 조정 입고
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmIn")
+	public MrAdjustmentVO mrAdmIn(@RequestBody AdjustmentListVO vo) {
+		
+		System.out.println(vo);
+		
+		materialService.admInsert(vo);
+		
+		return null;
+	}
+	
+	//자재 조정 출고
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmRel")
+	public MrAdjustmentVO mrAdmRel(@RequestBody AdjustmentListVO vo) {
+		
+		materialService.admRelease(vo);
+		
+		return null;
+	}
+	
+	
 // 자재 반품 화면
 	
 	@GetMapping("/mrReturn")
@@ -275,22 +340,29 @@ public class MaterialController {
 		
 	}
 
+ //  자재 불량 화면
+	
+	@GetMapping("/mrError")
+	public String mrError() {
+		
+		return "/material/materialError";
+	}
+	
+	
+  // 자재 불량 리스트
+	
+	@ResponseBody
+	@GetMapping("/mrErrorAjax")
+	public List<MrErrorVO> mrErrorList(){
+		
+		List<MrErrorVO> list = materialService.ErrorList();
+		
+		return list;
+	}
 	
 	
 	
-// 자재 조정 입고
-	/*
-	 * @ResponseBody
-	 * 
-	 * @RequestMapping("/mrAdjustInsert") public List<AdjustmentListVO>
-	 * MrAdmInsert(@RequestBody AdjustmentListVO vo){
-	 * 
-	 * 
-	 * return null;
-	 * 
-	 * 
-	 * }
-	 */
+	
 	
 }
 
