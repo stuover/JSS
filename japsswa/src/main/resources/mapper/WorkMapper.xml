@@ -6,20 +6,42 @@
   <mapper namespace="com.mes.jss.production.mapper.WorkMapper">
   
   	 <select id="processInfo" resultType="BomVO">
-		SELECT DISTINCT b.pro_code, p.pro_name,  pro_order
-		FROM bom b JOIN process p ON(b.pro_code = p.pro_code)
-		WHERE item_code = #{iCode}
-		ORDER BY 3
+		SELECT DISTINCT
+			LEVEL,
+			a.pro_code,
+			c.pro_name,
+			a.pro_order
+		FROM bom a left outer JOIN itemlist b 
+									ON (a.ing_code = b.item_code)
+				   left outer JOIN process c 
+									ON (a.pro_code = c.pro_code)
+        WHERE NOT level = 1
+		START WITH a.ing_code = #{iCode}
+		CONNECT BY  PRIOR a.bom_level = a.level_type
+		ORDER  BY level, pro_order
   	 </select>
   	 
 	<select id="bomInfo" resultType="BomVO">
-		SELECT item_con, pro_name, item_name, mr_lot_number
-		FROM bom b JOIN itemlist i ON(b.ing_code = i.item_code)
-		           JOIN process p ON(b.pro_code = p.pro_code)
-		           JOIN material m ON(b.ing_code = m.item_code)
-		WHERE b.item_code = #{itemCode} 
-		     and b.pro_code = #{proCode}
-		ORDER BY pro_order 
+		SELECT DISTINCT
+			LEVEL,
+            a.pro_code,
+            a.pro_order,
+            a.ing_code,
+			b.item_name,
+            a.item_con,
+            m.mr_lot_number,
+            m.store_count
+		FROM bom a LEFT OUTER JOIN itemlist b 
+                                ON (a.ing_code = b.item_code)
+                            LEFT OUTER JOIN process c 
+                                ON (a.pro_code = c.pro_code)
+                            LEFT OUTER JOIN material m 
+                                ON(a.ing_code = m.item_code)
+        WHERE NOT level = 1 
+            AND a.pro_code = #{proCode}
+		START WITH a.ing_code = #{itemCode}
+		CONNECT BY  PRIOR a.bom_level = a.level_type
+		ORDER  BY level
 	</select>
 
   	

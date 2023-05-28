@@ -59,63 +59,64 @@
 	</nav>
 	
 	<div class="container-fluid page-body-wrapper">
- 		<div class="col-12 grid-margin stretch-card">
-        	<div class="card">
-            	<div class="card-body">
-                <!-- Body Start -->
-                
-                  <h4 class="page-title">생산 실적 관리</h4>
-                  
-                  <input id="afterSearch" type="hidden" name="selectResult" value="insert">
-                  <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
+	 	<div class="col-12 grid-margin stretch-card">
+	        <div class="card">
+	            <div class="card-body">
+				
+	            <!-- Body Start -->
+	                
+	                <h4 class="page-title">생산 실적 관리</h4>
+	                  
+	                <input id="afterSearch" type="hidden" name="selectResult" value="insert">
+	                <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
+	
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+						<button type="button" id="searchProBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">등록</button>
+					</div>
+					
+	            <!-- Card Content Start --> 
+					<div class="p-2 row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-body">
+								<!-- card-body start -->
+					        
+								<div id=""></div>
+		                  
+						     
+								<div class="m-2 col-9">	
+									<h5 class="m-2 fw-bold fs-4 card-title">공정</h5>
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+										<button type="button" id="searchProBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+									</div>
+										
+									<div id="processGrid"></div>
+								</div>
+								
+								
+								<div class="m-3 row"></div>
+								
+								<div class="m-2 col-9">	
+									<h5 class="m-2 fw-bold fs-4 card-title">작업지시</h5>
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+										<button type="button" id="searchWorkBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+									</div>
+										
+									<div id="workGrid"></div>
+								</div>
+									
+								<div class="m-4 row"></div>							
+								<div id="workDetailGrid"></div>
 
-
-
-
-                  
-                <!-- Card Content Start --> 
-				<div class="p-2 row">
-				  <div class="col-sm-12">
-				    <div class="card">
-				      <div class="card-body">
-				      <!-- card-body start -->
-				        
-	                  <div id="">
-	                  	
-	                  </div>
-	                  
-					  	<h5 class="m-2 fw-bold fs-4 card-title">공정</h5>
-					      	
-					  	<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-					    	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
-					   	</div>
-							
-						<div id="processGrid"></div>
-	                	
-						
-						<div class="m-4 row"></div>
-						
-						<h5 class="m-2 fw-bold fs-4 card-title">작업지시</h5>
-						<div id=""></div>
-	                  
-	                  
-	                  <div id=""></div>
-	                  
-					  <!-- 버튼 : 제품 추가 및 삭제 -->
-					  <div class="m-1 d-grid gap-2 d-md-flex justify-content-md-start">
-				        <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#itemSearchModal">추가</button>				
-				        <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
-					  </div>
-	                  
-	                  <div id=""></div>
-				        
-					  <!-- Card-body end -->
-				      </div>
-				    </div>
-				  </div>
-				</div>
+								<!-- Card-body end -->
+								</div>
+							</div>
+						</div>
+					</div>
 				<!-- Card Content End -->      
-                 
+	                 
 				<!-- Body End -->
 				</div>
 			</div>
@@ -124,35 +125,127 @@
 	
 	
 	<script>
-	const token = $("meta[name='_csrf']").attr("content")
-	const header = $("meta[name='_csrf_header']").attr("content");
-	
-	// 초기화면 데이터 및 설정.
-	window.onload = function(){
+		const token = $("meta[name='_csrf']").attr("content")
+		const header = $("meta[name='_csrf_header']").attr("content");
+		
+		// 초기화면 데이터 및 설정.
+		window.onload = function(){
+			
+			
+			// 모달창 열릴 때 레이아웃 깨지지 않게 refreshLayout()
+			
+		}
+		
+		// 작업자 -> 해당 공정 조회 및 선택
+		let processGridData = [{}];
+		const processGrid = new tui.Grid({
+			el: document.getElementById('processGrid'),
+			data: processGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '공정코드',
+				  name: 'proCode'
+				},
+				{
+				  header: '공정명',
+				  name: 'proName'
+				}
+			]
+		})
+		
+		// 작업자 -> 해당 작업지시 조회 및 선택
+		let workGridData = [{}];
+		const workGrid = new tui.Grid({
+			el: document.getElementById('workGrid'),
+			data: workGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '작업지시명',
+				  name: 'workName'
+				},
+				{
+				  header: '작업지시 날짜',
+				  name: 'workDate'
+				}
+			]
+		})
 		
 		
-		// 모달창 열릴 때 레이아웃 깨지지 않게 refreshLayout()
-		
-	}
-	
-	// 
-	let processGridData = [{}];
-	const processGrid = new tui.Grid({
-		el: document.getElementById('processGrid'),
-		data: processGridData,
+		// 작업지시 조회결과 : 작업지시 상세내역
+		let workDetailGridData = [];
+		const workDetailGrid = new tui.Grid({
+		el: document.getElementById('workDetailGrid'),
+		data: workDetailGridData,
+		rowHeaders: ['checkbox'],
 		scrollX: false,
 		scrollY: false,
 		columns: [
 			{
-			  header: '공정코드',
-			  name: '공정코드'
-			},
-			{
-			  header: '공정명',
-			  name: 'proName'
-			}
-		]
-	})
+				header: '세부지시 코드',
+				name: 'wdetailId',
+				hidden: true
+			 },
+			 {
+				header: '제품코드',
+				name: 'itemCode',
+				hidden: true
+			  },
+			  {
+				header: '제품명',
+				name: 'itemName',
+				editot: 'text'
+			  },
+			  {
+				header: '지시 시작날짜',
+				name: 'workStart',
+				formatter: function (e) {
+					let result = e.value;
+					
+					if(result == null) {
+						result = e.value;
+						return;
+					} else {
+						result = e.value.substr(0,10);
+						return;
+					}
+				 },
+				editor: 'datePicker'
+			  },
+			  {
+				header: '지시 완료날짜',
+				name: 'workEnd',
+				formatter: function (e) {
+					let result = e.value;
+					if(result == null) {
+						result = e.value;
+						return;
+					} else {
+						result = e.value.substr(0,10);
+						return;
+					}
+			  },
+				editor: 'datePicker'
+			  },
+			  {
+				header: '지시수량',
+				name: 'workAmount',
+				editor: 'text'
+			  }
+			 ]
+		   });
+		
+		
+	
 	
 	</script>
 	

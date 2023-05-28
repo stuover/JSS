@@ -11,7 +11,7 @@ public class ProductProfitController {
 	
 	
 	
-	@RequestMapping("/protfitManage")
+	@RequestMapping("/profitManage")
 	public String profitMangement() {
 		
 		return "production/profitManage";

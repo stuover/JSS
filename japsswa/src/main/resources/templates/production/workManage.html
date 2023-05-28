@@ -8,6 +8,12 @@
 <head>
 <meta name="_csrf" th:content="${_csrf.token}"/>
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<style>
+	.tui-grid-cell-content {
+    	text-align: center;
+	}
+</style>
+
 </head>
 
 <th:block layout:fragment="content">
@@ -494,7 +500,7 @@
 		      },
 		      {
 			    header: 'hold 정보',
-			    name: 'holdInfo',
+			    name: 'insertHold',
 			    hidden: true
 			   }
 		     ]
@@ -614,7 +620,8 @@
 		        {
 		          header: '공정순서',
 		          name: 'proOrder',
-		          filter: 'select'
+		          filter: 'select',
+		          width: 100
 		        },
 		        {
 		          header: '공정명',
@@ -641,20 +648,26 @@
 	        }); 
 			
 		    // 더블클릭한 제품의 공정 순서 출력.
-		    var iCode = '';
-		    let keyNumber = '';
+		    var iCode = '';		// 더블클릭한 제품의 제품코드
+		    var itemKeyNum = '';		// 더블클긱한 제품의 rowKey
+		    var holdData = detailGrid.getValue(itemKeyNum , 'insertHold');		// 더블클릭한 제품의 insertHold 셀에 담긴 값
 		    detailGrid.on('dblclick', function(e) {
-
-		    	if(e.rowKey != keyNumber){
-		    		detailGrid.removeRowClassName(keyNumber, 'cell-color');
+		    	
+		    	
+				
+		    	if(e.rowKey != itemKeyNum){
+		    		detailGrid.removeRowClassName(itemKeyNum, 'cell-color');
 		    	}
 		    	detailGrid.addRowClassName(e.rowKey, 'cell-color');
-		    	keyNumber = e.rowKey;
+		    	itemKeyNum = e.rowKey;
 		    	
 		    	if(e.columnName == 'itemName') {
 		    	iCode = detailGrid.getRow(e.rowKey).itemCode;
 		    	console.log(iCode);
-		    	
+		    	console.log('itemKeyNum : '+ itemKeyNum);
+				console.log('holdData : ' + holdData);
+				
+
 		    	
 		    	$.ajax({
 		    		url : "/processInfoAjax",
@@ -662,14 +675,16 @@
 		    		method : "GET",
 		    		dataTyep : "JSON",
 		    		success : function(result) {
-		    			console.log(result);
+		    			//console.log(result);
 		    			processGrid.resetData(result);
 		    		},
 		    		error : function(reject) {
 		    			console.log(reject);
 		    		}
 		    	});
-		    		
+		    	
+
+		    	
 				}
 		    	
 		    	
@@ -682,7 +697,7 @@
 		    const holdGrid = new tui.Grid({
 		      el: document.getElementById('holdGrid'),
 		      data: holdGridData,
-		      rowHeaders: ['checkbox'],
+		      rowHeaders: [{ type: 'checkbox', align: 'left', valign: 'middle' }],
 		      scrollX: false,
 		      scrollY: true,
 		      columns: [
@@ -692,20 +707,33 @@
 				  hidden: true
 		        },
 		        {
+			      header: '공정코드',
+			      name: 'proCode',
+				  hidden: true
+			    },
+		        {
+				  header: '공정순서',
+				  name: 'proOrder',
+				  hidden: true
+				},		    
+		        {
 		          header: '자재명',
 		          name: 'itemName'
 		        },
 		        {
 		          header: '소요량',
-		          name: 'itemCon'
+		          name: 'itemCon',
+		          width: 120
 		        },   
 		        {
 		          header: '자재LOT',
-		          name: 'mrLotNumber'
+		          name: 'mrLotNumber',
+		          width: 300
 		        },
 		        {
 		          header: '현 재고',
-		          name: 'itemCon'
+		          name: 'storeCount',
+		          width: 120
 		        },
 		        {
 		          header: 'Hold 자재 코드',
@@ -720,8 +748,26 @@
 				{
 		          header: 'Hold 상태',
 		          name: 'holdStatus',
-				  editor: 'text'
-		        }
+		          editor: {
+		              type: 'select',
+		              options: {
+		                listItems: [
+		                  {
+		                    text: '홀드',
+		                    value: '홀드'
+		                  },
+		                  {
+		                    text: '홀드 완료',
+		                    value: '홀드 완료'
+		                  },
+		                  {
+		                    text: '홀드 취소 요청',
+		                    value: '홀드 취소 요청'
+		                  }
+		                ]
+		              }
+		            }
+		          }
 		      ]
 		    });
   			
@@ -731,14 +777,14 @@
 		    
 		    // 더블클릭한 제품의 공정 순서 출력.
 		    let pCode = '';
-		    let keyNumber2 = '';
+		    let keyNumber = '';
 		    processGrid.on('dblclick', function(e) {
 
-		    	if(e.rowKey != keyNumber2){
-		    		processGrid.removeRowClassName(keyNumber2, 'cell-color');
+		    	if(e.rowKey != keyNumber){
+		    		processGrid.removeRowClassName(keyNumber, 'cell-color');
 		    	}
 		    	processGrid.addRowClassName(e.rowKey, 'cell-color');
-		    	keyNumber2 = e.rowKey;
+		    	keyNumber = e.rowKey;
 		    	
 		    	if(e.columnName == 'proName') {
 		    	pCode = processGrid.getRow(e.rowKey).proCode;
