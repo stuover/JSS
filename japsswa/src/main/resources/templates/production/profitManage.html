@@ -65,13 +65,13 @@
 				
 	            <!-- Body Start -->
 	                
-	                <h4 class="page-title">생산 실적 관리</h4>
 	                  
 	                <input id="afterSearch" type="hidden" name="selectResult" value="insert">
 	                <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
 	
-					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-						<button type="button" id="searchProBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">등록</button>
+					<div class="h-auto d-md-flex justify-content-between">
+						<div><h3 class="page-title">생산 실적 관리</h3></div>
+						<div><button type="button" id="insertBtn" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#insertModal">등록</button></div>
 					</div>
 					
 	            <!-- Card Content Start --> 
@@ -85,12 +85,13 @@
 		                  
 						     
 								<div class="m-2 col-9">	
-									<h5 class="m-2 fw-bold fs-4 card-title">공정</h5>
 									
-									<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-										<button type="button" id="searchProBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-between">
+										<div><h5 class="m-2 fw-bold fs-4 card-title">공정</h5></div>
+										<div><button type="button" id="searchProBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button></div>
 									</div>
-										
+
 									<div id="processGrid"></div>
 								</div>
 								
@@ -98,10 +99,11 @@
 								<div class="m-3 row"></div>
 								
 								<div class="m-2 col-9">	
-									<h5 class="m-2 fw-bold fs-4 card-title">작업지시</h5>
 									
-									<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-										<button type="button" id="searchWorkBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-between">
+										<div><h5 class="m-2 fw-bold fs-4 card-title">작업지시</h5></div>
+										<div><button type="button" id="searchWorkBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button></div>
 									</div>
 										
 									<div id="workGrid"></div>
@@ -176,7 +178,11 @@
 				{
 				  header: '작업지시 날짜',
 				  name: 'workDate'
-				}
+				},
+				{
+				  header: '담당자',
+				  name: 'empName2'
+				}				
 			]
 		})
 		
