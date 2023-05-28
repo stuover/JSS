@@ -26,11 +26,14 @@
 	<h3 style="font-weight:bold; text-align:center; margin-bottom:100px;">자재 조정 관리</h3>
 	
 	<div>
-	<button type="button" class="btn btn-primary" id="insertBtn" style="float:right; height: 30px; width: 50px; padding: 8px; margin-bottom: 10px; margin-right: 20px; margin-top:10px;">등록</button>
+	<button type="button" class="btn btn-primary" id="insertBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:10px;">등록</button>
 	</div>
 	<div id="grid1"></div>
-	
-	<div id="grid" style="margin-top:100px;"></div>
+	<div>
+	<button type="button" class="btn btn-warning" id="relBtn" style="float:right; height: 30px; width: 50px; padding:3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">출고</button>
+	<button type="button" class="btn btn-success" id="storeBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">입고</button>
+	</div>
+	<div id="grid" style=""></div>
 	
 	<script>
 	
@@ -96,25 +99,7 @@
 		
 		
 		
-		$('#storeBtn').on('click',function(){
-	    	console.log(grid.getCheckedRows()[0].adjustmentCode);
 	
-	    	$.ajax({
-	    		url : "/mrStore",
-	    		contentType: "application/json",
-				method : "POST",
-				data : JSON.stringify({list : grid.getCheckedRows()}),
-				dataType : "json",
-				beforeSend: function(xhr){
-					xhr.setRequestHeader(header, token);
-				},
-				success : function(result) {
-				}
-	    	})
-			grid.removeCheckedRows(false);
-
-	    	
-	    })
 		
 	
 	   $.ajax({
@@ -174,7 +159,7 @@
 					url:"/mrAdmInsert",
 					contentType:"application/json",
 					method:"POST",
-					data:JSON.stringify({list : grid1.getCheckedRows()}),
+					data:JSON.stringify({list : grid.getCheckedRows()}),
 					beforeSend: function(xhr){
 						xhr.setRequestHeader(header, token);
 					},
@@ -188,9 +173,54 @@
 				
 			})
 			
+		$('#storeBtn').on('click',function(){
 			
 			
 			
+			$.ajax({
+				url:"/mrAdmIn",
+				method:"POST",
+				contentType:"application/json",
+				data:JSON.stringify({list : grid.getCheckedRows()}),
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(result){
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+			})
+			
+			
+		})
+			
+		$('#relBtn').on('click',function(){
+			
+			
+			$.ajax({
+				url:"/mrAdmRel",
+				method:"POST",
+				contentType:"application/json",
+				data:JSON.stringify({list : grid.getCheckedRows()}),
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(result){
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+			})
+			
+			
+		})
+		
+			
+		
+		
 		});
 
 	

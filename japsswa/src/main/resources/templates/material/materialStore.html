@@ -23,18 +23,18 @@
 <body>
 
 	<th:block layout:fragment="content">
-		<h3 style="font-weight: bold; margin-top:50px; text-align:center; margin-right:40px;">&emsp;자재 입고</h3>
+		<h3 style="font-weight: bold; margin-top:30px; text-align:center; margin-right:40px;">&emsp;자재 입고</h3>
 
 		<form action="/test" method="post">
 		<div>
 			<button type="button" id="storeBtn" class="btn btn-success"
 				data-bs-toggle="modal" data-bs-target="#searchModal"
-				style="float: right; height: 30px; width: 50px; padding: 8px; margin-bottom: 10px; margin-right: 20px; margin-top:90px;">입고</button>
+				style="float: right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:25px;">입고</button>
 				<input type="hidden" value="" id="sotre" name="testCode">
 			<button type="button" id="checkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target=".bd-example-modal-lg"
 				data-bs-target="#searchModal"
-				style="float: right; height: 30px; width: 80px; padding: 8px; margin-bottom: 10px; margin-right: 8px; margin-top:90px;">입고확인</button>
+				style="float: right; height: 30px; width: 150px; padding: 3px; margin-bottom: 10px; margin-right: 8px; margin-top:25px;">입고확인 및 삭제</button>
 
 		</div>
 		</form>
@@ -44,14 +44,14 @@
 
 
 		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
 
-			<div class="modal-dialog modal-lg">
+			<div class="modal-dialog modal-lg "  >
 
-				<div class="modal-content">
-					<div class="modal-header">
+				<div class="modal-content" >
+					<div class="modal-header" >
 						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: bold; margin-left: 750px;">입고 처리 확인</h4>
+							style="font-weight: bold; margin-left: 280px;">입고 처리 확인 및 삭제</h4>
 
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
@@ -64,13 +64,14 @@
 							입고사유코드 :<input type=text id="searchcode"
 								style="margin-left: 15px; padding: 1px;">
 							<button type="button" class="btn btn-dark" id="searchBtn"
-								style="padding: 8px; margin-left: 15px;">검색</button>
+								style="padding: 3px; margin-left: 15px;">검색</button>
+							<button type="button" class="btn btn-dark" id="deleteBtn"
+								style="padding: 3px; margin-left: 15px;">삭제</button>	
 						</h6>
 					</div>
-					<div id="grid1"></div>
+					<div id="modalgrid"></div>
 					<div>
-						<button type="button" id="closeBtn" class="btn btn-dark" data-dismiss="modal"
-							style="width: 50px; height: 30px; margin-left: 830px; padding: 8px;">닫기</button>
+						
 					</div>
 				</div>
 
@@ -78,12 +79,18 @@
 		</div>
 
 
-		<div id="grid" ></div>
-
+		<div id="grid"></div>
+		
+		<h3 style="margin-top:30px; text-align:center; font-weight:bold;">반제품 입고</h3>
+		<div>
+		<button type="button" id="halfBtn" class="btn btn-warning" style="float: right; height: 30px; width: 50px; padding: 3px; margin-top:30px; margin-right: 20px; margin-bottom: 10px; text-color:white;">입고</button>
+		</div>
+		<div id="grid2" style=""></div>
+		
 
 		<script>
 		
-		const token = $("meta[name='_csrf']").attr("content")
+		const token = $("meta[name='_csrf']").attr("content");
   		const header = $("meta[name='_csrf_header']").attr("content");
 		
 		
@@ -109,11 +116,6 @@
 
 		    	
 		    })
-			
-			
-			
-			
-			
 			
 			
 			
@@ -212,9 +214,10 @@
 		});
 
 		var modalgrid = new tui.Grid({
-			el : document.getElementById('grid1'),
+			el : document.getElementById('modalgrid'),
 			scollX : false,
 			scollY : false,	
+			rowHeaders: ['checkbox'],
 			columns : [ {
 				header : '자재lot번호',
 				name : 'mrLotNumber',
@@ -223,8 +226,12 @@
 				header : '품목코드',
 				name : 'itemCode'
 			},{
-				header : '사원 번호',
-				name : 'empNo'
+				header : '품목명',
+				name : 'itemName'
+			},
+			{
+				header : '담당자',
+				name : 'empName'
 			},  
 			{
 				header : '입고 날짜',
@@ -309,8 +316,128 @@
 	    	})
 	    })
 	   
-	   
+	   	
+	    $.ajax({
+	    	url:"/mrPerformance",
+	    	method:"GET",
+	    	success: function(result){
+	    		grid2.resetData(result);
+	    	},
+	    	error: function(reject){
+	    		console.log(reject);
+	    	}
+	    	
+	    })
 	    
+	    
+	    var grid2 = new tui.Grid({
+				el : document.getElementById('grid2'),
+				scollX : false,
+				scollY : false,
+
+				rowHeaders: ['checkbox'],
+	              
+				columns : [ {
+					header : '생산실적코드',
+					name : 'performanceId'
+				},{
+					header : '지시상세코드',
+					name : 'wDetailId'
+				},{
+					header :'품목코드',
+					name : 'itemCode'
+				},{
+					header : '지시공정코드',
+					name : 'wBomId'
+				},{
+					header : '설비코드',
+					name : 'facCode'
+				},
+			
+				{
+					header : '생산량',
+					name : 'outPut'
+				},{
+					header : '합격량',
+					name : 'passItem'
+				},  
+				 
+				{
+					header : '불량량',
+					name : 'failItem'
+				},
+				{
+					header : '작업시작시간',
+					name : 'startTime'
+				},
+				{
+					header : '작업완료시간',
+					name : 'endTime'
+				},
+				{
+					header : '작업자',
+					name : 'worker'
+				}
+				
+				
+				],
+	            pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				  
+			})
+	    
+	    $('#halfBtn').on('click',function(){
+	    	
+	    	console.log(grid2.getCheckedRows());
+	    
+	    $.ajax({
+	    	
+	    	url:"/halfMrInsert",
+	    	method:"POST",
+	    	contentType: "application/json",
+	    	data : JSON.stringify({list : grid2.getCheckedRows()}),
+	    	beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success : function(result){
+				
+			},
+			error : function(reject){
+				console.log(reject);
+			}
+	    	
+	    	
+	    })
+	    
+	    });
+		
+		$('#deleteBtn').on('click',function(){
+			
+		$.ajax({
+			url:"/mrStoreCancle",
+			method:"POST",
+			contentType:"application/json",
+			data : JSON.stringify({list: modalgrid.getCheckedRows()}),
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success : function(result){
+				
+			},
+			error: function(reject){
+				console.log(reject);
+			}
+			
+			
+		})
+		
+		});
+		
+		
+		
+		
 		});
 	</script>
 

@@ -21,4 +21,6 @@ public class CustomerVO {
 	String contractId;
 	String contProd;
 	Date contDate;
+	long mrPrice;
+	
 }
