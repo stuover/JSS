@@ -110,6 +110,12 @@ public class FacilityServiceimpl implements FacilityService{
 		return facilityMapper.getAllList();
 	}
 
+	@Override
+	public List<FacilityVO> searchFacility(String facCode) {
+		
+		return facilityMapper.searchFac(facCode);
+	}
+
 
 	
 	
