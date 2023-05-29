@@ -3,7 +3,7 @@ package com.mes.jss.facility.domain;
 import lombok.Data;
 
 @Data
-public class saveFAcVO {
+public class saveFacVO {
 
 	private FacilityVO upFac;
 	private FacilityVO downFac;

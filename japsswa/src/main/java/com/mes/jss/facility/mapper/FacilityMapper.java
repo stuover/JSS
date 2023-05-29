@@ -27,7 +27,7 @@ public interface FacilityMapper {
 	// 설비 페이지
 	public List<FacilityVO> getAllList();		// 전체 설비 리스트
 	public List<FacilityVO> searchFac(String facCode);		// 설비 단건 조회
-	public void insertFacility(FacilityVO upFac, FacilityVO downFac);		// 설비 등록 하는중
+	public int insertFacility(FacilityVO upFac, FacilityVO downFac);
 	public void modifyFac(FacilityVO vo);	// 설비 정보 수정
 	
 }
