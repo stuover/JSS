@@ -100,11 +100,13 @@ public class FacilityServiceimpl implements FacilityService{
 		return facilityMapper.searchFac(facCode);
 	}
 
-	@Override
-	public void saveFacility(FacilityVO upFac, FacilityVO downFac) {	// 설비 등록 하는중
-
-		facilityMapper.insertFacility(upFac, downFac);
-	}
+	
+	  @Override public boolean saveFacility(FacilityVO upFac, FacilityVO downFac) {
+	  
+	  return facilityMapper.insertFacility(upFac, downFac) == 1;
+	  
+	  }
+	 
 
 	@Override
 	public void modifyFacility(FacilityVO vo) {		// 설비 정보 수정
@@ -120,6 +122,10 @@ public class FacilityServiceimpl implements FacilityService{
 	public InspectionVO getInspection(InspectionVO vo) {
 		return null;
 	}
+
+
+	
+
 
 	
 
