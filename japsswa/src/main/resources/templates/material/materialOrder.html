@@ -24,7 +24,7 @@
 <body>
 
 	<th:block layout:fragment="content">
-		<h3 style="font-weight: bold;">&ensp;자재 발주</h3>
+		<h3 style="font-weight: bold; margin-bottom:70px; margin-left:700px;">&ensp;자재 발주</h3>
 	<div style="display:flex;">
 		<div style="float:left;">
 			<label for="cusId" style=" margin-left:20px; font-weight:bold;">거래처 코드</label><br>
@@ -110,14 +110,14 @@
 
 			</div>
 		</div>
-	<div style="width:200px; margin-left:1100px;">
-		<button type="button" id="insertBtn" class="btn btn-dark"style="height: 30px; width: 50px; padding: 3px;">등록</button>
-		<button type="button" id="deleteBtn" class="btn btn-dark" style="height: 30px; width: 50px; padding: 3px;">삭제</button>
+	<div style="width:200px; margin-left:1400px; margin-top:180px;">
+		<button type="button" id="deleteBtn" class="btn btn-dark" style="float:right; margin-left:10px;height: 30px; width: 50px; padding: 3px;">삭제</button>
+		<button type="button" id="insertBtn" class="btn btn-dark"style="float:right;height: 30px; width: 50px; padding: 3px;">등록</button>
 		
 		</div>
 		<div id="grid1" style="margin-top:5px;"></div>
-		<div style="margin-left:1100px;">
-		<button type="button" id="orderBtn" class="btn btn-success" style="width: 100px; height: 30px; padding: 3px;  margin-top:5px; ">발주</button>
+		<div style="margin-left:1400px;">
+		<button type="button" id="orderBtn" class="btn btn-success" style="float:right; margin-left:10px; margin-right:40px;width: 100px; height: 30px; padding: 3px;  margin-top:5px; ">발주</button>
 		</div>
 		<script>
 		const token = $("meta[name='_csrf']").attr("content")

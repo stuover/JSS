@@ -63,7 +63,10 @@
   		
   	<!-- 생산 실적 리스트 -->
   		<select id="mrPerList" resultType="PerformanceVO">
-  			select * from performance
+  			select p.performance_id, p.wdetail_id, p.item_code, p.wbom_id, p.fac_code,p.output,p.pass_item,p.fail_item,p.start_time,p.end_time,p.worker
+ 			from material m right outer join performance p on(m.store_reason_code = p.performance_id)
+ 			where m.store_reason_code is null
+ 
   			
   		
   		</select>	
