@@ -231,7 +231,7 @@
 
                 grid.on('check', function (e) {
                     var checkRows = grid.getCheckedRowKeys();
-
+                    downgrid.uncheckAll(true);
                     checkRows.forEach(function (key, idx) {
                         if (key != e.rowKey) {
                             grid.uncheck(key);
@@ -241,7 +241,7 @@
 
                 downgrid.on('check', function (e) {
                     var downcheckRows = downgrid.getCheckedRowKeys();
-
+					grid.uncheckAll(true);
                     downcheckRows.forEach(function (key, idx) {
                         if (key != e.rowKey) {
                             downgrid.uncheck(key);
@@ -386,6 +386,8 @@
 
                 $('#insertBtn').on('click', function () {
 
+                	// 공통코드로 사유 불러오기 . 수정해야함
+                	
                     stopData = modalgrid.getData()[0];
                     status = modalgrid.getData()[0].facStatus;
                     console.log(stopData);
@@ -395,9 +397,10 @@
 
                         $.ajax({
                             url: "/downListAjax",
-                            method: "get",
+                            method: "GET",
                             data: stopData,
                             success: function (result) {
+                            	console.log(stopData);
                                 checkfacStatus();
                                 facDownList();
                                 alert("비가동 처리되었습니다");

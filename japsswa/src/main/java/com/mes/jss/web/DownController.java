@@ -17,10 +17,14 @@ import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.service.FacilityService;
 import com.mes.jss.facility.service.impl.FacilityServiceimpl;
 
+/*
+ * 박종만
+ * 비가동 관리
+ */
 @Controller
 public class DownController {
 	
-	@Autowired FacilityService service = new FacilityServiceimpl();
+	@Autowired FacilityService service;
 
 	@GetMapping("/downtime")
 	public String  downtime(Model model) {
@@ -28,8 +32,8 @@ public class DownController {
 		return "Facility/Downtime";
 	}	
 	
+	@GetMapping("/facilityAjax")		// 전체 설비 리스트 조회
 	@ResponseBody
-	@GetMapping("/facilityAjax")		// 설비 리스트 조회
 	public List<FacilityVO> facility(){
 		
 		List<FacilityVO> list = service.getList();				
@@ -37,8 +41,8 @@ public class DownController {
 		
 	}
 	
+	@GetMapping("/downtimeAjax")		// 비가동 리스트 조회
 	@ResponseBody
-	@GetMapping("/downtimeAjax")		// 비가동리스트 조회
 	public List<DowntimeVO> downtime(){
 			
 		List<DowntimeVO> downlist = service.getDownList();
@@ -47,9 +51,9 @@ public class DownController {
 		
 	}
 	
-	@ResponseBody
-	@RequestMapping("/downListAjax")
-	public String register(DowntimeVO vo, Model model) {
+	// 리턴받기 매퍼에서 수정 필요
+	@RequestMapping("/downListAjax")		// 설비 비가동 등록 
+	public@ResponseBody  String register(DowntimeVO vo) {
 
 		service.setDownTime(vo);
 
@@ -57,10 +61,9 @@ public class DownController {
 		
 	}
 	
+	@RequestMapping("/facStatusAjax")		// 비가동시 설비 가동상태 변경
 	@ResponseBody
-	@RequestMapping("/facStatusAjax")
-	public String updateFac(
-			@RequestBody FacilityVO vo, Model model) {
+	public String updateFac(@RequestBody FacilityVO vo) {
 
 		System.out.println(vo);
 		service.updateFacList(vo);
@@ -69,28 +72,18 @@ public class DownController {
 				
 	}
 	
+	@RequestMapping("/newFacStatusAjax")		// 가동시,삭제시 설비 가동상태 변경
 	@ResponseBody
-	@RequestMapping("/newFacStatusAjax")
-	public String newUpdateFac(@RequestBody FacilityVO vo, Model model) {
+	public String newUpdateFac(@RequestBody FacilityVO vo) {
 		
 		System.out.println(vo);
 		service.newUpdateFacList(vo);
 		
 		return "success";
 	}
-	
-	@ResponseBody
-	@RequestMapping("/startListAjax")
-	public String startList(@RequestBody FacilityVO vo, Model model) {
 		
-		System.out.println(vo);
-		service.updateFacList(vo);
-		return "startSuccess";
-	}
-	
+	@RequestMapping("/startTimeAjax")		// 가동일시 추가
 	@ResponseBody
-	@RequestMapping("/startTimeAjax")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss a", timezone = "Asia/Seoul")
 	public String updateStart(DowntimeVO vo, Model model) {
 		
 		if(service.updateStartDate(vo)) {
@@ -100,8 +93,8 @@ public class DownController {
 		}
 	}	
 	
+	@RequestMapping("/removeDowntimeAjax")		// 비가동 내역 삭제
 	@ResponseBody
-	@RequestMapping("/removeDowntimeAjax")
 	public FacilityVO removeDownTime(@RequestBody FacilityVO vo) {
 		 
 		System.out.println(vo);
@@ -112,8 +105,8 @@ public class DownController {
 		return vo;			
 	}
 	
+	@RequestMapping("/modifyDownTimeAjax")		// 비가동내역 수정 
 	@ResponseBody
-	@RequestMapping("/modifyDownTimeAjax")
 	public DowntimeVO modifyDownTime(@RequestBody DowntimeVO vo) {
 		
 		service.modifyDownTime(vo);		
@@ -121,6 +114,8 @@ public class DownController {
 		
 		return vo;
 	}
+	
+	
 	
 	// 설비 비가동 내역
 	
@@ -130,8 +125,8 @@ public class DownController {
 		return "Facility/DownDetail";
 	}
 	
+	@GetMapping("/downDetailAjax")		// 비가동 내역 조회
 	@ResponseBody
-	@GetMapping("/downDetailAjax")
 	public List<DowntimeVO> downDetail(Model model){
 		
 		List<DowntimeVO> list = service.getDownDetail();
@@ -139,8 +134,8 @@ public class DownController {
 		return list;
 	}
 	
+	@RequestMapping("/searchList")		// 비가동 내역 단건 검색
 	@ResponseBody
-	@RequestMapping("/searchList")
 	public List<FacilityVO> searchList(@RequestParam String facName){
 		
 		System.err.println(facName);
