@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
+import com.mes.jss.quality.domain.TestHistoryVO;
 
 public interface QualityMapper {
 	
@@ -15,6 +16,15 @@ public interface QualityMapper {
 
 
 	public List<CheckListVO> getCheckList(String itemCode);
+
+
+	public void updateQuality(QualityVO qt);
+
+
+	public void samUpdateQuality(QualityVO qt);
+
+
+	public void insertHistory(TestHistoryVO vo);
 	
 	
 }

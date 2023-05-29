@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
+import com.mes.jss.quality.domain.TestHistoryListVO;
+import com.mes.jss.quality.domain.TestHistoryVO;
 import com.mes.jss.quality.mapper.QualityMapper;
 import com.mes.jss.quality.service.QualityService;
 
@@ -42,6 +43,38 @@ public class QualityServiceImpl implements QualityService{
 	public List<CheckListVO> getCheckList(String itemCode) {
 		// TODO Auto-generated method stub
 		return qualityMapper.getCheckList(itemCode);
+	}
+
+
+
+	@Override
+	public void completeTest(TestHistoryListVO data) {
+		QualityVO qt = data.getVo();
+		int count = 0;
+		
+		for(TestHistoryVO  vo : data.getList()) {
+			vo.setTestCode(qt.getTestCode());
+			
+			if(vo.getTestResult().equals("불합격")){
+				count++;
+			}
+			qualityMapper.insertHistory(vo);
+		}
+		
+		if(qt.getItemType().equals("자재")){
+			qt.setErrQuantity(data.getList().get(0).getMrCount());
+			qualityMapper.updateQuality(qt);
+		}else {
+			if(count >0) {
+				qt.setTestNote("불합격");
+				qualityMapper.samUpdateQuality(qt);
+			}else { 
+				qt.setTestNote("합격");
+				qualityMapper.samUpdateQuality(qt);
+			}
+			
+		}
+	
 	}
 
 	

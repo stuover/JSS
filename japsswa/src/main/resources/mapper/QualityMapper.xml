@@ -14,9 +14,10 @@
   		
   		
   		<select id ="qualityList" resultType="QualityVO">
-  			select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation, test_Quantity, test_Note
+  			select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation, test_Quantity, test_Note, item_type
   			from quality_test a join itemlist b
   			on a.item_code = b.item_code
+  			where situation = '검사대기'
   			order by test_code
   		</select>
   
@@ -24,5 +25,35 @@
   			select checklist_code, test_name, fac_name, test_standard from checklist where item_code = #{itemCode}
   		
   		</select>
+  		
+  		<update id="updateQuality" parameterType="QualityVO">
+  			update Quality_test
+  			set end_date = sysdate,
+  				err_quantity = #{errQuantity},
+  				pass_quantity = #{testQuantity} - #{errQuantity},
+  				defective_rate = #{errQuantity} / #{testQuantity}*100,
+  				situation = '검사완료'
+  			where test_Code = #{testCode}
+  		</update>
+  		
+  		<update id="samUpdateQuality" parameterType="QualityVO">
+  			update Quality_test
+  			set end_date = sysdate,
+  				err_quantity = #{errQuantity},
+  				pass_quantity = (#{testQuantity} - #{errQuantity}),
+  				defective_rate = (#{errQuantity} / #{testQuantity} * 100),
+  				situation = '검사완료',
+  				test_note = #{testNote}
+  			where testCode = #{testCode}
+  		</update>
+  		
+  		
+  		<insert id="insertHistory" parameterType="TestHistoryVO">
+  			insert into test_history values (history_seq.nextval, #{checklistCode}, #{testResult}, #{mrCount}, #{testCode})
+  		</insert>
+  		
+  		
+  		
+  		
   	
   </mapper>

@@ -18,17 +18,13 @@ import com.mes.jss.basic.service.BomService;
 import com.mes.jss.basic.service.ItemService;
 import com.mes.jss.basic.service.ProcessOrderService;
 import com.mes.jss.basic.service.ProcessService;
-import com.mes.jss.basic.service.impl.BomServiceImpl;
-import com.mes.jss.basic.service.impl.ItemServiceImpl;
-import com.mes.jss.basic.service.impl.ProcessOrderServiceImpl;
-import com.mes.jss.basic.service.impl.ProcessServiceImpl;
 
 @Controller
 public class BomController {
-	@Autowired ProcessOrderService proOrdSv = new ProcessOrderServiceImpl();
-	@Autowired ProcessService proService = new ProcessServiceImpl();
-	@Autowired BomService bomService = new BomServiceImpl();
-	@Autowired ItemService itemService = new ItemServiceImpl();
+	@Autowired ProcessOrderService proOrdSv;
+	@Autowired ProcessService proService;
+	@Autowired BomService bomService;
+	@Autowired ItemService itemService;
 	
 	@GetMapping("/bom")
 	public String bom(){

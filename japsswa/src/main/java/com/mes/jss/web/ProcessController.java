@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.basic.domain.ProcessVO;
 import com.mes.jss.basic.service.ProcessService;
-import com.mes.jss.basic.service.impl.ProcessServiceImpl;
 
 @Controller
 public class ProcessController {
-	@Autowired ProcessService proService = new ProcessServiceImpl();
+	@Autowired ProcessService proService;
 	
 	
 	@GetMapping("/process")
