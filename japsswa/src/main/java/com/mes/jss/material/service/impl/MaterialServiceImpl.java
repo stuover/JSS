@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mes.jss.material.domain.AdjustmentListVO;
-import com.mes.jss.material.domain.DetaiListlVO;
+import com.mes.jss.material.domain.DetaiListVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrListVO;
@@ -135,7 +135,7 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	@Override
 	@Transactional
-	public void orders(DetaiListlVO vo) {
+	public void orders(DetaiListVO vo) {
 
 		materialMapper.mrorderInsert(vo.getList().get(0).getCustomerId());
 		
@@ -146,6 +146,19 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 
 	}
+	
+	// 자재 발주 취소
+	
+	@Override
+	public void orderDel(DetaiListVO vo) {
+		
+		for(int i=0; i<vo.getList().size(); i++) {
+			
+			materialMapper.mrOrderDelete(vo.getList().get(i).getMrOrderCode());
+		}
+		
+	}
+	
 	
 	// 자재 발주 리스트
 		@Override
@@ -240,6 +253,10 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.ErrorGetList();
 	}
+
+	
+
+	
 
 	
 

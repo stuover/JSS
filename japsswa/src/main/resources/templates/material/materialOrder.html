@@ -116,9 +116,31 @@
 		
 		</div>
 		<div id="grid1" style="margin-top:5px;"></div>
-		<div style="margin-left:1400px;">
-		<button type="button" id="orderBtn" class="btn btn-success" style="float:right; margin-left:10px; margin-right:40px;width: 100px; height: 30px; padding: 3px;  margin-top:5px; ">발주</button>
+		<div style="margin-left:1000px;">
+		<button type="button" id="orderBtn" class="btn btn-success" style="float:right;float:right; margin-left:20px; margin-right:5px;width: 100px; height: 30px; padding: 3px;  margin-top:5px; ">발주 신청</button>
+		<button type="button" id="listDeleteBtn" class="btn btn-info"  data-toggle="modal" data-target=".bd-example3-modal-lg" style="float:right; margin-left:5px; width: 200px; height: 30px; padding: 3px;  margin-top:5px; color:white;">발주 조회 및 취소</button>
 		</div>
+		
+		
+		<!-- Large modal -->
+
+
+<div class="modal fade bd-example3-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      	<h4 style="margin-bottom:50px; margin-top:50px; font-weight:bold; text-align:center;">발주 조회 및 취소</h4>
+      
+      <div id="grid3" ></div>
+      <button type="button" id="orderDeleteBtn" class="btn btn-warning" style="margin-top:50px;">삭제</button>
+    </div>
+    
+  </div>
+</div>
+		
+		
+		
+		
+		
 		<script>
 		const token = $("meta[name='_csrf']").attr("content")
   		const header = $("meta[name='_csrf_header']").attr("content");
@@ -331,9 +353,116 @@
 	    		grid.refreshLayout();
 	    	})
 	    })
+		
+	    
+	    $('#listDeleteBtn').on('click',function(){
+	    	
+	    
+	    	
+	    $.ajax({
+				url : "/mrOrderListAjax",
 
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid3.resetData(result);
+					grid3.refreshLayout();
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+
+			});
+	    
+	    
+	    });
+
+			var grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ 
+					{
+						header : '발주일자',
+						name : 'mrOrderDate'
+					},
+					{
+					header : '발주코드',
+					name : 'mrOrderCode'
+				}, 
+					{
+					header : '거래처코드',
+					name : 'customerId'
+				}, 
+				{
+					header : '거래처명',
+					name : 'customerName'
+				},
+				
+				{
+					header : '사원 코드',
+					name : 'empNo'
+				}, 
+				{
+					header : '사원명',
+					name : 'empName',
+					width: 60
+				},
+				{
+					header : '품목 수',
+					name : 'productCount',
+					width: 40
+				},				
+				{
+					header : '총 가격',
+					name : 'allCount',
+					width: 80
+				} 
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+	    
+	    
+	    $("#orderDeleteBtn").on('click',function(){
+	    	
+	    	
+	    	$.ajax({
+				url : "/OrderDelete",
+				contentType : "application/json",
+				method : "post",
+				data : JSON.stringify({ list : grid3.getCheckedRows()}),
+				dataType: "json",
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success : function(result){
+					
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+			})
+			grid3.removeCheckedRows(false);
+	    	
+	    	
+	    })
+			
+			
+			
+	    
 		})
 			
+		
+		
 		
 		
 		

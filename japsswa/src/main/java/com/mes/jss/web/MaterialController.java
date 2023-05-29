@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.material.domain.AdjustmentListVO;
-import com.mes.jss.material.domain.DetaiListlVO;
+import com.mes.jss.material.domain.DetaiListVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrListVO;
@@ -30,7 +30,10 @@ import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.sale.domain.CustomerVO;
 
 
-
+/*
+ * 구용억
+ * 자재관리
+ */
 
 
 @Controller
@@ -45,7 +48,7 @@ public class MaterialController {
 //  자재 조회 페이지
 	
 	@GetMapping("/mslist")     
-	public String mrList(Model model, MrVO vo) {
+	public String mrList() {
 			
 		return "/material/material";
 						
@@ -55,7 +58,7 @@ public class MaterialController {
 	
 	@ResponseBody
 	@GetMapping("/mslistAjax")   
-	public List<MrVO> mrList() {
+	public List<MrVO> mrListAjax() {
 						
 		List<MrVO> list = materialService.mrlist();
 		
@@ -163,13 +166,26 @@ public class MaterialController {
 	
 	@ResponseBody
 	@RequestMapping("/Orders")		
-	public MrOrderDetailVO orders(@RequestBody DetaiListlVO vo) {
+	public MrOrderDetailVO orders(@RequestBody DetaiListVO vo) {
 						
 		materialService.orders(vo);
 				
 		return null;
 		
 	}
+	
+ // 자재 발주 취소
+	
+	@ResponseBody
+	@RequestMapping("/OrderDelete")
+	public MrOrderDetailVO orderDelete(@RequestBody DetaiListVO vo) {
+		
+		materialService.orderDel(vo);
+		
+		return null;
+		
+	}
+	
 
 // 거래처 아작스
 	
@@ -182,7 +198,7 @@ public class MaterialController {
 		
 	}
 
-// 모달창 검사 코드로 검색	
+// 모달창 거래처 코드로 검색	
 	
 	@ResponseBody
 	@RequestMapping("/searchCustomerAjax")    
@@ -227,6 +243,7 @@ public class MaterialController {
 		
 		return list;
 	}
+
 	
 	
 // 자재 조정 화면
