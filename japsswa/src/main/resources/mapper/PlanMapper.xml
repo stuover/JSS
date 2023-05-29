@@ -8,53 +8,99 @@
   	 <!-- 생산계획 조회 모달창 : 생산 계획 리스트(초기값) -->
 	<select id="modalPlanList" resultType="PlanVO">
 		<![CDATA[ 
-			SELECT plan_id, plan_name, plan_date, emp_name
+			SELECT 
+				  plan_id, 
+				  plan_name, 
+				  plan_date, 
+				  emp_name
 			FROM (
-			      SELECT plan_id, plan_name, plan_date, emp_name
-			      FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
-			      WHERE plan_date >= (SYSDATE - 7)
+			      SELECT 
+			      		plan_id, 
+			      		plan_name, 
+			      		plan_date, 
+			      		emp_name
+			      FROM 
+			      	  plan p JOIN emp e 
+			      	  		 ON(p.emp_no = e.emp_no)
+			      WHERE 
+			      	   plan_date >= (SYSDATE - 7)
 			      )
-			WHERE plan_date <= (SYSDATE + 7)
+			WHERE 
+				 plan_date <= (SYSDATE + 7)
 		]]>
 	</select>  	
 	
 	<!-- 생산계획 조회 모달창 : 기간 키워드로 생산계획 검색 결과 -->
   	<select id="modalPlanResult" resultType="PlanVO">
 		<![CDATA[ 
-			SELECT plan_id, plan_name, plan_date, emp_name
+			SELECT 
+				  plan_id, 
+				  plan_name, 
+				  plan_date, 
+				  emp_name
 			FROM (
-			      SELECT plan_id, plan_name, plan_date, emp_name
-			      FROM plan p JOIN emp e ON(p.emp_no = e.emp_no)
-			      WHERE plan_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
+			      SELECT 
+			      		plan_id, 
+			      		plan_name, 
+			      		plan_date, 
+			      		emp_name
+			      FROM 
+			      	  plan p JOIN emp e 
+			      	  		 ON (p.emp_no = e.emp_no)
+			      WHERE 
+			      	   plan_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
 			      )
-			WHERE plan_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
+			WHERE 
+				 plan_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
 		]]>
 
   	</select>
 
 	<!--생산계획관리 페이지 : 생산 계획 세부내용 검색 결과  -->	
 	<select id="planSearchResult" resultType="PlanVO">
-		select  pdetail_id, item_name, plan_amount, plan_start, plan_end, plan_priority, d.item_code
-		from plan_detail d join itemlist i on (d.item_code = i.item_code)
-		where plan_id = #{planId}
+		SELECT  
+			  pdetail_id, 
+			  item_name, 
+			  plan_amount, 
+			  plan_start, 
+			  plan_end, 
+			  plan_priority, 
+			  d.item_code
+		FROM 
+			plan_detail d JOIN itemlist i 
+						  ON (d.item_code = i.item_code)
+		WHERE 
+			 plan_id = #{planId}
 	</select>
 	
 	
 	<!-- 제품명 조회 모달창 : 완제품 리스트 (초기값) -->
 	<select id="itemList" resultType="PlanVO">
-		SELECT i.item_code, item_name, sum(nvl(ord_count,0)) as "itemOrders"
-		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
-		WHERE item_type = '완제품'
+		SELECT 
+			  i.item_code, 
+			  item_name, 
+			  sum(nvl(ord_count,0)) as "itemOrders"
+		FROM 
+			itemlist i LEFT OUTER JOIN orddetail o 
+								  ON(i.item_code = o.item_code)
+		WHERE 
+			 item_type = '완제품'
 		GROUP BY i.item_code, item_name
 		ORDER BY 3 DESC
 	</select>
 	
 	<!-- 제품 검색 모달창 : 완제품 리스트 (검색결과) -->
 	<select id ="itemListResult"  resultType="PlanVO">
-		SELECT i.item_code, item_name, sum(nvl(ord_count,0)) as "itemOrders"
-		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
-		WHERE item_type = '완제품' 
-		               and item_name LIKE '%' || #{itemName} || '%'
+		SELECT 
+			  i.item_code, 
+			  item_name, 
+			  sum(nvl(ord_count,0)) as "itemOrders"
+		FROM 
+			 itemlist i LEFT OUTER JOIN orddetail o 
+			 					   ON(i.item_code = o.item_code)
+		WHERE 
+			 item_type = '완제품' 
+		     AND item_name LIKE '%' || #{itemName} || '%'
 		GROUP BY i.item_code, item_name
 		ORDER BY 3 DESC
 	</select>
@@ -62,9 +108,15 @@
 	
 	<!-- 제품명 조회 모달창 : 완제품,반제품 리스트 (초기값) -->
 	<select id="itemsList" resultType="PlanVO">
-		SELECT i.item_code, item_name
-		FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
-		WHERE item_type = '완제품' OR item_type = '반제품'
+		SELECT 
+			  i.item_code, 
+			  item_name
+		FROM 
+			itemlist i LEFT OUTER JOIN orddetail o 
+								  ON(i.item_code = o.item_code)
+		WHERE 
+			 item_type = '완제품' 
+			 OR item_type = '반제품'
 		GROUP BY i.item_code, item_name
 		ORDER BY 1 DESC
 	</select>	
@@ -72,12 +124,20 @@
 	<!-- 제품 검색 모달창 : 완제품,반제품 리스트 (검색결과) -->
 	<select id ="itemsListResult"  resultType="PlanVO">
 		SELECT item_code, item_name
-		FROM (SELECT i.item_code, item_name
-		      FROM itemlist i LEFT OUTER JOIN orddetail o on(i.item_code = o.item_code)
-		      WHERE item_type = '완제품' OR item_type = '반제품'
+		FROM (
+			  SELECT 
+					i.item_code, 
+					item_name
+		      FROM 
+		      	   itemlist i LEFT OUTER JOIN orddetail o 
+		      	   						 ON(i.item_code = o.item_code)
+		      WHERE 
+		      	   item_type = '완제품' 
+		      	   OR item_type = '반제품'
 		      GROUP BY i.item_code, item_name  
 		      )
-		WHERE item_name LIKE '%' || #{itemName} || '%'
+		WHERE 
+			 item_name LIKE '%' || #{itemName} || '%'
 		ORDER BY 1 DESC
 	</select>
 
@@ -114,19 +174,21 @@
 	<!-- 생산계획 공통 내용 수정처리 -->
 	<update id="planModify" parameterType="PlanVO">
 		UPDATE plan 
-		set plan_name  = #{planName},
-		     plan_date = TO_DATE(TO_CHAR(CAST(#{planDate} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
-		WHERE plan_id = #{planId}
+		SET plan_name  = #{planName},
+		    plan_date = TO_DATE(TO_CHAR(CAST(#{planDate} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
+		WHERE 
+			 plan_id = #{planId}
 	</update>
 	
 	<!-- 생산계획 세부 내용 수정처리 -->
 	<update id="planDetailModify" parameterType="PlanVO">
 		UPDATE plan_detail
 		SET plan_amount = #{planAmount},
-		       plan_priority = #{planPriority},
-		       plan_start = TO_DATE(TO_CHAR(CAST(#{planStart} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd'),
-		       plan_end = TO_DATE(TO_CHAR(CAST(#{planEnd} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
-		WHERE pdetail_id = #{pdetailId}	
+		    plan_priority = #{planPriority},
+		    plan_start = TO_DATE(TO_CHAR(CAST(#{planStart} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd'),
+		    plan_end = TO_DATE(TO_CHAR(CAST(#{planEnd} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
+		WHERE 
+			 pdetail_id = #{pdetailId}	
 	</update>
 	
 	
@@ -134,13 +196,15 @@
 	<!-- 생산계획 공통 내용 삭제 -->
 	<delete id="planDelete" parameterType="PlanVO">
 		DELETE FROM plan
-		WHERE plan_id = #{planId}
+		WHERE 
+			 plan_id = #{planId}
 	</delete>
 	
 	<!-- 생산계획 세부 내용 삭제 -->
 	<delete id="planDetailDelete" parameterType="PlanVO">
 		DELETE FROM plan_detail
-		WHERE pdetail_id = #{pdetailId}
+		WHERE 
+			 pdetail_id = #{pdetailId}
 	</delete>
 
   	

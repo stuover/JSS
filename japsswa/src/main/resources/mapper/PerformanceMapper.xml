@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.mes.jss.production.mapper.PerformanceMapper">
+  
+	
+	
+	<select id="processList" resultType="ProcessVO">
+		SELECT 
+			  pro_code, 
+			  pro_name 
+		FROM 
+			process 
+		ORDER BY 1
+	</select>
+	
+	<select id="processListResult" resultType="ProcessVO">
+		SELECT 
+			  pro_code, 
+			  pro_name
+		FROM 
+			process
+		WHERE 
+			 pro_name LIKE '%'|| #{proName} ||'%'
+		ORDER BY 1
+	</select>
+	
+
+  	
+  </mapper>
