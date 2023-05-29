@@ -29,36 +29,25 @@
                   
                   <input id="afterSearch" type="hidden" name="selectResult" value="insert">
                   <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
-
-					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-		              <button type="button" id="resetBtn" class="btn btn-dark btn-sm">
-						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
-						  <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
-						  <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
-						</svg>             
-		              </button>
-					</div>
-
+         
+				<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">
                   <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
                   	<button id="saveBtn" class="btn btn-primary">저장</button>
                   	<button id="deleteBtn" class="btn btn-danger">삭제</button>
                   </div>
-                  
-                  
-				<div class="p-2 row">
-				  <div class="col-sm-12">
-				    <div class="card">
-				      <div class="card-body">
 				      <!-- card-body start -->
 				        
 	                  <div id="commonGrid"></div>
 	                  
-		<!-- 버튼 : 제품 추가 및 삭제 -->
-		<div class="m-1 d-grid gap-2 d-md-flex justify-content-md-start">
-	        <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#itemSearchModal">추가</button>				
-	        <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
-		</div>
+						<!-- 버튼 : 제품 추가 및 삭제 -->
+						<div class="m-1 d-grid gap-2 d-md-flex justify-content-md-start">
+					        <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#itemSearchModal">추가</button>				
+					        <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
+						</div>
 	                  
 	                  <div id="detailGrid"></div>
 				        
@@ -66,34 +55,25 @@
 				      </div>
 				    </div>
 				  </div>
-				</div>       
-                  
+				</div>    
+
 				<div class="p-2 row">
-				  <div class="col-sm-4">
-				    <div class="card">
-				      <div class="card-body">
-				      <!-- card-body start -->
-				        <h5 class="page-title">공정</h5>
-				        <div id="processGrid"></div>
-					  <!-- card-body end -->
-				      </div>
-				    </div>
-				  </div>
-				  <div class="col-sm-8">
-				    <div class="card">
-				      <div class="card-body">
-				      <!-- card-body start -->
-				        <h5 class="page-title">홀드 자재</h5>
-				        <div id="holdGrid"></div>
-				        
-					  <!-- card-body end -->
-				      </div>
-				    </div>
-				  </div>
-				</div>     
-                  
-                  
-                  
+					<div class="col-sm-12">
+					 <div class="card">
+					  <div class="card-body">
+					 	<h5 class="page-title">BOM 및 공정 정보</h5>
+						  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+							<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">홀드</button>
+							</div>
+							<!-- card-body start -->
+						
+							<div id="bomInfoGrid"></div>
+						
+							<!-- card-body end -->
+							</div>
+						</div>
+					</div>
+				</div>      
                   
 				<!-- Body End -->				            
                 </div>
@@ -165,70 +145,32 @@
 	            	</div>
 	        </div>
 	        </div>
-	    </div>    
-	    
-	    
+	    </div>   
+	     
+		<!-- Hold 모달창 -->
+		<div class="modal fade" id="holdModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="">Hold 자재</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+		
+				<div id="holdSelectGrid"></div>
+				
+				</div>
+					<div class="modal-footer">
+						<button id="saveHoldBtn" type="button" class="btn btn-primary">저장</button>
+					</div>
+			</div>
+			</div>
+		</div>
+
 	    <!-- Modal List End -->
   		
 
   		<script>
-  		
-  	    // =============================== 객체 시작
-  	    let holdList = {
-  	      // Hold 된 LOT별 자재 목록
-  	      rowList: [],
-
-  	      // Hold 된 LOT별 자재정보 등록
-  	      insertHold: function (head, row) {
-  	        row.rowKey = head;
-  	        this.rowList.push(row);
-  	      },
-
-  	      // LOT별 Hold수량 목록
-  	      getLotHoldVal: function () {
-  	        let holds = {};
-  	        this.rowList.forEach((obj, idx) => {
-  	          if (holds[obj.lot] === undefined) {
-  	            holds[obj.lot] = Number(obj.val);
-  	          } else {
-  	            let preVal = holds[obj.lot];
-  	            holds[obj.lot] = preVal + Number(obj.val);
-  	          }
-  	        });
-
-  	        return holds;
-  	      },
-
-  	      // 해당 제품(지시제품이 등록된 Grid의 해당 RowKey)의 
-  	      // Hold 된 LOT별 자재 목록
-  	      getRowData(rowKey){
-  	        let dataList = [];
-  	        this.rowList.forEach((obj, idx) => {
-  	          if(Number(obj.rowKey) == rowKey){
-  	            dataList.push(obj);
-  	          }
-  	        });
-  	        return dataList;
-  	      },
-
-  	      // 해당 제품(지시제품이 등록된 Grid의 해당 RowKey)의 
-  	      // Hold 된 LOT별 자재 목록 삭제
-  	      delRowData(rowKey){
-  	        let idxList = [];
-  	        this.rowList.forEach((obj, idx) => {
-  	          if(Number(obj.rowKey) == rowKey){
-  	            idxList.push(idx);
-  	          }
-  	        });
-
-  	        for(let i = idxList.length-1; i > -1; i--){
-  	          this.rowList.splice(i, 1);
-  	        };
-  	      }
-  	    };
-  	    // =============================== 객체 끝	
-  		
-  		
   		const token = $("meta[name='_csrf']").attr("content")
   		const header = $("meta[name='_csrf_header']").attr("content");
   		const Grid = tui.Grid;
@@ -255,6 +197,12 @@
   		  		console.log('open');
   		  		setTimeout(() => itemSearchGrid.refreshLayout(), 300);
   		  	})
+  		  	// Hold 자재 선택 모달창 그리드 refresh
+  		  	$('#holdModal').on('shown.bs.modal', function (e) {
+  		  		console.log('open');
+  		  		setTimeout(() => holdSelectGrid.refreshLayout(), 300);
+  		  	})  		  	
+  		  	
   		  	
   		};  		
 
@@ -508,7 +456,7 @@
 		
 			// 생산계획 조회 결과 하나만 체크할 수 있게 설정.
 	    	detailGrid.on('check', function (e) {
-	            var checkRows = detailGrid.getCheckedRowKeys();
+	            let checkRows = detailGrid.getCheckedRowKeys();
 	            checkRows.forEach(function( key, idx){                      
 	                if(key != e.rowKey){
 	                	detailGrid.uncheck(key);
@@ -543,7 +491,7 @@
 			
 			// 제품명 검색 결과 하나만 체크할 수 있게 설정.
         	itemSearchGrid.on('check', function (e) {
-	            var checkRows = itemSearchGrid.getCheckedRowKeys();
+	            let checkRows = itemSearchGrid.getCheckedRowKeys();
 	            checkRows.forEach(function( key, idx){                      
 	                if(key != e.rowKey){
 	                	itemSearchGrid.uncheck(key);
@@ -608,95 +556,14 @@
 				detailGrid.removeCheckedRows(false);
 			});
 		    
-		
-			// 공정 정보
-			let processGridData = [];
-		    const processGrid = new tui.Grid({
-		      el: document.getElementById('processGrid'),
-		      data: processGridData,
-		      scrollX: false,
-		      scrollY: true,
-		      columns: [
-		        {
-		          header: '공정순서',
-		          name: 'proOrder',
-		          filter: 'select',
-		          width: 100
-		        },
-		        {
-		          header: '공정명',
-		          name: 'proName'
-		        },
-		        {
-		          header: '공정코드',
-		          name: 'proCode'
-		        }
-		      ]
-		    });			
-		    
-		    // 공정 정보 그리드 높이 지정.
-		    processGrid.setBodyHeight(200);
-		    
-			// 공정 정보 검색 결과 하나만 체크할 수 있게 설정.
-        	processGrid.on('check', function (e) {
-	            var checkRows = processGrid.getCheckedRowKeys();
-	            checkRows.forEach(function( key, idx){                      
-	                if(key != e.rowKey){
-	                	processGrid.uncheck(key);
-	                }
-	            });
-	        }); 
-			
-		    // 더블클릭한 제품의 공정 순서 출력.
-		    var iCode = '';		// 더블클릭한 제품의 제품코드
-		    var itemKeyNum = '';		// 더블클긱한 제품의 rowKey
-		    var holdData = detailGrid.getValue(itemKeyNum , 'insertHold');		// 더블클릭한 제품의 insertHold 셀에 담긴 값
-		    detailGrid.on('dblclick', function(e) {
-		    	
-		    	
-				
-		    	if(e.rowKey != itemKeyNum){
-		    		detailGrid.removeRowClassName(itemKeyNum, 'cell-color');
-		    	}
-		    	detailGrid.addRowClassName(e.rowKey, 'cell-color');
-		    	itemKeyNum = e.rowKey;
-		    	
-		    	if(e.columnName == 'itemName') {
-		    	iCode = detailGrid.getRow(e.rowKey).itemCode;
-		    	console.log(iCode);
-		    	console.log('itemKeyNum : '+ itemKeyNum);
-				console.log('holdData : ' + holdData);
-				
-
-		    	
-		    	$.ajax({
-		    		url : "/processInfoAjax",
-		    		data : {code : iCode},
-		    		method : "GET",
-		    		dataTyep : "JSON",
-		    		success : function(result) {
-		    			//console.log(result);
-		    			processGrid.resetData(result);
-		    		},
-		    		error : function(reject) {
-		    			console.log(reject);
-		    		}
-		    	});
-		    	
-
-		    	
-				}
-		    	
-		    	
-		    });
-		    
+		   
 
 			
-			// Hold 자재 정보
-			let holdGridData = [];
-		    const holdGrid = new tui.Grid({
-		      el: document.getElementById('holdGrid'),
-		      data: holdGridData,
+			// BOM 및 공정 정보
+			let bomInfoGridData = [];
+		    const bomInfoGrid = new tui.Grid({
+		      el: document.getElementById('bomInfoGrid'),
+		      data: bomInfoGridData,
 		      rowHeaders: [{ type: 'checkbox', align: 'left', valign: 'middle' }],
 		      scrollX: false,
 		      scrollY: true,
@@ -708,13 +575,11 @@
 		        },
 		        {
 			      header: '공정코드',
-			      name: 'proCode',
-				  hidden: true
+			      name: 'proCode'
 			    },
 		        {
 				  header: '공정순서',
-				  name: 'proOrder',
-				  hidden: true
+				  name: 'proOrder'
 				},		    
 		        {
 		          header: '자재명',
@@ -731,85 +596,69 @@
 		          width: 300
 		        },
 		        {
-		          header: '현 재고',
-		          name: 'storeCount',
+		          header: '작업지시량',
+		          name: 'workAmount',
 		          width: 120
 		        },
 		        {
-		          header: 'Hold 자재 코드',
-		          name: 'holdId',
-				  hidden: true
-		        },		
-		        {
-		          header: 'Hold 수량',
-		          name: 'holdAmount',
-				  editor: 'text'
-		        },
-				{
-		          header: 'Hold 상태',
-		          name: 'holdStatus',
-		          editor: {
-		              type: 'select',
-		              options: {
-		                listItems: [
-		                  {
-		                    text: '홀드',
-		                    value: '홀드'
-		                  },
-		                  {
-		                    text: '홀드 완료',
-		                    value: '홀드 완료'
-		                  },
-		                  {
-		                    text: '홀드 취소 요청',
-		                    value: '홀드 취소 요청'
-		                  }
-		                ]
-		              }
-		            }
-		          }
+		          header: '필요 자재량',
+		          name: 'requiredItem'
+		        }
 		      ]
 		    });
   			
 		    
-		    // 공정 정보 그리드 높이 지정.
-		    holdGrid.setBodyHeight(200);
-		    
-		    // 더블클릭한 제품의 공정 순서 출력.
-		    let pCode = '';
-		    let keyNumber = '';
-		    processGrid.on('dblclick', function(e) {
-
-		    	if(e.rowKey != keyNumber){
-		    		processGrid.removeRowClassName(keyNumber, 'cell-color');
+		 	// Hold 모달창
+		    let holdSelectGridData = [];
+		    const holdSelectGrid = new tui.Grid({
+		      el: document.getElementById('holdSelectGrid'),
+		      data: holdSelectGridData,
+		      scrollX: false,
+		      scrollY: true,
+		      columns: [
+		    	{
+		    	  header: '공정순서',
+		    	  name: 'proOrder',
+		    	  filter: 'select',
+		    	  hidden: true
+		    	},
+		    	{
+		    	  header: '공정코드',
+		    	  name: 'proCode',
+		    	  hidden: true
+		    	},
+		    	{
+		    	  header: '공정명',
+		    	  name: 'proName',
+		    	  hidden: true
+		    	},
+		    	{
+		    	  header: '제품코드',
+		    	  name: 'itemCode',
+		    	  hidden: true
+		    	},
+		    	{
+		    	  header: '제품명',
+		    	  name: 'itemName'
+		    	},
+		    	{
+		    	  header: '자재 LOT',
+		    	  name: 'mrLotNumber'
+		    	},
+		    	{
+		    	  header: '현 재고',
+		    	  name: 'currentCount'
+		    	},
+		    	{
+		    	  header: '필요 자재량',
+		    	  name: 'requiredItem'
+		    	},
+		    	{
+		    	  header: 'Hold 수량',
+		    	  name: 'holdCount'
 		    	}
-		    	processGrid.addRowClassName(e.rowKey, 'cell-color');
-		    	keyNumber = e.rowKey;
-		    	
-		    	if(e.columnName == 'proName') {
-		    	pCode = processGrid.getRow(e.rowKey).proCode;
-		    	console.log(iCode);
-		    	
-		    	
-		    	$.ajax({
-		    		url : "/bomInfoAjax",
-		    		data : { itemCode : iCode, proCode : pCode},
-		    		method : "get",
-		    		success : function(result) {
-		    			console.log(result);
-		    			holdGrid.resetData(result);
-		    		},
-		    		error : function(reject) {
-		    			console.log(reject);
-		    		}
-		    	});
-		    		
-				}
-		    	
+		      ]
 		    });
-	    
-		
-
 			
   		</script>
     
