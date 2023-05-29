@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+
+</head>
+<th:block layout:fragment="content">
+
+
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="page-title">완제품 입고 관리</h4>
+					
+
+					<!--<input id="name" type="hidden" th:value="${#authentication.principal.empName}">  --> 
+				
+
+					<div class="row"></div>
+					
+					<div id="topGrid"></div>
+					<button id="inBtn" type="button" class="btn btn-dark">입고처리</button>
+					<div id="botGrid"></div>
+					
+				
+					<div>
+						<form>
+							
+							<button id="inCancelBtn" type="button" class="btn btn-danger">입고취소</button>
+							
+						</form>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+
+	<script>
+	
+	
+	/* const token = $("meta[name='_csrf']").attr("content")
+	const header = $("meta[name='_csrf_header']").attr("content") */
+	const Grid = tui.Grid;
+	
+	//화면 상단 그리드
+	let topGridData = [{}];
+		const topGrid = new Grid({
+	      el: document.getElementById('topGrid'),
+	      data: topGridData,
+	      rowHeaders: ['checkbox'],
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '생산실적코드',
+				  name: 'performanceId',
+				  hidden: true
+				 },
+			     {
+				  header: '품목코드',
+				  name: 'itemCode',
+				  hidden: true
+				 },
+				 {
+				  header: '품목명',
+				  name: 'itemName'
+			     },
+			     {
+				  header: '작업완료날짜',
+				  name: 'endTime'
+				 }, 
+			     {
+			      header: '입고량',
+			      name: 'passItem'
+			     }
+		      ],
+		      
+		        
+		    });
+
+		topGrid.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+		topGrid.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+		topGrid.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+		
+
+		window.onload = function(){
+			
+			$.ajax({
+				url : "/passList",
+				method : "get",
+				success : function(result){
+					topGrid.resetData(result);
+					topGrid.refreshLayout();
+				}
+			})
+		}
+		
+		
+		
+		//화면 하단 그리드
+		let botGridData = [{}];
+  		const botGrid = new Grid({
+		      el: document.getElementById('botGrid'),
+		      data: botGridData,
+		      rowHeaders: ['checkbox'],
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+		    	  {
+					  header: '생산실적코드',
+					  name: 'performanceId',
+					  hidden: true
+					 },
+				     {
+					  header: '품목코드',
+					  name: 'itemCode',
+					  hidden: true
+					 },
+					 {
+					  header: '품목명',
+					  name: 'itemName'
+				     },
+				     {
+					  header: '작업완료날짜',
+					  name: 'endTime'
+					 }, 
+				     {
+				      header: '입고량',
+				      name: 'passItem'
+				     },
+				     {
+					  header: 'lot번호',
+					  name: 'fLotNo'
+					  
+					 },
+					 {
+					  header: '유통기한',
+					  name: 'fExpiration'
+					 }
+			      ],
+			      
+			        
+			    });
+
+  		    botGrid.on('check', ev => {
+		      console.log('check!', ev);
+		    });
+
+  		    botGrid.on('uncheck', ev => {
+		      console.log('uncheck!', ev);
+		    });
+
+  		    botGrid.on('focusChange', ev => {
+		      console.log('change focused cell!', ev);
+		    });
+		 
+	 
+
+		
+		           
+		           
+		           
+
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+
+</th:block>
+
+</html>

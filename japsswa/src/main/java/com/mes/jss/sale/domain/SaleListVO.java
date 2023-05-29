@@ -7,4 +7,5 @@ import lombok.Data;
 public class SaleListVO {
 	private List<OrderVO> list;
 	private OrderVO commInfo;
+	private String info;
 }
