@@ -340,6 +340,9 @@ public class MaterialController {
 		
 	}
 
+
+	
+	
  //  자재 불량 화면
 	
 	@GetMapping("/mrError")
