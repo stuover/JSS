@@ -55,8 +55,9 @@
 					<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
 					<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
 					<div id="grid"></div>
+					
 					<div id="changeGrid"></div>
-
+				
 					<div>
 						<form>
 							
@@ -144,6 +145,8 @@
 	
 	
 	
+		 
+	 
 
 		const token = $("meta[name='_csrf']").attr("content")
 		const header = $("meta[name='_csrf_header']").attr("content")
@@ -748,16 +751,17 @@
 		           var customerId = '';
 		           var orderId = '';
 		           $('#custChooseBtn').on('click', function(){
-		        	   
+		        	  
 		        	   $('#sortBtn').val('update');
 		        	   ordId = CmodalGrid.getCheckedRows()[0].ordId;
 		        	   customerId = CmodalGrid.getCheckedRows()[0].customerId;
 		        	   orderId = CmodalGrid.getCheckedRows()[0].ordId;
 		        	   
-		        	   $('#showCustModal').modal('hide');
+		        	    $('#showCustModal').modal('hide'); 
+
 		        	   
 		        	   $('#showCustModal').on('hidden.bs.modal',function(e){
-		        		 
+		        		   grids.refreshLayout();
 		        		   $.ajax({
 		        			   url : "/orderShow",
 		        			   method : "GET",
@@ -768,6 +772,7 @@
 		        				   grids.refreshLayout();
 		        				   
 		        				   $('#grid').hide();
+		        				   
 		        				   $('#changeGrid').show();
 		        				   
 		        				   $.ajax({
@@ -857,12 +862,12 @@
 		           $('#updateBtn').on('click', function(){
 		        	   console.log(grids.getData()[0].ordId);
 		        	   changeGrid.finishEditing();
-		        	   var data = changeGrid.getData();
+		        	   var datas = changeGrid.getData();
 		        	   console.log(data);
 		        	   $.ajax({
 		        		   url : "/ordUpdate",
 		        		   contentType : "application/json",
-		        		   data : JSON.stringify( { list : data, commInfo : grids.getData()[0].ordId}),
+		        		   data : JSON.stringify( { list : datas, commInfo : grids.getData()[0].ordId}),
 		        		   method : "post",
 		        		   beforeSend : function(xhr){
 		        			   xhr.setRequestHeader(header, token);
@@ -889,7 +894,7 @@
 		           
 		           
 		           
-		           
+
 		           
 		           
 		           

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+</head>
+<th:block layout:fragment="content">
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+	<link
+		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css"
+		rel="stylesheet">
+
+	<script type="text/javascript"
+		src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+	<link rel="stylesheet"
+		href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+	<link rel="stylesheet"
+		href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+	<script
+		src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+	<link rel="stylesheet"
+		href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+	<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+	
+	
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="page-title">주문서 관리</h4>
+					
+
+					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
+					<div>
+						
+									
+									<button id="receiptBtn" type="button" class="btn btn-dark"
+										data-bs-toggle="modal" data-bs-target="receiptModal">명세서</button>
+				
+					</div>
+
+					<div class="row"></div>
+					
+				
+					<div id="grid1"></div>
+					<button id="moveBtn" type="button" class="btn btn-danger">이동</button>
+					<div id="grid2"></div>
+					
+
+					<div>
+						<form>
+							
+							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
+							<button id="outBtn" type="button" class="btn btn-dark"
+										data-bs-toggle="modal" data-bs-target="outModal">출고</button>
+							
+						</form>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<!-- 모달 -->
+	
+	<div class="modal fade" id="receiptModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="receiptModalLabel">명세서</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					
+					<div id="recmodalGrid"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="print
+					Btn" type="button" class="btn btn-dark">인쇄</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<div class="modal fade" id="outModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="outModalLabel">출고 수량 입력</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="outCount" name="oCount">
+					<button id="countBtn" type="button" class="btn btn-dark">입력</button>
+					
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	
+
+	<script>
+	
+	let grid1Data = [];
+		const grid1 = new Grid({
+	      el: document.getElementById('grid1'),
+	      data: grid1Data,
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '품목명',
+				  name: 'itemName'
+				 },
+			     {
+				  header: '주문수량',
+				  name: 'ordCount'
+				 },
+				 {
+				  header: '거래처명',
+				  name: 'customerName'
+			     },
+			     {
+				  header: '주문날짜',
+				  name: 'ordDate'
+				 }, 
+			     {
+			      header: '납부예정날짜',
+			      name: 'outDate'
+			     },	
+			     {
+				  header: '총 가격',
+				  name: 'ordName',
+				  editor: 'text'
+				  
+				 },
+				 {
+				  header: '담당자',
+				  name: 'empName',
+				  editor: 'text'
+				 }
+		      ],
+		      
+		        
+		    });
+
+		grids.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+	    grids.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+	    grids.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+	
+
+	
+		           
+		           
+		           
+		           
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+	
+	
+
+</th:block>
+
+</html>

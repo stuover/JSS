@@ -138,8 +138,8 @@ public class SaleController {
 		
 		//List<OrderVO> lists = saleService.delDet(svo);
 		List<OrderVO> list = svo.getList();
-		saleService.delDet(list);
 		System.err.println(svo);
+		saleService.delDet(list);
 		return null;
 		
 	}
