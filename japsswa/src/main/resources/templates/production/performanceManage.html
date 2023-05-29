@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>PolluxUI Admin</title>
+<!-- base:css -->
+<link rel="stylesheet" href="/vendors/typicons/typicons.css">
+<link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
+<!-- endinject -->
+<!-- plugin css for this page -->
+<!-- End plugin css for this page -->
+<!-- inject:css -->
+<link rel="stylesheet" href="/css/vertical-layout-light/style.css">
+<!-- endinject -->
+<link rel="shortcut icon" href="/images/favicon.png" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+</head>
+<body>
+	<!-- partial -->
+	<nav class="navbar-breadcrumb col-xl-12 col-12 d-flex flex-row p-0">
+		<div class="navbar-links-wrapper d-flex align-items-stretch">
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-calendar-outline"></i></a>
+			</div>
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-mail"></i></a>
+			</div>
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-folder"></i></a>
+			</div>
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-document-text"></i></a>
+			</div>
+		</div>
+
+	</nav>
+	
+	<div class="container-fluid page-body-wrapper">
+	 	<div class="col-12 grid-margin stretch-card">
+	        <div class="card">
+	            <div class="card-body">
+				
+	            <!-- Body Start -->
+	                
+	                  
+	                <input id="afterSearch" type="hidden" name="selectResult" value="insert">
+	                <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
+	
+					<div class="h-auto d-md-flex justify-content-between">
+						<div><h3 class="page-title">생산 실적 관리</h3></div>
+						<div><button type="button" id="insertBtn" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#performanceModal">등록</button></div>
+					</div>
+					
+	            <!-- Card Content Start --> 
+					<div class="p-2 row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-body">
+								<!-- card-body start -->
+					        
+								<div id=""></div>
+		                  
+						     
+								<div class="m-2 col-9">	
+									
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-between">
+										<div><h5 class="m-2 fw-bold fs-4 card-title">공정</h5></div>
+										<div><button type="button" id="searchProBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#processSearchModal">조회</button></div>
+									</div>
+
+									<div id="processGrid"></div>
+								</div>
+								
+								
+								<div class="m-3 row"></div>
+								
+								<div class="m-2 col-9">	
+									
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-between">
+										<div><h5 class="m-2 fw-bold fs-4 card-title">작업지시</h5></div>
+										<div><button type="button" id="searchWorkBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">조회</button></div>
+									</div>
+										
+									<div id="workGrid"></div>
+								</div>
+									
+								<div class="m-4 row"></div>							
+								<div id="workDetailGrid"></div>
+
+								<!-- Card-body end -->
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- Card Content End -->      
+	                 
+				<!-- Body End -->
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+	<!-- Modal List Start -->
+	<!-- 생산실적 등록 모달창 -->
+	<div class="modal fade" id="performanceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="searchModalLabel">생산실적 등록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+	
+				<div class="container">
+				  <div class="row justify-content-lg-center">
+					<div class="col-12 col-lg-12">
+					  <div class="bg-white border rounded shadow-sm overflow-hidden">          
+			  
+						<form action="#!">
+						  <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
+	
+							<div class="col-12 col-md-6">
+							  <label for="email" class="form-label">작업지시명</label>
+							  <div class="input-group">
+								<span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+										<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+										<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+									</svg>
+								</span>
+								<input type="text" class="form-control" id="workName" name="workName" readonly>
+							  </div>
+							</div>
+	
+							<div class="col-12 col-md-6">
+							  <label for="phone" class="form-label">제품명</label>
+							  <div class="input-group">
+								<span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+										<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+										<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+									</svg>
+								</span>
+								<input type="text" class="form-control" id="itemName" name="itemName" readonly>
+							  </div>
+							</div>
+	
+	
+							<div class="col-12 col-md-6">
+								<label for="phone" class="form-label">공정명</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+										<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+										<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="proName" name="proName" readonly>
+								</div>
+							  </div>             
+	
+							  <div class="col-12 col-md-6">
+								<label for="phone" class="form-label">진행 가능한 작업지시량<span class="text-danger">*</span></label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
+										<path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+										<path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+									s</svg>
+								  </span>
+								  <input type="text" class="form-control" id="workAmount" name="workAmount" required>
+								</div>
+							  </div> 
+	
+							  <div class="col-12 col-md-6">
+								<label for="phone" class="form-label">설비명<span class="text-danger">*</span></label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
+										<path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="facName" name="facName" required>
+								</div>
+							  </div> 
+	
+							  <div class="col-12 col-md-6">
+								<label for="phone" class="form-label">작업자<span class="text-danger">*</span></label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+										<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+										<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="workerName" name="workerName" required>
+								</div>
+							  </div>
+	
+							  <div class="col-12 col-md-6">
+								<label for="phone" class="form-label">작업 시작</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hourglass-top" viewBox="0 0 16 16">
+										<path d="M2 14.5a.5.5 0 0 0 .5.5h11a.5.5 0 1 0 0-1h-1v-1a4.5 4.5 0 0 0-2.557-4.06c-.29-.139-.443-.377-.443-.59v-.7c0-.213.154-.451.443-.59A4.5 4.5 0 0 0 12.5 3V2h1a.5.5 0 0 0 0-1h-11a.5.5 0 0 0 0 1h1v1a4.5 4.5 0 0 0 2.557 4.06c.29.139.443.377.443.59v.7c0 .213-.154.451-.443.59A4.5 4.5 0 0 0 3.5 13v1h-1a.5.5 0 0 0-.5.5zm2.5-.5v-1a3.5 3.5 0 0 1 1.989-3.158c.533-.256 1.011-.79 1.011-1.491v-.702s.18.101.5.101.5-.1.5-.1v.7c0 .701.478 1.236 1.011 1.492A3.5 3.5 0 0 1 11.5 13v1h-7z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="workStart" name="workStart">
+								</div>
+							  </div>
+	
+							  <div class="col-12 col-md-6">
+								<label for="phone" class="form-label">작업 종료</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hourglass-bottom" viewBox="0 0 16 16">
+										<path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2h-7z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="workEnd" name="workEnd">
+								</div>
+							  </div>
+	
+							  <div class="col-12 col-md-6">
+								<label for="phone" class="form-label">불량품 수</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+										<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+										<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="failItem" name="failItem">
+								</div>
+							  </div>
+							  <div class="p-4 col-12 col-md-4 align-bottom">
+								<button class="btn btn-success btn-lg">&#43;</button>
+								<button class="btn btn-danger btn-lg">&#8722;</button>
+							  </div>
+	
+							<div class="col-12">
+							  <div class="d-grid justify-content-center">
+									<button class="btn btn-primary btn-lg" type="submit">저장</button>
+							  </div>
+							</div>
+						  </div>
+						</form>
+			  
+					  </div>
+					</div>
+				  </div>
+				</div>
+	
+			</div>
+	
+		</div>
+		</div>
+	</div>
+	
+	
+	<!-- 공정 조회 모달창 -->
+	<div class="modal fade" id="processSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">공정 선택</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="text" id="searchPorcessResult"></input>
+				<button id="process-search-btn" class="m-2 btn btn-success btn-sm">검색</button>
+			<div id="processSearchGrid"></div>
+			</div>
+				<div class="modal-footer">
+					<button id="selectProcessBtn" type="button" class="btn btn-primary">선택</button>
+				</div>
+		</div>
+		</div>
+	</div>
+			
+			
+	
+	<!-- 작업지시 조회 모달창 -->
+	<div class="modal fade" id="workSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">작업지시 선택</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<input type="text" id="searchWorkResult"></input>
+				<button id="work-search-btn" class="m-2 btn btn-success btn-sm">검색</button>
+			<div id="workSearchGrid"></div>
+			</div>
+				<div class="modal-footer">
+					<button id="selectWorkBtn" type="button" class="btn btn-primary">선택</button>
+				</div>
+		</div>
+		</div>
+	</div> 
+	
+	<!-- Modal List End -->
+
+
+	<script>
+		const token = $("meta[name='_csrf']").attr("content")
+		const header = $("meta[name='_csrf_header']").attr("content");
+		
+		// 초기화면 데이터 및 설정.
+		window.onload = function(){
+			
+			
+			// 모달창 열릴 때 레이아웃 깨지지 않게 refreshLayout()
+			
+		}
+		
+		// 작업자 -> 해당 공정 조회 및 선택
+		let processGridData = [{}];
+		const processGrid = new tui.Grid({
+			el: document.getElementById('processGrid'),
+			data: processGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '공정코드',
+				  name: 'proCode'
+				},
+				{
+				  header: '공정명',
+				  name: 'proName'
+				}
+			]
+		})
+		
+		
+		// 공정 선택 모달창 : 공정 내역
+		let proSearchGridData = [];
+		const processSearchGrid = new tui.Grid({
+			el: document.getElementById('processSearchGrid'),
+			data: proSearchGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '공정코드',
+				  name: 'proCode'
+				},
+				{
+				  header: '공정명',
+				  name: 'proName'
+				}
+			]
+		})		
+		
+		// 작업자 -> 해당 작업지시 조회 및 선택
+		let workGridData = [{}];
+		const workGrid = new tui.Grid({
+			el: document.getElementById('workGrid'),
+			data: workGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '작업지시명',
+				  name: 'workName'
+				},
+				{
+				  header: '작업지시 날짜',
+				  name: 'workDate'
+				},
+				{
+				  header: '담당자',
+				  name: 'empName2'
+				}				
+			]
+		})
+		
+
+
+		// 작업지시 선택 모달창 : 작업지시 내역
+		let workSearchGridData = [];
+		const workSearchGrid = new tui.Grid({
+			el: document.getElementById('workSearchGrid'),
+			data: workSearchGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '작업지시명',
+				  name: 'workName'
+				},
+				{
+				  header: '작업지시 날짜',
+				  name: 'workDate'
+				},
+				{
+				  header: '담당자',
+				  name: 'empName2'
+				}				
+			]
+		})	
+		
+		
+		// 작업지시 조회결과 : 작업지시 상세내역
+		let workDetailGridData = [];
+		const workDetailGrid = new tui.Grid({
+		el: document.getElementById('workDetailGrid'),
+		data: workDetailGridData,
+		rowHeaders: ['checkbox'],
+		scrollX: false,
+		scrollY: false,
+		columns: [
+			{
+				header: '세부지시 코드',
+				name: 'wdetailId',
+				hidden: true
+			 },
+			 {
+				header: '제품코드',
+				name: 'itemCode',
+				hidden: true
+			  },
+			  {
+				header: '제품명',
+				name: 'itemName',
+				editot: 'text'
+			  },
+			  {
+				header: '지시 시작날짜',
+				name: 'workStart',
+				formatter: function (e) {
+					let result = e.value;
+					
+					if(result == null) {
+						result = e.value;
+						return;
+					} else {
+						result = e.value.substr(0,10);
+						return;
+					}
+				 },
+				editor: 'datePicker'
+			  },
+			  {
+				header: '지시 완료날짜',
+				name: 'workEnd',
+				formatter: function (e) {
+					let result = e.value;
+					if(result == null) {
+						result = e.value;
+						return;
+					} else {
+						result = e.value.substr(0,10);
+						return;
+					}
+			  },
+				editor: 'datePicker'
+			  },
+			  {
+				header: '지시수량',
+				name: 'workAmount',
+				editor: 'text'
+			  }
+			 ]
+		   });
+
+
+	
+	
+	
+	</script>
+	
+	
+
+	<!-- base:js -->
+	<script src="/vendors/js/vendor.bundle.base.js"></script>
+	<!-- endinject -->
+	<!-- Plugin js for this page-->
+	<script src="/vendors/chart.js/Chart.min.js"></script>
+	<!-- End plugin js for this page-->
+	<!-- inject:js -->
+	<script src="/js/off-canvas.js"></script>
+	<script src="/js/hoverable-collapse.js"></script>
+	<script src="/js/template.js"></script>
+	<script src="/js/settings.js"></script>
+	<script src="/js/todolist.js"></script>
+	<!-- endinject -->
+	<!-- Custom js for this page-->
+	<script src="/js/dashboard.js"></script>
+	<!-- End custom js for this page-->
+</body>
+
+</html>
+

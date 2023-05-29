@@ -25,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Controller
 @Log4j2
-public class ProductWorkController {
+public class WorkController {
 	
 	@Autowired WorkService workService = new WorkServiceImpl();
 
