@@ -1,9 +1,11 @@
 package com.mes.jss.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,7 +44,18 @@ public class FacilityController {
 		
 		List<FacilityVO> list = service.searchFacility(facCode);
 		
-		return list;		
+		return list;
+	}
+	
+	@RequestMapping("/insertAjax")
+	@ResponseBody
+	public FacilityVO insertAjax(@RequestBody FacilityVO data) {
+		
+		//FacilityVO upFac = data.get
+		//System.out.println(vo);
+		
+		return null;
+		
 	}
 	
 }
