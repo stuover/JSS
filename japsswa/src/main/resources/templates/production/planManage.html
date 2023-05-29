@@ -312,7 +312,6 @@
 						url : "/searchItemResultAjax",
 						data : {itemName : item},
 						method :"GET",
-						dataType : "JSON",
 						success : function(result){
 							console.log('result : '+ result);
 							itemGrid.resetData(result);
@@ -531,7 +530,6 @@
 	  												contentType : "application/json", 
 	  												data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
 	  												method :"POST",
-	  												dataType : "JSON",
 	  												beforeSend: function(xhr){
 	  													xhr.setRequestHeader(header, token);
 	  												},
