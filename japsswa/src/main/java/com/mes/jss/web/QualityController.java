@@ -7,8 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.quality.service.QualityService;
 
@@ -45,7 +47,29 @@ public class QualityController {
 		return list;
 						
 	}
+
+	@GetMapping("/quality")
+	public String quality() {
+
+		return "quality/qualityInspection";
+						
+	}
 	
+	@ResponseBody
+	@GetMapping("/qualityList")
+	public List<QualityVO>  qualityList() {
+		
+		
+		return qualityService.qualityList();
+		
+	}
+	
+	@ResponseBody
+	@GetMapping("/getCheckList")
+	public List<CheckListVO> getCheckList(@RequestParam String itemCode){
+		return qualityService.getCheckList(itemCode);
+		
+	}
 	
 	
 	

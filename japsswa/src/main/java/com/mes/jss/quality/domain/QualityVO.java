@@ -8,7 +8,7 @@ import lombok.Data;
 public class QualityVO {	// 품질 VO
 	String testCode;
 	String itemCode;
-	String mrOrderDetail;
+	String mrOrderDetCode;
 	String itemType;
 	String situation;
 	Date startDate;
