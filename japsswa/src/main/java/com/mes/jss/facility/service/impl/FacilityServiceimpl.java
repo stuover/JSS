@@ -11,111 +11,117 @@ import com.mes.jss.facility.domain.InspectionVO;
 import com.mes.jss.facility.mapper.FacilityMapper;
 import com.mes.jss.facility.service.FacilityService;
 
-@Service("facilityService")
+@Service
 public class FacilityServiceimpl implements FacilityService{
 
 	@Autowired FacilityMapper facilityMapper;
 
-	// 비가동 페이지
-	
-	@Override
-	public FacilityVO getFacility(FacilityVO vo) {
-		
-		return facilityMapper.getFacility(vo);
-	}
+	// 비가동 페이지		
 
 	@Override
-	public List<FacilityVO> getList() {
+	public List<FacilityVO> getList() {	// 전체 설비 리스트 조회
 		
 		return facilityMapper.getList();
 	}
-
+	
 	@Override
-	public InspectionVO getInspection(InspectionVO vo) {
-		return null;
-	}
-
-	@Override
-	public DowntimeVO getDowntime(DowntimeVO vo) {
-		return null;
-	}
-
-	@Override
-	public List<DowntimeVO> getDownList() {
+	public List<DowntimeVO> getDownList() {	// 비가동 리스트 조회
 
 		return facilityMapper.getdownList();
 	}
 
 	@Override
-	public boolean registerDownList(DowntimeVO vo) {
+	public boolean setDownTime(DowntimeVO vo) {		// 설비 비가동 등록
 		
-		return facilityMapper.insertDownList(vo) > 0;
-	}
-
-	@Override
-	public void setDownTime(DowntimeVO vo) {
-		facilityMapper.insertDownList(vo);
+		return facilityMapper.insertDownList(vo) == 1;
 		
 	}
 
 	@Override
-	public boolean updateFacList(FacilityVO vo) {
+	public boolean updateFacList(FacilityVO vo) {	// 비가동시 설비 가동상태 변경
 		
 		return facilityMapper.updateFacStatus(vo);
 	}
 	
 	@Override
-	public boolean newUpdateFacList(FacilityVO vo) {
+	public boolean newUpdateFacList(FacilityVO vo) {		// 가동시 설비 가동상태 변경
 
 		return facilityMapper.newUpdateFacStatus(vo);
 	}
 
 	@Override
-	public boolean updateStartDate(DowntimeVO vo) {
+	public boolean updateStartDate(DowntimeVO vo) {	// 가동일시 추가
 			
 			return facilityMapper.insertStartTime(vo);
 	}	
 
 	@Override
-	public boolean removeDownTime(FacilityVO vo) {
+	public boolean removeDownTime(FacilityVO vo) {		// 비가동 내역 삭제
 
 		return facilityMapper.deleteDownCode(vo);
 	}
 
 	@Override
-	public boolean modifyDownTime(DowntimeVO vo) {
+	public boolean modifyDownTime(DowntimeVO vo) {		// 비가동 내역 수정
 
 		return facilityMapper.updateDownTime(vo);
 	}
 
+	
+	
 	// 비가동 내역 페이지
 	
 	@Override
-	public List<DowntimeVO> getDownDetail() {
+	public List<DowntimeVO> getDownDetail() {	// 비가동 내역 전체 조회
 		
 		return facilityMapper.getDownDetailList();
 	}
 
 	@Override
-	public List<FacilityVO> searchList(String facName) {
+	public List<FacilityVO> searchList(String facName) {		// 비가동 내역 단건 조회
 
 		return facilityMapper.searchlist(facName);
 	}
 
-	// 설비 페이지
+	
+	
+	
+	// 설비 관리 페이지
 	
 	@Override
-	public List<FacilityVO> getAllList() {
+	public List<FacilityVO> getAllList() {		// 전체 설비 리스트
 		
 		return facilityMapper.getAllList();
 	}
 
 	@Override
-	public List<FacilityVO> searchFacility(String facCode) {
+	public List<FacilityVO> searchFacility(String facCode) {		// 설비 단건 조회
 		
 		return facilityMapper.searchFac(facCode);
 	}
 
+	@Override
+	public void saveFacility(FacilityVO upFac, FacilityVO downFac) {	// 설비 등록 하는중
+
+		facilityMapper.insertFacility(upFac, downFac);
+	}
+
+	@Override
+	public void modifyFacility(FacilityVO vo) {		// 설비 정보 수정
+
+		facilityMapper.modifyFac(vo);
+	}
+
+	
+	// 점검 관리 페이지
+	
+	
+	@Override
+	public InspectionVO getInspection(InspectionVO vo) {
+		return null;
+	}
+
+	
 
 	
 	

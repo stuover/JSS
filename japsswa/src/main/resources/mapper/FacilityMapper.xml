@@ -5,46 +5,61 @@
   
   <mapper namespace="com.mes.jss.facility.mapper.FacilityMapper">
   
-  	<!-- 비가동 페이지 -->
-  
-  	<select id="getFacility" resultType="FacilityVO">
-  		select * from facility where fac_code = #{facCode}
-  	</select>
+  	<!-- 비가동 페이지 -->    	
   	
   	<select id="getList" resultType="FacilityVO">
-  		SELECT fac_name, fac_code, fac_manager, fac_status, get_fac_start_date(fac_code) as start_date
-		FROM facility 
-		ORDER BY fac_code
-                
+  		SELECT	fac_name, 
+  		            fac_code, 
+  		            fac_manager, 
+  		            fac_status, 
+  		            get_fac_start_date(fac_code) as start_date
+		  FROM  facility 
+		ORDER  BY fac_code                
   	</select>
   	
   	<select id="getdownList" resultType="DowntimeVO">  				
-        select f.fac_name,f.fac_code,d.down_code,d.stop_date,d.down_reason,d.down_manager,d.remark
-		from facility f join downtime d 
-		on(f.fac_code = d.fac_code)
-		where d.start_date is null
-		order by fac_code
+        select  f.fac_name,
+        		  f.fac_code,
+        		  d.down_code,
+        		  d.stop_date,
+        		  d.down_reason,
+        		  d.down_manager,
+        		  d.remark
+		  from  facility f join downtime d 
+		     on  (f.fac_code = d.fac_code)
+		where  d.start_date is null
+     order by fac_code
   	</select>
   	
   	<insert id="insertDownList" parameterType="DowntimeVO">  				
-		insert into downtime(down_code, stop_date, down_reason, down_manager, remark, fac_code)
-		values (('DOW' || lpad(downtime_seq.nextval, 4, '0')), current_date , 
-		#{downReason} , #{downManager} , #{remark} , #{facCode})
+		insert into downtime(
+		          down_code, 
+		          stop_date, 
+		          down_reason, 
+		          down_manager, 
+		          remark, 
+		          fac_code)
+		values (('DOW' || lpad(downtime_seq.nextval, 4, '0')),
+		           current_date , 
+		          #{downReason} , 
+		          #{downManager} , 
+		          #{remark} , 
+		          #{facCode})
   	</insert>
   	
   	<update id="updateFacStatus" parameterType="FacilityVO">
-  		update facility set fac_status = case
-		when fac_status = 'Y' then 'N'
-		else fac_status
-		end
+  		update facility 
+  		     set 
+  		          fac_status = case	when fac_status = 'Y' then 'N'
+		                                    else   fac_status	end
 		where fac_code = #{facCode}
   	</update>
   	
   	<update id="newUpdateFacStatus" parameterType="FacilityVO">
-  		update facility set fac_status = case
-        when fac_status = 'N' then 'Y'
-		else fac_status
-		end
+  		update facility 
+  			set 
+  		          fac_status = case  when fac_status = 'N' then 'Y'
+		                             		else   fac_status	end
 		where fac_code = #{facCode}
   	</update>
   	
@@ -57,8 +72,11 @@
   	</delete>
   	
   	<update id="updateDownTime" parameterType="DowntimeVO">
-  		update downtime set down_reason = #{downReason} , down_manager = #{downManager} , 
-  		remark = #{remark} where down_code = #{downCode}
+  		update downtime set
+  		          down_reason = #{downReason} , 
+  		          down_manager = #{downManager} , 
+  		          remark = #{remark} 
+  		 where down_code = #{downCode}
   	</update>
   	
   	<!-- 비가동 내역 페이지 -->
@@ -81,6 +99,21 @@
   	</select>
   	
   	<select id="searchFac" parameterType="FacilityVO" resultType="FacilityVO">
-  		select * from facility where fac_code = #{facName}
+  		select * from facility where fac_code like '%' || #{facName} || '%'
   	</select>
+  	
+  	<insert id="insertFacility" parameterType="FacilityVO">
+  		insert into facility (fac_code , fac_name , fac_date, fac_process , fac_status,
+  		wash_cycle, ins_cycle, last_inspection, fac_manager, fac_function)
+        values(('FAC' || lpad(facility_seq.nextval, 4,0)) , #{facName} , #{facDate} , #{facProcess}, #{facStatus}, 
+        #{washCycle},#{insCycle}, #{lastInspection}, #{facManager}, #{facFunction})
+  	</insert>
+  	
+  	<update id="modifyFac" parameterType="FacilityvO">
+  		update facility set fac_name = #{facName} , fac_date = #{facDate} , 
+  		           fac_process = #{facProcess} , wash_cycle = #{washCycle} ,
+  		ins_cycle = #{insCycle} , fac_manager = #{facManager} ,
+  		fac_function = #{facFunction} , fac_picture = #{facPicture}
+  		where fac_code = #{facCode}
+  	</update>
   </mapper>
