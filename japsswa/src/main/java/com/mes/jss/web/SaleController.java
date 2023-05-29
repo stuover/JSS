@@ -15,6 +15,10 @@ import com.mes.jss.sale.domain.OrderVO;
 import com.mes.jss.sale.domain.SaleListVO;
 import com.mes.jss.sale.service.SaleService;
 
+/*
+ * 개발자 : 강현영
+ * 주문서 관리
+ */
 @Controller
 public class SaleController {
 	
@@ -71,7 +75,7 @@ public class SaleController {
 		return info;
 	}
 	
-	//등록
+	//주문 등록
 	@RequestMapping("/entireRegister")
 	@ResponseBody
 	public OrderVO entRegisterAjax(@RequestBody SaleListVO listVo, Principal principal) {
@@ -89,12 +93,12 @@ public class SaleController {
 	@RequestMapping("/custOrdModal")
 	@ResponseBody
 	public List<OrderVO> custOrdModalAjax(){
-		List<OrderVO> oModal = saleService.custOrdModal();
+		List<OrderVO> oModal = saleService.custOrdModal();  //접수완료건 조회
 		
 		return oModal;
 	} 
 	
-	//수정할때 접수완료상태 거래처 검색
+	//수정할때 모달내에서 거래처 검색
 	@RequestMapping("/custShowModal")
 	@ResponseBody
 	public List<OrderVO> custShowModalAjax(@RequestParam String oCode){
@@ -148,9 +152,8 @@ public class SaleController {
 	@RequestMapping("/ordUpdate")
 	@ResponseBody
 	public OrderVO ordUpdate(@RequestBody SaleListVO slist) {		
-		OrderVO commiInfo = slist.getCommInfo();
-		List<OrderVO> ulist = slist.getList();
-		saleService.ordUpdate(commiInfo,ulist);
+
+		saleService.ordUpdate(slist);
 		return null;
 		
 	}

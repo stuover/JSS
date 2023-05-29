@@ -86,8 +86,8 @@ public class SaleServiceImpl implements SaleService {
 
 	@Override
 	public void entDel(String delId) {
-		orderMapper.entDel(delId);
 		orderMapper.entDelDet(delId);
+		orderMapper.entDel(delId);
 		
 		
 	}
@@ -95,18 +95,22 @@ public class SaleServiceImpl implements SaleService {
 	@Override
 	public void delDet(List<OrderVO> list) {
 		for(OrderVO vo : list) {
-			vo.getOrdDetailId();
 			orderMapper.delDet(vo);
 		}
 		
 	}
 
+
+
 	@Override
-	public void ordUpdate(OrderVO uvo, List<OrderVO> slist) {
+	public void ordUpdate(SaleListVO slist) {
 		
-		for(OrderVO vo : slist) {
-			vo.setOrdId(uvo.getOrdId());
+		for(OrderVO vo : slist.getList()) {
+			vo.setOrdId(slist.getInfo());
+			System.err.println(vo);
+
 			orderMapper.ordUpdate(vo);
+
 		}
 		
 	}
