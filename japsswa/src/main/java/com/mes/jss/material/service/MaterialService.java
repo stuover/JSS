@@ -3,7 +3,7 @@ package com.mes.jss.material.service;
 import java.util.List;
 
 import com.mes.jss.material.domain.AdjustmentListVO;
-import com.mes.jss.material.domain.DetaiListlVO;
+import com.mes.jss.material.domain.DetaiListVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrListVO;
@@ -37,6 +37,13 @@ public interface MaterialService {
 	// 입고 처리
 	public void mrIn(QualityListVO vo);
 	
+	// 반제품 입고
+	public void halfIn(PerformanceListVO vo);
+		
+	// 자재 입고 취소
+	public void mrDelete(MrListVO vo);
+
+	
 	// 거래처 리스트
 	public List<CustomerVO> cusSearch();
 	
@@ -44,7 +51,10 @@ public interface MaterialService {
 	public List<CustomerVO> cusListSearch(String result);
 	
 	// 자재 발주
-	public void orders(DetaiListlVO vo);
+	public void orders(DetaiListVO vo);
+	
+	// 자재 발주 취소
+	public void orderDel(DetaiListVO vo);
 	
 	// 자재 발주 조회
 	public List<MrOrderVO> OrderMain();
@@ -81,10 +91,9 @@ public interface MaterialService {
 	
 	// 생산 실적 리스트
 	public List<PerformanceVO> mrPerformanceList();
-
-	public void halfIn(PerformanceListVO vo);
-
-	public void mrDelete(MrListVO vo);
+	
+	
+	
 	
 	
 

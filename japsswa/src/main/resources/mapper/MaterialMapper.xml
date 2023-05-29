@@ -8,15 +8,35 @@
   	<!-- 자재 리스트 -->
   		<select id="getList" resultType="MrVO">
   		
-  		select i.item_type,m.mr_lot_number,i.item_name,m.item_code,i.item_name,e.emp_name,m.expire_date,m.store_date,m.store_count,m.store_reason_type,m.store_reason_code from emp e join material m on(e.emp_no=m.emp_no) join itemlist i on(m.item_code=i.item_code) 
-  		where to_char(store_date,'dd') = to_char(sysdate,'dd')
+  		select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_name,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code) 
+  		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   		
   		</select>  
   	
   	<!-- 자재 재고 리스트 -->
   	
   		<select id="getMrCount" resultType="MrVO">
-  		select item_code, item_name, item_type, save_material, sum(store_count) as total from itemlist join material using(item_code) group by item_code, item_name, item_type, save_material
+  		select item_code, 
+  		       item_name, 
+  		       item_type, 
+  		       save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist 
+  		  join material using(item_code) 
+  		 group by item_code, item_name, item_type, save_material
 							
   		
   		</select>
@@ -124,6 +144,19 @@
   			)
   		}
   		</select>
+  		
+  	<!--  발주취소 -->	
+  		<select id="mrOrderDelete" statementType="CALLABLE">
+  			{call mr_order_delete(
+  				#{mrOrderCode, mode=IN, jdbcType=VARCHAR}
+  			
+  			)
+  			}
+  			
+  		
+  		
+  		</select>
+  		
   	
   	<!-- 조정 될 리스트 -->	
   		<select id="mrAdGetList" resultType="MrAdjustmentVO">

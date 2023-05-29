@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class DetaiListlVO {
+public class DetaiListVO {
 	
 	 List<MrOrderDetailVO> list;
 }

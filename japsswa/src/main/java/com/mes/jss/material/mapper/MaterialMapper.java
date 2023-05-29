@@ -53,6 +53,9 @@ public interface MaterialMapper {
 	// 발주 등록
 	public void mrorderInsert(String result);
 	
+	// 발주 취소
+	public void mrOrderDelete(String mrOrderCode);
+	
 	// 발주 조회
 	public List<MrOrderVO> OrmGetList();
 	
@@ -86,6 +89,8 @@ public interface MaterialMapper {
 	
 	// 자재 불량 리스트
 	public List<MrErrorVO> ErrorGetList();
+
+	
 
 	
 	
