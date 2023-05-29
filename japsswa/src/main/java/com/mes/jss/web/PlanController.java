@@ -15,7 +15,6 @@ import com.mes.jss.production.domain.PlanDatasVO;
 import com.mes.jss.production.domain.PlanVO;
 import com.mes.jss.production.domain.SearchVO;
 import com.mes.jss.production.service.PlanService;
-import com.mes.jss.production.service.impl.PlanServiceImpl;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -26,7 +25,7 @@ import lombok.extern.log4j.Log4j2;
 public class PlanController {
 	
 
-	@Autowired PlanService planService = new PlanServiceImpl();
+	@Autowired PlanService planService;
 	
 	@RequestMapping("/planManage")
 	public String planManagement() {

@@ -1,6 +1,5 @@
 package com.mes.jss.web;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.service.FacilityService;
-import com.mes.jss.facility.service.impl.FacilityServiceimpl;
 
 @Controller
 public class FacilityController {
 
-	@Autowired FacilityService service = new FacilityServiceimpl();
+	@Autowired FacilityService service;
 	
 	// 설비
 	

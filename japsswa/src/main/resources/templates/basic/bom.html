@@ -34,7 +34,9 @@
 				      <div class="card-body">
 				      <!-- card-body start -->
 				        <h5 class="page-title">BOM</h5>
-				        
+				        				<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+				                          	<button type="button" id="excel" class="btn btn-success" style="display : none;">엑셀</button>
+				        				</div>
 				        <div id="bomGrid"></div>
 					  <!-- card-body end -->
 				      </div>
@@ -250,10 +252,19 @@ modalGrid.on('click',function(e){
 			console.log(reject);
 		}
 	})
-	$('#searchModal').modal('hide');	
+	$('#searchModal').modal('hide');
+	$('#excel').css('display', 'block');
 });
 
-
+const options = {
+		  includeHiddenColumns: true,
+		  onlySelected: true,
+		  fileName: 'bom',
+		};
+		
+$('#excel').on('click', function(){
+	bomGrid.export('xlsx', options);
+})
 
 
 

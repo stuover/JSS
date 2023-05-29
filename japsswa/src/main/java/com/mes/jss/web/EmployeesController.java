@@ -16,14 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.service.EmployeesService;
-import com.mes.jss.basic.service.impl.EmployeesServiceImpl;
 
 @Controller
 public class EmployeesController {
 
 	@Autowired
-	EmployeesService empService = new EmployeesServiceImpl();
-
+	EmployeesService empService;
 	@RequestMapping("/employee")
 	public String testgrid(Model model) {
 

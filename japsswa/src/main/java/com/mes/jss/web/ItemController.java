@@ -5,23 +5,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.basic.domain.ItemVO;
 import com.mes.jss.basic.service.CommonService;
 import com.mes.jss.basic.service.ItemService;
-import com.mes.jss.basic.service.impl.CommonServiceImpl;
-import com.mes.jss.basic.service.impl.ItemServiceImpl;
 
 @Controller
 public class ItemController {
-	@Autowired ItemService itemService = new ItemServiceImpl();
-	@Autowired CommonService commService= new CommonServiceImpl();
+	@Autowired ItemService itemService;
+	@Autowired CommonService commService;
 
 	
 	//  부분검색

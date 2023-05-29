@@ -14,12 +14,16 @@ public class QualityVO {	// 품질 VO
 	Date startDate;
 	Date endDate;
 	long empNo;
-	long testQuantity;
-	long errQuantity;
+	
+	double testQuantity;
+	double errQuantity;
+	
 	long passQuantity;
 	double defectiveRate;
 	String testNote;
 	double error;
 	String empName;
 	String itemName;
+	
+	
 }

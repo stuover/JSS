@@ -15,12 +15,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.service.FacilityService;
-import com.mes.jss.facility.service.impl.FacilityServiceimpl;
 
 @Controller
 public class DownController {
 	
-	@Autowired FacilityService service = new FacilityServiceimpl();
+	@Autowired FacilityService service;
 
 	@GetMapping("/downtime")
 	public String  downtime(Model model) {

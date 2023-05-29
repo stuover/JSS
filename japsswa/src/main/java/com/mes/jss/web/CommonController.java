@@ -16,13 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mes.jss.basic.domain.CommListVO;
 import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.basic.service.CommonService;
-import com.mes.jss.basic.service.impl.CommonServiceImpl;
 
 @Controller
 public class CommonController {
 
 	@Autowired 
-	CommonService commService = new CommonServiceImpl();
+	CommonService commService;
 	
 	@GetMapping("/common")
 	public String Common() {

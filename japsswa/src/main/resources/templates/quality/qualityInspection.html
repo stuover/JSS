@@ -48,12 +48,15 @@
 	        <h4>검사 목록</h4>
 	        <div id="testGrid"></div>
 	        <div>
-	            <button id="startBtn" type="button">저장</button>
+	            <button id="finshBtn" type="button">검사완료</button>
 	        </div>
 		</div>
 
 
 <script>
+const token = $("meta[name='_csrf']").attr("content")
+const header = $("meta[name='_csrf_header']").attr("content");
+
 
 var qualityGrid = new tui.Grid({
     el: document.getElementById('qualityGrid'),
@@ -76,6 +79,9 @@ var qualityGrid = new tui.Grid({
 	    }, {
 	        header: '품목명',
 	        name: 'itemName'
+	    }, {
+	        header: '구분',
+	        name: 'itemType'
 	    }, {
 	        header: '상세',
 	        name: 'situation'
@@ -129,21 +135,56 @@ var testGrid = new tui.Grid({
     }, {
         header: '검사기준치',
         name: 'testStandard'
+    }, {
+        header: '합격량',
+        name: 'passQuantity',
+    	editor: 'text'
+    }, {
+        header: '불량량',
+        name: 'mrCount'
+    }, {
+        header: '불량률',
+        name: 'defectiveRate'
+    }, {
+        header: '합격여부',
+        name: 'testResult',
+        editor:{
+        	type : 'radio',
+        	options: {
+        		listItems : [
+        			{text : '합 격', value:'합격'},
+        			{text : '불합격', value:'불합격'}	
+        		]
+        	}
+        }
     }
     ]
+    ,summary: {
+        height: 40,
+        position: 'bottom', // or 'top'
+        columnContent: {
+           eachPrice: {
+            template: function(valueMap) {
+              return `TOTAL: $('<input type="text">')`;
+            }
+          }
+        }
+      }
 });
 
+var qualityKey = null;
 qualityGrid.on('click', function(e){
-	
+	qualityKey = e.rowKey;
 	$.ajax({
 		url : '/getCheckList',
 		method:"get",
 		dataType : "json",
 		data : {itemCode : qualityGrid.getRow(e.rowKey).itemCode},
 		success: function(result){
-			console.log(result);
 			testGrid.resetData(result)
+			
 			$('#CheckList').css("display", 'block')
+			testGrid.refreshLayout();
 		}, error : function(reject){
 			console.log(reject)
 		}
@@ -151,6 +192,34 @@ qualityGrid.on('click', function(e){
 	})
 	
 })
+
+testGrid.on('editingFinish', function(e){
+	let row = testGrid.getRow(e.rowKey);
+    testGrid.setValue(e.rowKey, "mrCount", qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity, false)
+    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100+"%", false)
+})
+
+
+
+ $('#finshBtn').on('click',function(){
+ 	console.log(qualityGrid.getRow(qualityKey))
+ 	console.log(testGrid.getData())
+	
+ 	$.ajax({
+ 		url : "/completeTest",
+ 		method : "post",
+ 		contentType : "application/json",
+ 		data : JSON.stringify({list : testGrid.getData(), vo : qualityGrid.getRow(qualityKey)}),
+ 		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},
+ 		success : function(result) {
+			
+ 		}, error : function (reject) {
+ 			console.log(reject)
+ 		}
+ 	})
+ })
 
 </script>
 </th:block>
