@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen"
+        href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <style>
+        button {
+            width: 100px;
+            margin-right: 550px;
+            border-radius: 20px;
+        }
+
+        .modal-header {
+            text-align: center;
+        }
+
+        #cenLbtn {
+            margin-right: 20px;
+        }
+
+        h4 {
+            text-align: center;
+        }
+
+        .tui-grid-cell-content {
+            text-align: center;
+        }
+    </style>
+</head>
+
+    <th:block layout:fragment="content">
+        <h4>검사 예정</h4>
+        <div id="qualityGrid"></div>
+
+        <!-- /.modal -->
+
+		<div id="CheckList" style = "display : none;">
+	        <h4>검사 목록</h4>
+	        <div id="testGrid"></div>
+	        <div>
+	            <button id="startBtn" type="button">저장</button>
+	        </div>
+		</div>
+
+
+<script>
+
+var qualityGrid = new tui.Grid({
+    el: document.getElementById('qualityGrid'),
+    scrollX: false,
+    scrollY: false,
+    pageOptions: {
+        useClient: true,
+        perPage: 5
+    },
+    columns: [
+    	{
+	         header: '검사코드',
+	         name: 'testCode'
+	   	 }, {
+	   		 header: '상세코드',
+	         name: 'mrOrderDetCode'
+		 }, {
+	        header: '품목코드',
+	        name: 'itemCode'
+	    }, {
+	        header: '품목명',
+	        name: 'itemName'
+	    }, {
+	        header: '상세',
+	        name: 'situation'
+	    }, {
+	        header: '검사수량',
+	        name: 'testQuantity',
+    	}, {
+	        header: '비고',
+	        name: 'testNote'
+    	}
+	    ]
+});
+
+function qualityGridList(){
+	$.ajax({
+		url : "/qualityList",
+		method : "get",
+		dataType : "json",
+		success : function (result) {
+			qualityGrid.resetData(result)
+		}, error : function (reject) {
+			console.log(reject)
+		}
+	})	
+}
+
+qualityGridList();
+
+var testGrid = new tui.Grid({
+    el: document.getElementById("testGrid"),
+    scrollX: false,
+    scrollY: false,
+    pageOptions: {
+        useClient: true,
+        perPage: 7
+    },
+    rowHeaders: [{
+        type: 'checkbox',
+        header: " "
+    }],
+    columns: [
+    	{
+        header: '검사항목코드',
+        name: 'checklistCode'
+    }, {
+        header: '검사명',
+        name: 'testName'
+    }, {
+        header: '검사설비',
+        name: 'facName'
+    }, {
+        header: '검사기준치',
+        name: 'testStandard'
+    }
+    ]
+});
+
+qualityGrid.on('click', function(e){
+	
+	$.ajax({
+		url : '/getCheckList',
+		method:"get",
+		dataType : "json",
+		data : {itemCode : qualityGrid.getRow(e.rowKey).itemCode},
+		success: function(result){
+			console.log(result);
+			testGrid.resetData(result)
+			$('#CheckList').css("display", 'block')
+		}, error : function(reject){
+			console.log(reject)
+		}
+		
+	})
+	
+})
+
+</script>
+</th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
