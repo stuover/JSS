@@ -12,7 +12,17 @@
   		
   		</select>  
   		
+  		
+  		<select id ="qualityList" resultType="QualityVO">
+  			select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation, test_Quantity, test_Note
+  			from quality_test a join itemlist b
+  			on a.item_code = b.item_code
+  			order by test_code
+  		</select>
   
-  	
+  		<select id = "getCheckList" resultType="CheckListVO">
+  			select checklist_code, test_name, fac_name, test_standard from checklist where item_code = #{itemCode}
+  		
+  		</select>
   	
   </mapper>
