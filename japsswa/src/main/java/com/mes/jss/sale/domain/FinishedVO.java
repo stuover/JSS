@@ -6,15 +6,17 @@ import lombok.Data;
 
 @Data
 public class FinishedVO {
-	private String fLotNo;
-	private int finishedCount;
-	private Date storeInDate;
-	private Date fExpiration;
-	private String itemCode;
-	private String itemName;
-	private int empNo;
-	private String performanceId;
-	private Date endTime;
-	private int passItem;
+	 String fnLotNo;
+	 long fnCount;
+	 Date fnStoreIn;
+	 Date fnExpiration;
+	 String itemCode;
+	 String itemName;
+	 long empNo;
+	 String empName;
+	 String performanceId;
+	 Date endTime;
+	 long passItem;
+	 String ordDetStatus;
 	
 }

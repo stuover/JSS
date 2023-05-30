@@ -9,7 +9,6 @@ public class OrderVO {
 	private String ordId;
 	private String ordName;
 	private long totalPrice;
-	private String ordStatus;
 	private String customerId;
 	private Date ordDate;
 	private Long empNo;
@@ -20,6 +19,7 @@ public class OrderVO {
 	private String itemCode;
 	private long unitPrice;
 	private long eachPrice;
+	private String ordDetStatus;
 	
 	private String customerName;
 	private String custAddr;

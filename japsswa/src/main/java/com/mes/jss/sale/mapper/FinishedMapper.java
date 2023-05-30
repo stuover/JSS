@@ -8,4 +8,12 @@ public interface FinishedMapper {
 
 	List<FinishedVO> passList();
 
+	public void fRegister(long manager, FinishedVO fvo);
+
+	List<FinishedVO> storeInItem();
+
+
+
+
+
 }
