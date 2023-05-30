@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mes.jss.basic.domain.CustomerVO;
 import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
@@ -22,7 +23,6 @@ import com.mes.jss.production.domain.PerformanceListVO;
 import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.quality.domain.QualityVO;
-import com.mes.jss.sale.domain.CustomerVO;
 
 @Service("materialService")
 public class MaterialServiceImpl implements MaterialService {

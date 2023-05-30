@@ -1,5 +1,6 @@
 package com.mes.jss.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.quality.domain.TestHistoryListVO;
+import com.mes.jss.quality.domain.TestHistoryVO;
 import com.mes.jss.quality.service.QualityService;
 
 
@@ -76,15 +78,58 @@ public class QualityController {
 	
 	@ResponseBody
 	@RequestMapping("/completeTest")
-	public String completeTest(@RequestBody TestHistoryListVO data) {
+	public String completeTest(@RequestBody TestHistoryListVO data, Principal principal) {
 		System.err.println(data);
-		qualityService.completeTest(data);
+		qualityService.completeTest(data, Long.parseLong(principal.getName()));
 		return null;
 	}
 	
 	
+	@GetMapping("/passQuality")
+	public String passQuality() {
+
+		return "quality/passQuality";
+						
+	}
+	
+	@GetMapping("/errQuality")
+	public String errQuality() {
+
+		return "quality/errQuality";
+						
+	}
+	
+	@ResponseBody
+	@GetMapping("/passList")
+	public List<QualityVO> passQualityList(){
+		
+		return qualityService.getPassQualityList();
+	}
 	
 	
+	@ResponseBody
+	@GetMapping("/errList")
+	public List<QualityVO> errQualityList(){
+		
+		return qualityService.getErrQualityList();
+	}
 	
+	
+	@ResponseBody
+	@RequestMapping("/getHistoryList")
+	public List<TestHistoryVO> getHistoryList(@RequestParam String testCode){
+		
+		return qualityService.getHistoryList(testCode);
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/removeTest")
+	public String removeTest(@RequestBody TestHistoryListVO data) {
+		qualityService.removeTest(data);
+		return null;
+	}
+	
+
 	
 }

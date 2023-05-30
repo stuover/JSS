@@ -1,4 +1,4 @@
-package com.mes.jss.sale.domain;
+package com.mes.jss.basic.domain;
 
 import java.util.Date;
 
@@ -14,10 +14,12 @@ public class CustomerVO {
 	String custPart;
 	String contractStatus;
 	String custEtc;
+	
 	int empNo;
 	String itemName;
 	String itemCode;
 	long itemPrice;
+	
 	String contractId;
 	String contProd;
 	Date contDate;

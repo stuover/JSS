@@ -6,6 +6,7 @@ import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.quality.domain.TestHistoryListVO;
+import com.mes.jss.quality.domain.TestHistoryVO;
 
 public interface QualityService {
 
@@ -17,5 +18,13 @@ public interface QualityService {
 
 	public List<CheckListVO> getCheckList(String itemCode);
 
-	public void completeTest(TestHistoryListVO data);
+	public void completeTest(TestHistoryListVO data, long empNo);
+
+	public List<QualityVO> getPassQualityList();
+
+	public List<QualityVO> getErrQualityList();
+
+	public List<TestHistoryVO> getHistoryList(String testCode);
+
+	public void removeTest(TestHistoryListVO data);
 }

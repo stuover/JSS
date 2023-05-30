@@ -2,6 +2,7 @@ package com.mes.jss.material.mapper;
 
 import java.util.List;
 
+import com.mes.jss.basic.domain.CustomerVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
@@ -10,7 +11,6 @@ import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.quality.domain.QualityVO;
-import com.mes.jss.sale.domain.CustomerVO;
 
 public interface MaterialMapper {
 	

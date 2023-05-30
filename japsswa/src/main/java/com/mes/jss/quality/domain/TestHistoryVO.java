@@ -9,4 +9,10 @@ public class TestHistoryVO {
 	public String testResult;
 	public double mrCount;
 	public String testCode;
+	
+	
+	public String testName;
+	public String facName;
+	public String testStandard;
+	public String itemCode;
 }

@@ -13,6 +13,9 @@
   		</select>  
   		
   		
+  		
+  		
+  		
   		<select id ="qualityList" resultType="QualityVO">
   			select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation, test_Quantity, test_Note, item_type
   			from quality_test a join itemlist b
@@ -26,25 +29,30 @@
   		
   		</select>
   		
+  		
+  		
+  		
   		<update id="updateQuality" parameterType="QualityVO">
   			update Quality_test
   			set end_date = sysdate,
   				err_quantity = #{errQuantity},
   				pass_quantity = #{testQuantity} - #{errQuantity},
   				defective_rate = #{errQuantity} / #{testQuantity}*100,
-  				situation = '검사완료'
-  			where test_Code = #{testCode}
+  				situation = '검사완료',
+  				test_note = '합격',
+  				emp_no = #{empNo}
+  			where test_code = #{testCode}
   		</update>
   		
   		<update id="samUpdateQuality" parameterType="QualityVO">
   			update Quality_test
   			set end_date = sysdate,
-  				err_quantity = #{errQuantity},
+  				err_Quantity = #{errQuantity},
   				pass_quantity = (#{testQuantity} - #{errQuantity}),
   				defective_rate = (#{errQuantity} / #{testQuantity} * 100),
   				situation = '검사완료',
   				test_note = #{testNote}
-  			where testCode = #{testCode}
+  			where test_Code = #{testCode}
   		</update>
   		
   		
@@ -53,7 +61,55 @@
   		</insert>
   		
   		
+  		<select id ="getPassQualityList" resultType="QualityVO">
+  			select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation, test_Quantity, test_Note, item_type, PASS_QUANTITY,err_QUANTITY,DEFECTIVE_RATE, c.emp_name
+  			from quality_test a join itemlist b
+  			on (a.item_code = b.item_code) join emp c
+  										   on(a.emp_no = c.emp_no)
+  			where situation = '검사완료'
+  			and test_note = '합격'
+  			order by test_code desc
+  		</select>
   		
+  		
+  		<select id ="getErrQualityList" resultType="QualityVO">
+  			select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation, test_Quantity, test_Note, item_type, PASS_QUANTITY,err_QUANTITY,DEFECTIVE_RATE, c.emp_name
+  			from quality_test a join itemlist b
+  			on (a.item_code = b.item_code) join emp c
+  											on(a.emp_no = c.emp_no)
+  			where situation = '검사완료'
+  			and test_note = '불합격'
+  			order by test_code desc
+  		</select>
+  		
+  		<select id="getHistoryList" resultType="TestHistoryVO">
+  			select test_history_code, a.checklist_code, test_result, mr_count, test_code, b.test_name, fac_name, test_standard
+  			from test_history a join checklist b
+  			on a.checklist_code = b.checklist_code
+  			where test_code = #{testCode}
+  		</select>
+  		
+  		<update id="updateHistory">
+  			update test_history
+  			set test_result = #{testResult},
+  				mr_count = #{mrCount}
+  			where test_history_code = #{testHistoryCode}
+  		</update>
+  		
+  		
+  		<update id="cancelTest">
+  			update Quality_test
+  			set	situation = '검사대기',
+  				test_note = null,
+  				err_quantity = null,
+  				pass_quantity = null,
+  				defective_rate = null
+  			where test_code = #{testCode}
+  		</update>
+  		
+  		<delete id="deleteTestHistory">
+  			delete from test_history where test_history_code = #{testHistoryCode}
+  		</delete>
   		
   	
   </mapper>
