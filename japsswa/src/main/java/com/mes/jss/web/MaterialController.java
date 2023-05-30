@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.basic.domain.CustomerVO;
 import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.DetaiListVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
@@ -27,7 +28,6 @@ import com.mes.jss.production.domain.PerformanceListVO;
 import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.quality.domain.QualityVO;
-import com.mes.jss.sale.domain.CustomerVO;
 
 
 /*

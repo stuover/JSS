@@ -25,6 +25,24 @@ public interface QualityMapper {
 
 
 	public void insertHistory(TestHistoryVO vo);
+
+
+	public List<QualityVO> getPassQualityList();
+
+
+	public List<QualityVO> getErrQualityList();
+
+
+	public List<TestHistoryVO> getHistoryList(String testCode);
+
+
+	public void updateHistory(TestHistoryVO vo);
+
+
+	public void cancelTest(String testCode);
+
+
+	public void deleteTestHistory(String testHistoryCode);
 	
 	
 }

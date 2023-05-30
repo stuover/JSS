@@ -14,7 +14,7 @@ public class QualityVO {	// 품질 VO
 	Date startDate;
 	Date endDate;
 	long empNo;
-	
+	String empName;
 	double testQuantity;
 	double errQuantity;
 	
@@ -22,7 +22,6 @@ public class QualityVO {	// 품질 VO
 	double defectiveRate;
 	String testNote;
 	double error;
-	String empName;
 	String itemName;
 	
 	
