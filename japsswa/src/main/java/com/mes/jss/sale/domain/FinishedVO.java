@@ -17,6 +17,6 @@ public class FinishedVO {
 	 String performanceId;
 	 Date endTime;
 	 long passItem;
-	 String ordDetStatus;
+	 String orddetStatus;
 	
 }

@@ -7,15 +7,15 @@
 
 	<select id="passList" resultType="FinishedVO">
 		select p.performance_id, 
-	       i.item_code, 
-	       i.item_name, 
-	       p.end_time, 
-	       p.pass_item
-			from performance p 
-	        join itemlist i
-			on p.item_code = i.item_code
-	       where item_type = '완제품'
-	       and end_time is not null
+		       i.item_code, 
+		       i.item_name, 
+		       p.end_time, 
+		       p.pass_item
+				from performance p 
+		        join itemlist i
+				on p.item_code = i.item_code
+		       where item_type = '완제품'
+		       and end_time is not null
 	</select>
 	
 	<select id="fRegister" statementType="CALLABLE">
@@ -43,6 +43,10 @@
 						    join emp e on(f.emp_no = e.emp_no)
             
 	</select>
+	
+	<delete id="delFinished" parameterType="FinishedVO">
+		delete from finished where fn_lot_no = #{fnLotNo}
+	</delete>
 
 
 </mapper>

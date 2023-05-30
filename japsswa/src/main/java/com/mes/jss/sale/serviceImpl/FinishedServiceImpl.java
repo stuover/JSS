@@ -39,4 +39,12 @@ public class FinishedServiceImpl implements FinishedService{
 		
 	}
 
+	@Override
+	public void delFinished(List<FinishedVO> list) {
+		for(FinishedVO vo : list) {
+			finishedMapper.delFinished(vo);
+		}
+		
+	}
+
 }
