@@ -141,120 +141,118 @@
 		  };  		
   		
 		
-  		// 생산 계획 공통(초기화면)
-  		let gridData2 = [{}];
-  		const grid2 = new Grid({
-		      el: document.getElementById('grid2'),
-		      data: gridData2,
-		      scrollX: false,
-		      scrollY: false,
-		      columns: [
-			     {
-			  	header: '계획코드',
-			  	name: 'planId',
-				hidden: true
-				},		    	  
-		        {
-  		      header: '계획명',
-  		      name: 'planName',
-  		      editor: 'text'
-  		     },
-    		    {
-    		     header: '계획날짜',
-    		     name: 'planDate',
-    		     formatter: function (e) {
-    		    	 
-    		    	 let result = e.value;
-    		    	 if(result == null) {
-    		    		 result = e.value
-    		    		 return;
-    		    	 }else {
-    		    		 result = e.value.substr(0,10)
- 		        		return result;
-    		    	 }
-                 	},
-    		     editor:  'datePicker'
-  	             
-    		    }, 		    
-    		    {
-    		     header: '담당자',
-    		     name: 'empName'
-    		    }	   
-		      ]
-		    });
+		// 생산 계획 공통(초기화면)
+		  let gridData2 = [{}];
+		  const grid2 = new Grid({
+		  	el: document.getElementById('grid2'),
+		  	data: gridData2,
+		  	scrollX: false,
+		  	scrollY: false,
+		  	columns: [
+		  		{
+		  			header: '계획코드',
+		  			name: 'planId',
+		  			hidden: true
+		  		},		    	  
+		  		{
+		  			header: '계획명',
+		  			name: 'planName',
+		  			editor: 'text'
+		  		},
+		  		{
+		  			header: '계획날짜',
+		  			name: 'planDate',
+		  			formatter: function (e) {
+		  				 
+		  				let result = e.value;
+		  				if(result == null) {
+		  					result = e.value
+		  					return;
+		  				}else {
+		  					result = e.value.substr(0,10)
+		  					return result;
+		  				}
+		  			},
+		  			editor:  'datePicker'		 
+		  		}, 		    
+		  		{
+		  		 header: '담당자',
+		  		 name: 'empName'
+		  		}	   
+		  	]
+		  });
   		
-  
+
+		// 생산계획 상세(초기회면)
+		let gridData = [];	 
+		const grid = new Grid({
+			el: document.getElementById('grid'),
+			data: gridData,
+			rowHeaders: ['checkbox'],
+			scrollX: false,
+			scrollY: true,
+			columns: [
+				{
+					header: '계획상세코드',
+					name: 'pdetailId',
+					hidden: true
+				},
+				{
+					header: '제품코드',
+					name: 'itemCode'
+				},
+				{
+					header: '제품명',
+					name: 'itemName'
+				},
+				{
+					header: '계획 수량',
+					name: 'planAmount',   
+					editor: 'text'
+				},
+				{
+					header: '계획시작날짜',
+					name: 'planStart',
+					formatter: function (e) {
+						 
+						let result = e.value;
+						if(result == null) {
+							result = e.value
+							return;
+						}else {
+							result = e.value.substr(0,10)
+							return result;
+						}
+					},      		  
+					editor: 'datePicker'
+				 },
+				 {
+					header: '계획완료날짜',
+					name: 'planEnd',
+					formatter: function (e) {
+						 
+						let result = e.value;
+						if(result == null) {
+							result = e.value
+							return;
+						}else {
+							result = e.value.substr(0,10)
+							return result;
+						}
+					},  
+					editor:  'datePicker'
+				},    		        
+				{
+					header: '작업우선순위',
+					name: 'planPriority',
+					editor: 'text'
+				}	   
+			]
+		});
   		    
-  		    // 생산계획 상세(초기회면)
-			let gridData = [];	 
-  		    const grid = new Grid({
-  		    	el: document.getElementById('grid'),
-  		     	data: gridData,
-  		        rowHeaders: ['checkbox'],
-  		     	scrollX: false,
-  		    	scrollY: true,
-  		    	columns: [
-  	  		    {
-  	  		      header: '계획상세코드',
-  	  		      name: 'pdetailId',
-  	  		      hidden: true
-  	  		    },
-  	  		    {
-    	  		  header: '제품코드',
-    	  		  name: 'itemCode'
-    	  		 },
-  		        {
-  		          header: '제품명',
-  		          name: 'itemName'
-  		        },
-  		        {
-  		          header: '계획 수량',
-  		          name: 'planAmount',   
-      		      editor: 'text'
-  		        },
-      		     {
-        		  header: '계획시작날짜',
-        		  name: 'planStart',
-      		      formatter: function (e) {
-        		    	 
-    		    	  let result = e.value;
-    		    	  if(result == null) {
-    		    		  result = e.value
-    		    		  return;
-    		    	  }else {
-    		    		  result = e.value.substr(0,10)
- 		        		  return result;
-						  }
-                  },      		  
-        		  editor: 'datePicker'
-        		 },
-        		 {
-           		  header: '계획완료날짜',
-           		  name: 'planEnd',
-      		      formatter: function (e) {
-        		    	 
-    		    	  let result = e.value;
-    		    	  if(result == null) {
-    		    		  result = e.value
-    		    		  return;
-    		    	  }else {
-    		    		  result = e.value.substr(0,10)
- 		        		  return result;
-						  }
-                  },  
-           		  editor:  'datePicker'
-           		 },    		        
-      		     {
-      		      header: '작업우선순위',
-      		      name: 'planPriority',
-      		      editor: 'text'
-      		     }	   
-  		      ]
-  		    });
-  		    
-			// 그리드 edit 시작 -> checkBox : checked
-			grid.on('editingStart', (e) => { grid.check(e.rowKey)})
-  		    
+		// 그리드 edit 시작 -> checkBox : checked
+		grid.on('editingStart', (e) => { grid.check(e.rowKey)})
+ 		    
     
   		    
   		    // 검색
@@ -564,7 +562,7 @@
   												$.ajax({
 	  												url : "/modifyPlanAjax",
 	  												contentType : "application/json", 
-	  												data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
+	  												data :  JSON.stringify({head : grid2.getData()[0], detailList : grid.getCheckedRows()}) ,
 	  												method :"POST",
 	  												dataType : "JSON",
 	  												beforeSend: function(xhr){

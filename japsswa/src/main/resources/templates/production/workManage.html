@@ -34,6 +34,7 @@
 				  <div class="col-sm-12">
 				    <div class="card">
 				      <div class="card-body">
+				      <h5 class="page-title">작업지시</h5>
                   <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
                   	<button id="saveBtn" class="btn btn-primary">저장</button>
@@ -63,7 +64,7 @@
 					  <div class="card-body">
 					 	<h5 class="page-title">BOM 및 공정 정보</h5>
 						  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-							<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">홀드</button>
+							<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">자재 홀드</button>
 							</div>
 							<!-- card-body start -->
 						
@@ -181,7 +182,7 @@
   			$('#afterSearch').hide();
   			// 담당자(로그인 사원이름) 정보 input에 넣어준 뒤 숨김.
   			$('#empName').hide();
-  			empName = $('#empName').val();
+  			let empName = $('#empName').val();
   			// 그리드 담당자 셀에 담당자 이름 넣어주기.
   			commonGrid.setValue(0, 'empName', empName, false);
   				  
@@ -226,6 +227,11 @@
 		          name: 'planName'
 		        },
 		        {
+			      header: '계획날짜',
+			      name: 'planDate',
+		          hidden: true
+			    },		        
+		        {
 		          header: '지시명',
 		          name: 'workName',
 				  editor: 'text'
@@ -233,17 +239,7 @@
 		        {
 		          header: '지시날짜',
 		          name: 'workDate',
-				  formatter: function (e) {
-					let result = e.value;
-					if(result == null) {
-						result = e.value;
-						return;
-					} else {
-						result = e.value.substr(0,10);
-						return;
-					}
-				  },
-				  editor: 'datePicker'
+		          editor: 'datePicker',
 		        },
 		        {
 		          header: '담당자',
@@ -288,99 +284,7 @@
              ]
            });
 		
-  		
-		// 계획명 셀 더블클릭 -> 생산계획 조회 모달창 띄우기
-		commonGrid.on('dblclick', (ev) => {
-			
-			if(ev.columnName == 'planName') {
-				console.log('Modal Open');
-				$('#planSearchModal').modal('show');
-				
-				$('#planSearchModal').on('shown.bs.modal', function (e) {
-					$.ajax({
-							url : "/modalPlanListAjax",
-							method :"GET",
-							dataType : "JSON",
-							success : function(result){
-								console.log(result);
-								planSearchGrid.resetData(result);
-								},
-							error : function(reject){
-								console.log(reject);
-								}
-							});	   
-				})
-			}
-			
-		});
-		
-		
-      	// 기간 설정 후 검색 ->  기간 내 수립한 생산계획 리스트 
-		    $('#plan-search-btn').click(function (){
-			let startTime = $('#plan-st-date').val();
-  		    let endTime = $('#plan-end-date').val();
-  		    
-  		    console.log(startTime);
-  		    console.log(endTime);
-		    
-				$.ajax({
-					url : "/modalPlanResultAjax",
-					data : {'startTime' : startTime , 'endTime' : endTime},
-					method :"GET",
-					dataType : "JSON",
-					success : function(result){
-						console.log(result);
-						planSearchGrid.resetData(result);
-					},
-					error : function(reject){
-						console.log(reject);
-					}
-				});	
-		    	
-		  	});
-      	
-			// 생산계획 조회 결과 하나만 체크할 수 있게 설정.
-        	planSearchGrid.on('check', function (e) {
-	            var checkRows = planSearchGrid.getCheckedRowKeys();
-	            checkRows.forEach(function( key, idx){                      
-	                if(key != e.rowKey){
-	                	planSearchGrid.uncheck(key);
-	                }
-	            });
-	        });
-			
-			
-          	// 선택 버튼 -> 모달창 닫기 -> 선택한 생산 계획 및 세부 계획 출력.
-  		    let planInfo = [];
-			let planCode = '';
-			$('#selectPlanBtn').click(function () {
-				planCode = planSearchGrid.getCheckedRows()[0].planId;
-				planInfo = [{planId : planSearchGrid.getCheckedRows()[0].planId ,planName : planSearchGrid.getCheckedRows()[0].planName}];
-				 console.log('planId = ' + planCode);
-				 console.log(planInfo);
-	 
-				$('#planSearchModal').modal('hide');
-	  			  
-				$('#planSearchModal').on('hidden.bs.modal', function (e) {
-					 commonGridData = planInfo;
-					 commonGrid.resetData(commonGridData);
-					 
-					 $.ajax({
-							url : "/planSearchResultAjax",
-							data : {planId : planCode},
-							method :"GET",
-							dataType : "JSON",
-							success : function(result){
-								console.log('result : '+ result);
-								detailGrid.resetData(result);
-							},
-		  					error : function(reject){
-		  						console.log(reject);
-		  					}
-						});	 				 
-				 });	
-			});	
-		
+ 
   		    
   		// 생산계획 상세(초기회면)
 		let detailGridData = [];
@@ -392,10 +296,15 @@
 		scrollY: false,
 		columns: [
 			{
-		     	header: '세부지시 코드',
+		     	header: '지시 상세코드',
 		    	name: 'wdetailId',
 		    	hidden: true
 		     },
+		     {
+			   header: '계획 상세코드',
+			   name: 'pdetailId',
+			   hidden: true
+			  },
 		     {
 		        header: '제품코드',
 		        name: 'itemCode',
@@ -413,32 +322,11 @@
 		      {
 		        header: '지시 시작날짜',
 		        name: 'workStart',
-				formatter: function (e) {
-					let result = e.value;
-					
-					if(result == null) {
-						result = e.value;
-						return;
-					} else {
-						result = e.value.substr(0,10);
-						return;
-					}
-				 },
 				editor: 'datePicker'
 		      },
 			  {
 		        header: '지시 완료날짜',
 		        name: 'workEnd',
-				formatter: function (e) {
-					let result = e.value;
-					if(result == null) {
-						result = e.value;
-						return;
-					} else {
-						result = e.value.substr(0,10);
-						return;
-					}
-			  },
 				editor: 'datePicker'
 		      },
 		      {
@@ -454,71 +342,160 @@
 		     ]
 		   });
 		
-			// 생산계획 조회 결과 하나만 체크할 수 있게 설정.
-	    	detailGrid.on('check', function (e) {
-	            let checkRows = detailGrid.getCheckedRowKeys();
-	            checkRows.forEach(function( key, idx){                      
-	                if(key != e.rowKey){
-	                	detailGrid.uncheck(key);
-	                }
-	            });
-	        });
-  		    	
+		
+			// 작업지시 세부사항 편집 시 해당 row 자동으로 체크
+			detailGrid.on('editingStart', (e) => {detailGrid.check(e.rowKey)});
+						
+	 		
+			// 계획명 셀 더블클릭 -> 생산계획 조회 모달창 띄우기
+			commonGrid.on('dblclick', (ev) => {
+				
+				if(ev.columnName == 'planName') {
+					console.log('Modal Open');
+					$('#planSearchModal').modal('show');
+					
+					$('#planSearchModal').on('shown.bs.modal', function (e) {
+						$.ajax({
+								url : "/modalPlanListAjax",
+								method :"GET",
+								dataType : "JSON",
+								success : function(result){
+									console.log(result);
+									planSearchGrid.resetData(result);
+									},
+								error : function(reject){
+									console.log(reject);
+									}
+								});	   
+					})
+				}
+				
+			});
 			
+
+			// 기간 설정 후 검색 ->  기간 내 수립한 생산계획 리스트 
+			$('#plan-search-btn').click(function (){
+			let startTime = $('#plan-st-date').val();
+			let endTime = $('#plan-end-date').val();
+
+				$.ajax({
+					url : "/modalPlanResultAjax",
+					data : {'startTime' : startTime , 'endTime' : endTime},
+					method :"GET",
+					dataType : "JSON",
+					success : function(result){
+						console.log(result);
+						planSearchGrid.resetData(result);
+					},
+					error : function(reject){
+						console.log(reject);
+					}
+				});	
+				
+			});
+
+			// 생산계획 조회 모달창 : 결과 하나만 체크할 수 있게 설정.
+			planSearchGrid.on('check', function (e) {
+				var checkRows = planSearchGrid.getCheckedRowKeys();
+				checkRows.forEach(function( key, idx){                      
+					if(key != e.rowKey){
+						planSearchGrid.uncheck(key);
+					}
+				});
+			});
+
+
+			// 선택 버튼 -> 모달창 닫기 -> 선택한 생산 계획 및 세부 계획 출력.
+			let planInfo = [];
+			let planCode = '';
+			$('#selectPlanBtn').click(function () {
+				planCode = planSearchGrid.getCheckedRows()[0].planId;
+				planInfo = [{planId : planSearchGrid.getCheckedRows()[0].planId ,planName : planSearchGrid.getCheckedRows()[0].planName, planDate : planSearchGrid.getCheckedRows()[0].planDate}];
+				 console.log('planId = ' + planCode);
+				 console.log(planInfo);
+
+				$('#planSearchModal').modal('hide');
+				  
+				$('#planSearchModal').on('hidden.bs.modal', function (e) {
+					 commonGridData = planInfo;
+					 commonGrid.resetData(commonGridData);
+					 
+			  		// 그리드 담당자 셀에 담당자 이름 넣어주기.
+					let empName = $('#empName').val(); 
+			  		commonGrid.setValue(0, 'empName', empName, false);
+					 
+					 $.ajax({
+							url : "/planSearchResultAjax",
+							data : {planId : planCode},
+							method :"GET",
+							dataType : "JSON",
+							success : function(result){
+								console.log('result : '+ result);
+								detailGrid.resetData(result);
+							},
+							error : function(reject){
+								console.log(reject);
+							}
+						});	 				 
+				 });	
+			});	
+			
+		
+			//
 			// 제품 검색 모달창
 			let itemSearchGridData = [];	 
-  		    const itemSearchGrid = new Grid({
-  		    	el: document.getElementById('itemSearchGrid'),
-  		     	data: itemSearchGridData,
-  		        rowHeaders: [{type: 'checkbox', header: " "}],
-  		     	scrollX: false,
-  		    	scrollY: true,
-                pageOptions: { 
-               		useClient: true,
-                	perPage: 5 
-                }, 		    	
-  		    	columns: [
-  	  		    {
-    	  		  header: '제품코드',
-    	  		  name: 'itemCode'
-    	  		 },
-  		        {
-  		          header: '제품명',
-  		          name: 'itemName'
-  		        }  
-  		      ]
-  		    });
-			
+			const itemSearchGrid = new Grid({
+				el: document.getElementById('itemSearchGrid'),
+				data: itemSearchGridData,
+				rowHeaders: [{type: 'checkbox', header: " "}],
+				scrollX: false,
+				scrollY: true,
+				pageOptions: { 
+					useClient: true,
+					perPage: 5 
+				}, 		    	
+				columns: [
+				{
+				  header: '제품코드',
+				  name: 'itemCode'
+				 },
+				{
+				  header: '제품명',
+				  name: 'itemName'
+				}  
+			  ]
+			});
+
 			// 제품명 검색 결과 하나만 체크할 수 있게 설정.
-        	itemSearchGrid.on('check', function (e) {
-	            let checkRows = itemSearchGrid.getCheckedRowKeys();
-	            checkRows.forEach(function( key, idx){                      
-	                if(key != e.rowKey){
-	                	itemSearchGrid.uncheck(key);
-	                }
-	            });
-	        });  		    
-  		    
-          	// 추가 버튼 -> 제품명 모달창 : 제품명 리스트 초기값 (제품코드 순으로 정렬)
-  		    $('#addRow').click(function (){
+			itemSearchGrid.on('check', function (e) {
+				let checkRows = itemSearchGrid.getCheckedRowKeys();
+				checkRows.forEach(function( key, idx){                      
+					if(key != e.rowKey){
+						itemSearchGrid.uncheck(key);
+					}
+				});
+			});  		    
+
+			// 추가 버튼 -> 제품명 모달창 : 제품명 리스트 초기값 (제품코드 순으로 정렬)
+			$('#addRow').click(function (){
 				$.ajax({
-  					url : "/searchItemsListAjax",
-  					method :"GET",
-  					dataType : "JSON",
-  					success : function(result){
-  						console.log(result);
-  						itemSearchGrid.resetData(result);
-  					},
-  					error : function(reject){
-  						console.log(reject);
-  					}
-  				});		    	
-  		    });
-          	
-  			// 검색 버튼 -> 제품명 키워드로 검색내용 출력.
-  		    let item = '';
-  		    $('#item-search-btn').click(function (){
-  		    	item = $('#searchItemResult').val();
+					url : "/searchItemsListAjax",
+					method :"GET",
+					dataType : "JSON",
+					success : function(result){
+						console.log(result);
+						itemSearchGrid.resetData(result);
+					},
+					error : function(reject){
+						console.log(reject);
+					}
+				});		    	
+			});
+
+			// 검색 버튼 -> 제품명 키워드로 검색내용 출력.
+			let item = '';
+			$('#item-search-btn').click(function (){
+				item = $('#searchItemResult').val();
 				console.log(item);
 				
 				 $.ajax({
@@ -530,135 +507,150 @@
 							console.log('result : '+ result);
 							itemSearchGrid.resetData(result);
 						},
-	  					error : function(reject){
-	  						console.log(reject);
-	  					}
+						error : function(reject){
+							console.log(reject);
+						}
 					});				
-  		    });
-  		    
-  		    
-  		    // 선택 버튼 클릭 -> 모달창 닫기, 새로운 행 추가.
-  		    let itemInfo = [];
-		    $('#selectItemBtn').click(function() {
-	  		    	itemInfo = [{itemCode : itemSearchGrid.getCheckedRows()[0].itemCode , itemName : itemSearchGrid.getCheckedRows()[0].itemName}];
-	  		    	$('#searchItemResult').val('');	 
-	  		    	itemSearchGridData = [{}];
-	  		    	itemSearchGrid.resetData(itemSearchGridData);
-	  		    	
-	  		    	$('#itemSearchModal').modal('hide');
-	  		    	
-	  		    	detailGrid.appendRows(itemInfo);
-	  		    	
-	  		    });
-		    
+			});
+
+
+			// 선택 버튼 클릭 -> 모달창 닫기, 새로운 행 추가.
+			let itemInfo = [];
+			$('#selectItemBtn').click(function() {
+					itemInfo = [{itemCode : itemSearchGrid.getCheckedRows()[0].itemCode , itemName : itemSearchGrid.getCheckedRows()[0].itemName}];
+					$('#searchItemResult').val('');	 
+					itemSearchGridData = [{}];
+					itemSearchGrid.resetData(itemSearchGridData);
+					
+					$('#itemSearchModal').modal('hide');
+					
+					detailGrid.appendRows(itemInfo);
+					
+				});
+
 			// 삭제버튼 -> 선택한 row 삭제
 			$('#deleteRow').click(function (){
 				detailGrid.removeCheckedRows(false);
 			});
-		    
-		   
 
+
+			// 작업지시 등록.
+			// 저장 버튼 클릭 -> 공통 및 세부내용 저장.
+			$('#saveBtn').click(function (){
+				// 공통사항 edit 종료
+				commonGrid.finishEditing();
+				// 공통사항 입력된 데이터 
+				console.log(commonGrid.getData()[0]);
+				
+				// 세부사항 edit 종료
+				detailGrid.finishEditing();			
+				// 세부사항 입력된 데이터 
+				console.log(detailGrid.getCheckedRows());
+				
+			})
 			
+			
+
 			// BOM 및 공정 정보
 			let bomInfoGridData = [];
-		    const bomInfoGrid = new tui.Grid({
-		      el: document.getElementById('bomInfoGrid'),
-		      data: bomInfoGridData,
-		      rowHeaders: [{ type: 'checkbox', align: 'left', valign: 'middle' }],
-		      scrollX: false,
-		      scrollY: true,
-		      columns: [
-		        {
-		          header: '제품코드',
-		          name: 'itemCode',
+			const bomInfoGrid = new tui.Grid({
+			  el: document.getElementById('bomInfoGrid'),
+			  data: bomInfoGridData,
+			  rowHeaders: [{ type: 'checkbox', align: 'left', valign: 'middle' }],
+			  scrollX: false,
+			  scrollY: true,
+			  columns: [
+				{
+				  header: '제품코드',
+				  name: 'itemCode',
 				  hidden: true
-		        },
-		        {
-			      header: '공정코드',
-			      name: 'proCode'
-			    },
-		        {
+				},
+				{
+				  header: '공정코드',
+				  name: 'proCode'
+				},
+				{
 				  header: '공정순서',
 				  name: 'proOrder'
 				},		    
-		        {
-		          header: '자재명',
-		          name: 'itemName'
-		        },
-		        {
-		          header: '소요량',
-		          name: 'itemCon',
-		          width: 120
-		        },   
-		        {
-		          header: '자재LOT',
-		          name: 'mrLotNumber',
-		          width: 300
-		        },
-		        {
-		          header: '작업지시량',
-		          name: 'workAmount',
-		          width: 120
-		        },
-		        {
-		          header: '필요 자재량',
-		          name: 'requiredItem'
-		        }
-		      ]
-		    });
-  			
-		    
-		 	// Hold 모달창
-		    let holdSelectGridData = [];
-		    const holdSelectGrid = new tui.Grid({
-		      el: document.getElementById('holdSelectGrid'),
-		      data: holdSelectGridData,
-		      scrollX: false,
-		      scrollY: true,
-		      columns: [
-		    	{
-		    	  header: '공정순서',
-		    	  name: 'proOrder',
-		    	  filter: 'select',
-		    	  hidden: true
-		    	},
-		    	{
-		    	  header: '공정코드',
-		    	  name: 'proCode',
-		    	  hidden: true
-		    	},
-		    	{
-		    	  header: '공정명',
-		    	  name: 'proName',
-		    	  hidden: true
-		    	},
-		    	{
-		    	  header: '제품코드',
-		    	  name: 'itemCode',
-		    	  hidden: true
-		    	},
-		    	{
-		    	  header: '제품명',
-		    	  name: 'itemName'
-		    	},
-		    	{
-		    	  header: '자재 LOT',
-		    	  name: 'mrLotNumber'
-		    	},
-		    	{
-		    	  header: '현 재고',
-		    	  name: 'currentCount'
-		    	},
-		    	{
-		    	  header: '필요 자재량',
-		    	  name: 'requiredItem'
-		    	},
-		    	{
-		    	  header: 'Hold 수량',
-		    	  name: 'holdCount'
-		    	}
-		      ]
-		    });
+				{
+				  header: '자재명',
+				  name: 'itemName'
+				},
+				{
+				  header: '소요량',
+				  name: 'itemCon',
+				  width: 120
+				},   
+				{
+				  header: '자재LOT',
+				  name: 'mrLotNumber',
+				  width: 300
+				},
+				{
+				  header: '작업지시량',
+				  name: 'workAmount',
+				  width: 120
+				},
+				{
+				  header: '필요 자재량',
+				  name: 'requiredItem'
+				}
+			  ]
+			});
+
+
+			// Hold 모달창
+			let holdSelectGridData = [];
+			const holdSelectGrid = new tui.Grid({
+			  el: document.getElementById('holdSelectGrid'),
+			  data: holdSelectGridData,
+			  scrollX: false,
+			  scrollY: true,
+			  columns: [
+				{
+				  header: '공정순서',
+				  name: 'proOrder',
+				  filter: 'select',
+				  hidden: true
+				},
+				{
+				  header: '공정코드',
+				  name: 'proCode',
+				  hidden: true
+				},
+				{
+				  header: '공정명',
+				  name: 'proName',
+				  hidden: true
+				},
+				{
+				  header: '제품코드',
+				  name: 'itemCode',
+				  hidden: true
+				},
+				{
+				  header: '제품명',
+				  name: 'itemName'
+				},
+				{
+				  header: '자재 LOT',
+				  name: 'mrLotNumber'
+				},
+				{
+				  header: '현 재고',
+				  name: 'currentCount'
+				},
+				{
+				  header: '필요 자재량',
+				  name: 'requiredItem'
+				},
+				{
+				  header: 'Hold 수량',
+				  name: 'holdCount'
+				}
+			  ]
+			});
 			
   		</script>
     
