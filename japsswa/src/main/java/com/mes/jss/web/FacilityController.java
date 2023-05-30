@@ -54,17 +54,11 @@ public class FacilityController {
 
 	
 	  @RequestMapping("/insertAjax") // 설비 등록
-	  @ResponseBody public saveFacVO insertAjax(@RequestBody saveFacVO vo ) {
+	  @ResponseBody public FacilityVO insertAjax(@RequestBody FacilityVO  vo ) {
 	  
 	  System.err.println(vo);
-	  FacilityVO upFac = vo.getUpFac(); 
-	  FacilityVO downFac= vo.getDownFac();
-	  
-	  System.err.println(upFac); System.err.println(downFac);
-	  
-	  service.saveFacility(upFac, downFac);
-	  
-	  
+	  service.saveFacility(vo);
+	  System.out.println(vo);
 	  return vo;
 	  
 	  }
@@ -90,10 +84,10 @@ public class FacilityController {
 
 //	}
 
-	/*
-	 * @RequestMapping("/test0001") public String test() {
-	 * 
-	 * return "Facility/test1111"; }
-	 */
+	
+	  @RequestMapping("/test0001") public String test() {
+	  
+	  return "Facility/test1111"; }
+	 
 
 }

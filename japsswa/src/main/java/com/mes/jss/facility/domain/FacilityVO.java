@@ -13,14 +13,14 @@ public class FacilityVO {
 
 	String facCode;
 	String facName;
-	Date facDate;
+	String facDate;
 	String facFunction;
 	String facPicture;
 	String facProcess;
 	String facStatus;
 	String washCycle;
 	String insCycle;
-	Date lastInspection;
+	String lastInspection;
 	String facManager;
 	
 	// 조인할때 필요

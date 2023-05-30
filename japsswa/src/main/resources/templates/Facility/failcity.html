@@ -10,18 +10,17 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
     <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-    
 
-<style>
-h2{
-	text-align: center;
-	margin-bottom: 15px;
-}
+    <style>
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-.tui-grid-cell-content {
+        .tui-grid-cell-content {
             text-align: center;
         }
-</style>
+    </style>
 
 </head>
 
@@ -35,399 +34,476 @@ h2{
             <button id="insertBtn" type="button" class="btn btn-dark">등록</button>
             <button id="modifyBtn" type="button" class="btn btn-primary">수정</button>
         </div>
-        
+
         <!-- 그리드 -->
         <div id="grid"></div>
         <!-- 그리드 끝-->
-        
-        <!-- 검색시 하단 그리드 -->
-        <div id="searchGrid"></div>
-        <!-- 검색시 하단 그리드 끝-->
-        
+
         <!-- 등록 모달 -->
-        
-        
 
-<!-- Modal -->
-<div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        <!-- Modal -->
+        <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
             aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
-    <div class="modal-content">
-      <div class="modal-header">        
-        <h5 class="modal-title" id="downModalTitle">비가동 내역</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      <!-- 모달 그리드 시작 -->
-        <div id="modalGrid"></div>
-        <div id="modalDownGrid"></div>
-        <!-- 모달 그리드 끝 -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-        <button id="saveBtn" type="button" class="btn btn-primary">등록</button>        
-      </div>
-    </div>
-  </div>
-</div>
-        
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">비가동 내역</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 모달 그리드 시작 -->
+                        <div id="modalGrid"></div>
+                        <div id="modalDownGrid"></div>
+                        <!-- 모달 그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button id="saveBtn" type="button" class="btn btn-primary">등록</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 등록 모달 끝 -->
-        
+
+        <!-- 상세내역 모달 끝 -->
+
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">설비 상세 페이지</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 모달 그리드 시작 -->
+                        <div id="detailGrid"></div>
+                        <div id="detailDownGrid"></div>
+                        <!-- 모달 그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button id="detailModBtn" type="button" class="btn btn-primary">수정</button>
+                        <button id="detailDelBtn" type="button" class="btn btn-primary">삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상세내역 모달 끝 -->
+
         <script>
-        
-        // 변수
-        var dbGridData = null;
-        var facCode = null;
-        var modalGrid = null;
-        var modalDownGrid = null;
-        var modifyList = null; 
-        
-        
-        // 전체 설비 리스트 함수
-        function getFacList(){
-        	
-        	$.ajax({
-        		url : "/AllfacilityAjax",
-        		method : "GET",
-        		dataType : "JSON",
-        		success : function(result){
-        			grid.resetData(result);
-        			//console.log(result);
-        		},
-        		error : function(reject){
-        			console.log("오류");
-        			console.log(reject);
-        		}
-        	});
-        }
-        
-        getFacList();
-        
-        const grid = new tui.Grid({
-            el: document.getElementById('grid'),
-            scrollX: false,
-            scrollY: false,
-            pageOptions: {
-                useClient: true,
-                perPage: 15
-            },
-            columns: [{
-                    header: '설비코드 ',
-                    name: 'facCode'
-                },
-                {
-                    header: '설비명',
-                    name: 'facName'
-                },
-                {
-                    header: '설치날짜 ',
-                    name: 'facDate'
-                },
-                {
-                    header: '투입공정 ',
-                    name: 'facProcess'
-                },
-                {
-                    header: '설비가동상태 ',
-                    name: 'facStatus',
-                    validation: {
-                    	 regExp: /[x-yX-Y]/
-                      }
-                },
-                {
-                    header: '세척주기 ',
-                    name: 'washCycle'
-                },
-                {
-                    header: '점검주기 ',
-                    name: 'insCycle'
-                },
-                {
-                    header: '마지막 점검일',
-                    name: 'lastInspection'
-                },
-                {
-                    header: '관리자',
-                    name: 'facManager'
-                },
-                {
-                    header: '설비기능',
-                    name: 'facFunction'
-                },
-                {
-                    header: '설비사진',
-                    name: 'facPicture'
-                }]
-        });
-        
-        // 단건 검색시 아래 그리드
-        
-        const searchGrid = new tui.Grid({
-            el: document.getElementById('searchGrid'),
-            scrollX: false,
-            scrollY: false,            
-            columns: [{
-                    header: '설비코드 ',
-                    name: 'facCode'
-                },
-                {
-                    header: '설비명',
-                    name: 'facName',
-                    editor: 'text'
-                },
-                {
-                    header: '설치날짜 ',
-                    name: 'facDate'
-                },
-                {
-                    header: '투입공정 ',
-                    name: 'facProcess',
-                    editor: 'text'
-                },
-                {
-                    header: '설비가동상태 ',
-                    name: 'facStatus'
-                },
-                {
-                    header: '세척주기 ',
-                    name: 'washCycle',
-                    editor: 'text'
-                },
-                {
-                    header: '점검주기 ',
-                    name: 'insCycle',
-                    editor: 'text'
-                },
-                {
-                    header: '마지막 점검일',
-                    name: 'lastInspection'
-                },
-                {
-                    header: '관리자',
-                    name: 'facManager',
-                    editor: 'text'
-                },
-                {
-                    header: '설비기능',
-                    name: 'facFunction',
-                    editor: 'text'
-                },
-                {
-                    header: '설비사진',
-                    name: 'facPicture'
-                }]
-        });
-        
-        // 단건 검색시 아래쪽 그리드에 나올 아작스
-        
-        function searchFac(){
-        	
-        	var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-        	
-        	$.ajax({
-                url: "/searchFacility",
-                method: "GET",
-                data: {
-                    'facCode': facCode
-                },
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header, token);
-                },
 
-                success: function (result) {
-                    console.log("성공");
-                    searchGrid.resetData(result);
+            // 변수
+            var dbGridData = null;
+            var facCode = null;
+            var modalGrid = null;
+            var modalDownGrid = null;
+            var modifyList = null;
+            var detailDownGrid = null;
 
+
+            // 전체 설비 리스트 함수
+            function getFacList() {
+
+                $.ajax({
+                    url: "/AllfacilityAjax",
+                    method: "GET",
+                    dataType: "JSON",
+                    success: function (result) {
+                        grid.resetData(result);
+                        //console.log(result);
+                    },
+                    error: function (reject) {
+                        console.log("오류");
+                        console.log(reject);
+                    }
+                });
+            }
+
+            getFacList();
+
+            const grid = new tui.Grid({
+                el: document.getElementById('grid'),
+                scrollX: false,
+                scrollY: false,
+                pageOptions: {
+                    useClient: true,
+                    perPage: 15
                 },
-                error: function (reject) {
+                columns: [{
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '설비명',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설치날짜 ',
+                        name: 'facDate'
+                    },
+                    {
+                        header: '투입공정 ',
+                        name: 'facProcess'
+                    },
+                    {
+                        header: '설비가동상태 ',
+                        name: 'facStatus',
+                        validation: {
+                            regExp: /[x-yX-Y]/
+                        }
+                    },
+                    {
+                        header: '세척주기 ',
+                        name: 'washCycle'
+                    },
+                    {
+                        header: '점검주기 ',
+                        name: 'insCycle'
+                    },
+                    {
+                        header: '마지막 점검일',
+                        name: 'lastInspection'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'facManager'
+                    },
+                    {
+                        header: '설비기능',
+                        name: 'facFunction'
+                    },
+                    {
+                        header: '설비사진',
+                        name: 'facPicture'
+                    }
+                ]
+            });
 
+            
+            
+            // 더블클릭시 상세내역 모달
+            grid.on('dblclick', function (e) {
+
+                if (e.columnName != "_checked") {
+
+                    gridData = grid.getRow(e.rowKey);
+                    //console.log(gridData);
+
+                    let firstFac = {
+                        facName : gridData.facName,
+                        facDate : gridData.facDate,
+                        facProcess : gridData.facProcess,
+                        facFunction : gridData.facFunction
+                    }
+
+                    let secondFac = {
+                        washCycle : gridData.washCycle,
+                        insCycle : gridData.insCycle,
+                        lastInspection : gridData.lastInspection,
+                        facManager : gridData.facManager,
+                        facStatus : gridData.facStatus
+                    };
+
+                    console.log("firstFac, secondFac 값");
+                    console.log(firstFac);
+                    console.log(secondFac);
+
+                    $('#detailModal').modal('show');
+                    detailGrid.resetData([firstFac]);
+                    detailDownGrid.resetData([secondFac]);
+                    setTimeout(() => detailGrid.refreshLayout(), 300);
+                    setTimeout(() => detailDownGrid.refreshLayout(), 300);
                 }
             });
-        }
-        
-		function modifyFac(){
-			
-			var modifyList = searchGrid.getData()[0];
-			console.log(modifyList);
-			
-			var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-        	
-        	$.ajax({
-                url: "/modifyFacility",
-                method: "POST",
-                data: JSON.stringify(modifyList),
-                contentType: "application/json",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header, token);
-                },
-                success: function (result) {
-                    alert("수정");
-                    searchGrid.resetData(result);
-                    getFacList();
-                },
-                error: function (reject) {
-					consoleo.log("reject");
-					consoleo.log(reject);
-                }
-            });
-		}
-        
-        // 검색
-        
-        $('#searchBtn').on('click', function () {
 
-                facCode = $('#searchInput').val();
-                console.log(facCode);
-                
-                searchFac();
+            // 상세내역 모달 그리드                        
+
+            var detailGrid = new tui.Grid({
+                el: document.getElementById('detailGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '설비명',
+                        name: 'facName',
+                        editor: 'text'
+                    },
+                    {
+                        header: '설치날짜 ',
+                        name: 'facDate'
+                    },
+                    {
+                        header: '투입공정 ',
+                        name: 'facProcess',
+                        editor: 'text'
+                    },
+                    {
+                        header: '설비기능',
+                        name: 'facFunction',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+            // 상세내역 모달 하단 그리드
+
+            var detailDownGrid = new tui.Grid({
+                el: document.getElementById('detailGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '세척주기 ',
+                        name: 'washCycle',
+                        editor: 'text'
+                    },
+                    {
+                        header: '점검주기 ',
+                        name: 'insCycle',
+                        editor: 'text'
+                    },
+                    {
+                        header: '마지막 점검일',
+                        name: 'lastInspection'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'facManager',
+                        editor: 'text'
+                    },
+                    {
+                        header: '설비가동상태 ',
+                        name: 'facStatus'
+                    },
+                    {
+                        header: '설비사진',
+                        name: 'facPicture'
+                    }
+                ]
+            });
+
+
+
+
+
+            // 객체 합치기(수정용)
+            function mergeModFac(firstFac, secondFac) {
+
+                const newModFac = {};
+
+                for (let att  in firstFac) {
+                    newModFac[att] = firstFac[att];
+                }
+
+                for (let mer in secondFac) {
+                    newModFac[att] = secondFac[att];
+                }
+
+                return newModFac;
+                console.log(newModFac);
+            }
+
+            // 수정 함수
+            function modifyFac() {
+
+                //let firstFac = detailGrid.getData()[0];
+                //let secondFac = detailDownGrid.getData()[0];
+
+                //console.log("upModFac");
+                //console.log(upModFac);
+                //console.log("downModFac");
+                //console.log(downModFac);
+
+                let modobj = mergeModFac(upModFac, downModFac);
+                console.log(modobj);
+
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                $.ajax({
+                    url: "/modifyFacility",
+                    method: "POST",
+                    data: JSON.stringify(modobj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("수정 완료되었습니다");
+                        $('#detailModal').modal('hide');
+                        getFacList();
+
+                    },
+                    error: function (reject) {
+                        consoleo.log("reject");
+                        consoleo.log(reject);
+                    }
+                });
+            }
+
+            $('#detailModBtn').on('click', function () {
+                console.log("수정");
+                detailGrid.finishEditing();
+                detailDownGrid.finishEditing();
+                modifyFac();
             })
-            
-            // 초기화
-            
-            $('#resetBtn').on('click', function(){
-            	console.log("클릭");
-            	getFacList();
-            	
-            })
-            
-            $('#modifyBtn').on('click', function(){
-            	console.log("수정");
-            	modifyFac();
-            })
-            
-        
-            
+
+
+
             // 모달 그리드
-            
-            
-            
+
             var modalGrid = new tui.Grid({
-            el: document.getElementById('modalGrid'),
-            scrollX: false,
-            scrollY: false,            
-            columns: [{
-                    header: '설비코드 ',
-                    name: 'facCode'
-                },
-                {
-                    header: '설비명',
-                    name: 'facName',
-                    editor: 'text'
-                },
-                {
-                    header: '설치날짜 ',
-                    name: 'facDate',
-                    editor: 'datePicker'
-                 },
-                {
-                    header: '투입공정 ',
-                    name: 'facProcess',
-                    editor: 'text'
-                },
-                {
-                    header: '설비가동상태 ',
-                    name: 'facStatus',
-                    editor: 'text'
-                }]
-        });
-        
-        var modalDownGrid = new tui.Grid({
-            el: document.getElementById('modalDownGrid'),
-            scrollX: false,
-            scrollY: false,            
-            columns: [{
-                    header: '세척주기 ',
-                    name: 'washCycle',
-                    editor: 'text'
-                },
-                {
-                    header: '점검주기 ',
-                    name: 'insCycle',
-                    editor: 'text'
-                },
-                {
-                    header: '마지막 점검일',
-                    name: 'lastInspection',
-                    editor: 'datePicker'                    
-                },
-                {
-                    header: '관리자',
-                    name: 'facManager',
-                    editor: 'text'
-                },
-                {
-                    header: '설비기능',
-                    name: 'facFunction',
-                    editor: 'text'
-                },
-                {
-                    header: '설비사진',
-                    name: 'facPicture'
-                }]
-        });
-        
-     	// 등록버튼 클릭시 , 오류있음 모달끄면 로우가 하나씩 계속 증가
-        $('#insertBtn').on('click', function(){
-           	
-        	$('#insertModal').on('shown.bs.modal', function (){
-           		modalGrid.refreshLayout()
-           		modalDownGrid.refreshLayout()
-           	})
-        	$('#insertModal').modal('show');
-            modalGrid.appendRow();
-            modalDownGrid.appendRow();
-        })
-        
-        function saveFac(){
-        	
-        	upFac = modalGrid.getData()[0];
-        	 downFac = modalDownGrid.getData()[0];
-        	//insertList = {upFac, downFac} 
-        	//?/console.log(upFac);
-        	//console.log(downFac);
-        	
-        	var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-        	
-        	$.ajax({
-        		url : "/insertAjax",
-        		method : "POST",
-        		data: JSON.stringify( {upFac : modalGrid.getData()[0] , downFac : modalDownGrid.getData()[0]}),  
-      			contentType: "application/json",
-      			beforeSend: function (xhr) {
-                    xhr.setRequestHeader(header, token);
-                },
-      			success: function(result){
-      				console.log("성공?");
-      				console.log(JSON.stringify( { upFac : modalGrid.getData()[0] , downFac : modalDownGrid.getData()[0]}));
-      				//console.log(JSON.stringify(insertList));
-      			},
-      			error: function(reject){
-      				console.log("오류");
-      				console.log(JSON.stringify( { upFac : modalGrid.getData()[0] , downFac : modalDownGrid.getData()[0]}));
-      				//console.log(JSON.stringify(insertList));
-      				console.log(reject);
-      			}        		
-        	});
-        }
-        
-        $('#saveBtn').on('click', function(){
-        	
-        	//console.log("저장");
-        	modalGrid.finishEditing();
-        	modalDownGrid.finishEditing();
-        	
-        	saveFac();
-        })
-       
-        
-     
+                el: document.getElementById('modalGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '설비명',
+                        name: 'facName',
+                        editor: 'text'
+                    },
+                    {
+                        header: '설치날짜 ',
+                        name: 'facDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '투입공정 ',
+                        name: 'facProcess',
+                        editor: 'text'
+                    },
+                    {
+                        header: '설비가동상태 ',
+                        name: 'facStatus',
+                        editor: 'text'
+                    }
+                ]
+            });
+
+            // 모달 하단 그리드
+
+            var modalDownGrid = new tui.Grid({
+                el: document.getElementById('modalDownGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '세척주기 ',
+                        name: 'washCycle',
+                        editor: 'text'
+                    },
+                    {
+                        header: '점검주기 ',
+                        name: 'insCycle',
+                        editor: 'text'
+                    },
+                    {
+                        header: '마지막 점검일',
+                        name: 'lastInspection',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'facManager',
+                        editor: 'text'
+                    },
+                    {
+                        header: '설비기능',
+                        name: 'facFunction',
+                        editor: 'text'
+                    },
+                    {
+                        header: '설비사진',
+                        name: 'facPicture'
+                    }
+                ]
+            });
+
+            // 등록버튼 클릭시 , 오류있음 모달끄면 로우가 하나씩 계속 증가
+            $('#insertBtn').on('click', function () {
+
+                $('#insertModal').on('shown.bs.modal', function () {
+                    modalGrid.refreshLayout()
+                    modalDownGrid.refreshLayout()
+                })
+                $('#insertModal').modal('show');
+                modalGrid.appendRow();
+                modalDownGrid.appendRow();
+            })
+
+            // 객체 합치기(등록용)
+            function mergeFac(upFac, downFac) {
+
+                const newFac = {};
+
+                for (let att in upFac) {
+                    newFac[att] = upFac[att];
+                }
+
+                for (let att in downFac) {
+                    newFac[att] = downFac[att];
+                }
+                return newFac;
+                console.log(newFac);
+            }
+
+            // 등록 함수
+            function saveFac() {
+
+                let upFac = modalGrid.getData()[0];
+                let downFac = modalDownGrid.getData()[0];
+                //insertList = {upFac, downFac} 
+                //?/console.log(upFac);
+                //console.log(downFac);
+                let obj = mergeFac(upFac, downFac);
+                console.log(obj)
+
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                $.ajax({
+                    url: "/insertAjax",
+                    method: "POST",
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("등록되었습니다");
+                        console.log(obj);
+                        $('#insertModal').modal('hide');
+                        getFacList();
+                    },
+                    error: function (reject) {
+                        console.log("오류");
+                        console.log(reject);
+                    }
+                });
+            }
+
+            $('#saveBtn').on('click', function () {
+
+                //console.log("저장");
+                modalGrid.finishEditing();
+                modalDownGrid.finishEditing();
+
+                saveFac();
+            })
         </script>
-        
+
     </th:block>
 </body>
 
