@@ -420,7 +420,6 @@
 				$.ajax({
   					url : "/modalPlanListAjax",
   					method :"GET",
-  					dataType : "JSON",
   					success : function(result){
   						console.log(result);
   						modalGrid.resetData(result);
@@ -482,7 +481,6 @@
 							url : "/planSearchResultAjax",
 							data : {planId : planCode},
 							method :"GET",
-							dataType : "JSON",
 							success : function(result){
 								console.log('result : '+ result);
 								grid.resetData(result);
@@ -493,13 +491,10 @@
 						});
 					 
 					 $('#afterSearch').attr('value', 'modify');
-					
 					 
 				 });	
 
-				 }
-				 
-
+				 } 
 			})
 			
   			
