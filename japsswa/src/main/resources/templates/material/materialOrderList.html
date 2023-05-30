@@ -6,13 +6,9 @@
 <head>
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+	
+	
 
-
-
-<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
 
 <style>
 	
@@ -27,44 +23,42 @@
 
 <th:block layout:fragment="content">
 	
-	
-	<h3 style="font-weight:bold; margin-left:30px;">자재 발주 조회</h3>
-	
+	<div style="width:1000px;">
+	<p style="font-weight:bold; margin-left:600px; text-align:center; margin-top:30px; font-size:30px;">자재 발주 조회</p>
+	</div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog-lg" role="document">
+<!-- Large modal -->
+
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="grid2"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button"id= "closeBtn" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+     
+  <!-- 발주 상세 모달 -->
+         <h4 style="text-align:center; font-weight:bold;">상세 내역</h4>
+      <div id="grid2"></div>
     </div>
   </div>
 </div>
 	
+        
+   
 	
 	
-	<div id="grid" style="margin-top:100px;"></div>
 	
 	
-	<div id="grid1"></div>
+ <!-- 발주 메인 -->	
+	
+	<div id="grid1" style="margin-top:100px;"></div>
 	
 	<script>
 	
 	$(document).ready(function(){
 		
-	
+
+// 발주 리스트	
+
+
 	$.ajax({
 				url : "/mrOrderListAjax",
 
@@ -132,13 +126,15 @@
 			
 	
 	
-			
+// 발주 더블 클릭 이벤트
+
 	grid1.on('dblclick',(ev) =>{
 		
+
+		
 				if(ev.columnName=='mrOrderCode'){
-					$('#exampleModalLong').modal('show');
 							
-				
+					$('#exampleModalLong').modal('show');
 				
 				
 				
@@ -148,7 +144,9 @@
 			
 			
 			console.log(result.mrOrderCode);
-			
+
+// 발주 상세 리스트
+
 			$.ajax({
 				url : "/mrOrderDetailAjax",
 
@@ -170,17 +168,19 @@
 			});	
 			
 			
-					
+
+// 발주 상세 리스트
 			var grid2 = new tui.Grid({
 				el : document.getElementById('grid2'),
 				scollX : false,
 				scollY : false,
-				
+				width:1000,
 				rowHeaders: ['checkbox'],
 				
 				columns : [{
 					header : '발주 일자',
-					name : 'mrOrderDate'
+					name : 'mrOrderDate',
+					width:80
 				} , {
 					header : '발주 코드',
 					name : 'mrOrderCode'
@@ -190,7 +190,8 @@
 				},
 				{
 					header : '담당자',
-					name : 'empName'
+					name : 'empName',
+					width:50
 				},
 				{
 					header : '거래처 코드',
@@ -198,7 +199,9 @@
 				},
 				{
 					header : '거래처명',
-					name : 'customerName'
+					name : 'customerName',
+					width:70
+					
 				},
 				{
 					header : '품목 코드',
@@ -206,19 +209,23 @@
 				},
 				{
 					header : '품목명',
-					name : 'itemName'
+					name : 'itemName',
+					width:70
 				},
 				{
 					header : '수량',
-					name : 'mrCount'
+					name : 'mrCount',
+					width:30
 				}, 
 				{
 					header : ' 가격',
-					name : 'mrPrice'
+					name : 'mrPrice',
+					width:50
 				},
 				{
 					header : '총 가격',
-					name : 'priceTotal'
+					name : 'priceTotal',
+					width:80
 				},
 				{
 					header : '납품일',
@@ -230,7 +237,7 @@
 			})	
 			
 			
-			
+// 새로고침			
 			$(function(){
 		    	$('#exampleModalLong').on('shown.bs.modal', function(){
 		    		grid2.refreshLayout();

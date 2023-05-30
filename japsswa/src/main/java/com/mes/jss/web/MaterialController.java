@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +18,7 @@ import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrListVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
+import com.mes.jss.material.domain.MrReleaseVO;
 import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.domain.ReturnListVO;
@@ -32,7 +32,7 @@ import com.mes.jss.sale.domain.CustomerVO;
 
 /*
  * 구용억
- * 자재관리
+ * 자재관리   마지막 수정일 (23.05.30)
  */
 
 
@@ -79,6 +79,8 @@ public class MaterialController {
 	}
 
  
+	
+	
 	// 자재 재고 리스트
 	@ResponseBody
 	@GetMapping("/mrCount")
@@ -89,6 +91,16 @@ public class MaterialController {
 		return list;
 	}
 	
+	// 자재 lot 재고 리스트
+	@ResponseBody
+	@GetMapping("/mrLotCount")
+	public List<MrVO> mrLotCount(){
+		
+		List<MrVO> list = materialService.mrLotCountList();
+		
+		return list;
+		
+	}
 	
 	
  // 자재 재고 검색
@@ -151,6 +163,46 @@ public class MaterialController {
 		
 		return null;
 		
+	}
+
+	
+// 자재 입고 내역 화면
+	
+	@GetMapping("/mrStoreList")
+	public String mrStoreList() {
+		
+		return "/material/materialStoreList";
+	}
+	
+// 자재 입고 내역 리스트
+	
+	@ResponseBody
+	@GetMapping("/StoreList")
+	public List<MrVO> StoreList(){
+		
+		List<MrVO> list = materialService.stList();
+		
+		return list;
+	}
+	
+// 자재 출고 내역 화면
+	
+	@GetMapping("/mrReleaseList")
+	public String mrReleaseList() {
+		
+		return "/material/materialRelease";
+	}
+	
+
+// 자재 출고 내역
+	
+	@ResponseBody
+	@GetMapping("/mrRelList")
+	public List<MrReleaseVO> mrRelList(){
+		
+		List<MrReleaseVO> list = materialService.mrRelGetList();
+		
+		return list;
 	}
 	
 // 자재 발주 화면
@@ -286,6 +338,8 @@ public class MaterialController {
 	@RequestMapping("/mrAdmInsert")
 	public MrAdjustmentVO MrAdmInsert(@RequestBody AdjustmentListVO vo) {
 		
+		System.out.println(vo);
+		
 		materialService.admIn(vo);
 		
 		return null;
@@ -316,6 +370,16 @@ public class MaterialController {
 		return null;
 	}
 	
+	// 자재 조정 취소
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmDelete")
+	public MrAdjustmentVO mrAdmDel(@RequestBody AdjustmentListVO vo) {
+		
+		materialService.admDel(vo);
+		
+		return null;
+	}
 	
 // 자재 반품 화면
 	
@@ -357,7 +421,16 @@ public class MaterialController {
 		
 	}
 
-
+ // 자재 반품 삭제
+	@ResponseBody
+	@RequestMapping("/mrReturnDelete")
+	public MrReturnVO mrReturnDelete(@RequestBody ReturnListVO vo) {
+		
+		materialService.returnDelete(vo);
+		
+		return null;
+	}
+	
 	
 	
  //  자재 불량 화면
@@ -371,14 +444,14 @@ public class MaterialController {
 	
   // 자재 불량 리스트
 	
-	@ResponseBody
+	/*@ResponseBody
 	@GetMapping("/mrErrorAjax")
 	public List<MrErrorVO> mrErrorList(){
 		
 		List<MrErrorVO> list = materialService.ErrorList();
 		
 		return list;
-	}
+	}*/
 	
 	
 	

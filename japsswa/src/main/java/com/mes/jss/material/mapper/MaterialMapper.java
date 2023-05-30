@@ -6,6 +6,7 @@ import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
+import com.mes.jss.material.domain.MrReleaseVO;
 import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.production.domain.PerformanceVO;
@@ -26,6 +27,9 @@ public interface MaterialMapper {
 	// 자재 재고
 	public List<MrVO> getMrCount();	
 	
+	// 자재 lot 재고
+	public List<MrVO> getMrLotCount();
+	
 	// 자재명 검색
 	public List<MrVO> mrCountList(String keyword);
 	
@@ -34,6 +38,13 @@ public interface MaterialMapper {
 	
 	// 입고 취소
 	public void deleteMr(String mrLotNumber);
+	
+	// 자재 입고 내역
+	public List<MrVO> storeGetList();
+
+	// 자재 출고 내역
+	public List<MrReleaseVO> RelGetList();
+	
 	
 	// 생산 실적 리스트
 	public List<PerformanceVO> mrPerList();
@@ -76,7 +87,11 @@ public interface MaterialMapper {
 	
 	// 자재 조정 출고
 	public void adjRelease(MrAdjustmentVO vo);
-		
+	
+	// 자재 조정 취소
+	public void admDelete(String vo);
+	
+	
 	// 자재 반품 품질 리스트
 	public List<QualityVO> retGetList();
 	
@@ -86,10 +101,17 @@ public interface MaterialMapper {
 	// 자재 반품 등록
 	public List<MrReturnVO> returnInsert(MrReturnVO vo);
 	
+	// 자재 반품 취소
+	public void returnDel(String mrReturnCode);
 	
 	// 자재 불량 리스트
 	public List<MrErrorVO> ErrorGetList();
+	
+	
 
+	
+	
+	
 	
 
 	

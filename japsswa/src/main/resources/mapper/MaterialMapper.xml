@@ -6,6 +6,7 @@
   <mapper namespace="com.mes.jss.material.mapper.MaterialMapper">
   		
   	<!-- 자재 리스트 -->
+  	
   		<select id="getList" resultType="MrVO">
   		
   		select i.item_type,
@@ -41,12 +42,24 @@
   		
   		</select>
   		 
+  	<!-- 자재 lot 재고 리스트 -->
+  		<select id="getMrLotCount"	resultType="MrVO">
+  			select m.mr_lot_number, i.item_name, i.item_type,sum(store_count) as total, m.expire_date   
+  			from material m join itemlist i on(m.item_code = i.item_code)
+  			group by mr_lot_number, item_name, item_type, expire_date
+  			
+  			
+  		
+  		</select>
+  		
   		
   	
   	<!-- 입고 확인 검색 -->	
   		<select id="codeList" resultType="MrVO">
   		
-  		select * from material where store_reason_code = #{keyword}
+  		select * 
+  		from material 
+  		where store_reason_code = #{keyword}
   		
   		</select>
 	
@@ -54,13 +67,40 @@
 	<!-- 자재 재고 확인 -->	
 		<select id="mrCountList" resultType="MrVO">
 		
-			select distinct i.item_name,i.item_type,
-			(select sum(store_count) from material m join itemlist i on(m.item_code = i.item_code)
+			select distinct i.item_name,
+			i.item_type,
+			(select sum(store_count) 
+			from material m 
+			join itemlist i on(m.item_code = i.item_code)
 			 where i.item_name = #{keyword}) total
-           	 from material m join itemlist i on(m.item_code = i.item_code) 
+           	 from material m 
+           	 join itemlist i 
+           	 on(m.item_code = i.item_code) 
            	 where i.item_name = #{keyword} 
 		</select>
 		
+	
+	<!-- 자재 입고 내역 -->
+		<select id="storeGetList" resultType="MrVO">
+		
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_name,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code) 
+  		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+			
+		</select>	
+
 	
 	<!-- 자재 입고 -->	
 		<select id="StoreIn" statementType="CALLABLE">
@@ -83,11 +123,32 @@
   		
   	<!-- 생산 실적 리스트 -->
   		<select id="mrPerList" resultType="PerformanceVO">
-  			select p.performance_id, p.wdetail_id, p.item_code, p.wbom_id, p.fac_code,p.output,p.pass_item,p.fail_item,p.start_time,p.end_time,p.worker
- 			from material m right outer join performance p on(m.store_reason_code = p.performance_id)
- 			where m.store_reason_code is null
+  			select p.performance_id, 
+  			p.wdetail_id, 
+  			p.item_code, 
+  			p.wbom_id, 
+  			p.fac_code,
+  			p.output,
+  			p.pass_item,
+  			p.fail_item,
+  			p.start_time,
+  			p.end_time,
+  			p.worker
+ 			from material m 
+ 			right outer join performance p on(m.store_reason_code = p.performance_id) join itemlist i on(p.item_code=i.item_code)
+ 			where m.store_reason_code is null and i.item_type ='반제품'
  
   			
+  		
+  		</select>	
+  		
+  	<!-- 자재 출고 내역 -->
+  	
+  		<select id="RelGetList" resultType="mrReleaseVO">
+  			
+  			select * from material_release	
+  		
+  		
   		
   		</select>	
   		
@@ -106,8 +167,13 @@
   		
   	<!-- 거래처 리스트 -->	
   		<select id="customerList" resultType="CustomerVO">
-  			select c.customer_id, c.customer_name, i.item_name,i.item_code,i.item_price 
-  			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
+  			select c.customer_id, 
+  			c.customer_name, 
+  			i.item_name,
+  			i.item_code,
+  			i.item_price 
+  			from customer c 
+  			join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
   			
   			
   		
@@ -116,8 +182,14 @@
   		
   	<!-- 거래처 검색 -->	
   		<select id="searchcustomer" resultType="CustomerVO">
-  			select c.customer_id, c.customer_name, i.item_name,i.item_code,i.item_price 
-  			from customer c join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
+  			select c.customer_id, 
+  			c.customer_name, 
+  			i.item_name,
+  			i.item_code,
+  			i.item_price 
+  			from customer c 
+  			join contract t on(c.customer_id = t.customer_id) 
+  			join itemlist i on(t.item_code=i.item_code)
   			where c.customer_name = #{result}
   		</select>
   
@@ -161,8 +233,15 @@
   	<!-- 조정 될 리스트 -->	
   		<select id="mrAdGetList" resultType="MrAdjustmentVO">
   		
-  		  select i.item_code,i.item_name,m.store_count, sum(r.mr_real_count) as totalRel,m.mr_lot_number,i.save_material
-			from itemlist i join material m on(i.item_code = m.item_code) join material_release r on(m.mr_lot_number=r.mr_lot_number)
+  		  select i.item_code,
+  		  i.item_name,
+  		  m.store_count, 
+  		  sum(r.mr_real_count) as totalRel,
+  		  m.mr_lot_number,
+  		  i.save_material
+			from itemlist i 
+			join material m on(i.item_code = m.item_code) 
+			join material_release r on(m.mr_lot_number=r.mr_lot_number)
 			where m.hold_count = m.store_count  
 			group by i.item_code, i.item_name, m.store_count, m.mr_lot_number, i.save_material
 			
@@ -174,9 +253,11 @@
   	
   	<!-- 조정 리스트 -->		
   		<select id="admGetList" resultType="MrAdjustmentVO">
-  			select * from material_adjustment
-  			where to_char(register_date,'dd') = to_char(sysdate,'dd')
+  			select * 
+  			from material_adjustment
+  			where to_char(register_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   		</select>
+  
   
   	<!-- 조정 등록 -->
   		<select id="adjInsert" statementType="CALLABLE">
@@ -219,25 +300,63 @@
   <!-- 발주 리스트 -->		
   		<select id="OrmGetList" resultType="MrOrderVO">
   		
-  			select o.mr_order_date,o.mr_order_code,c.customer_id,c.customer_name,e.emp_no,e.emp_name,o.product_count,o.all_count 
-  			from customer c join material_order o on(c.customer_id = o.customer_id) join emp e on(o.emp_no=e.emp_no) 
+  			select o.mr_order_date,
+  			o.mr_order_code,
+  			c.customer_id,
+  			c.customer_name,
+  			e.emp_no,
+  			e.emp_name,
+  			o.product_count,
+  			o.all_count 
+  			from customer c 
+  			join material_order o on(c.customer_id = o.customer_id) 
+  			join emp e on(o.emp_no=e.emp_no) 
   		</select>
   
   <!-- 발주 상세 리스트 -->		
   		<select id="OrdGetList" resultType="MrOrderDetailVO">
   		
-  			select m.mr_order_date,m.mr_order_code,d.mr_order_det_code, c.customer_id,c.customer_name,i.item_code,i.item_name,d.mr_count,d.mr_price,d.price_total,d.delivery_date,e.emp_name
-  			from customer c join material_order m on(c.customer_id = m.customer_id)
-         	join emp e on(m.emp_no=e.emp_no) join material_order_detail d on(m.mr_order_code=d.mr_order_code) join itemlist i on(d.item_code=i.item_code)
+  			select m.mr_order_date,
+  			m.mr_order_code,
+  			d.mr_order_det_code, 
+  			c.customer_id,
+  			c.customer_name,
+  			i.item_code,
+  			i.item_name,
+  			d.mr_count,
+  			d.mr_price,
+  			d.price_total,
+  			d.delivery_date,
+  			e.emp_name
+  			from customer c 
+  			join material_order m on(c.customer_id = m.customer_id)
+         	join emp e on(m.emp_no=e.emp_no) 
+         	join material_order_detail d on(m.mr_order_code=d.mr_order_code) 
+         	join itemlist i on(d.item_code=i.item_code)
          	where d.mr_order_code = #{keyword}
   		
   		</select>	
   	
   	<!-- 반품 품질 리스트 -->
   		<select id="retGetList" resultType="QualityVO">
-  			select q.test_code, e.emp_name,q.item_code,q.mr_order_det_code,i.item_type,i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity,(q.err_quantity/q.test_quantity)*100 as error,q.test_note 
-  			from itemlist i join quality_test q on(i.item_code = q.item_code) join emp e on(q.emp_no=e.emp_no) 
-           where test_note is null and (q.err_quantity/q.test_quantity)*100 between 10 and 100
+  			select q.test_code, 
+  			e.emp_name,
+  			q.item_code,
+  			q.mr_order_det_code,
+  			i.item_type,
+  			i.item_name,
+  			q.situation,
+  			q.end_date,
+  			q.test_quantity,
+  			q.err_quantity,
+  			q.pass_quantity,
+  			(q.err_quantity/q.test_quantity)*100 as error,
+  			q.test_note 
+  			from itemlist i 
+  			join quality_test q on(i.item_code = q.item_code) 
+  			join emp e on(q.emp_no=e.emp_no) 
+           where test_note is null 
+           and (q.err_quantity/q.test_quantity)*100 between 10 and 100
   		
   		</select>
   	
@@ -260,6 +379,19 @@
   			)
   		}
   		</select>
+  		
+  	<!-- 반품 취소 -->
+  		<select id="returnDel" statementType="CALLABLE">
+  			{call mr_return_delete(
+  				#{mrReturnCode, mode=IN, jdbcType=VARCHAR}	
+  			
+  			
+  			)
+  		}
+  		
+  		</select>	
+  		
+  		
   		
   	<!-- 자재 불량 리스트 -->
   		<select id="ErrorGetList" resultType="MrErrorVO">

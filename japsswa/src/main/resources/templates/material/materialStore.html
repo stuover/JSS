@@ -23,14 +23,24 @@
 <body>
 
 	<th:block layout:fragment="content">
+	
+<!-- 제목 -->
+	
 		<h3 style="font-weight: bold; margin-top:30px; text-align:center; margin-right:40px;">&emsp;자재 입고</h3>
 
 		<form action="/test" method="post">
 		<div>
+		
+<!-- 입고 버튼 -->
+			
 			<button type="button" id="storeBtn" class="btn btn-success"
 				data-bs-toggle="modal" data-bs-target="#searchModal"
 				style="float: right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:25px;">입고</button>
 				<input type="hidden" value="" id="sotre" name="testCode">
+				
+				
+<!-- 입고 확인 및 삭제 -->
+				
 			<button type="button" id="checkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target=".bd-example-modal-lg"
 				data-bs-target="#searchModal"
@@ -42,6 +52,7 @@
 
 		<!-- Large modal -->
 
+<!-- 입고 조회 모달 -->
 
 		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
 			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
@@ -52,6 +63,7 @@
 					<div class="modal-header" >
 						<h4 class="modal-title" id="exampleModalLabel"
 							style="font-weight: bold; margin-left: 280px;">입고 처리 확인 및 삭제</h4>
+<!-- 닫기 버튼 -->
 
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
@@ -59,16 +71,28 @@
 						</button>
 
 					</div>
+					
+<!-- 검색 인풋-->				
 					<div>
 						<h6 style="font-weight: bold; text-align: center;">
 							입고사유코드 :<input type=text id="searchcode"
+			
 								style="margin-left: 15px; padding: 1px;">
+<!-- 검색 버튼 -->
+								
 							<button type="button" class="btn btn-dark" id="searchBtn"
 								style="padding: 3px; margin-left: 15px;">검색</button>
+
+<!--  삭제 버튼 -->
+								
 							<button type="button" class="btn btn-dark" id="deleteBtn"
-								style="padding: 3px; margin-left: 15px;">삭제</button>	
+								style="padding: 3px; margin-left: 15px;">삭제</button>
+									
 						</h6>
 					</div>
+					
+<!-- 입고 조회 리스트 -->	
+				
 					<div id="modalgrid"></div>
 					<div>
 						
@@ -78,13 +102,23 @@
 			</div>
 		</div>
 
+<!-- 품질 검사 완료 창-->
 
 		<div id="grid"></div>
+
+<!-- 제목 -->
 		
 		<h3 style="margin-top:30px; text-align:center; font-weight:bold;">반제품 입고</h3>
 		<div>
+		
+<!--  반제품 입고 버튼-->
+		
 		<button type="button" id="halfBtn" class="btn btn-warning" style="float: right; height: 30px; width: 50px; padding: 3px; margin-top:30px; margin-right: 20px; margin-bottom: 10px; text-color:white;">입고</button>
+		
 		</div>
+
+<!-- 생산 실적 리스트 -->
+		
 		<div id="grid2" style=""></div>
 		
 
@@ -96,10 +130,13 @@
 		
 		$(document).ready(function() {
 			
-			
+
+// 입고 버튼 클릭 이벤트
+
 			$('#storeBtn').on('click',function(){
 		    	console.log(grid.getCheckedRows()[0].testCode);
 
+// 입고		    	
 		    	$.ajax({
 		    		url : "/mrStore",
 		    		contentType: "application/json",
@@ -118,7 +155,8 @@
 		    })
 			
 			
-			
+// 품질 리스트	아작스
+
 			$.ajax({
 				url : "/mrlistAjax",
 
@@ -201,7 +239,8 @@
 			
 		
 		
-		
+// 자재 입고 리스트 모달
+
 		$.ajax({
 			url : "/mslistAjax",
 			method : "GET",
@@ -212,6 +251,8 @@
 			}
 
 		});
+
+// 자재입고 리스트 모달 그리드			
 
 		var modalgrid = new tui.Grid({
 			el : document.getElementById('modalgrid'),
@@ -270,13 +311,14 @@
 		
 		
 		
-		
+// 입고 검색 클릭 이벤트		
 		
 		$('#searchBtn').on('click',function(){
 			  
 			  const result= $("#searchcode").val();
 			  $('#searchcode').val('');
-				
+
+// 입고 검색			  
 			  $.ajax({
 					url:"/searchListAjax",
 					method:"GET",
@@ -291,7 +333,9 @@
 				
 					
 		     });
-			  
+
+// 닫기 버튼
+
 			 $('#closeBtn').on('click',function(){
 				 $.ajax({
 						url : "/mslistAjax",
@@ -309,14 +353,17 @@
 			
 			
 		
-		
+// 새로고침
+
 		$(function(){
 	    	$('#store').on('shown.bs.modal', function(){
 	    		modalgrid.refreshLayout();
 	    	})
 	    })
 	   
-	   	
+
+// 생산 실적 리스트
+
 	    $.ajax({
 	    	url:"/mrPerformance",
 	    	method:"GET",
@@ -329,7 +376,8 @@
 	    	
 	    })
 	    
-	    
+// 생산 실적 그리드
+
 	    var grid2 = new tui.Grid({
 				el : document.getElementById('grid2'),
 				scollX : false,
@@ -387,11 +435,15 @@
 	            }
 				  
 			})
-	    
+
+// 반제품 입고 클릭 이벤트
+
 	    $('#halfBtn').on('click',function(){
 	    	
 	    	console.log(grid2.getCheckedRows());
-	    
+
+// 반제품 입고
+
 	    $.ajax({
 	    	
 	    	url:"/halfMrInsert",
@@ -412,9 +464,14 @@
 	    })
 	    
 	    });
-		
+
+
+// 입고 취소 클릭 이벤트
+
 		$('#deleteBtn').on('click',function(){
-			
+
+// 입고 취소
+
 		$.ajax({
 			url:"/mrStoreCancle",
 			method:"POST",
