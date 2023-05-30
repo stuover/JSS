@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class MrReleaseVO {   // 자재 출고
-	private String mrRealCode;
-	private String mrLotNumber;
-	private String performanceId;
-	private String itemCode;
-	private String adjustmentCode;
-	private int mrRealCount;
-	
+	 String mrRelCode;
+	 String mrLotNumber;
+	 String performanceId;
+	 String itemCode;
+	 String adjustmentCode;
+	 int mrRelCount;
+	 String mrRelReasonCode;
 }

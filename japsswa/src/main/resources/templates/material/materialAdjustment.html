@@ -23,27 +23,48 @@
 
 <th:block layout:fragment="content">
 	
+	<!-- 제목 -->
+	
 	<h3 style="font-weight:bold; text-align:center; margin-bottom:100px;">자재 조정 관리</h3>
 	
 	<div>
+	
+	<!-- 조정 등록 버튼 -->
+	
 	<button type="button" class="btn btn-primary" id="insertBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:10px;">등록</button>
+	
+	
 	</div>
+	
+	<!-- 조정 될 리스트 -->	
+	
 	<div id="grid1"></div>
 	<div>
+	
+	<!-- 출고 버튼 -->
+	
 	<button type="button" class="btn btn-warning" id="relBtn" style="float:right; height: 30px; width: 50px; padding:3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">출고</button>
+	
+	<!-- 입고 버튼 -->
+	
 	<button type="button" class="btn btn-success" id="storeBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">입고</button>
 	</div>
+	
+	<!--  조정 리스트  -->
+	
 	<div id="grid" style=""></div>
 	
 	<script>
 	
 	const token = $("meta[name='_csrf']").attr("content")
-		const header = $("meta[name='_csrf_header']").attr("content");
+	const header = $("meta[name='_csrf_header']").attr("content");
 	
 	
 	
 	$(document).ready(function(){
 		
+	
+	// 조정 될 리스트 아작스	
 		
 		$.ajax({
 			url:"/mrAdmAjax",
@@ -57,7 +78,10 @@
 			}
 		})
 		
+	
 		
+	// 조정 될 그리드
+	
 			var grid1 = new tui.Grid({
 				el : document.getElementById('grid1'),
 				scollX : false,
@@ -90,17 +114,7 @@
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-		
+	// 조정 리스트 아작스
 	
 	   $.ajax({
 				url : "/mrAdjustmentAjax",
@@ -119,8 +133,8 @@
 		
 		
 		
-		
-
+	// 조정 리스트 그리드
+	
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
 				scollX : false,
@@ -154,21 +168,24 @@
 				}
 				]
 			})
-			
+
+	// 조정 등록 
+	
 			$('#insertBtn').on('click',function(){
+				
 				
 				
 				$.ajax({
 					url:"/mrAdmInsert",
 					contentType:"application/json",
 					method:"POST",
-					data:JSON.stringify({list : grid.getCheckedRows()}),
+					data:JSON.stringify({ list : grid1.getCheckedRows()}),
 					beforeSend: function(xhr){
 						xhr.setRequestHeader(header, token);
 					},
 					success: function(result){
-							
-						   
+						
+			   
 						
 						 $.ajax({
 								url : "/mrAdjustmentAjax",
@@ -194,7 +211,8 @@
 			})
 			
 			
-			
+	// 입고 
+	
 		$('#storeBtn').on('click',function(){
 			
 			
@@ -217,7 +235,10 @@
 			
 			
 		})
-			
+	
+		
+	// 출고
+	
 		$('#relBtn').on('click',function(){
 			
 			

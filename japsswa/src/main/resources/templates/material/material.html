@@ -36,20 +36,32 @@
 						  버튼
 						</button>
 						</div>
-						 
-						<h5 style="font-weight:bold; margin-top:30px; margin-left=300px;">&ensp;자재 재고 검색 &emsp;:&emsp; <input type=text id="mrName"> <button type="button" class="btn btn-dark" id="searchBtn"
-													style="padding: 3px; margin-left: 15px;">검색</button></h5>
-						
+		
+		<!--  제목 -->		<!-- 검색 버튼 --> 
+		
+		
+		<h5 style="font-weight:bold; margin-top:20px; margin-left=300px;">&ensp;자재 재고 검색 &emsp;:&emsp; <input type=text id="mrName"> <button type="button" class="btn btn-dark" id="searchBtn"
+																style="padding: 3px; margin-left: 15px;">검색</button></h5>
+			 <!-- 검색 화면  그리드 -->
+			 	
 						<div id="searchGrid">
+			 
+			 <!-- 재고 화면 그리드 -->			
+						
 							<div id="grid3"></div>
 						</div>
 						<div id="hide">
 							<div id="grid" style="margin-top: 20px;"></div>
 						</div>
-						<div id="grid1" style="margin-top: 270px;"></div>
+						<div id="grid1" style=""></div>
+						
+						<h3 style="font-weight:bold; margin-left:680px; margin-top:40px; margin-bottom:40px;">&ensp;lot별 자재 조회</h3>
+						<div id="grid4" style="margin-top:20px;"></div>
+			
 						
 					
 					<!-- Modal -->
+					
 					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					  <div class="modal-dialog" role="document">
 					    <div class="modal-content">
@@ -90,7 +102,7 @@
 	
 	
 		
-	
+	// 재고 아작스
 	
 		$(document).ready(function() {
 			$('#searchGrid').css('display', 'none');
@@ -107,6 +119,9 @@
 				}
 
 			})
+			
+	// 재고 그리드
+		
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
 				scollX : false,
@@ -137,11 +152,13 @@
 				],
 				pageOptions: { 
 	            	useClient: true,
-	               	perPage: 5 
+	               	perPage: 4
 	            }
 			})
 		
-		});
+		
+		
+	// 검색 결과 그리드	
 		
 		
 		var grid3 = new tui.Grid({
@@ -162,13 +179,19 @@
 				name : 'total'
 			}
 			
-			]
+			
+			],
+			pageOptions: { 
+            	useClient: true,
+               	perPage: 4 
+            }
+			
 		})
 	
 	
 		
 		
-		
+	// 검색 결과 아작스
 		
 		$('#searchBtn').on('click',function(){
 			  
@@ -193,11 +216,62 @@
 		     });
 			})
 			
-			 
+	
+	// 자재 lot 재고
+	
+		$.ajax({
+			url:"/mrLotCount",
+			method:"GET",
+			success: function(result){
+				grid4.resetData(result);
+			},
+			error: function(reject){
+				console.log(reject)
+			}
+		})
+		
+	
+		
+		var grid4 = new tui.Grid({
+			el : document.getElementById('grid4'),
+			scollX : false,
+			scollY : false,
+			
+			
+			columns : [ {
+				header : '자재lot번호',
+				name : 'mrLotNumber',
+				
+			}, {
+				header : '자재명',
+				name : 'itemName'
+			}, {
+				header : '구분',
+				name : 'itemType'
+			},{
+				header : '재고량',
+				name : 'total'
+			},{
+				header : '유통기한',
+				name : 'expireDate'
+			}
+			
+			
+			
+			],
+			pageOptions: { 
+            	useClient: true,
+               	perPage: 5 
+            }
+		})
 		
 			
 			
+			
 		
+			
+			
+	// 새로고침 	
 		
 		$(function(){
 	    	$('#store').on('shown.bs.modal', function(){
@@ -206,8 +280,9 @@
 	    })
 	   
 	    
+			
 	    
-	 
+		});
 	    
 	</script>
 

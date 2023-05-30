@@ -14,6 +14,7 @@ import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrListVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
 import com.mes.jss.material.domain.MrOrderVO;
+import com.mes.jss.material.domain.MrReleaseVO;
 import com.mes.jss.material.domain.MrReturnVO;
 import com.mes.jss.material.domain.MrVO;
 import com.mes.jss.material.domain.ReturnListVO;
@@ -45,6 +46,13 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.getMrCount();
 	}
 	
+	// 자재 lot 재고 리스트
+	@Override
+	public List<MrVO> mrLotCountList() {
+		
+		return materialMapper.getMrLotCount();
+	}
+	
 	// 자재 재고 검색
 	
 	@Override
@@ -52,6 +60,22 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.mrCountList(keyword);
 	}
+	
+	// 자재 입고 내역
+	@Override
+	public List<MrVO> stList() {
+		
+		return materialMapper.storeGetList();
+	}
+	
+	// 자재 출고 내역
+		@Override
+		public List<MrReleaseVO> mrRelGetList() {
+			
+			return materialMapper.RelGetList();
+		}
+
+	
 	
 	
 	// 자재 입고
@@ -245,6 +269,17 @@ public class MaterialServiceImpl implements MaterialService {
 			materialMapper.returnInsert(vo.getList().get(i));
 		}
 		
+	}
+	// 자재 반품 삭제
+			
+		
+	@Override
+	public void returnDelete(ReturnListVO vo) {
+		
+		for(int i=0; i<vo.getList().size(); i++) {
+			
+			materialMapper.returnDel(vo.getList().get(i).getMrReturnCode());
+		}
 		
 	}
 	// 자재 불량 리스트
@@ -253,6 +288,24 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.ErrorGetList();
 	}
+
+	@Override
+	public void admDel(AdjustmentListVO vo) {
+		
+		for(int i=0; i<vo.getList().size(); i++) {
+			
+			materialMapper.admDelete(vo.getList().get(i).getAdjustmentCode());
+		}
+		
+		
+	}
+	
+	
+
+	
+	
+	
+	
 
 	
 

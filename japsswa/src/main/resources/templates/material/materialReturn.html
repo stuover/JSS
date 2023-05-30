@@ -22,24 +22,59 @@
 	
 
 <th:block layout:fragment="content">
+
+<!-- 제목 -->
 	
 	<h3 style="text-align:center; font-weight:bold;margin-top:30px;"> 자재 반품 </h3>
 	<div>
-	<button type="button" id="moveBtn" class="btn btn-info" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px; width:60px; padding:3px;">이동</button>
+
+<!-- 이동 버튼 -->	
+	<button type="button" id="moveBtn" class="btn btn-dark" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px; width:60px; padding:3px;">이동</button>
+	
 	</div>
-	<div id="grid" style=""></div>
+	
+<!-- 반품 될 리스트 -->
+	
+	<div id="grid" ></div>
+	
+<!--  제목 -->
 	
 	<h3 style="text-align:center; font-weight:bold; margin-top:50px;"> 반품 </h3>
-	<div style="">
+	<div>
+
+<!-- 삭제 -->
 		
 		<button type="button" id="deleteBtn" class="btn btn-dark" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px;  width:60px; padding:3px;">삭제</button>
 		
 		</div>
+
+<!-- 반품 리스트 -->
 	
-	<div id="grid1" style=""></div>
+	<div id="grid1" ></div>
 	<div>
-	<button type="button" id="insertBtn" class="btn btn-success" style="float:right; margin-bottom:10px; margin-right:20px; width:60px; padding:3px;">등록</button>
+
+<!-- 반품 등록 버튼 -->	
+
+	<button type="button" id="insertBtn" class="btn btn-success" style="float:right; margin-bottom:10px; margin-right:20px; margin-left:10px;width:60px; padding:3px;">등록</button>
+	<button type="button" class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" style="float:right; color:white; padding:3px;">반품 조회 및 취소</button>
+	
 	</div>
+	
+<!-- 모달 -->
+
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <h4 style="font-weight:bold; text-align:center; margin-top:20px;">반품 조회    </h4>          
+      <div><button type="button"  id="returnDelBtn"  class="btn btn-warning" style="margin-right:10px; float:right; padding:5px;">삭제</button></div>   
+      <hr>
+      <div id="grid3"></div>
+    </div>
+  </div>
+</div>	
+	
+	
+	
 	<script>
 	
 		const token = $("meta[name='_csrf']").attr("content")
@@ -50,7 +85,7 @@
 
 			
 		
-	
+// 반품 될 리스트	
 		
 	$.ajax({
 				url : "/mrReturnListAjax",
@@ -64,6 +99,8 @@
 				}
 
 			});
+
+// 반품 리스트 그리드
 
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
@@ -130,19 +167,27 @@
 				  
 			})
 	
-			
-			/*$.ajax({
+// 반품 리스트
+
+			$.ajax({
 				
 				url : "/mrReturnAjax",
 
 				method : "GET",
-				dataType : "json",
+				
 
 				success : function(result) {
-					grid1.resetData(result);
-					
+					grid3.resetData(result);
+					grid3.refreshLayout();
+				},
+				error: function(reject){
+					console.log(reject);
 				}
-			})*/
+			});
+			
+			
+// 반품 리스트 그리드			
+
 			var grid1 = new tui.Grid({
 				el : document.getElementById('grid1'),
 				scollX : false,
@@ -183,7 +228,54 @@
 				  
 			})
 				
-		
+
+	
+			var grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+				scollX : false,
+				scollY : false,
+				rowHeaders: ['checkbox'],
+								
+				columns : [ {
+					header : '반품코드',
+					name : 'mrReturnCode'
+				},{
+					header : '검사코드',
+					name : 'testCode'
+				},{
+					header :'품목코드',
+					name : 'itemCode'
+				},{
+					header : '반품수',
+					name : 'mrReturnCount'
+				},{
+					header : '반품사유',
+					name : 'mrReturnReason',
+					editor: 'text'
+				},
+			
+				{
+					header : '반품일',
+					name : 'mrReturnDate'
+				},{
+					header : '사원코드',
+					name : 'empNo'
+				}
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				  
+			})
+				
+	
+
+
+
+// 이동 버튼 클릭 이벤트
+
 		$('#moveBtn').on('click',function(){
 			
 		let mrReturn = {
@@ -195,7 +287,9 @@
 			grid1.appendRow(mrReturn);
 		})	
 			
-			
+
+// 등록 버튼 클릭 이벤트		
+
 		$('#insertBtn').on('click',function(){
 			
 			grid1.finishEditing();
@@ -205,7 +299,10 @@
 				itemCode : grid1.getCheckedRows()[0].itemCode,
 				mrReturnCount : grid1.getCheckedRows()[0].mrReturnCount
 		}
-			
+
+
+// 등록 기능
+
 			$.ajax({
 			url:"/mrReturnInsert",
 			contentType : "application/json",
@@ -225,7 +322,7 @@
 				
 			})
 			
-								
+						
 		
 		
 		
@@ -234,16 +331,54 @@
 		})
 		
 		
-		
-		
+
+	
+// 그리드 삭제
+
 		$('#deleteBtn').on('click',function(){
 				grid1.removeCheckedRows(false);
 			})
 		
 		
 		
+			$(function(){
+		    	$('#exampleModalLong').on('shown.bs.modal', function(){
+		    		grid3.refreshLayout();
+		    	})
+		    })
 			
-			});
+			
+		    
+		  $('#returnDelBtn').on('click',function(){
+			
+			  
+			  $.ajax({
+					url:"/mrReturnDelete",
+					contentType : "application/json",
+					method: "post",
+					data : JSON.stringify({list : grid3.getCheckedRows()}),
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+							},
+					success: function(result){
+						grid3.resetData(result);
+						grid3.removeCheckedRows(false);  
+					},
+					error: function(reject){
+						console.log(reject);
+					}
+					
+			  })
+		  })  
+		    
+		    
+		    
+		    
+		});	
+			
+			
+			
+			
 			
 			
 			

@@ -24,17 +24,31 @@
 <body>
 
 	<th:block layout:fragment="content">
+	
+	<!-- 제목 -->
+	
 		<h3 style="font-weight: bold; margin-bottom:70px; margin-left:700px;">&ensp;자재 발주</h3>
+		
+		
 	<div style="display:flex;">
+	
+	<!-- 거래처 코드 인풋 -->
+	
 		<div style="float:left;">
 			<label for="cusId" style=" margin-left:20px; font-weight:bold;">거래처 코드</label><br>
 			  <input type=text id="cusId" style="width:180px; margin-left:20px;">
 				</div> 
-		<div style="float:left;">	
+		<div style="float:left;">
+		
+	<!-- 거래처 인풋 -->
+			
 		<label for="cusName" style=" margin-left:100px; font-weight:bold; margin-bottom:5px;">거래처 &ensp;</label><br>  
 	   <input type=text id="cusName" style="width:180px; margin-left:100px; margin-bottom:5px;">       
 	   
 	   </div>
+	   
+	<!-- 거래처 및 자재 찾기 버튼 -->
+	   
 	    <button type="button" id="checkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target=".bd-example-modal-lg"
 				data-bs-target="#searchModal"
@@ -45,26 +59,40 @@
  
 
 	 <div style="display:flex;">
+	 
+	<!-- 품목 코드 인풋 -->
+	 
 		<div style="float:left;">
 		<label for="proId" style=" margin-left:20px; margin-top:20px;font-weight:bold;">품목 코드 &ensp;</label><br>
 	    <input type=text id="proId" style="width:180px; margin-left:20px;">	
 		</div>
+		
+		
+	<!-- 품목 인풋 -->
+		
 		<div style="float:left;">
 		 <label for="proName" style=" margin-left:100px; margin-top:20px;font-weight:bold;">품목 &ensp;</label><br>	 
 		 <input type=text id="proName" style="width:180px; margin-left:100px;">
 		 </div> 
 	</div>
 		
+	<!-- 가격 인풋 -->
 		
 		<div style="display:flex;">	
 			<div style="float:left;">
 		<label for="proPrice" style=" margin-left:20px; margin-top:20px;font-weight:bold;" >가격 &ensp;</label><br>
 			 <input type=text id="proPrice" style="width:180px; margin-left:20px;" >	
 			</div>
+			
+	<!-- 수량 인풋 -->
+			
 			<div style="float:left;">
 			<label for="count" style=" margin-left:100px; margin-top:20px;font-weight:bold;" >수량 &ensp;</label><br>
 			 <input type=text id="count" style="width:180px; margin-left:100px;" >
 			</div>
+	
+	
+	<!-- 납품입 인풋 -->
 			
 			<div style="float:left;">
 			<label for="delivery" style=" margin-left:100px; margin-top:20px;font-weight:bold;">납품일 &ensp;</label><br>
@@ -84,6 +112,9 @@
 
 				<div class="modal-content">
 					<div class="modal-header">
+					
+				<!-- 모달 제목 -->
+					
 						<h4 class="modal-title" id="exampleModalLabel"
 							style="font-weight: bold; margin-left: 50px;">거래처 및 자재 찾기</h4>
 
@@ -94,14 +125,27 @@
 
 					</div>
 					<div>
+					
+					<!-- 모달 검색 창 -->	
+					
 						<h6 style="font-weight: bold; text-align: center;">
+												
 							거래처명 :<input type=text id="searchcode"
 								style="margin-left: 15px; padding: 1px; width:130Px; ">
+						
+					<!-- 모달 검색 버튼 -->	
+							
 							<button type="button" class="btn btn-dark" id="searchBtn"
 								style="padding: 8px; margin-left:10px;">검색</button>
 						</h6>
 					</div>
+					
+				<!-- 검색 그리드 -->
+					
 					<div id="grid"></div>
+					
+				<!-- 선택 버튼 -->	
+				
 					<div>
 						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
 							style="width: 50px; height: 30px; margin-left:10px; padding: 3px;">선택</button>
@@ -111,13 +155,28 @@
 			</div>
 		</div>
 	<div style="width:200px; margin-left:1400px; margin-top:180px;">
+	
+	<!-- 삭제 버튼 -->
+	
 		<button type="button" id="deleteBtn" class="btn btn-dark" style="float:right; margin-left:10px;height: 30px; width: 50px; padding: 3px;">삭제</button>
+	
+	<!-- 등록 버튼 -->
+	
 		<button type="button" id="insertBtn" class="btn btn-dark"style="float:right;height: 30px; width: 50px; padding: 3px;">등록</button>
 		
 		</div>
+	
+	<!-- 등록 시킨 빈 그리드 -->
+		
 		<div id="grid1" style="margin-top:5px;"></div>
 		<div style="margin-left:1000px;">
+	
+	<!-- 발주 신청 버튼 -->	
+		
 		<button type="button" id="orderBtn" class="btn btn-success" style="float:right;float:right; margin-left:20px; margin-right:5px;width: 100px; height: 30px; padding: 3px;  margin-top:5px; ">발주 신청</button>
+		
+	<!-- 발주 취소 버튼 -->
+		
 		<button type="button" id="listDeleteBtn" class="btn btn-info"  data-toggle="modal" data-target=".bd-example3-modal-lg" style="float:right; margin-left:5px; width: 200px; height: 30px; padding: 3px;  margin-top:5px; color:white;">발주 조회 및 취소</button>
 		</div>
 		
@@ -128,9 +187,17 @@
 <div class="modal fade bd-example3-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
+    
+    <!-- 발주 조회 및 취소 모달 제목 -->
+    
       	<h4 style="margin-bottom:50px; margin-top:50px; font-weight:bold; text-align:center;">발주 조회 및 취소</h4>
+    
+    <!-- 발주 조회 모달 -->
       
       <div id="grid3" ></div>
+      
+    <!-- 삭제 버튼 -->
+      
       <button type="button" id="orderDeleteBtn" class="btn btn-warning" style="margin-top:50px;">삭제</button>
     </div>
     
@@ -142,10 +209,18 @@
 		
 		
 		<script>
+		
+	// 토큰	
 		const token = $("meta[name='_csrf']").attr("content")
   		const header = $("meta[name='_csrf_header']").attr("content");
+		
+		
+		
 		$(document).ready(function() {
+		
 			
+	// 거래처 및 자재 찾기 버튼
+	
 			$('#checkBtn').on('click',function(){
 			
 				$('#cusId').val('');
@@ -155,12 +230,16 @@
 				 $('#proPrice').val('');	
 				 $('#count').val('');
 				 $('#delivery').val('');
-			
+	
+				 
+	// 조정 될 리스트 그리드 삭제 버튼
+	
 			$('#deleteBtn').on('click',function(){
 				grid1.removeCheckedRows(false);
-			})	 
+			});	 
 				 
-				 
+	//	거래처 검색 아작스
+	
 			$.ajax({
 				url:"/mrCustomerAjax",
 				method:"GET",
@@ -177,7 +256,9 @@
 			});
 			
 			
-			
+	
+	// 거래처 및 자재 모달창 검색 버튼
+	
 			$('#searchBtn').on('click',function(){
 				  
 				  const result= $("#searchcode").val();
@@ -201,7 +282,10 @@
 				 
 	 
 				 }) 		
-			
+		
+				 
+	// 거래처 및 자재 모달창 선택 버튼
+	
 				 $('#chooseBtn').on('click',function(){
 					 
 					 $('#cusId').val(grid.getCheckedRows()[0].customerId);
@@ -210,7 +294,8 @@
 					 $('#proName').val(grid.getCheckedRows()[0].itemName);
 					 $('#proPrice').val(grid.getCheckedRows()[0].itemPrice);
 					 
-					 
+	// 거래처 아작스
+	
 					 $.ajax({
 							url : "/mrCustomerAjax",
 							method : "GET",
@@ -221,7 +306,10 @@
 
 						});
 					})
-			
+	
+	
+  // 빈 그리드 등록 버튼
+  
 				$('#insertBtn').on('click',function(){
 					
 					let order = {
@@ -238,7 +326,10 @@
 				
 					
 				})
-			
+	
+				
+	// 발주 신청 버튼
+	
 				$('#orderBtn').on('click',function(){
 					
 					$('#cusId').val('');
@@ -251,6 +342,10 @@
 					
 					
 					console.log(grid1.getCheckedRows());
+					
+					
+					
+	// 발주 신청				
 					$.ajax({
 						url : "/Orders",
 						contentType : "application/json",
@@ -267,7 +362,8 @@
 					grid1.removeCheckedRows(false);
 				})	
 		
-		
+	// 거래처 모달창 그리드	
+	
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
 
@@ -302,7 +398,8 @@
 			});
 			
 			
-			
+	
+	// 빈 그리드
 			
 			const grid1 = new tui.Grid({
 				el : document.getElementById('grid1'),
@@ -346,7 +443,7 @@
 			
 			
 			
-			
+	// 모달 새로 고침	
 
 			$(function(){
 	    	$('#store').on('shown.bs.modal', function(){
@@ -354,11 +451,14 @@
 	    	})
 	    })
 		
-	    
+	
+	// 발주 조회 및 삭제 버튼
+	
 	    $('#listDeleteBtn').on('click',function(){
 	    	
 	    
-	    	
+	// 발주 조회 아작스 
+	
 	    $.ajax({
 				url : "/mrOrderListAjax",
 
@@ -379,6 +479,9 @@
 	    
 	    });
 
+	
+	// 발주 조회 리스트 아작스
+	
 			var grid3 = new tui.Grid({
 				el : document.getElementById('grid3'),
 				scollX : false,
@@ -431,10 +534,13 @@
 	            }
 			})
 	    
-	    
+	
+	// 발주 취소 버튼
+	
 	    $("#orderDeleteBtn").on('click',function(){
 	    	
-	    	
+	// 발주 취소
+	
 	    	$.ajax({
 				url : "/OrderDelete",
 				contentType : "application/json",

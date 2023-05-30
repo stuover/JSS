@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+</style>
+
+</head>
+<body>
+
+	<th:block layout:fragment="content">
+	
+	<h3 style="text-align:center; font-weight:bold; margin-top:50px;">자재 출고 내역</h3>
+	
+	<div id="grid" style="margin-top:150px;"></div>
+	
+	
+	<script>
+	
+	
+	
+	$(document).ready(function(){
+		
+	
+	
+		
+		$.ajax({
+		url:"/mrRelList",
+		method:"GET",
+		success: function(result){
+			grid.resetData(result);
+			
+		},
+		error: function(reject){
+			console.log(reject);
+			
+		}
+	})
+	
+	
+	
+	
+	
+	
+	
+	
+	var grid = new tui.Grid({
+		el : document.getElementById('grid'),
+		scollX : false,
+		scollY : false,	
+		rowHeaders: ['checkbox'],
+		columns : [ {
+			header : '자재 출고 코드',
+			name : 'mrRelCode',
+			
+		}, {
+			header : '품목코드',
+			name : 'itemCode'
+		},{
+			header : '자재lot번호',
+			name : 'mrLotNumber'
+		},
+		{
+			header : '출고수량',
+			name : 'mrRelCount'
+		},  
+		{
+			header : '출고 사유 코드',
+			name : 'mrRelReasonCode'
+		}
+					
+		],
+		pageOptions: { 
+        	useClient: true,
+           	perPage: 5 
+        }
+		
+	})
+	
+	});
+	
+	
+	
+	</script>
+	</th:block>
+
+
+</body>
+
+</html>
