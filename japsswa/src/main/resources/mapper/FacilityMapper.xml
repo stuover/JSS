@@ -14,7 +14,7 @@
   		            fac_status, 
   		            get_fac_start_date(fac_code) as start_date
 		  FROM  facility 
-		ORDER  BY fac_code                
+		ORDER  BY fac_code
   	</select>
   	
   	<select id="getdownList" resultType="DowntimeVO">  				
@@ -33,18 +33,18 @@
   	
   	<insert id="insertDownList" parameterType="DowntimeVO">  				
 		insert into downtime(
-		          down_code, 
-		          stop_date, 
-		          down_reason, 
-		          down_manager, 
-		          remark, 
-		          fac_code)
-		values (('DOW' || lpad(downtime_seq.nextval, 4, '0')),
-		           current_date , 
-		          #{downReason} , 
-		          #{downManager} , 
-		          #{remark} , 
-		          #{facCode})
+			           down_code, 
+			           stop_date, 
+			           down_reason, 
+			           down_manager, 
+			           remark, 
+			           fac_code)
+			values  (('DOW' || lpad(downtime_seq.nextval, 4, '0')),
+			           current_date , 
+			           #{downReason} , 
+			           #{downManager} , 
+			           #{remark} , 
+			           #{facCode})
   	</insert>
   	
   	<update id="updateFacStatus" parameterType="FacilityVO">
@@ -64,15 +64,20 @@
   	</update>
   	
   	<update id="insertStartTime" parameterType="DowntimeVO">
-  		update downtime set start_date = current_date where fac_code = #{facCode}
+  		update downtime 
+  			set 
+  				  start_date = current_date 
+  	     where fac_code = #{facCode}
   	</update>  	 
   	
   	<delete id="deleteDownCode">
-  		delete from downtime where down_code = #{downCode}
+  		delete from downtime 
+  			 where 	 down_code = #{downCode}
   	</delete>
   	
   	<update id="updateDownTime" parameterType="DowntimeVO">
-  		update downtime set
+  		update downtime 
+  			set
   		          down_reason = #{downReason} , 
   		          down_manager = #{downManager} , 
   		          remark = #{remark} 
@@ -82,20 +87,38 @@
   	<!-- 비가동 내역 페이지 -->
   	
   	<select id="getDownDetailList" resultType="DowntimeVO">
-  		select f.fac_name, f.fac_code , d.down_code, d.start_date, d.stop_date, d.down_reason, d.down_manager, d.remark
-		from facility f join downtime d on (f.fac_code = d.fac_code) order by down_code desc
+  		select  f.fac_name, 
+  				  f.fac_code , 
+  				  d.down_code, 
+  				  d.start_date, 
+  				  d.stop_date, 
+  				  d.down_reason, 
+  				  d.down_manager, 
+  				  d.remark
+		from   facility f join downtime d 
+		on      (f.fac_code = d.fac_code) 
+		order by down_code desc
   	</select>
   	
   	<select id="searchlist" parameterType="FacilityVO" resultType="FacilityVO">
-  		select d.down_code, f.fac_code, f.fac_name, d.start_date, d.stop_date, d.down_reason, d.down_manager, d.remark
-		from downtime d join facility f on (f.fac_code = d.fac_code)
+  		select  d.down_code, 
+  				  f.fac_code,
+  				  f.fac_name, 
+  				  d.start_date, 
+  				  d.stop_date, 
+  				  d.down_reason,
+  				  d.down_manager, 
+  				  d.remark
+		from   downtime d join facility f 
+		   on   (f.fac_code = d.fac_code)
 		where fac_name = #{facName}
   	</select>
   	
   	<!-- 설비 페이지 -->
   	
   	<select id="getAllList" resultType="FacilityVO">
-  		select * from facility
+  		select fac_code, fac_name, to_char(fac_date, 'YYYY-MM-DD') as fac_date , fac_process, fac_status, wash_cycle, ins_cycle, to_char(last_inspection, 'YYYY-MM-DD') as last_inspection, fac_manager, fac_function, fac_picture
+		from facility
   	</select>
   	
   	<select id="searchFac" parameterType="FacilityVO" resultType="FacilityVO">
@@ -105,7 +128,7 @@
   	<insert id="insertFacility" parameterType="FacilityVO">
   		insert into facility (fac_code , fac_name , fac_date, fac_process , fac_status,
   		wash_cycle, ins_cycle, last_inspection, fac_manager, fac_function)
-        values(('FAC' || lpad(facility_seq.nextval, 4,0)) , #{facName} , #{facDate} , #{facProcess}, #{facStatus}, 
+        values(('FAC' || lpad(facility_seq.nextval, 4,'0')) , #{facName} , #{facDate} , #{facProcess}, #{facStatus}, 
         #{washCycle},#{insCycle}, #{lastInspection}, #{facManager}, #{facFunction})
   	</insert>
   	

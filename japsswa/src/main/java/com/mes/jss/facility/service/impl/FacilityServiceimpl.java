@@ -101,12 +101,23 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	
-	  @Override public boolean saveFacility(FacilityVO upFac, FacilityVO downFac) {
+	  //@Override public boolean saveFacility(FacilityVO upFac, FacilityVO downFac) {
 	  
-	  return facilityMapper.insertFacility(upFac, downFac) == 1;
+		  //{facfName : facfName , 
+		  //upFac.setFacName(downFac.getFacName());
+		  //upFac.setFacDate(downFac.getFacDate());
+		  //upFac.setFacProcess(downFac.getFacProcess());
+		  //upFac.setFacStatus(downFac.getFacStatus());
+		  
+	  //return facilityMapper.insertFacility(upFac, downFac) == 1;
 	  
-	  }
+	 // }
 	 
+	@Override
+	public boolean saveFacility(FacilityVO vo) {
+		
+		return facilityMapper.insertFacility(vo) == 1;
+	}
 
 	@Override
 	public void modifyFacility(FacilityVO vo) {		// 설비 정보 수정
@@ -122,6 +133,7 @@ public class FacilityServiceimpl implements FacilityService{
 	public InspectionVO getInspection(InspectionVO vo) {
 		return null;
 	}
+
 
 
 	
