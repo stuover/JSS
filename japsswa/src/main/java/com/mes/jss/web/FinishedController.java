@@ -1,9 +1,12 @@
 package com.mes.jss.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,6 +34,35 @@ public class FinishedController {
 	}
 	
 	//체크한 품목 입고처리
+	@RequestMapping("/fRegister")
+	@ResponseBody
+	public FinishedVO fRegisterAjax(@RequestBody List<FinishedVO> flistvo, Principal principal){
+		
+		flistvo.get(0).setEmpNo(Long.parseLong(principal.getName()));
+		
+		
+		System.err.println(flistvo);
+		
+		 System.err.println(principal.getName());
+		 
+		 
+		 /*List<FinishedVO> flistvo2 = new ArrayList<>();
+		 flistvo2 = flistvo;
+		 flistvo2.get(0).setEmpNo(); 
+		/*
+		 * long manager = Long.parseLong();
+		 * 
+		 * finishedService.fRegister(manager, flistvo); System.err.println(manager);
+		 * System.err.println(flistvo);
+		 */return null;
+	}
 	
+	//입고처리된 품목 리스트(하단 그리드에 방금 입고처리한 품목 포함)
+	@RequestMapping("/storeInItem")
+	@ResponseBody
+	public List<FinishedVO> storeInItem(){
+		List<FinishedVO> slist = finishedService.storeInItem();
+		return slist;
+	}
 	
 }

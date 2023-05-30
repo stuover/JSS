@@ -6,9 +6,42 @@
 <mapper namespace="com.mes.jss.sale.mapper.FinishedMapper">
 
 	<select id="passList" resultType="FinishedVO">
-		select p.performance_id, i.item_code, i.item_name, p.end_time, p.pass_item
-		from performance p join itemlist i
-		on p.item_code = i.item_code
+		select p.performance_id, 
+	       i.item_code, 
+	       i.item_name, 
+	       p.end_time, 
+	       p.pass_item
+			from performance p 
+	        join itemlist i
+			on p.item_code = i.item_code
+	       where item_type = '완제품'
+	       and end_time is not null
+	</select>
+	
+	<select id="fRegister" statementType="CALLABLE">
+		{
+			CALL finished_register(
+				#{manager, mode=IN, jdbcType=VARCHAR},
+				#{performanceId, mode=IN, jdbcType=VARCHAR},
+				#{itemCode, mode=IN, jdbcType=VARCHAR},
+				#{passItem, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="storeInItem" resultType = "FinishedVO">
+		select f.performance_id, 
+		   f.item_code, 
+		   i.item_name, 
+		   f.fn_store_in, 
+		  f.fn_count, 
+		   f.fn_lot_no, 
+		   f.fn_expiration,
+           e.emp_no,
+           e.emp_name
+			from finished f join itemlist i on(f.item_code = i.item_code)
+						    join emp e on(f.emp_no = e.emp_no)
+            
 	</select>
 
 

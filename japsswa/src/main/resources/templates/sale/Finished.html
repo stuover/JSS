@@ -19,7 +19,7 @@
 					<h4 class="page-title">완제품 입고 관리</h4>
 					
 
-					<!--<input id="name" type="hidden" th:value="${#authentication.principal.empName}">  --> 
+					<input id="name" type="text" th:value="${#authentication.principal.empName}">  
 				
 
 					<div class="row"></div>
@@ -50,8 +50,8 @@
 	<script>
 	
 	
-	/* const token = $("meta[name='_csrf']").attr("content")
-	const header = $("meta[name='_csrf_header']").attr("content") */
+	const token = $("meta[name='_csrf']").attr("content")
+	const header = $("meta[name='_csrf_header']").attr("content") 
 	const Grid = tui.Grid;
 	
 	//화면 상단 그리드
@@ -60,6 +60,10 @@
 	      el: document.getElementById('topGrid'),
 	      data: topGridData,
 	      rowHeaders: ['checkbox'],
+	      pageOptions: { 
+              useClient: true,
+              perPage: 5 
+              },
 	      scrollX: false,
 	      scrollY: false,
 	      columns: [
@@ -105,6 +109,7 @@
 
 		window.onload = function(){
 			
+			//화면 상단 그리드에 생산완료된 완제품 리스트
 			$.ajax({
 				url : "/passList",
 				method : "get",
@@ -113,7 +118,57 @@
 					topGrid.refreshLayout();
 				}
 			})
+			
+			//화면 하단 그리드에 입고처리된 완제품 리스트
+			$.ajax({
+					  url : "/storeInItem",
+					  method : "get",
+					  success : function(result){
+						  botGrid.resetData(result);
+						  
+					  }
+				  })
 		}
+		
+		
+		//입고처리버튼 누르면 입고처리가 되고 하단 그리드로 이동
+		$('#inBtn').on('click', function(){
+			
+			var data = topGrid.getCheckedRows();
+			console.log(data);
+			
+			$.ajax({
+				url : "/fRegister",
+				contentType : "application/json",
+				data : JSON.stringify(data),
+				method : "post",
+				beforeSend : function(xhr){
+     			   xhr.setRequestHeader(header, token);
+     			   
+     		   },
+     		   success : function(result){
+    			  
+				  alert("입고처리 되었습니다.")
+				  
+				  $.ajax({
+					  url : "/storeInItem",
+					  method : "get",
+					  success : function(result){
+						  console.log(result);
+						  botGrid.resetData(result);
+						  botGrid.refreshLayout();
+					  },
+					  error : function(reject){
+						  console.log(reject);
+					  }
+					  
+				  })
+     		   },
+     		   error : function(reject){
+     			   console.log(reject);
+     		   }
+			})
+		})
 		
 		
 		
@@ -123,39 +178,47 @@
 		      el: document.getElementById('botGrid'),
 		      data: botGridData,
 		      rowHeaders: ['checkbox'],
+		      pageOptions: { 
+	                useClient: true,
+	                perPage: 5 
+	                },
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
 		    	  {
 					  header: '생산실적코드',
-					  name: 'performanceId',
-					  hidden: true
+					  name: 'performanceId'
+					 
 					 },
 				     {
 					  header: '품목코드',
-					  name: 'itemCode',
-					  hidden: true
+					  name: 'itemCode'
+					 
 					 },
 					 {
 					  header: '품목명',
 					  name: 'itemName'
 				     },
 				     {
-					  header: '작업완료날짜',
-					  name: 'endTime'
+					  header: '완제품입고날짜',
+					  name: 'fnStoreIn'
 					 }, 
 				     {
 				      header: '입고량',
-				      name: 'passItem'
+				      name: 'fnCount'
 				     },
 				     {
 					  header: 'lot번호',
-					  name: 'fLotNo'
+					  name: 'fnLotNo'
 					  
 					 },
 					 {
 					  header: '유통기한',
-					  name: 'fExpiration'
+					  name: 'fnExpiration'
+					 },
+					 {
+				      header: '담당자',
+					  name: 'empName'
 					 }
 			      ],
 			      

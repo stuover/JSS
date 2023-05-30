@@ -134,6 +134,10 @@
   		const grids = new Grid({
 		      el: document.getElementById('grids'),
 		      data: gridsData,
+		      pageOptions: { 
+	                useClient: true,
+	                perPage: 5 
+	                },
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
@@ -227,6 +231,10 @@
 		      el: document.getElementById('grid'),
 		      data: gridData,
 		      rowHeaders: ['checkbox'],
+		      pageOptions: { 
+	                useClient: true,
+	                perPage: 5 
+	                },
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
@@ -292,6 +300,10 @@
 			      el: document.getElementById('changeGrid'),
 			      data: changeGridData,
 			      rowHeaders: ['checkbox'],
+			      pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
 			      scrollX: false,
 			      scrollY: false,
 			      columns: [
