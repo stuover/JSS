@@ -110,23 +110,18 @@
 				b.item_name,
 				a.ing_code,
 				a.item_con,
-				a.item_type AS "itemType",
+				b.item_type AS "itemType",
 				a.pro_code,
 				c.pro_name,
 				a.unit,
 				a.pro_order
 		FROM 
-			bom a LEFT OUTER JOIN itemlist b
-							 ON a.ing_code = b.item_code
-				  LEFT OUTER JOIN process c
-							 ON a.pro_code = c.pro_code 
-		<where>
-			 <if test="itemType.equals('완제품')">
-			     not
-			 </if> 
-		   	
-				a.item_type = '반제품' 
-		</where>
+			 bom a LEFT OUTER JOIN itemlist b
+							  ON a.ing_code = b.item_code
+				   LEFT OUTER JOIN process c
+							  ON a.pro_code = c.pro_code 
+		WHERE 
+			 NOT a.item_type = '반제품' 
 		START WITH a.ing_code = #{ingCode}
 		CONNECT BY PRIOR a.bom_level = a.level_type
 		ORDER BY level, pro_order
