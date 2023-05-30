@@ -237,8 +237,36 @@
 		      console.log('change focused cell!', ev);
 		    });
 		 
-	 
-
+	 		//입고 취소
+			$('#inCancelBtn').on('click', function(){
+				var delF = botGrid.getCheckedRows();
+				
+				$.ajax({
+					url : "/delFinished",
+					method : "post",
+					contentType : "application/json",
+					data : JSON.stringify({flist : delF}),
+					beforeSend : function(xhr){
+	        			xhr.setRequestHeader(header, token);
+	        		},
+	        		success : function(result){
+	        			
+	        			$.ajax({
+	  					  url : "/storeInItem",
+	  					  method : "get",
+	  					  success : function(result){
+	  						  console.log(result);
+	  						  botGrid.resetData(result);
+	  						  botGrid.refreshLayout();
+	  					  },
+	  					  error : function(reject){
+	  						  console.log(reject);
+	  					  }
+	  					  
+	  				  })
+	        		}  
+				})
+			})
 		
 		           
 		           

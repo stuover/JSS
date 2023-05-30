@@ -13,4 +13,6 @@ public interface FinishedService {
 
 	List<FinishedVO> storeInItem();
 
+	public void delFinished(List<FinishedVO> list);
+
 }
