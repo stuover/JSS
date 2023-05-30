@@ -21,29 +21,31 @@ public class WorkVO {
 	Date workStart;
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date workEnd;
-	
+
+	// 생산계획
 	String planId;
 	String planName;
 	String itemName;
+	String empName;
 	
+	// 작업지시 공정정보
 	String wbomId;
 	String proCode;
 	String proName;
+	int proOrder;
 	int proSeq;
 	int instructNum;
 	int passItem;
 	int failItem;
 	String successStatus;
 	
+	//홀드 자재
 	String holdId;
 	String holdLot;
 	int holdAmount;
-	String intuseAmount;
-	String holdStatus;
 	
-	// 자재lot
-	String mrLotNumber;
-	
-	// BOM에서 자재 소요량
-	int itemCon;
+	// 자재
+	String mrLotNumber;	// 자재lot	
+	int itemCon;	// BOM 소요량
+	String itemType;	// 물품 구분 (완제품, 반제품, 자재)
 }

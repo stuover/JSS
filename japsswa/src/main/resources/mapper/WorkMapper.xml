@@ -4,75 +4,133 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.mes.jss.production.mapper.WorkMapper">
-  
-  	 <select id="processInfo" resultType="BomVO">
-		SELECT DISTINCT
-					   LEVEL,
-					   a.pro_code,
-					   c.pro_name,
-					   a.pro_order
-		FROM 
-			bom a LEFT OUTER JOIN itemlist b 
-							 ON (a.ing_code = b.item_code)
-				   LEFT OUTER JOIN process c 
-							  ON (a.pro_code = c.pro_code)
-        WHERE 
-        	 NOT level = 1
-		START WITH 
-			       a.ing_code = #{iCode}
-		CONNECT BY 
-				   PRIOR a.bom_level = a.level_type
-		ORDER  BY level, pro_order
-  	 </select>
-  	 
-	<select id="bomInfo" resultType="BomVO">
-		SELECT DISTINCT
-					   LEVEL,
-					   a.pro_code,
-					   a.pro_order,
-					   a.ing_code,
-					   b.item_name,
-					   a.item_con,
-					   m.mr_lot_number,
-					   m.store_count
-		FROM 
-			bom a LEFT OUTER JOIN itemlist b 
-                             ON (a.ing_code = b.item_code)
-                  LEFT OUTER JOIN process c 
-                             ON (a.pro_code = c.pro_code)
-                  LEFT OUTER JOIN material m 
-                             ON(a.ing_code = m.item_code)
-        WHERE 
-        	 NOT level = 1 
-             AND a.pro_code = #{proCode}
-		START WITH 
-				  a.ing_code = #{itemCode}
-		CONNECT BY  
-				  PRIOR a.bom_level = a.level_type
-		ORDER  BY level
-	</select>
-	
-	
-	<select id="processList" resultType="ProcessVO">
-		SELECT 
-			  pro_code, 
-			  pro_name 
-		FROM 
-			process 
-		ORDER BY 1
-	</select>
-	
-	<select id="processListResult" resultType="ProcessVO">
-		SELECT 
-			  pro_code, 
-			  pro_name
-		FROM 
-			process
-		WHERE 
-			 pro_name LIKE '%'|| #{proName} ||'%'
-		ORDER BY 1
-	</select>
-	
 
+	<!-- 작업지시 공통 등록 -->
+	<select id="workCommonSave" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
+		
+		{call WORK_INSERT(
+				#{workName, mode=IN, jdbcType=VARCHAR},
+				#{workDate, mode=IN, jdbcType=VARCHAR},
+				#{empNo, mode=IN, jdbcType=VARCHAR},
+				#{workId, mode=INOUT, jdbcType=VARCHAR, javaType=String}
+				)
+		}
+		
+	</select>
+	
+	
+	<!-- 작업지시 세부 등록 -->
+	<select id="workDetailSave" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
+	
+		{call WDETAIL_INSERT(
+				#{workId, mode=IN, jdbcType=VARCHAR},
+				#{itemCode, mode=IN, jdbcType=VARCHAR},
+				#{workAmount, mode=IN, jdbcType=VARCHAR},
+				#{workStart, mode=IN, jdbcType=VARCHAR},
+				#{workEnd, mode=IN, jdbcType=VARCHAR},
+				#{pdetailId, mode=IN, jdbcType=VARCHAR}
+				)
+		}
+	
+	</select>
+	
+	<!-- 작업지시 조회 모달창 : 초기값 -->
+	<select id="workResult" resultType="WorkVO">
+		<![CDATA[ 
+			SELECT 
+				  work_id, 
+				  work_name, 
+				  work_date, 
+				  emp_name
+			FROM (
+				  SELECT 
+						work_id, 
+						work_name, 
+						work_date, 
+						emp_name
+				  FROM 
+					  work w JOIN emp e 
+							 ON(w.emp_no = e.emp_no)
+				  WHERE 
+					   work_date >= (SYSDATE - 3)
+				  )
+			WHERE 
+				 work_date <= (SYSDATE + 3)
+		]]>
+	</select>
+	
+	<!-- 작업지시 조회 모달창 : 검색결과 -->
+	<select id="workSearchResult" parameterType="SearchVO" resultType="WorkVO">
+		<![CDATA[ 
+			SELECT 
+				  work_id, 
+				  work_name, 
+				  work_date, 
+				  emp_name
+			FROM (
+				  SELECT 
+						work_id, 
+						work_name, 
+						work_date,  
+						emp_name
+				  FROM 
+					  work w JOIN emp e 
+							 ON (w.emp_no = e.emp_no)
+				  WHERE 
+					   work_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
+				  )
+			WHERE 
+				 work_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
+		]]>
+	</select>
+	
+	
+	<!-- 작업지시 관리 페이지 : 모달창에서 선택한 작업지시 세부내용 검색 결과 -->
+	<select id="workSelectDetail" parameterType="WorkVO" resultType="WorkVO">
+		SELECT  
+			  wdetail_id,
+			  w.pdetail_id,
+			  w.item_code,
+			  i.item_type,
+			  item_name, 
+			  work_amount, 
+			  work_start, 
+			  work_end
+		FROM 
+			work_detail w JOIN itemlist i 
+						  ON (w.item_code = i.item_code)
+		WHERE 
+			 work_id = #{workId}
+	</select>
+	
+	<!-- 제품명 더블클릭 -> 해당 제품의 BOM 정보 조회 -->
+	<select id="itemBomInfo" parameterType="WorkVO" resultType="WorkVO">
+		SELECT  DISTINCT
+				LEVEL,
+				b.item_name,
+				a.ing_code,
+				a.item_con,
+				a.item_type AS "itemType",
+				a.pro_code,
+				c.pro_name,
+				a.unit,
+				a.pro_order
+		FROM 
+			bom a LEFT OUTER JOIN itemlist b
+							 ON a.ing_code = b.item_code
+				  LEFT OUTER JOIN process c
+							 ON a.pro_code = c.pro_code 
+		<where>
+			 <if test="itemType.equals('완제품')">
+			     not
+			 </if> 
+		   	
+				a.item_type = '반제품' 
+		</where>
+		START WITH a.ing_code = #{ingCode}
+		CONNECT BY PRIOR a.bom_level = a.level_type
+		ORDER BY level, pro_order
+	</select>
+	
   	
   </mapper>
