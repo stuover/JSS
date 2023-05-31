@@ -14,4 +14,10 @@ public interface CustomerService {
 
 	List<TransactionItemVO> getTranList(String cusId);
 
+	void removeItem(TransListVO data);
+
+	CustomerVO addCustomer(CustomerVO data);
+
+
+
 }

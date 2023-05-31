@@ -21,4 +21,8 @@ public interface EmployeesMapper {
 
 	public EmpVO getUser(EmpVO vo);
 
+	public String getPwd(String name);
+
+	public void updatePwd(String npwd, String name);
+
 }

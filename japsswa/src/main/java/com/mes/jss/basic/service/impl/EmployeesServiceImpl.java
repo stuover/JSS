@@ -77,6 +77,18 @@ public class EmployeesServiceImpl implements EmployeesService, UserDetailsServic
 		
 		return empMapper.deleteEmp(vo);
 	}
+
+	@Override
+	public String getPwd(String name) {
+		// TODO Auto-generated method stub
+		return empMapper.getPwd(name);
+	}
+
+	@Override
+	public void modifyPwd(String npwd, String name) {
+		empMapper.updatePwd(npwd, name);
+		
+	}
 	
 	
 

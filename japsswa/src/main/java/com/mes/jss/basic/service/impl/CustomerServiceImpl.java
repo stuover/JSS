@@ -48,6 +48,22 @@ public class CustomerServiceImpl implements CustomerService{
 		// TODO Auto-generated method stub
 		return cusMapper.getCusItemList(cusId);
 	}
+
+	@Override
+	public void removeItem(TransListVO data) {
+		
+		for(TransactionItemVO vo : data.getList()) {
+			vo.setCustomerId(data.getCusCode());
+			cusMapper.deleteitemDeta(vo);
+		}
+	}
+
+	@Override
+	public CustomerVO addCustomer(CustomerVO data) {
+		cusMapper.insertCustomer(data);
+		return cusMapper.getCustomer();
+	}
+
 	
 	
 	

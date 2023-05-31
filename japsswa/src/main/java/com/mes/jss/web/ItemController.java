@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mes.jss.basic.domain.ItemVO;
 import com.mes.jss.basic.service.CommonService;
 import com.mes.jss.basic.service.ItemService;
+import com.mes.jss.quality.domain.CheckListVO;
+import com.mes.jss.quality.service.QualityService;
 
 @Controller
 public class ItemController {
 	@Autowired ItemService itemService;
 	@Autowired CommonService commService;
-
+	@Autowired QualityService qcService;
 	
 	//  부분검색
 	@ResponseBody
@@ -82,6 +84,24 @@ public class ItemController {
 		}else {
 			return "fail";
 		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/saveItemQuality")
+	public List<CheckListVO> saveItemQuality(@RequestBody List<CheckListVO> vo){
+		System.err.println(vo);
+
+		return 	qcService.updateItemQuality(vo);
+
+	}
+
+	@ResponseBody
+	@RequestMapping("/removeQualityList")
+	public List<CheckListVO> removeQualityList(@RequestBody List<CheckListVO> vo){
+		System.err.println(vo);
+
+		return 	qcService.removeItemQuality(vo);
+
 	}
 	
 }

@@ -1,11 +1,14 @@
 package com.mes.jss.web;
 
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +53,6 @@ public class EmployeesController {
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		vo.setPassword(scpwd.encode(vo.getPassword()));
 		empService.ragisterEmp(vo);
-
 		return "basic/employee";
 	}
 
@@ -117,6 +119,22 @@ public class EmployeesController {
 		} else {
 			return "Fail";
 		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/modifyPwd")
+	public String modifyPwd(String pwd, String nPwd, Principal principal) {
+		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
+		System.err.println(principal.getName());
+		boolean result = scpwd.matches(pwd, empService.getPwd(principal.getName()));
+		if(result) {
+			String npwd =scpwd.encode(nPwd);
+			empService.modifyPwd(npwd, principal.getName());
+			return "success";
+		}else {
+			return "fail";
+		}
+		
 	}
 	
 	

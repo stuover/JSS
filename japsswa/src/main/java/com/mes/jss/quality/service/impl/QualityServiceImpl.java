@@ -101,4 +101,31 @@ public class QualityServiceImpl implements QualityService {
 		}
 	}
 
+	@Override
+	public List<CheckListVO> updateItemQuality(List<CheckListVO> vo) {
+		
+		for(CheckListVO list : vo) {
+			if(list.getChecklistCode() == null) {
+				qualityMapper.insertCheckList(list);
+			}else {
+				qualityMapper.updateCheckList(list);
+			}
+			
+		}
+		
+		
+		return qualityMapper.getCheckList(vo.get(0).getItemCode());
+	}
+
+	@Override
+	public List<CheckListVO> removeItemQuality(List<CheckListVO> vo) {
+		for(CheckListVO list : vo) {
+			if(list.getChecklistCode() != null) {
+				qualityMapper.deleteCheckList(list.getChecklistCode());
+			}
+		}
+		
+		return qualityMapper.getCheckList(vo.get(0).getItemCode());
+	}
+
 }

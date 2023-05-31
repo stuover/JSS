@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
- xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
-
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
 <head>
+
 <!-- Required meta tags -->
 <meta charset="utf-8">
 <meta name="viewport"
@@ -40,7 +40,6 @@
 
 </head>
 <body>
-<input id="empNo" type="hidden" th:value="${#authentication.principal.empNo}"> 
 	<!-- partial -->
 	<nav class="navbar-breadcrumb col-xl-12 col-12 d-flex flex-row p-0">
 		<div class="navbar-links-wrapper d-flex align-items-stretch">
@@ -56,6 +55,22 @@
 			<div class="nav-link">
 				<a href="javascript:;"><i class="typcn typcn-document-text"></i></a>
 			</div>
+			
+			<div class="nav-link">
+				<a href="javascript:;">비밀번호변경</a>
+			</div>
+
+				<div>
+					<input th:value="${#authentication.principal.username}"> 님 
+				</div>
+				
+					<form th:action="logout" method="post">
+					<input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}">
+					<button>로그아웃</button>
+				</form>
+				
+
 		</div>
 
 	</nav>
@@ -383,6 +398,10 @@
 	<!-- Custom js for this page-->
 	<script src="/js/dashboard.js"></script>
 	<!-- End custom js for this page-->
+
+<script>
+
+</script>
 </body>
 
 </html>
