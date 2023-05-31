@@ -23,6 +23,35 @@
 
 <th:block layout:fragment="content">
 	
+	<!-- Large modal -->
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    
+  		    <h4 style="text-align:center; font-weight:bold; margin-top:10px;"> 자재 조정 조회</h4>
+  		    <div>
+  		    <button type="button" id="adDelBtn" class="btn btn-danger" style="float:right; padding:3px; margin-right:10px;">취소</button> 
+  		    </div>
+  		    
+  		    <hr>
+  		    
+  		   	<div id="grid3"></div>
+  		   	
+  		   	 
+    </div>
+  </div>
+</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	<!-- 제목 -->
 	
 	<h3 style="font-weight:bold; text-align:center; margin-bottom:100px;">자재 조정 관리</h3>
@@ -41,18 +70,24 @@
 	<div id="grid1"></div>
 	<div>
 	
+	
+	
 	<!-- 출고 버튼 -->
 	
-	<button type="button" class="btn btn-warning" id="relBtn" style="float:right; height: 30px; width: 50px; padding:3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">출고</button>
+	<button type="button" class="btn btn-warning" id="relBtn" style="float:right; height: 30px; width: 50px; padding:3px; margin-right: 20px; margin-top:100px; margin-bottom:10px; color:white">출고</button>
 	
 	<!-- 입고 버튼 -->
 	
 	<button type="button" class="btn btn-success" id="storeBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">입고</button>
+	
+	<button type="button" class="btn btn-info" id="searchDelBtn" data-toggle="modal" data-target=".bd-example-modal-lg" style="float:right;  margin-top:100px; height: 30px; padding: 3px; padding-bottom:4px; color:white; margin-right:20px;">조정 확인 및 삭제</button>
 	</div>
 	
 	<!--  조정 리스트  -->
 	
-	<div id="grid" style=""></div>
+	<div id="grid2" ></div>
+	
+		
 	
 	<script>
 	
@@ -109,7 +144,11 @@
 					header : '안전재고',
 					name : 'saveMaterial'
 				}
-				]
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
 			})
 		
 		
@@ -121,8 +160,8 @@
 
 				method : "GET",
 				success : function(result) {
-					grid.resetData(result);
-					grid.refreshLayout();
+					grid2.resetData(result);
+					grid2.refreshLayout();
 					
 				},
 				error:function(reject){
@@ -135,8 +174,8 @@
 		
 	// 조정 리스트 그리드
 	
-			var grid = new tui.Grid({
-				el : document.getElementById('grid'),
+			var grid2 = new tui.Grid({
+				el : document.getElementById('grid2'),
 				scollX : false,
 				scollY : false,
 				
@@ -148,7 +187,19 @@
 				}, {
 					header : '자재 lot 번호',
 					name : 'mrLotNumber'
-				}, {
+				},{
+					header : '품목 코드',
+					name : 'itemCode'
+				},{
+					header : '구분',
+					name : 'itemType'
+				},
+				{
+					header : '품목명',
+					name : 'itemName'
+				}, 
+				
+				{
 					header : '등록일자',
 					name : 'registerDate'
 				}, {
@@ -166,7 +217,11 @@
 					header : '사원 번호',
 					name : 'empNo'
 				}
-				]
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
 			})
 
 	// 조정 등록 
@@ -262,6 +317,118 @@
 		})
 		
 			
+		$('#searchDelBtn').on('click',function(){
+			
+			 $.ajax({
+					url : "/mrAdjustmentAjax",
+
+					method : "GET",
+					success : function(result) {
+						grid3.resetData(result);
+						grid3.refreshLayout();
+						
+					},
+					error:function(reject){
+						console.log(reject);
+					}
+
+				});
+		})
+		
+		
+		
+		
+		
+		
+		
+		var grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '조정코드',
+					name : 'adjustmentCode'
+				}, {
+					header : '자재 lot 번호',
+					name : 'mrLotNumber'
+				},{
+					header : '품목 코드',
+					name : 'itemCode'
+				},{
+					header : '구분',
+					name : 'itemType',
+					width:50
+				},
+				{
+					header : '품목명',
+					name : 'itemName'
+				}, 
+				
+				{
+					header : '등록일자',
+					name : 'registerDate'
+				}, {
+					header : '처리',
+					name : 'process'
+				}, {
+					header : '결과',
+					name : 'change'
+				},
+				{
+					header : '조정일자',
+					name : 'adjustmentDate'
+				},
+				{
+					header : '사원 번호',
+					name : 'empNo'
+				}
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+		
+		
+			$('#adDelBtn').on('click',function(){
+				
+				console.log(grid3.getCheckedRows());
+				
+				$.ajax({
+					url:"/mrAdmDelete",
+					method:"POST",
+					contentType:"application/json",
+					data:JSON.stringify({ list : grid3.getCheckedRows() }),
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					succss : function(result){
+						
+					},
+					error: function(reject){
+						console.log(reject);
+					}
+					
+					
+				})
+				
+			})
+	
+	
+	
+	
+	
+		
+			$(function(){
+		    	$('#exampleModalLong').on('shown.bs.modal', function(){
+		    		grid3.refreshLayout();
+		    	})
+		    })
+		
+		
 		
 		
 		});

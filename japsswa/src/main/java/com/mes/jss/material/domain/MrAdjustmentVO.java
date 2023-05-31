@@ -22,5 +22,6 @@ public class MrAdjustmentVO {	// 자재 조정
 	long storeCount;
 	long totalRel;
 	long saveMaterial;
+	String itemType;
 	
 }

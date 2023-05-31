@@ -14,7 +14,16 @@
 <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
 
 <style>
-	
+
+
+
+#grid .redcolor{
+	background-color:#ffe4e4;
+}
+
+#grid .yellowcolor{
+	background-color:yellow;
+}	
 </style>
 
 </head>
@@ -28,7 +37,7 @@
               <div class="card">
                 <div class="card-body">
                   
-					<h3 style="font-weight:bold; margin-left:700px;">&ensp;자재 재고 조회</h3>
+					<h3 style="font-weight:bold; margin-left:700px; margin-bottom:30px;">&ensp;자재 재고 조회</h3>
 						
 						<div class="btn-group">
 						   <!-- Button trigger modal -->
@@ -40,7 +49,7 @@
 		<!--  제목 -->		<!-- 검색 버튼 --> 
 		
 		
-		<h5 style="font-weight:bold; margin-top:20px; margin-left=300px;">&ensp;자재 재고 검색 &emsp;:&emsp; <input type=text id="mrName"> <button type="button" class="btn btn-dark" id="searchBtn"
+		<h5 style="font-weight:bold; margin-top:20px; margin-left:500px;">&ensp;자재 재고 검색 &emsp;:&emsp; <input type=text id="mrName"> <button type="button" class="btn btn-dark" id="searchBtn"
 																style="padding: 3px; margin-left: 15px;">검색</button></h5>
 			 <!-- 검색 화면  그리드 -->
 			 	
@@ -53,7 +62,7 @@
 						<div id="hide">
 							<div id="grid" style="margin-top: 20px;"></div>
 						</div>
-						<div id="grid1" style=""></div>
+						<div id="grid1" ></div>
 						
 						<h3 style="font-weight:bold; margin-left:680px; margin-top:40px; margin-bottom:40px;">&ensp;lot별 자재 조회</h3>
 						<div id="grid4" style="margin-top:20px;"></div>
@@ -104,22 +113,58 @@
 		
 	// 재고 아작스
 	
-		$(document).ready(function() {
+		window.onload = function(){
+		
+	
+		
 			$('#searchGrid').css('display', 'none');
+			
 			$.ajax({
 				url : "/mrCount",
-
 				method : "GET",
-				detaType : "json",
-
 				success : function(result) {
-					grid.resetData(result);
 					
+					grid.resetData(result);
+					let data3 = grid.getData();
+					console.log(grid.getData());
+					grid.getData().forEach((ele, index)=>{
+						
+					console.log(ele.total);
+					console.log(ele.saveMaterial);
+					console.log(index);
+						
+						if( Number(ele.total) < Number(ele.saveMaterial)){
+							grid.addCellClassName(index,'itemType','redcolor');
+							grid.addCellClassName(index,'itemName','redcolor');
+							grid.addCellClassName(index,'itemCode','redcolor');
+							grid.addCellClassName(index,'total','redcolor');
+							grid.addCellClassName(index,'saveMaterial','redcolor');
+						} else if( Number(ele.total) <= Number(ele.saveMaterial/2) ){
+							grid.addCellClassName(index,'itemType','yellowcolor');
+							grid.addCellClassName(index,'itemName','yellowcolor');
+							grid.addCellClassName(index,'itemCode','yellowcolor');
+							grid.addCellClassName(index,'total','yellowcolor');
+							grid.addCellClassName(index,'saveMaterial','yellowcolor');
+							
+							
+						}
+							
+			
 
+			
+			
+					
+				
+					} ) 
+
+				},
+
+				error: function(reject){
+					console.log(reject);
 				}
 
-			})
 			
+		});
 	// 재고 그리드
 		
 			var grid = new tui.Grid({
@@ -155,6 +200,10 @@
 	               	perPage: 4
 	            }
 			})
+	
+	
+	
+			
 		
 		
 		
@@ -277,12 +326,12 @@
 	    	$('#store').on('shown.bs.modal', function(){
 	    		grid.refreshLayout();
 	    	})
-	    })
+	    });
 	   
 	    
 			
-	    
-		});
+	};
+		
 	    
 	</script>
 
