@@ -16,19 +16,19 @@ public class FinishedServiceImpl implements FinishedService{
 	@Autowired FinishedMapper finishedMapper;
 	
 	@Override
-	public List<FinishedVO> passList() {
-		List<FinishedVO> flist = finishedMapper.passList();
+	public List<FinishedVO> passItem() {
+		List<FinishedVO> flist = finishedMapper.passItem();
 		return flist;
 	}
 
 	@Override
-	public void fRegister(Principal principal, List<FinishedVO> flist) {
+	public void fRegister( List<FinishedVO> flistvo) {
 		
 			
-		for(FinishedVO fvo : flist) {
-			long a =Long.parseLong(principal.getName());
+		for(FinishedVO fvo : flistvo) {
+			
 					
-			finishedMapper.fRegister(a, fvo);
+			finishedMapper.fRegister(fvo);
 		}
 		
 	}
@@ -46,5 +46,7 @@ public class FinishedServiceImpl implements FinishedService{
 		}
 		
 	}
+
+	
 
 }

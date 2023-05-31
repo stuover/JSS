@@ -5,23 +5,24 @@
   
 <mapper namespace="com.mes.jss.sale.mapper.FinishedMapper">
 
-	<select id="passList" resultType="FinishedVO">
+	<select id="passItem" resultType="FinishedVO">
 		select p.performance_id, 
-		       i.item_code, 
+		       p.item_code, 
 		       i.item_name, 
 		       p.end_time, 
 		       p.pass_item
 				from performance p 
-		        join itemlist i
-				on p.item_code = i.item_code
-		       where item_type = '완제품'
-		       and end_time is not null
+		        join itemlist i on (p.item_code = i.item_code)
+                join finished f on (i.item_code = f.item_code)
+                join release r on (f.fn_lot_no = r.fn_lot_no)
+                join orddetail d on(r.orddetail_id = d.orddetail_id)
+		       where item_type = '완제품' and end_time is not null and orddet_status = '접수완료'
 	</select>
 	
 	<select id="fRegister" statementType="CALLABLE">
 		{
 			CALL finished_register(
-				#{manager, mode=IN, jdbcType=VARCHAR},
+				#{empName, mode=IN, jdbcType=VARCHAR},
 				#{performanceId, mode=IN, jdbcType=VARCHAR},
 				#{itemCode, mode=IN, jdbcType=VARCHAR},
 				#{passItem, mode=IN, jdbcType=VARCHAR}
@@ -44,9 +45,13 @@
             
 	</select>
 	
-	<delete id="delFinished" parameterType="FinishedVO">
-		delete from finished where fn_lot_no = #{fnLotNo}
-	</delete>
+	<select id="delFinished" statementType="CALLABLE">
+		{
+			CALL delete_finished(
+				#{fnLotNo}
+			)
+		}
+	</select>
 
 
 </mapper>

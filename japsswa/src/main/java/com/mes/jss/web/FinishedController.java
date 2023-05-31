@@ -26,10 +26,10 @@ public class FinishedController {
 	}
 	
 	//작업완료시간이 존재하는 완제품의 합격량 리스트
-	@RequestMapping("/passList")
+	@RequestMapping("/passItem")
 	@ResponseBody
-	public List<FinishedVO> passListAjax(){
-		List<FinishedVO> flist = finishedService.passList();
+	public List<FinishedVO> PassItemAjax(){
+		List<FinishedVO> flist = finishedService.passItem();
 		
 		return flist;
 	}
@@ -37,25 +37,18 @@ public class FinishedController {
 	//체크한 품목 입고처리
 	@RequestMapping("/fRegister")
 	@ResponseBody
-	public FinishedVO fRegisterAjax(@RequestBody List<FinishedVO> flistvo, Principal principal){
-		
-		flistvo.get(0).setEmpNo(Long.parseLong(principal.getName()));
+	public FinishedVO fRegisterAjax(@RequestBody List<FinishedVO> flistvo){
 		
 		
 		System.err.println(flistvo);
 		
-		 System.err.println(principal.getName());
+		finishedService.fRegister(flistvo);
+		
+		
 		 
 		 
-		 /*List<FinishedVO> flistvo2 = new ArrayList<>();
-		 flistvo2 = flistvo;
-		 flistvo2.get(0).setEmpNo(); 
-		/*
-		 * long manager = Long.parseLong();
-		 * 
-		 * finishedService.fRegister(manager, flistvo); System.err.println(manager);
-		 * System.err.println(flistvo);
-		 */return null;
+		
+		return null;
 	}
 	
 	//입고처리된 품목 리스트(하단 그리드에 방금 입고처리한 품목 포함) 

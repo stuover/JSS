@@ -7,12 +7,14 @@ import com.mes.jss.sale.domain.FinishedVO;
 
 public interface FinishedService {
 
-	List<FinishedVO> passList();
+	List<FinishedVO> passItem();
 
-	void fRegister(Principal principal, List<FinishedVO> flist);
+	void fRegister(List<FinishedVO> flist);
 
 	List<FinishedVO> storeInItem();
 
 	public void delFinished(List<FinishedVO> list);
+
+	
 
 }
