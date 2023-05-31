@@ -30,8 +30,20 @@ public interface WorkService {
 	
 	// 작업지시 관리 페이지 : 제품별 BOM 및 공정 정보 조회
 	// 제품명 더블클릭 -> 제품의 BOM 및 공정 정보 리스트
-	public List<WorkVO> itemBomInfo(String ingCode);
+	public List<WorkVO> itemBomInfo(String ingCode, String itemType);
 	
+	
+	// 작업지시 공통 및 세부사항 삭제
+	public boolean workDelete(String workId);
+	
+	
+	// 작업지시 공통 및 세부사항 수정
+	public void workModify(WorkVO head, List<WorkVO> detailList);
+	
+	
+	// 홀드 자재 선택 모달창 : 자재 리스트
+	// BOM정보 그리드에서 선택한 자재 리스트 출력.
+	public List<WorkVO> selectHoldMaterial(String itemCode);
 	
 	
 

@@ -192,7 +192,7 @@
 									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
 										<path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
 										<path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-									s</svg>
+									</svg>
 								  </span>
 								  <input type="text" class="form-control" id="workAmount" name="workAmount" required>
 								</div>
@@ -315,9 +315,12 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<input type="text" id="searchWorkResult"></input>
-				<button id="work-search-btn" class="m-2 btn btn-success btn-sm">검색</button>
-			<div id="workSearchGrid"></div>
+				<div class="m-2 d-md-flex justify-content-md-center">
+					<input type="date" id="startDateOption"></input> <span>&nbsp;~&nbsp;</span><input type="date" id="endDateOption"></input>
+					<button id="dateSearch" class="btn btn-success btn-sm">검색</button>
+				</div>
+			
+				<div id="workSearchGrid"></div>
 			</div>
 				<div class="modal-footer">
 					<button id="selectWorkBtn" type="button" class="btn btn-primary">선택</button>
@@ -492,7 +495,9 @@
 				  name: 'empName2'
 				}				
 			]
-		})	
+		});
+		
+		
 		
 		
 		// 작업지시 조회결과 : 작업지시 상세내역
@@ -558,7 +563,88 @@
 			 ]
 		   });
 
+		
 
+		// 작업지시 조회 버튼 -> 작업지시 리스트 (초기값) 
+		//(현재 날짜를 기준으로 일주일동안의 작업지시 조회 - 현재 날짜 포함, 현잰 날짜 전후로 3일)
+		$('#workSearchModal').on('shown.bs.modal', function (e) {
+			console.log('open');
+
+			$.ajax({
+				url: "/modalWorkListAjax",
+				method: "GET",
+				success: function(result){
+					console.log(result);
+					workSearchGrid.resetData(result);
+					workSearchGrid.refreshLayout();
+				},
+				error: function(reject){
+					console.log(reject);
+				}
+			});	
+			
+		}); 
+
+
+		// 기간 정한 후 검색 ->  기간 내 수립한 작업지시 리스트 조회
+		$('#dateSearch').click(function (){
+			let startTime = $('#startDateOption').val();
+			let endTime = $('#endDateOption').val();
+			
+			console.log(startTime);
+			console.log(endTime);
+
+			$.ajax({
+				url : "/workSearchResultAjax",
+				data : {'startTime' : startTime , 'endTime' : endTime},
+				method :"GET",
+				success : function(result){
+					console.log(result);
+					.resetData(result);
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+			});	
+			
+		});
+
+		// 작업지시 조회 모달창 : 작업지시 선택 버튼 -> 모달창 닫기 
+		// -> 선택한 생산 작업지시 공통 및 세부 내역 조회.
+		let workInfo = [];
+		var workCode = '';
+		$('#').click(function () {
+			workCode = workSearchGrid.getCheckedRows()[0].workId;
+			workInfo = [{
+						 workId : workSearchGrid.getCheckedRows()[0].workId,
+						 workName : workSearchGrid.getCheckedRows()[0].workName, 
+						 workDate : workSearchGrid.getCheckedRows()[0].workDate, 
+						 empName : workSearchGrid.getCheckedRows()[0].empName
+						}];
+			 console.log('workId = ' + workCode);
+			 console.log(workInfo);
+			 
+			$('#workSearchModal').modal('hide');
+
+			$('#workSearchModal').on('hidden.bs.modal', function (e) {
+				 workGridData= workInfo;
+				 workGrid.resetData(workInfo);
+				 
+				 $.ajax({
+						url : "/workSelectDetailAjax",
+						data : {workId : workCode},
+						method :"GET",
+						success : function(result){
+							console.log('result : '+ result);
+							workDetailGrid.resetData(result);
+						},
+						error : function(reject){
+							console.log(reject);
+						}
+					});
+				 
+			 });	 
+		});
 	
 	
 	

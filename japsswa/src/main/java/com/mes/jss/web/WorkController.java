@@ -35,6 +35,7 @@ public class WorkController {
 	
 	
 	// 작업지시 등록.
+	// 공통 및 세부사항 등록.
 	@RequestMapping("/workSaveAjax")
 	@ResponseBody
 	public void workSaveAjax(@RequestBody WorkDatasVO data, Principal principal) {
@@ -53,7 +54,7 @@ public class WorkController {
 	public List<WorkVO> modalWorkListAjax(){
 		List<WorkVO> inputData = new ArrayList<>();
 		inputData = workService.workResult();
-		
+		System.err.println(inputData);
 		return inputData;
 	}
 	
@@ -89,15 +90,47 @@ public class WorkController {
 	// 제품명 더블클릭 -> 제품의 BOM 및 공정 정보 리스트
 	@RequestMapping("/itemBomInfoAjax")
 	@ResponseBody
-	public List<WorkVO> itemBomInfoAjax(String ingCode) {
+	public List<WorkVO> itemBomInfoAjax(String ingCode, String itemType) {
 		List<WorkVO> inputData = new ArrayList<>();
-		inputData = workService.itemBomInfo(ingCode);
+		inputData = workService.itemBomInfo(ingCode, itemType);
 		
 		return inputData;
 	}
 	
+	// 작업지시 삭제
+	// 공통 및 세부사항 삭제
+	@RequestMapping("/workDeleteAjax")
+	@ResponseBody
+	public boolean workDeleteAjax(String workId) {
+		boolean result = workService.workDelete(workId);
+
+		return result;
+	}
 	
 	
+	// 작업지시 수정 
+	// 공통 및 세부사항 수정
+	@RequestMapping("/workModifyAjax")
+	@ResponseBody
+	public void workModifyAjax(@RequestBody WorkDatasVO data, Principal principal) {
+		WorkVO head = data.getHead();
+		head.setEmpNo(Long.parseLong(principal.getName()));
+		System.err.println(data);
+		List<WorkVO> detailList = data.getDetailList();
+		workService.workModify(head, detailList);	
+	}
+	
+	
+	// 홀드 자재 선택 모달창 : 자재 리스트
+	// BOM정보 그리드에서 선택한 자재 리스트 출력.
+	@RequestMapping("/selectHoldMaterialAjax")
+	@ResponseBody
+	public List<WorkVO> selectHoldMaterialAjax(String itemCode){
+		List<WorkVO> inputData = workService.selectHoldMaterial(itemCode);
+		
+		return inputData;
+		
+	}
 	
 	
 }

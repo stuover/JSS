@@ -37,22 +37,25 @@
 	<!-- 작업지시 조회 모달창 : 초기값 -->
 	<select id="workResult" resultType="WorkVO">
 		<![CDATA[ 
-			SELECT 
+			SELECT DISTINCT
 				  work_id, 
 				  work_name, 
 				  work_date, 
 				  emp_name
 			FROM (
 				  SELECT 
-						work_id, 
+						w.work_id,
 						work_name, 
 						work_date, 
 						emp_name
 				  FROM 
 					  work w JOIN emp e 
-							 ON(w.emp_no = e.emp_no)
+								ON(w.emp_no = e.emp_no)
+							 JOIN work_detail d 
+								ON(w.work_id = d.work_id)
 				  WHERE 
 					   work_date >= (SYSDATE - 3)
+			           AND work_start > (SYSDATE)
 				  )
 			WHERE 
 				 work_date <= (SYSDATE + 3)
@@ -62,45 +65,50 @@
 	<!-- 작업지시 조회 모달창 : 검색결과 -->
 	<select id="workSearchResult" parameterType="SearchVO" resultType="WorkVO">
 		<![CDATA[ 
-			SELECT 
-				  work_id, 
-				  work_name, 
-				  work_date, 
-				  emp_name
-			FROM (
-				  SELECT 
-						work_id, 
-						work_name, 
-						work_date,  
-						emp_name
-				  FROM 
-					  work w JOIN emp e 
-							 ON (w.emp_no = e.emp_no)
-				  WHERE 
-					   work_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
-				  )
-			WHERE 
-				 work_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
+				SELECT 
+					  work_id, 
+					  work_name, 
+					  work_date, 
+					  emp_name
+				FROM (
+					  SELECT 
+							work_id, 
+							work_name, 
+							work_date,  
+							emp_name
+					  FROM 
+						  work w JOIN emp e 
+									ON (w.emp_no = e.emp_no)
+								 JOIN work_detail d 
+									ON(w.work_id = d.work_id)
+					  WHERE 
+						   work_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
+						   AND work_start > (SYSDATE )
+					  )
+				WHERE 
+					 work_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')	
 		]]>
 	</select>
 	
 	
 	<!-- 작업지시 관리 페이지 : 모달창에서 선택한 작업지시 세부내용 검색 결과 -->
 	<select id="workSelectDetail" parameterType="WorkVO" resultType="WorkVO">
-		SELECT  
-			  wdetail_id,
-			  w.pdetail_id,
-			  w.item_code,
-			  i.item_type,
-			  item_name, 
-			  work_amount, 
-			  work_start, 
-			  work_end
+		SELECT 
+		       w.wdetail_id, 
+		       w.work_id, 
+		       w.item_code,
+		       i.item_name,
+		       i.item_type,
+		       w.work_amount, 
+		       w.work_start, 
+		       w.work_end, 
+		       pdetail_id, 
+		       NVL2(performance_id,'수정 불가', '수정 가능') AS "modifyOption"
 		FROM 
-			work_detail w JOIN itemlist i 
-						  ON (w.item_code = i.item_code)
+		    work_detail w LEFT OUTER JOIN performance f ON(w.wdetail_id = f.wdetail_id)
+		                  JOIN itemlist i ON (w.item_code = i.item_code)
 		WHERE 
-			 work_id = #{workId}
+		    work_id = #{workId}
 	</select>
 	
 	<!-- 제품명 더블클릭 -> 해당 제품의 BOM 정보 조회 -->
@@ -108,9 +116,9 @@
 		SELECT  DISTINCT
 				LEVEL,
 				b.item_name,
+				b.item_code,
 				a.ing_code,
 				a.item_con,
-				b.item_type AS "itemType",
 				a.pro_code,
 				c.pro_name,
 				a.unit,
@@ -120,11 +128,34 @@
 							  ON a.ing_code = b.item_code
 				   LEFT OUTER JOIN process c
 							  ON a.pro_code = c.pro_code 
-		WHERE 
-			 NOT a.item_type = '반제품' 
+		WHERE
+			  <if test="itemType.equals('반제품')">
+			  	NOT
+			  </if>
+			  a.item_type = '반제품' 
 		START WITH a.ing_code = #{ingCode}
 		CONNECT BY PRIOR a.bom_level = a.level_type
 		ORDER BY level, pro_order
+	</select>
+	
+	
+	<!-- 작업지시 공통 및 상세 삭제 -->
+	<insert id="workDelete" statementType="CALLABLE" parameterType="WorkVO">
+		{call WORK_DELETE(
+			#{workId, mode=IN, jdbcType=VARCHAR}			
+			)
+		}
+	</insert>
+	
+	<!-- HOLD 등록 모달창 : HOLD 처리할 자재 정보 -->
+	<select id="selectHoldMaterial" parameterType="WorkVO" resultType="WorkVO">
+		select 
+		      m.item_code,
+		      mr_lot_number,
+		      item_name, 
+		      (store_count - NVL(hold_count,0)) AS "currentCount"
+		FROM material m JOIN itemlist i ON (m.item_code = i.item_code)
+		WHERE m.item_code = #{itemCode}
 	</select>
 	
   	
