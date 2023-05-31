@@ -43,6 +43,15 @@ public interface QualityMapper {
 
 
 	public void deleteTestHistory(String testHistoryCode);
+
+
+	public void insertCheckList(CheckListVO list);
+
+
+	public void updateCheckList(CheckListVO list);
+
+
+	public void deleteCheckList(String checklistCode);
 	
 	
 }

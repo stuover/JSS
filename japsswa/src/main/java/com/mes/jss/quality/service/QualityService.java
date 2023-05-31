@@ -27,4 +27,8 @@ public interface QualityService {
 	public List<TestHistoryVO> getHistoryList(String testCode);
 
 	public void removeTest(TestHistoryListVO data);
+
+	public List<CheckListVO> updateItemQuality(List<CheckListVO> vo);
+
+	public List<CheckListVO> removeItemQuality(List<CheckListVO> vo);
 }

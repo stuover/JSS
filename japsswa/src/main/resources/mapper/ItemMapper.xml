@@ -48,6 +48,7 @@
   			select item_code,item_name,item_type
   			from itemlist
   			where item_Name like '%'||#{itemName}||'%'
+  			or item_code like '%'||#{itemName}||'%'
   			order by item_code
   		</select>
   		

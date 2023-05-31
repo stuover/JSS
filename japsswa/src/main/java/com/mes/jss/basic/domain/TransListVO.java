@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class TransListVO {
 	List<TransactionItemVO> list;
-	
+	String cusCode;
 	CustomerVO deta;
 }

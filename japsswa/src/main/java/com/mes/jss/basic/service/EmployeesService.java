@@ -14,6 +14,8 @@ public interface EmployeesService {
 	public boolean modifyEmp(EmpVO vo);
 	public boolean removeEmp(EmpVO vo);
 	EmpVO gerUser(EmpVO vo);
+	public String getPwd(String name);
+	public void modifyPwd(String npwd, String name);
 
 
 }

@@ -159,17 +159,7 @@ var testGrid = new tui.Grid({
         }
     }
     ]
-    ,summary: {
-        height: 40,
-        position: 'bottom', // or 'top'
-        columnContent: {
-           eachPrice: {
-            template: function(valueMap) {
-              return `TOTAL: $('<input type="text">')`;
-            }
-          }
-        }
-      }
+
 });
 
 var qualityKey = null;

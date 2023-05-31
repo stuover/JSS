@@ -49,5 +49,20 @@ public class CustomerController {
 		return cusService.getTranList(cusId);
 	}
 	
+	@ResponseBody
+	@RequestMapping("/removeItemDeta")
+	public String removeItemDeta(@RequestBody TransListVO data){
+		 System.err.println(data);
+		cusService.removeItem(data);
+		
+		return "success";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/saveCustomer")
+	public CustomerVO saveCustomer(@RequestBody CustomerVO data){
+
+		return cusService.addCustomer(data);
+	}
 	
 }

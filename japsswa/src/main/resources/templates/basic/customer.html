@@ -25,17 +25,25 @@
 			<div class="card">
 				<div class="card-body">
 					<h1 class="card-title">거래처 관리</h1>
-					<input id="commCode" name="commCode" type="text" placeholder="공통코드" maxlength='5'>
-					<input id="commName" name="commName" type="text" placeholder="공통코드명">
-					<input id="commNote" name="commNote" type="text" placeholder="비고">
-					<button id="insertBtn" type="button" class="btn btn-primary">등록</button>
-					<button id="deleteBtn" type="button" class="btn btn-primary">삭제</button>
-					<div id="cusGrid"></div>
+					<button id="insertBtn" type="button" class="btn btn-primary" style ="display:block;">등록</button>
 					
+					<div id="cusGrid"></div>	
+				</div>
+				<div class="card">
+					<div class="card-body">
+
+						<div id="insertDiv" style="display:none;">
+							<h1 class="card-title">거래처 등록 </h1>
+							<button id="saveBtn" type="button" class="btn btn-primary">저장</button>
+							<div id="insertGrid" ></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	
 	
 	
 		 <div class="modal fade" id="searchModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
@@ -148,7 +156,87 @@ var cusGrid = new tui.Grid({
 		sortable : true,
 	}
 	]
-});		
+});	
+
+var insertGrid = new tui.Grid({
+	el : document.getElementById('insertGrid'),
+	scrollX:true,
+	scrollY:true,
+    rowHeaders: ['rowNum'],
+	columns : [  
+	{
+		header : '거래처명',
+		name : 'customerName',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '주소',
+		name : 'custAddr',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : 'email',
+		name : 'custMail',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '연락처',
+		name : 'custTel',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '구분',
+		name : 'custPart',
+		editor: {
+            type: 'select',
+            options: {
+                listItems: [ 	
+                    {
+                        text: '매입처',
+                        value: '매입처'
+                    } ,
+                    {
+                        text: '판매처',
+                        value: '판매처'
+                    }
+                ]
+            }
+		 },
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '현거래유무',
+		name : 'contractStatus',
+		editor: {
+            type: 'select',
+            options: {
+                listItems: [ 	
+                    {
+                        text: '거래중',
+                        value: '거래중'
+                    } ,
+                    {
+                        text: '거래 중지',
+                        value: '거래 중지'
+                    }
+                ]
+            }
+		 },
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '비고',
+		name : 'custEtc',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true,
+	}
+	]
+});
 
 // 거래처 리스트
 function customerList(){
@@ -178,21 +266,25 @@ var detaGrid = new tui.Grid({
 		{
 			header : '거래처명',
 			name : 'customerName',
+			editor: 'text',
 			sortingType : 'desc',
 			sortable : true
 		}, {
 			header : '주소',
 			name : 'custAddr',
+			editor: 'text',
 			sortingType : 'desc',
 			sortable : true
 		}, {
 			header : 'email',
 			name : 'custMail',
+			editor: 'text',
 			sortingType : 'desc',
 			sortable : true,
 		}, {
 			header : '연락처',
 			name : 'custTel',
+			editor: 'text',
 			sortingType : 'desc',
 			sortable : true,
 		}, {
@@ -203,17 +295,33 @@ var detaGrid = new tui.Grid({
 		}, {
 			header : '현거래유무',
 			name : 'contractStatus',
+			editor: {
+	            type: 'select',
+	            options: {
+	                listItems: [ 	
+	                    {
+	                        text: '거래중',
+	                        value: '거래중'
+	                    } ,
+	                    {
+	                        text: '거래 중지',
+	                        value: '거래 중지'
+	                    }
+	                ]
+	            }
+			 },
 			sortingType : 'desc',
 			sortable : true,
 		}, {
 			header : '비고',
 			name : 'custEtc',
+			editor: 'text',
 			sortingType : 'desc',
 			sortable : true,
 		}]
 });
 
-
+//거래 품목 리스트
 var itemGrid = new tui.Grid({
 	el : document.getElementById('itemGrid'),
 	rowHeaders : [ {type : 'checkbox', header:" "}],
@@ -226,7 +334,6 @@ var itemGrid = new tui.Grid({
 		header : '품목코드',
 		name : 'itemCode',
 		sortingType : 'desc',
-		editor: 'text',
 		sortable : true
 	}, {
 		header : '품목명',
@@ -238,16 +345,16 @@ var itemGrid = new tui.Grid({
 		header : '구분',
 		name : 'itemType',
 		sortingType : 'desc',
-		editor: 'text',
 		sortable : true,
 	}]
 });
-
+// 거래처별 거래 품목 받아오기
+var rowKey = null;
 cusGrid.on('dblclick',function(e){
     detaGrid.resetData([cusGrid.getRow(e.rowKey)]);
 	setTimeout(()=> detaGrid.refreshLayout(), 300);
 	setTimeout(()=> itemGrid.refreshLayout(), 300);
-	
+	rowKey=e.rowKey
 	$.ajax({
 		url : "/transList",
 		method : "get",
@@ -263,6 +370,7 @@ cusGrid.on('dblclick',function(e){
 
 })
 
+// 전체 품목 리스트
 var modalItemGrid = new tui.Grid({
 	el : document.getElementById('modalItemGrid'),
 	pageOptions : {
@@ -338,10 +446,11 @@ modalItemGrid.on('click',function(e){
 	$('#itemSearch').modal('hide');
 });
 
+// 저장 버튼이벤트
 $('#saveBtn').on('click', function(){
 	let itemgrid = itemGrid.getData();
-	let cusGrid = detaGrid.getRow(0);
-
+	let cusGrid = detaGrid.getRow(rowKey);
+	console.log(cusGrid);
 	$.ajax({
 		url : "/saveCusDeta",
 		contentType : "application/json",
@@ -352,12 +461,7 @@ $('#saveBtn').on('click', function(){
 		},
 		success : function(result){
 			$('#searchModal').modal('hide');
-			
 			alert('등록완료!');
-			getComm(commCode);
-			getModal(commCode);
-			commList();
-
 		},
 		error : function(reject){
 			console.log(reject);
@@ -366,7 +470,65 @@ $('#saveBtn').on('click', function(){
 	});
 })
 
+
+//거래 품목 삭제
+$('#modalDelBtn').on('click',function(){
+	var data =  itemGrid.getCheckedRows();
+	cusCode = detaGrid.getRow(rowKey).customerId;
+	
+	$.ajax({
+		url : "/removeItemDeta",
+		contentType : "application/json",
+		data :  JSON.stringify({list : data, cusCode : cusCode }),
+		method :"post",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},
+		success : function(result){
+			itemGrid.removeCheckedRows()
+			alert('삭제완료!');
+		},
+		error : function(reject){
+			console.log(reject);
+		}
 		
+	});
+})
+
+// 버튼 이벤트
+$("#insertBtn").on('click',function(){
+	$('#insertDiv').css("display", "block")
+	$('#insertBtn').css("display", "none")
+	setTimeout(()=> insertGrid.refreshLayout(), 300);
+	insertGrid.appendRow();
+})
+
+
+// 업체 등록
+$("#saveBtn").on('click', function(){
+
+	$.ajax({
+		url : "/saveCustomer",
+		method : "post",
+		contentType : "application/json",
+		data :JSON.stringify( insertGrid.getRow(0)),
+		dataType:"json",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},
+		success : function(result){
+			console.log(result)
+			cusGrid.appendRow(result)
+			insertGrid.removeRow(0);
+			$('#insertDiv').css("display", "none")
+			$('#insertBtn').css("display", "block")
+			
+		},error : function(reject){
+			console.log(reject)
+		}
+	})
+})
+
 </script>
 
 </th:block>

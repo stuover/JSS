@@ -111,5 +111,23 @@
   			delete from test_history where test_history_code = #{testHistoryCode}
   		</delete>
   		
-  	
+  		<insert id="insertCheckList" parameterType="CheckListVO">
+  			insert into CHECKLIST (CHECKLIST_CODE, TEST_NAME, FAC_NAME, TEST_STANDARD, ITEM_CODE)
+  			values( (select Max(checklist_code)+1 from CHECKLIST), #{testName}, #{facName}, #{testStandard}, #{itemCode})
+  		</insert>
+  		
+  		<update id="updateCheckList" parameterType="CheckListVO"> 
+  			update CHECKLIST
+  			   set  TEST_NAME = #{testName},
+  			  	    FAC_NAME = #{facName},
+  			        TEST_STANDARD = #{testStandard},
+  			        ITEM_CODE = #{itemCode}
+  		 	where 	CHECKLIST_CODE = #{checklistCode}
+  		</update>
+  		
+  		
+  		<delete id="deleteCheckList">
+  			delete from checklist where checklist_code= #{checklistCode}
+  		</delete>
+  		
   </mapper>

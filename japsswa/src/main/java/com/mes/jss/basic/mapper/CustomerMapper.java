@@ -17,4 +17,10 @@ public interface CustomerMapper {
 
 	int result(TransactionItemVO list);
 
+	void deleteitemDeta(TransactionItemVO vo);
+
+	void insertCustomer(CustomerVO data);
+
+	CustomerVO getCustomer();
+
 }

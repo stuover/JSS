@@ -7,13 +7,13 @@
 <meta charset="UTF-8">
 
 <style>
-	.myTr th{
-		background-color : ;
-	}
-	.myTr th, td{
-		 border: 1px solid #444444;
-	}
-	
+.myTr th {
+	background-color:;
+}
+
+.myTr th, td {
+	border: 1px solid #444444;
+}
 </style>
 
 </head>
@@ -25,46 +25,51 @@
 			<div class="card">
 				<div class="card-body">
 					<h1 class="card-title">공통 코드 관리</h1>
-					<input id="commCode" name="commCode" type="text" placeholder="공통코드" maxlength='5'>
-					<input id="commName" name="commName" type="text" placeholder="공통코드명">
-					<input id="commNote" name="commNote" type="text" placeholder="비고">
+					<input id="commCode" name="commCode" type="text" placeholder="공통코드"
+						maxlength='5'> <input id="commName" name="commName"
+						type="text" placeholder="공통코드명"> <input id="commNote"
+						name="commNote" type="text" placeholder="비고">
 					<button id="insertBtn" type="button" class="btn btn-primary">등록</button>
 					<button id="deleteBtn" type="button" class="btn btn-primary">삭제</button>
-					
-					
+
+
 					<div id="grid"></div>
-					
+
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	
-		 <div class="modal fade" id="searchModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
-	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:670px">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	            <h5 class="modal-title" style="padding-right:25px;">세부코드 조회</h5>
-	                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	            </div>
 
-		        <div id="top">
-		            <div id="detaGrid" style="height:82px"></div>
-		        </div>
-				<div id="body" style="z-index : 9999">
-		            <button id="modalInsBtn" type="button" class="btn btn-primary" style="margin-left:10px">추가</button>
+
+	<div class="modal fade" id="searchModal" data-bs-backdrop="static"
+		tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered"
+			style="width: 670px">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" style="padding-right: 25px;">세부코드 조회</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
 				</div>
-		        <div id="battom">
-		           	<div id="modalGrid"></div>	            
-		        </div>
-	            <div class="modal-footer">
-	            	<button id="modalModBtn" type="button" class="btn btn-primary">저장</button>
-	            	<button id="modalDelBtn" type="button" class="btn btn-primary">삭제</button>
-	            </div>
-	        </div>
-	        </div>
-	    </div>
-	
+
+				<div id="top">
+					<div id="detaGrid" style="height: 82px"></div>
+				</div>
+				<div id="body" style="z-index: 9999">
+					<button id="modalInsBtn" type="button" class="btn btn-primary"
+						style="margin-left: 10px">추가</button>
+				</div>
+				<div id="battom">
+					<div id="modalGrid"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="modalModBtn" type="button" class="btn btn-primary">저장</button>
+					<button id="modalDelBtn" type="button" class="btn btn-primary">삭제</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script>
 		// GRID 를 생성한다.
 		// 나이는 수정할 수 있도록 설정한다.
@@ -173,7 +178,6 @@
 			
 			$('#deleteBtn').on('click', function() {
 				let commCode = $('#commCode').val();
-					console.log(commCode);
 				$.ajax({
 					url : "/removeCommCode",
 					method : "get",
@@ -200,9 +204,7 @@
 
 			// 모달 그리드 0.3초 후 그리기
 	 		  $('#searchModal').on('shown.bs.modal', function (e) {
-					console.log('open');
 					setTimeout(()=> detaGrid.refreshLayout(), 300);
-
 					setTimeout(()=> modalGrid.refreshLayout(), 300);
 
 	  			})
@@ -307,7 +309,6 @@
 
 	 		var commCode;
 			grid.on('click',function(e){
-				console.log("22");
 				if(e.columnName != "_checked"){
 				commCode = grid.getRow(e.rowKey).commCode;
 				 grid.setSelectionRange({
@@ -322,7 +323,6 @@
 			
 			
 			function getComm(commCode){
-					
 		 		 $.ajax({
 						url : "/commSearchAjax",
 						dataType: "json",
@@ -335,12 +335,10 @@
 
 						}					
 				});
-			
 			}
+			
 			// 모달 그리드 데이터 
-	 		 function getModal(commCode){
-		 		
-		 		
+	 		 function getModal(commCode){	
 				 $.ajax({
 					url : "/detailAjax",
 					dataType: "json",
@@ -401,6 +399,7 @@
 				console.log(commCode);
 				let arr = JSON.stringify( modalGrid.getCheckedRows() );
 				arr = arr.substr(1,arr.length-2)
+				
 				var data =  modalGrid.getCheckedRows();
 				
 				$.ajax({
