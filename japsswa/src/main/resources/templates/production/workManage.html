@@ -153,12 +153,24 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="">Hold 자재</h5>
+					<h5 class="modal-title" id="">Hold 자재 선택</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-		
-				<div id="holdSelectGrid"></div>
+					
+					<!-- 선택한 자재명과 필요한 자재 수량 모달 상단에 기재 -->
+					<div class="row gy-2 gy-xl-2 p-4 p-xl-2">
+
+						<div class="col-12 col-md-6">
+							<div class="input-group">
+							<label for="requiredItem" class="form-label p-2">필요한 자재 수량</label>
+								<input type="text" class="form-control form-control-sm" id="requiredItem" name="requiredItem">
+							</div>
+						</div>
+					</div>
+					
+					<!-- 자재 정보 그리드 -->
+					<div id="holdSelectGrid"></div>
 				
 				</div>
 					<div class="modal-footer">
@@ -878,7 +890,12 @@
 				},
 				{
 				  header: '공정코드',
-				  name: 'proCode'
+				  name: 'proCode',
+				  hidden: true
+				},
+				{
+				  header: '공정명',
+				  name: 'proName'
 				},
 				{
 				  header: '공정순서',
@@ -991,15 +1008,17 @@
 				  name: 'currentCount'
 				},
 				{
-				  header: '필요 자재량',
-				  name: 'requiredItem'
-				},
-				{
 				  header: 'Hold 수량',
-				  name: 'holdCount'
+				  name: 'holdCount',
+				  editor: 'text'
 				}
 			  ]
 			});
+			
+			
+			// 홀드 수량 편집 시 해당 row 자동으로 체크
+			holdSelectGrid.on('editingStart', (e) => {holdSelectGrid.check(e.rowKey)});	
+			
 			
 			// HOLD 자재 모달창 : 자재 정보 리스트
 			let bItemCode = '';		// bom 정보 그리드에서 선택한 자재의 품목코드
@@ -1015,6 +1034,7 @@
 					success: function(result) {
 						console.log(result);
 						holdSelectGrid.resetData(result);
+						$('#requiredItem').val(bRequire);
 						
 					},
 					error: function(reject) {
@@ -1023,6 +1043,8 @@
 				});
 			});
 			
+			
+			// 
 
 			
 			
