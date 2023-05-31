@@ -2,6 +2,9 @@ package com.mes.jss.sale.domain;
 
 import java.util.Date;
 
+import lombok.Data;
+
+@Data
 public class ReleaseVO {
 	String releaseId;
 	int relCount;

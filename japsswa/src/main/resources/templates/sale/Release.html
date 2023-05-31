@@ -6,32 +6,9 @@
 <head>
 
 
-<meta name="_csrf" th:content="${_csrf.token}" />
-<meta name="_csrf_header" th:content="${_csrf.headerName}" />
-
 </head>
 <th:block layout:fragment="content">
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
-	<link
-		href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css"
-		rel="stylesheet">
-
-	<script type="text/javascript"
-		src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-	<link rel="stylesheet"
-		href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-	<link rel="stylesheet"
-		href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-	<script
-		src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
-	<link rel="stylesheet"
-		href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-	<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-
-
-	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 	
 	
 	<div class="container-fluid page-body-wrapper">
@@ -39,10 +16,10 @@
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="page-title">주문서 관리</h4>
+					<h4 class="page-title">출고 관리</h4>
 					
 
-					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
+					<!-- <input id="name" type="hidden" th:value="${#authentication.principal.empName}"> --> 
 					<div>
 						
 									
@@ -113,7 +90,7 @@
 				</div>
 				<div class="modal-body">
 					<input type="text" id="outCount" name="oCount">
-					<button id="countBtn" type="button" class="btn btn-dark">입력</button>
+					<button id="countBtn" type="button" class="btn btn-dark">확인</button>
 					
 				</div>
 				
@@ -124,21 +101,38 @@
 
 	<script>
 	
+	/* const token = $("meta[name='_csrf']").attr("content")
+	const header = $("meta[name='_csrf_header']").attr("content") */
+	const Grid = tui.Grid;
+	
+	//상단 그리드 
 	let grid1Data = [];
 		const grid1 = new Grid({
 	      el: document.getElementById('grid1'),
 	      data: grid1Data,
+	      rowHeaders: ['checkbox'],
+	      pageOptions: { 
+              useClient: true,
+              perPage: 5 
+              },
 	      scrollX: false,
 	      scrollY: false,
 	      columns: [
 	    	     {
+				  header: '품목코드',
+				  name: 'itemName',
+				  hidden : true
+				 },
+				 {
+				  header: '거래처코드',
+				  name: 'itemName',
+				  hidden : true
+				 },
+	    	     {
 				  header: '품목명',
 				  name: 'itemName'
 				 },
-			     {
-				  header: '주문수량',
-				  name: 'ordCount'
-				 },
+			     
 				 {
 				  header: '거래처명',
 				  name: 'customerName'
@@ -153,31 +147,155 @@
 			     },	
 			     {
 				  header: '총 가격',
-				  name: 'ordName',
-				  editor: 'text'
-				  
+				  name: 'eachPrice'
+				 },
+				 {
+				  header: '재고량',
+				  name: 'fnCount'
+				 },
+				 {
+				  header: '주문수량',
+				  name: 'ordCount'
 				 },
 				 {
 				  header: '담당자',
-				  name: 'empName',
-				  editor: 'text'
+				  name: 'empName'
 				 }
 		      ],
 		      
 		        
 		    });
 
-		grids.on('check', ev => {
+		grid1.on('check', ev => {
 	      console.log('check!', ev);
 	    });
 
-	    grids.on('uncheck', ev => {
+	    grid1.on('uncheck', ev => {
 	      console.log('uncheck!', ev);
 	    });
 
-	    grids.on('focusChange', ev => {
+	    grid1.on('focusChange', ev => {
 	      console.log('change focused cell!', ev);
 	    });
+	    
+	    
+	    //하단 그리드
+	    let grid2Data = [];
+		const grid2 = new Grid({
+	      el: document.getElementById('grid2'),
+	      data: grid2Data,
+	      rowHeaders: ['checkbox'],
+	      pageOptions: { 
+              useClient: true,
+              perPage: 5 
+              },
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '품목명',
+				  name: 'itemName'
+				 },
+			     
+				 {
+				  header: '거래처명',
+				  name: 'customerName'
+			     },
+			     {
+				  header: '주문날짜',
+				  name: 'ordDate'
+				 }, 
+			     {
+			      header: '납부예정날짜',
+			      name: 'outDate'
+			     },	
+			     {
+				  header: '총 가격',
+				  name: 'eachPrice'
+				 },
+				 {
+				  header: '재고량',
+				  name: 'fnCount'
+				 },
+				 {
+				  header: '출고량',
+				  name: 'fnRelCount',
+				  editor: 'text'
+				 },
+				 {
+				  header: '담당자',
+				  name: 'empName'
+				 }
+		      ],
+		      
+		        
+		    });
+
+		grid2.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+	    grid2.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+	    grid2.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+	    
+	    
+	    //명세서 모달
+	    const recmodalGrid = new Grid({
+		               el: document.getElementById('recmodalGrid'),
+		 		      rowHeaders: ['checkbox'],
+		               scrollX: false,
+		               scrollY: false,
+		              pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+		               columns: [
+		            	   {
+			                   header: '거래처 코드',
+			                   name: 'customerId'
+			                 },
+		                 {
+		                   header: '거래처명',
+		                   name: 'customerName'
+		                 },
+		                 {
+		                   header: '연락처',
+		                   name: 'custTel'
+		                 },
+		                 {
+		                   header: '주소',
+		                   name: 'custAddr'
+		                 },              
+		                 {
+		                   header: '메일주소',
+		                   name: 'custMail'
+		                 }     
+		               ]
+		             });
+
+	    			 recmodalGrid.on('check', ev => {
+		               console.log('check!', ev);
+		             });
+
+	    			 recmodalGrid.on('uncheck', ev => {
+		               console.log('uncheck!', ev);
+		             });
+
+	    			 recmodalGrid.on('focusChange', ev => {
+		               console.log('change focused cell!', ev);
+		             });
+	    			 
+	    			 
+	    			 window.onload = function(){
+	    				 
+	    				 //상단 그리드에 입고완료 품목 리스트
+	    				 
+	    			 }
 	
 
 	

@@ -19,7 +19,7 @@
 					<h4 class="page-title">완제품 입고 관리</h4>
 					
 
-					<input id="name" type="text" th:value="${#authentication.principal.empName}">  
+					<input id="name" type="hidden" th:value="${#authentication.principal.empName}">  
 				
 
 					<div class="row"></div>
@@ -88,7 +88,14 @@
 			     {
 			      header: '입고량',
 			      name: 'passItem'
-			     }
+			     },
+			     {
+				  header: '담당자',
+				  name: 'empName',
+				  hidden: true
+				 }
+					 
+				 
 		      ],
 		      
 		        
@@ -108,14 +115,22 @@
 		
 
 		window.onload = function(){
+		
+		
 			
 			//화면 상단 그리드에 생산완료된 완제품 리스트
 			$.ajax({
-				url : "/passList",
+				url : "/passItem",
 				method : "get",
 				success : function(result){
 					topGrid.resetData(result);
 					topGrid.refreshLayout();
+					for(let i=0; i<topGrid.getRowCount(); i++){
+						topGrid.setValue(i, "empName", $('#name').val(), false);
+					};
+				
+					
+					
 				}
 			})
 			
@@ -134,7 +149,10 @@
 		//입고처리버튼 누르면 입고처리가 되고 하단 그리드로 이동
 		$('#inBtn').on('click', function(){
 			
+			
 			var data = topGrid.getCheckedRows();
+			
+			
 			console.log(data);
 			
 			$.ajax({
@@ -157,12 +175,15 @@
 						  console.log(result);
 						  botGrid.resetData(result);
 						  botGrid.refreshLayout();
+						  
 					  },
 					  error : function(reject){
 						  console.log(reject);
 					  }
 					  
 				  })
+				  
+				  topGrid
      		   },
      		   error : function(reject){
      			   console.log(reject);
@@ -187,13 +208,13 @@
 		      columns: [
 		    	  {
 					  header: '생산실적코드',
-					  name: 'performanceId'
-					 
+					  name: 'performanceId',
+					  hidden: true
 					 },
 				     {
 					  header: '품목코드',
-					  name: 'itemCode'
-					 
+					  name: 'itemCode',
+					  hidden: true
 					 },
 					 {
 					  header: '품목명',
@@ -255,9 +276,25 @@
 	  					  url : "/storeInItem",
 	  					  method : "get",
 	  					  success : function(result){
+	  						  alert("입고취소 되었습니다")
 	  						  console.log(result);
 	  						  botGrid.resetData(result);
 	  						  botGrid.refreshLayout();
+	  						  
+	  						$.ajax({
+	  							url : "/passItem",
+	  							method : "get",
+	  							success : function(result){
+	  								topGrid.resetData(result);
+	  								topGrid.refreshLayout();
+	  								for(let i=0; i<topGrid.getRowCount(); i++){
+	  									topGrid.setValue(i, "empName", $('#name').val(), false);
+	  								};
+	  							
+	  								
+	  								
+	  							}
+	  						})
 	  					  },
 	  					  error : function(reject){
 	  						  console.log(reject);

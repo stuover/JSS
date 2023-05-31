@@ -6,9 +6,9 @@ import com.mes.jss.sale.domain.FinishedVO;
 
 public interface FinishedMapper {
 
-	List<FinishedVO> passList();
+	List<FinishedVO> passItem();
 
-	public void fRegister(long manager, FinishedVO fvo);
+	public void fRegister(FinishedVO fvo);
 
 	List<FinishedVO> storeInItem();
 
