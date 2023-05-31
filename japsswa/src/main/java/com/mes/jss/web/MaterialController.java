@@ -442,16 +442,16 @@ public class MaterialController {
 	}
 	
 	
-  // 자재 불량 리스트
+ // 자재 불량 리스트
 	
-	/*@ResponseBody
+	@ResponseBody
 	@GetMapping("/mrErrorAjax")
 	public List<MrErrorVO> mrErrorList(){
 		
 		List<MrErrorVO> list = materialService.ErrorList();
 		
 		return list;
-	}*/
+	}
 	
 	
 	

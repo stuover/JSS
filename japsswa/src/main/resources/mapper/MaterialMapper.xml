@@ -112,7 +112,7 @@
 				
 		</select>
 				
-	<!-- 자재 삭제 -->
+	<!-- 자재 입고 삭제 -->
 		<select id="deleteMr" statementType="CALLABLE">
 			{call mr_store_delete(
 				#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
@@ -253,9 +253,9 @@
   	
   	<!-- 조정 리스트 -->		
   		<select id="admGetList" resultType="MrAdjustmentVO">
-  			select * 
-  			from material_adjustment
-  			where to_char(register_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+  			select a.adjustment_code,m.mr_lot_number,i.item_code,i.item_type,i.item_name,a.register_date, a.process,a.change,a.adjustment_date,a.emp_no
+  			from material_adjustment a join material m on(a.mr_lot_number = m.mr_lot_number) join itemlist i on (m.item_code = i.item_code) 
+  			where to_char(a.register_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   		</select>
   
   
@@ -296,6 +296,18 @@
   			
   		
   		</select>
+  		
+  		
+  	<!-- 조정 삭제 -->
+  		<select id="admDelete" statementType="CALLABLE">
+  			{call mr_ad_delete(
+  				#{adjustmentCode, mode=IN, jdbcType=VARCHAR}
+  			
+  			
+  			)}
+  			
+  		</select>
+  		
   		
   <!-- 발주 리스트 -->		
   		<select id="OrmGetList" resultType="MrOrderVO">

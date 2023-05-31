@@ -246,6 +246,17 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 	}
 	
+	// 자재 조정 취소
+		@Override
+		public void admDel(AdjustmentListVO vo) {
+			
+			for(int i=0; i<vo.getList().size(); i++) {
+				
+				materialMapper.admDelete(vo.getList().get(i).getAdjustmentCode());
+			}
+			
+		}
+	
 	// 반품 품질 리스트
 	@Override
 	public List<QualityVO> retList() {
@@ -288,15 +299,10 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.ErrorGetList();
 	}
+	
+	
+	
 
-	@Override
-	public void admDel(AdjustmentListVO vo) {
-		
-		for(int i=0; i<vo.getList().size(); i++) {
-			
-			materialMapper.admDelete(vo.getList().get(i).getAdjustmentCode());
-		}
-		
 		
 	}
 	
@@ -322,7 +328,7 @@ public class MaterialServiceImpl implements MaterialService {
 	
 
 	
-}
+
 
 	
 	
