@@ -26,15 +26,46 @@
         <div id="grid"></div>
     	<!-- 비가동 설비중 사유가 점검인 리스트 조회 그리드  끝 -->
     	
+    	<!-- 등록 모달 시작 -->
+
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 모달 그리드 시작 -->
+                        <div id="insertUpGrid"></div>
+                        <div id="insertDownGrid"></div>
+                        <!-- 모달 그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button id="detailModBtn" type="button" class="btn btn-primary">수정</button>
+                        <button id="detailDelBtn" type="button" class="btn btn-primary">삭제</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 등록 모달 끝 -->
+    	
     
     	<!-- 점검 내역 그리드 -->	
     	<div id="insGrid"></div>
     	<!-- 점검 내역 그리드 끝 -->	
-    
+    	
     
     
     
     <script>
+    
+    
     
     // 비가동 설비중 사유가 점검인 리스트 조회 그리드    
     const grid = new tui.Grid({
@@ -67,7 +98,7 @@
     function facDownList() {
 
         $.ajax({
-            url: "/downtimeAjax",
+            url: "/beforeInsList",
             method: "GET",
             dataType: "JSON",
             success: function (result) {
@@ -82,6 +113,7 @@
     }
 
     facDownList();
+    
     
     // 점검 내역 그리드
     const insGrid = new tui.Grid({
@@ -142,6 +174,7 @@
                     }]
             });
     
+ // 점검 내역 함수
     function insList(){
     	
     	$.ajax({    		
@@ -162,6 +195,136 @@
     insList();
     
     
+ // 더블클릭시 등록모달
+    grid.on('dblclick', function (e) {
+
+                   gridData = grid.getRow(e.rowKey);
+                   console.log(gridData);
+                   //$('#insertModal').modal('show');
+                   //grid.resetData(gridData);
+                   
+                   //setTimeout(() => grid.refreshLayout(), 300);                    
+               }
+    
+    
+    // 모달 상단 그리드
+    const insertUpGrid = new tui.Grid({
+                el: document.getElementById('insertUpGrid'),
+                scrollX: false,
+                scrollY: false,
+                pageOptions: {
+                    useClient: true,
+                    perPage: 15
+                },
+                columns: [{
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '설비명',
+                        name: 'facName'
+                    },
+                    {
+                    	header: '비가동 코드',
+                        name: 'downCode'
+                    },
+                    {
+                        header: '점검 코드 ',
+                        name: 'insCode'
+                    },
+                    {
+                        header: '점검날짜 ',
+                        name: 'insDate'
+                    },
+                    {
+                        header: '점검사유 ',
+                        name: 'insReason'
+                    },
+                    {
+                        header: '점검내역 ',
+                        name: 'insHistory'
+                    },
+                    {
+                        header: '적합판정',
+                        name: 'judgment'
+                    },
+                    {
+                        header: '부품교체내역',
+                        name: 'partHistory'
+                    },
+                    {
+                        header: '부품교체사유',
+                        name: 'partReason'
+                    },
+                    {
+                        header: '부품교체날짜',
+                        name: 'partDate'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager'
+                    }]
+            });
+    
+    // 모달 하단 그리드
+    
+    const insertDownGrid = new tui.Grid({
+                el: document.getElementById('insertDownGrid'),
+                scrollX: false,
+                scrollY: false,
+                pageOptions: {
+                    useClient: true,
+                    perPage: 15
+                },
+                columns: [{
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '설비명',
+                        name: 'facName'
+                    },
+                    {
+                    	header: '비가동 코드',
+                        name: 'downCode'
+                    },
+                    {
+                        header: '점검 코드 ',
+                        name: 'insCode'
+                    },
+                    {
+                        header: '점검날짜 ',
+                        name: 'insDate'
+                    },
+                    {
+                        header: '점검사유 ',
+                        name: 'insReason'
+                    },
+                    {
+                        header: '점검내역 ',
+                        name: 'insHistory'
+                    },
+                    {
+                        header: '적합판정',
+                        name: 'judgment'
+                    },
+                    {
+                        header: '부품교체내역',
+                        name: 'partHistory'
+                    },
+                    {
+                        header: '부품교체사유',
+                        name: 'partReason'
+                    },
+                    {
+                        header: '부품교체날짜',
+                        name: 'partDate'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager'
+                    }]
+            });
     </script>
 
     </th:block>

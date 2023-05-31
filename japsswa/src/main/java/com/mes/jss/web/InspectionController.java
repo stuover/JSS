@@ -23,6 +23,15 @@ public class InspectionController {
 		return "Facility/Inspection";
 	}
 	
+	@GetMapping("/beforeInsList")
+	@ResponseBody
+	public List<InspectionVO> beforeInspectionList(){
+		
+		List<InspectionVO> list = service.getbeforeInsList();
+		
+		return list;
+	}
+	
 	@RequestMapping("/inspectionList")
 	@ResponseBody
 	public List<InspectionVO> InspectionList(){

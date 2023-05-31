@@ -38,6 +38,7 @@ public interface FacilityMapper {
 	
 	
 	// 점검 
+	public List<InspectionVO> getbeInsList();	// 점검 등록 전 리스트
 	public List<InspectionVO> getInsList();	// 점검 내역 리스트
 	
 }

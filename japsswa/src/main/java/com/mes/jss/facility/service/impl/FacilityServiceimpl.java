@@ -124,10 +124,17 @@ public class FacilityServiceimpl implements FacilityService{
 	// 점검 관리 페이지
 	
 	@Override
-	public List<InspectionVO> getInspectionList() {
+	public List<InspectionVO> getbeforeInsList() {	// 점검 등록 전 리스트
+		
+		return facilityMapper.getbeInsList();
+	}
+
+	@Override
+	public List<InspectionVO> getInspectionList() {	// 점검 리스트
 
 		return facilityMapper.getInsList();
 	}
+
 
 	
 

@@ -153,9 +153,17 @@
   	
   	<!-- 점검 관리 페이지 -->
   	
+  	<select id="getbeInsList" resultType="InspectionVO">
+  		select f.fac_name, f.fac_code , d.down_code, d.down_reason, d.stop_date
+		from facility f full outer join downtime d on(f.fac_code = d.fac_code) full outer join inspection i on(d.fac_code = i.fac_code)
+		where down_reason = '점검' and ins_code is null and start_date is null
+  	</select>
+  	
   	<select id="getInsList" resultType="InspectionVO">
   		select * from inspection
   	</select>
+  	
+  	
   	
   	
   </mapper>
