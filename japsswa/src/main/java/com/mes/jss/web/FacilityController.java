@@ -43,51 +43,48 @@ public class FacilityController {
 
 	@RequestMapping("/searchFacility") // 설비 단건 조회
 	@ResponseBody
-	public List<FacilityVO> searchFacility(@RequestParam String facCode) {
+	public List<FacilityVO> searchFacility(FacilityVO vo) {
 
-		System.out.println(facCode);
-		// vo로 받기 수정
-		List<FacilityVO> list = service.searchFacility(facCode);
+		System.out.println(vo);
+		List<FacilityVO> list = service.searchFacility(vo);
 
 		return list;
 	}
 
-	
-	  @RequestMapping("/insertAjax") // 설비 등록
-	  @ResponseBody public FacilityVO insertAjax(@RequestBody FacilityVO  vo ) {
-	  
-	  System.err.println(vo);
-	  service.saveFacility(vo);
-	  System.out.println(vo);
-	  return vo;
-	  
-	  }
-	 
+	@RequestMapping("/insertAjax") // 설비 등록
+	@ResponseBody
+	public FacilityVO insertAjax(@RequestBody FacilityVO vo) {
+
+		service.saveFacility(vo);
+		System.out.println(vo);
+		
+		return vo;
+
+	}
 
 	@RequestMapping("/modifyFacility") // 설비 정보수정
 	@ResponseBody
 	public FacilityVO modifyFacility(@RequestBody FacilityVO vo) {
+
 		System.err.println(vo);
-		System.err.println("123");
 		service.modifyFacility(vo);
 
 		return vo;
 	}
 
-	//@RequestMapping("/insertAjax") // 설비 등록
-	//@ResponseBody
-	//public List<FacilityVO> insertAjax(@RequestBody List<FacilityVO> insertData) {
+	@RequestMapping("/RemoveFacility")
+	@ResponseBody
+	public FacilityVO RemoveFacility(@RequestBody FacilityVO vo) {
+		
+		System.out.println(vo);
+		service.RemoveFacility(vo);
+		
+		return vo;
+	}
+	@RequestMapping("/test0001")
+	public String test() {
 
-//		List<FacilityVO> data = service.saveFacility(insertData);
-
-//		return data;
-
-//	}
-
-	
-	  @RequestMapping("/test0001") public String test() {
-	  
-	  return "Facility/test1111"; }
-	 
+		return "Facility/test1111";
+	}
 
 }

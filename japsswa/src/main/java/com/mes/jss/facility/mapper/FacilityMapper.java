@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
+import com.mes.jss.facility.domain.InspectionVO;
 
 public interface FacilityMapper {
 
@@ -19,15 +20,24 @@ public interface FacilityMapper {
 	public boolean insertStartTime(DowntimeVO vo);	// 가동일시 추가
 	public boolean deleteDownCode(FacilityVO vo);	// 비가동 내역 삭제
 	public boolean updateDownTime(DowntimeVO vo);	// 비가동 내역 수정
-
+	
 	// 비가동 내역
 	public List<DowntimeVO> getDownDetailList();		// 비가동 내역 전체 조회
 	public List<FacilityVO> searchlist(String facName);	// 비가동 내역 단건 조회
 	
+	
+	
 	// 설비 페이지
-	public List<FacilityVO> getAllList();		// 전체 설비 리스트
-	public List<FacilityVO> searchFac(String facCode);		// 설비 단건 조회
+	public List<FacilityVO> getAllList();		// 전체 설비 리스트	
+	public List<FacilityVO> searchFac(FacilityVO vo);	// 설비 단건 조회
+	
 	public int insertFacility(FacilityVO vo);
 	public void modifyFac(FacilityVO vo);	// 설비 정보 수정
+	public void deleteFac(FacilityVO vo);	// 설비 삭제
+	
+	
+	
+	// 점검 
+	public List<InspectionVO> getInsList();	// 점검 내역 리스트
 	
 }

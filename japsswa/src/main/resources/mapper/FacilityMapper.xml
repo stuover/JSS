@@ -122,7 +122,7 @@
   	</select>
   	
   	<select id="searchFac" parameterType="FacilityVO" resultType="FacilityVO">
-  		select * from facility where fac_code like '%' || #{facName} || '%'
+  		select * from facility where fac_name like '%' || #{facName} || '%'
   	</select>
   	
   	<insert id="insertFacility" parameterType="FacilityVO">
@@ -133,10 +133,47 @@
   	</insert>
   	
   	<update id="modifyFac" parameterType="FacilityvO">
-  		update facility set fac_name = #{facName} , fac_date = #{facDate} , 
-  		           fac_process = #{facProcess} , wash_cycle = #{washCycle} ,
-  		ins_cycle = #{insCycle} , fac_manager = #{facManager} ,
-  		fac_function = #{facFunction} , fac_picture = #{facPicture}
-  		where fac_code = #{facCode}
+  		update facility   		
+  					set
+					  		fac_name = #{facName}, 
+					  		fac_date = #{facDate} , 
+					  		fac_process = #{facProcess},
+					  		wash_cycle = #{washCycle} ,
+					  		ins_cycle = #{insCycle},
+					  		last_inspection = #{lastInspection}, 
+					  		fac_manager = #{facManager},
+					  		fac_function = #{facFunction},
+							fac_picture = #{facPicture}		
+  				  where  fac_code = #{facCode}
   	</update>
+  	
+  	<delete id="deleteFac">
+  		delete from facility where fac_code = #{facCode} 
+  	</delete>
+  	
+  	<!-- 점검 관리 페이지 -->
+  	
+  	<select id="getInsList" resultType="InspectionVO">
+  		select * from inspection
+  	</select>
+  	
+  	
   </mapper>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

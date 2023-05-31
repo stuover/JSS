@@ -33,16 +33,16 @@ public interface FacilityService {
 	
 	// 설비 페이지
 	public List<FacilityVO> getAllList();		// 전체 설비 리스트
-	public List<FacilityVO> searchFacility(String facCode);	// 설비 단건 조회
-	
+	public List<FacilityVO> searchFacility(FacilityVO vo);	// 설비 단건 조회
 	
 	public boolean saveFacility(FacilityVO vo);		// 설비 정보 등록
 	public void modifyFacility(FacilityVO vo);		// 설비 정보 수정
+	public void RemoveFacility(FacilityVO vo);	// 설비 삭제
 
 	
 	
-	// 점검 페이지
-	public InspectionVO getInspection(InspectionVO vo);
+	// 점검 페이지	
+	public List<InspectionVO> getInspectionList();
 	
-	//public DowntimeVO getDowntime(DowntimeVO vo);		// 미완
+
 }

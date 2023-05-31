@@ -68,7 +68,7 @@
 
         <!-- 등록 모달 끝 -->
 
-        <!-- 상세내역 모달 끝 -->
+        <!-- 상세내역 모달 시작 -->
 
         <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
             aria-hidden="true">
@@ -87,9 +87,9 @@
                         <!-- 모달 그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                         <button id="detailModBtn" type="button" class="btn btn-primary">수정</button>
                         <button id="detailDelBtn" type="button" class="btn btn-primary">삭제</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -128,6 +128,7 @@
 
             getFacList();
 
+            // 전체설비 그리드
             const grid = new tui.Grid({
                 el: document.getElementById('grid'),
                 scrollX: false,
@@ -188,6 +189,8 @@
 
             
             
+            
+            
             // 더블클릭시 상세내역 모달
             grid.on('dblclick', function (e) {
 
@@ -197,6 +200,7 @@
                     //console.log(gridData);
 
                     let firstFac = {
+                    	facCode : gridData.facCode,
                         facName : gridData.facName,
                         facDate : gridData.facDate,
                         facProcess : gridData.facProcess,
@@ -240,7 +244,8 @@
                     },
                     {
                         header: '설치날짜 ',
-                        name: 'facDate'
+                        name: 'facDate',
+                        editor: 'datePicker'
                     },
                     {
                         header: '투입공정 ',
@@ -274,7 +279,8 @@
                     },
                     {
                         header: '마지막 점검일',
-                        name: 'lastInspection'
+                        name: 'lastInspection',
+                        editor: 'datePicker'
                     },
                     {
                         header: '관리자',
@@ -305,7 +311,7 @@
                     newModFac[att] = firstFac[att];
                 }
 
-                for (let mer in secondFac) {
+                for (let att in secondFac) {
                     newModFac[att] = secondFac[att];
                 }
 
@@ -313,18 +319,13 @@
                 console.log(newModFac);
             }
 
-            // 수정 함수
+            // 수정 ajax 함수
             function modifyFac() {
 
-                //let firstFac = detailGrid.getData()[0];
-                //let secondFac = detailDownGrid.getData()[0];
+                let firstFac = detailGrid.getData()[0];
+                let secondFac = detailDownGrid.getData()[0];
 
-                //console.log("upModFac");
-                //console.log(upModFac);
-                //console.log("downModFac");
-                //console.log(downModFac);
-
-                let modobj = mergeModFac(upModFac, downModFac);
+                let modobj = mergeModFac(firstFac, secondFac);
                 console.log(modobj);
 
                 var token = $("meta[name='_csrf']").attr("content");
@@ -345,12 +346,12 @@
 
                     },
                     error: function (reject) {
-                        consoleo.log("reject");
-                        consoleo.log(reject);
+                        console.log("reject");
+                        console.log(reject);
                     }
                 });
             }
-
+			
             $('#detailModBtn').on('click', function () {
                 console.log("수정");
                 detailGrid.finishEditing();
@@ -358,7 +359,42 @@
                 modifyFac();
             })
 
+            
+            // 설비 삭제 함수
+			function delFac(){
+            	
+            	let firstFac = detailGrid.getData()[0];
+            	console.log(firstFac);
+            	
+            	var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+                
+                $.ajax({
+                	
+                	url : "/RemoveFacility",
+                	method : "POST",
+                	data : JSON.stringify(firstFac),
+                	contentType : "application/json",
+                	beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("삭제 되었습니다");
+                        $('#detailModal').modal('hide');
+                        getFacList();
 
+                    },
+                    error: function (reject) {
+                        console.log("reject");
+                        console.log(reject);
+                    }
+                });
+            }
+            
+            $('#detailDelBtn').on('click', function () {
+                console.log("삭제");
+                delFac();
+            })
 
             // 모달 그리드
 
@@ -431,7 +467,7 @@
                 ]
             });
 
-            // 등록버튼 클릭시 , 오류있음 모달끄면 로우가 하나씩 계속 증가
+            // 등록버튼 클릭시 , 오류있음 모달끄면 로우가 하나씩 계속 증가, 수정필요
             $('#insertBtn').on('click', function () {
 
                 $('#insertModal').on('shown.bs.modal', function () {
@@ -459,7 +495,7 @@
                 console.log(newFac);
             }
 
-            // 등록 함수
+            // 등록 ajax 함수
             function saveFac() {
 
                 let upFac = modalGrid.getData()[0];
@@ -501,6 +537,32 @@
                 modalDownGrid.finishEditing();
 
                 saveFac();
+            })
+            
+            $('#searchBtn').on('click', function(){
+            	
+            	$('#searchInput').val();
+                console.log($('#searchInput').val());
+                
+                $.ajax({
+                    url: "/searchFacility",
+                    method: "GET",
+                    data: {facName : $('#searchInput').val()},
+                    dataType : "json",
+                    success: function (result) {
+                        console.log("성공");
+                        grid.resetData(result);
+                    },
+                    error: function (reject) {
+                    	console.log("reject");
+                    	console.log(reject);
+                    }
+                });
+            })
+            
+            $('#resetBtn').on('click', function(){
+            	
+            	getFacList();
             })
         </script>
 
