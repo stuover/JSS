@@ -94,27 +94,16 @@ public class FacilityServiceimpl implements FacilityService{
 		return facilityMapper.getAllList();
 	}
 
-	@Override
-	public List<FacilityVO> searchFacility(String facCode) {		// 설비 단건 조회
-		
-		return facilityMapper.searchFac(facCode);
-	}
-
 	
-	  //@Override public boolean saveFacility(FacilityVO upFac, FacilityVO downFac) {
-	  
-		  //{facfName : facfName , 
-		  //upFac.setFacName(downFac.getFacName());
-		  //upFac.setFacDate(downFac.getFacDate());
-		  //upFac.setFacProcess(downFac.getFacProcess());
-		  //upFac.setFacStatus(downFac.getFacStatus());
-		  
-	  //return facilityMapper.insertFacility(upFac, downFac) == 1;
-	  
-	 // }
+	@Override
+	public List<FacilityVO> searchFacility(FacilityVO vo) {		// 설비 단건 조회
+
+		return facilityMapper.searchFac(vo);
+	}
+		
 	 
 	@Override
-	public boolean saveFacility(FacilityVO vo) {
+	public boolean saveFacility(FacilityVO vo) {		// 설비 등록
 		
 		return facilityMapper.insertFacility(vo) == 1;
 	}
@@ -124,15 +113,25 @@ public class FacilityServiceimpl implements FacilityService{
 
 		facilityMapper.modifyFac(vo);
 	}
+	
+	@Override
+	public void RemoveFacility(FacilityVO vo) {
+
+		facilityMapper.deleteFac(vo);
+	}
 
 	
 	// 점검 관리 페이지
 	
-	
 	@Override
-	public InspectionVO getInspection(InspectionVO vo) {
-		return null;
+	public List<InspectionVO> getInspectionList() {
+
+		return facilityMapper.getInsList();
 	}
+
+	
+
+	
 
 
 
