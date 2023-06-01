@@ -51,8 +51,14 @@
 	
 	<update id="updatePwd">
 		update emp 
-		   set password = #{npwd}
-		 where emp_no = #{name}
+		   set
+			   	<if test="newPwd != null and newPwd !=''.toString()">
+			   	   password = #{newPwd},
+			   	</if> 
+		   	   phone_num = #{phoneNum},
+		   	   email= #{email}
+		   	   
+		 where emp_no = #{empNo}
 	</update>
 	
   </mapper>

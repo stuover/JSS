@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layout/index}"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head lang="en">
-<meta charset="UTF-8">
+	<meta charset="UTF-8">
 
 </head>
 
@@ -15,8 +14,7 @@
 				<div class="card-body">
 					<h1 class="card-title">사원 정보</h1>
 					<form id="controller">
-						<button type="button" id="modifyBtn" class="btn btn-success"
-							data-bs-toggle="modal" data-bs-target="#searchModal">수정</button>
+						<button type="button" id="modifyBtn" class="btn btn-success">수정</button>
 						<button id="addEmpBtn">등록</button>
 						<div id="grid"></div>
 					</form>
@@ -27,26 +25,22 @@
 
 
 
-	<div class="modal fade" id="searchModal" tabindex="-1"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="searchModalLabel">
 						<span id="selNo">사원정보 조회</span><span id="selName">사원정보 조회</span>
 					</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<span id="position">현재 직책 : </span> 
-					<select id="selPosi">
+					<span id="position">현재 직책 : </span> <select id="selPosi">
 						<option value="null">선택해주세요</option>
 						<option value="사원">사원</option>
 						<option value="대리">대리</option>
 						<option value="부장">부장</option>
-					</select> 
-					<br> <span id="deptName">현재 직책 : </span> <select id="selDept">
+					</select> <br> <span id="deptName">현재 직책 : </span> <select id="selDept">
 						<option value="null">선택해주세요</option>
 						<option value="인사">인사</option>
 						<option value="영업">영업</option>
@@ -67,159 +61,156 @@
 
 
 	<script>
-		// GRID 를 생성한다.
-		// 나이는 수정할 수 있도록 설정한다.
 
-		window.onload = function() {
+		// 사원정보 그리드
+		var grid = new tui.Grid({
+			el: document.getElementById('grid'),
+			scrollX: true,
+			scrollY: true,
+			rowHeaders: [{ type: 'checkbox', header: " " }, { type: 'rowNum' }],
+			pageOptions: {
+				useClient: true,
+				perPage: 10
+			},
+			columns: [
+				{
+					header: '사원번호',
+					name: 'empNo',
+					sortingType: 'desc',
+					sortable: true
+				}, {
+					header: '이름',
+					name: 'empName',
+					sortingType: 'desc',
+					sortable: true
+				}, {
+					header: '직책',
+					name: 'position',
+					sortingType: 'desc',
+					sortable: true,
+				}, {
+					header: '부서',
+					name: 'deptName',
+					sortingType: 'desc',
+					sortable: true
+				}, {
+					header: '연락처',
+					name: 'phoneNum',
+					sortingType: 'desc',
+					sortable: true
+				}, {
+					header: 'e-mail',
+					name: 'email',
+					sortingType: 'desc',
+					sortable: true
+				}, {
+					header: '입사일',
+					name: 'hireDate',
+					sortingType: 'desc',
+					sortable: true
+				}]
+		});
+
+		// 사원 전체 리스트
+		function empList() {
+
 			$.ajax({
-				url : "/employeeAjax",
-				method : "GET",
-				dataType : "JSON",
-				success : function(result) {
+				url: "/employeeAjax",
+				method: "GET",
+				dataType: "JSON",
+				success: function (result) {
 					grid.resetData(result);
 				}
 			});
+		}
+		empList();
 
-			var grid = new tui.Grid({
-				el : document.getElementById('grid'),
-				scrollX : true,
-				scrollY : true,
-				rowHeaders : [ {type : 'checkbox', header:" "},{type :'rowNum'} ],
-				pageOptions : {
-					useClient : true,
-					perPage : 10
-				},
-				columns : [ 
-				{
-					header : '사원번호',
-					name : 'empNo',
-					sortingType : 'desc',
-					sortable : true
-				}, {
-					header : '이름',
-					name : 'empName',
-					sortingType : 'desc',
-					sortable : true
-				}, {
-					header : '직책',
-					name : 'position',
-					sortingType : 'desc',
-					sortable : true,
-				}, {
-					header : '부서',
-					name : 'deptName',
-					sortingType : 'desc',
-					sortable : true
-				}, {
-					header : '연락처',
-					name : 'phoneNum',
-					sortingType : 'desc',
-					sortable : true
-				}, {
-					header : 'e-mail',
-					name : 'email',
-					sortingType : 'desc',
-					sortable : true
-				},
-
-				{
-					header : '입사일',
-					name : 'hireDate',
-					sortingType : 'desc',
-					sortable : true
-				} ]
+		// 체크박스 하나만
+		grid.on('check', function (e) {
+			var checkRows = grid.getCheckedRowKeys();
+			checkRows.forEach(function (key, idx) {
+				if (key != e.rowKey) {
+					grid.uncheck(key);
+				}
 			});
+		});
 
-			
-			grid.on('check', function (e) {
-                var checkRows = grid.getCheckedRowKeys();
-                checkRows.forEach(function( key, idx){                      
-                   if(key != e.rowKey){
-                      grid.uncheck(key);
-                   }
-                });
-             });
-			
-			$('#addEmpBtn').on('click', function(e) {
-				e.preventDefault();
-				self.location = '/employee/ragister';
-			})
+		// 등록페이지로 이동
+		$('#addEmpBtn').on('click', function (e) {
+			e.preventDefault();
+			self.location = '/employee/ragister';
+		})
 
-			$('#modifyBtn').on('click',function(e) {
-				e.preventDefault();
-				var empNo = null;
-				var checkd = null;
-				$('input:checkbox').each(function(index) {
-
-					if ($(this).is(":checked") == true) {
-						checkd = $(this).parent().parent().data('row-key');
-						empNo = $('td[data-row-key='+ checkd+ ']').children(':eq(2)').text();
-						}
-				})
-				console.log(empNo);
-
+		// 사원 정보 수정(부서, 직급변경)
+		$('#modifyBtn').on('click', function (e) {
+			e.preventDefault();
+			let empNo = grid.getCheckedRows()[0].empNo
+			console.log(empNo)
+			if (empNo != null && empNo != ""){
 				$.ajax({
-					url : "/serchEmpAjax",
-					method : "GET",
-					data : {empNo : empNo},
-					dataType : "JSON",
-					success : function(result) {
+					url: "/serchEmpAjax",
+					method: "GET",
+					data: { empNo: empNo },
+					dataType: "JSON",
+					success: function (result) {
+						$('#searchModal').modal('show');
+
 						$('.modal-title #selNo').text(result.empNo);
 						$('.modal-title #selName').text(result.empName);
-						
+
 						if (result.position != null) {
-							$('.modal-body #position').text("현재 직책 : "+ result.position+ '　　　변경할 직책');
+							$('.modal-body #position').text("현재 직책 : " + result.position + '　　　변경할 직책');
 						} else {
 							$('.modal-body #position').text("직책이 없습니다.　　　　변경할 직책");
 						}
 
 						if (result.deptName != null) {
-							$('.modal-body #deptName').text("현재 부서 : "+ result.deptName + '　　변경할 부서');
+							$('.modal-body #deptName').text("현재 부서 : " + result.deptName + '　　　변경할 부서');
 						} else {
 							$('.modal-body #deptName').text("직책이 없습니다.　　　　변경할 부서")
 						}
+						$('#modifyModal').modal('show');
 
-						$('.modal').modal('show');
-
-						}
-				});
-
-				$('#finBtn').on('click',function(e) {
-					e.preventDefault();
-					$.ajax({
-						url : "/modifyEmpAjax",
-						method : "get",
-						data : {empNo : $('.modal-title #selNo').text(),
-								position : $('#selPosi').val(),
-								deptName : $('#selDept').val()
-								},
-						dateType : "json",
-						success : function(result) {
-							$('td[data-row-key='+ checkd+ ']').children(':eq(4)').text($('#selPosi').val());
-							$('td[data-row-key='+ checkd+ ']').children(':eq(5)').text($('#selDept').val());
-							$('#searchModal').modal('hide');
-						}
-					});
-							
+					}
 				})
+			}
+		});
 
-				$('#delBtn').on('click',function(e) {
-					e.preventDefault();
-					$.ajax({
-						url : "/removeEmpAjax",
-						method : "get",
-						data : {empNo : $('.modal-title #selNo').text()},
-						dateType : "JSON",
-						success : function(result) {
-							grid.removeCheckedRows(false);
-							grid.blur();
-							$('#searchModal').modal('hide');									
-						}												
-					});												
-				})
-			})
+		$('#finBtn').on('click', function (e) {
+			e.preventDefault();
+			$.ajax({
+				url: "/modifyEmpAjax",
+				method: "get",
+				data: {
+					empNo: $('.modal-title #selNo').text(),
+					position: $('#selPosi').val(),
+					deptName: $('#selDept').val()
+				},
+				dateType: "json",
+				success: function (result) {
+					$('td[data-row-key=' + checkd + ']').children(':eq(4)').text($('#selPosi').val());
+					$('td[data-row-key=' + checkd + ']').children(':eq(5)').text($('#selDept').val());
+					$('#searchModal').modal('hide');
+				}
+			});
 
-		}
+		})
+
+		$('#delBtn').on('click', function (e) {
+			e.preventDefault();
+			$.ajax({
+				url: "/removeEmpAjax",
+				method: "get",
+				data: { empNo: $('.modal-title #selNo').text() },
+				dateType: "JSON",
+				success: function (result) {
+					grid.removeCheckedRows();
+					$('#modifyModal').modal('hide');
+				}
+			});
+		})
+
+
 	</script>
 </th:block>
 

@@ -19,5 +19,8 @@ public class CommVO {
 	public String detaModifyDate;
 	
 	public String detailsIndex;
+	
+	public String text;
+	public String value;
 
 }

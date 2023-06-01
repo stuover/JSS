@@ -23,6 +23,6 @@ public interface EmployeesMapper {
 
 	public String getPwd(String name);
 
-	public void updatePwd(String npwd, String name);
+	public void updatePwd(EmpVO vo);
 
 }
