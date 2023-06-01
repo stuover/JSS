@@ -73,4 +73,10 @@
 	<select id="getItemDeta" resultType = "CommVO">
 		select deta_code, deta_name from details_comm where comm_code ='ITE'
 	</select>
+	
+	
+	<select id="getTypeList" resultType="CommVO">
+		select deta_Code value , deta_Name text from details_comm where comm_code= 'ITE'
+	</select>
+	
   </mapper>

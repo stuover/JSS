@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <th:block th:fragment="header">
 
@@ -16,52 +17,129 @@
 				<a href="javascript:;"><i class="typcn typcn-folder"></i></a>
 			</div>
 			<div class="nav-link">
-				<a href="javascript:;"><i class="typcn typcn-document-text"></i></a>
 			</div>
 
-			<div class="nav-link">
-				<a href="javascript:;">비밀번호변경</a>
-			</div>
+			<th:block sec:authorize="isAuthenticated()">
+				<input th:value="${#authentication.principal.empName}">
+				<div class="nav-link">
+					<a href="#"><i class="typcn typcn-document-text"  id="openMyInfo"></i></a>
+				</div>
+				<div class="nav-link">
+					<form th:action="logout" method="post">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+						<button>로그아웃</button>
+					</form>
+				</div>
 
-			<div>
-				<input th:value="${#authentication.principal.username}"> 님
-			</div>
-
-			<form th:action="logout" method="post">
-				<input type="hidden" th:name="${_csrf.parameterName}"
-					th:value="${_csrf.token}">
-				<button>로그아웃</button>
-			</form>
+			</th:block>
+			
 		</div>
 	</nav>
-	<div class="container-fluid page-body-wrapper">
-		<!-- partial:partials/_settings-panel.html -->
-		<div class="theme-setting-wrapper">
-			<div id="settings-trigger">
-				<i class="typcn typcn-cog-outline"></i>
-			</div>
-			<div id="theme-settings" class="settings-panel">
-				<i class="settings-close typcn typcn-times"></i>
-				<p class="settings-heading">SIDEBAR SKINS</p>
-				<div class="sidebar-bg-options selected" id="sidebar-light-theme">
-					<div class="img-ss rounded-circle bg-light border mr-3"></div>
-					Light
-				</div>
-				<div class="sidebar-bg-options" id="sidebar-dark-theme">
-					<div class="img-ss rounded-circle bg-dark border mr-3"></div>
-					Dark
-				</div>
-				<p class="settings-heading mt-2">HEADER SKINS</p>
-				<div class="color-tiles mx-0 px-4">
-					<div class="tiles success"></div>
-					<div class="tiles warning"></div>
-					<div class="tiles danger"></div>
-					<div class="tiles info"></div>
-					<div class="tiles dark"></div>
-					<div class="tiles default"></div>
-				</div>
-			</div>
-		</div>
+	
+<th:block sec:authorize="isAuthenticated()">
+	<div class="modal fade" id="myInfo" tabindex="-1" aria-labelledby="exampleModalLabel" >
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	        <form id="myFom">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">내정보</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+		            <div class="modal-body">
+		          
+		            	<span>사원번호 : </span><input id="empNo" name="empNo" th:value="${#authentication.principal.empNo}" readonly><br>
+						<span>사원이름 : </span><input th:value="${#authentication.principal.empName}" readonly><br>
+						<span>부서이름 : </span><input th:value="${#authentication.principal.deptName}" readonly><br>
+						<span>  직 책 : </span><input th:value="${#authentication.principal.position}" readonly><br>
+						
+						<span>전화번호 : </span><input id="phoneNum" name="phoneNum" th:value="${#authentication.principal.phoneNum}" placeholder="연락처"><br>
+						<span> 이메일 : </span><input id="email" name="email" th:value="${#authentication.principal.email}"  type= "email" placeholder="e-mail"><br>
+						<span>새비밀번호 : </span><input id="newPwd" name="newPwd" type="password" placeholder="새 비밀번호"><br>
+						<span id="message" style="display:none"> 비밀번호가 다릅니다.</span>
+						<span>비밀번호확인 : </span><input id="newPwd2" name="newPwd2" type="password" placeholder="새 비밀번호 확인"><br>
+		            </div>
+	            <div class="modal-footer">
+	            	<input id="password" name="password" type="password" placeholder="현재 비밀번호"><br>
+	            	<button id="myInfoModBtn" type="button" class="btn btn-primary">수정</button>
+	            </div>
+	        </form>
+	        </div>
+	        </div>
+	    </div>
+
+</th:block>
+	<script>
+	const token = $("meta[name='_csrf']").attr("content")
+	const header = $("meta[name='_csrf_header']").attr("content");
+
+	$('#openMyInfo').on('click', function(e){
+		e.preventDefault();
+		$('#myInfo').modal('show');
+	})
+	
+	$('#modPwBtn').on('click', function(){
+		$('#newPwdInp').css('display', "block")
+	})
+	
+	$('#myFom #myInfoModBtn').on('click', function(e){
+		let pwd = $('#password').val();
+		console.log(pwd);
+
+		if(pwd != null && pwd!=""){
+			let newPwd = $('#newPwd').val();
+			let newPwd2 = $('#newPwd2').val();
+			console.log(newPwd)
+						console.log(newPwd2)
+
+			if(newPwd == newPwd2){
+				$.ajax({
+					url : "/modifyPwd",
+					method:"post",
+					contentType : "application/json",
+					data : JSON.stringify({password : pwd,
+							phoneNum : $("#phoneNum").val(),
+							email : $("#email").val(),
+							newPwd : $("#newPwd").val()}),
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);    
+					},
+					success : function(result){
+						if(result == "success"){
+							alert("내정보가 수정 되었습니다.")
+							$('#myFom newPwd').val('');
+							$('#myFom newPwd2').val('');
+							$('#myFom password').val('');
+							$('#myInfo').modal('hide');
+
+						}else if(result == "fail"){
+							alert("비밀번호가 틀렸습니다.")
+							$('#myFom newPwd').val('');
+							$('#myFom newPwd2').val('');
+							$('#myFom password').val('');
+						}						
+					},error : function(reject){
+						console.log(reject)
+					}
+				})
+			}else {
+				$('#myFom newPwd').val('');
+				$('#myFom newPwd2').val('');
+				$('#myFom password').val('');	
+				$('#message').css("display","block");
+				
+			}
+			
+		}else {
+			alert('현재 비밀번호를 입력하세요!')
+		}
+	})
+
+
+	</script>
+	
+	<!-- <div class="container-fluid page-body-wrapper">
+
+		
 		<div id="right-sidebar" class="settings-panel">
 			<i class="settings-close typcn typcn-times"></i>
 			<ul class="nav nav-tabs" id="setting-panel" role="tablist">
@@ -147,7 +225,7 @@
 						<p class="text-gray mb-0 ">Call Sarah Graves</p>
 					</div>
 				</div>
-				<!-- To do section tab ends -->
+				To do section tab ends
 				<div class="tab-pane fade" id="chats-section" role="tabpanel"
 					aria-labelledby="chats-section">
 					<div
@@ -225,9 +303,9 @@
 						</li>
 					</ul>
 				</div>
-				<!-- chat tab ends -->
+				chat tab ends
 			</div>
-		</div>
+		</div> -->
 </th:block>
 
 </html>

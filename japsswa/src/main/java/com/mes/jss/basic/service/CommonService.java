@@ -25,4 +25,7 @@ public interface CommonService {
 
 	public List<CommVO> getItemDeta();
 
+	public List<CommVO> getTypeList();
+
+
 }

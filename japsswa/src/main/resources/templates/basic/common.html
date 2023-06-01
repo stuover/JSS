@@ -413,8 +413,7 @@
 					},
 					success : function(result){
 						alert('삭제완료!');
-						getModal(commCode);
-
+						modalGrid.removeCheckedRows();
 					},
 					error : function(reject){
 						console.log(reject);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.basic.domain.ItemVO;
 import com.mes.jss.basic.service.CommonService;
 import com.mes.jss.basic.service.ItemService;
@@ -46,7 +47,7 @@ public class ItemController {
 	// 타임리프
 	@RequestMapping("/item")
 	public String process(Model model){		
-		model.addAttribute("list",commService.getItemDeta());
+		model.addAttribute("typeCode",commService.getTypeList());
 		return "basic/item";
 	}
 	

@@ -85,8 +85,8 @@ public class EmployeesServiceImpl implements EmployeesService, UserDetailsServic
 	}
 
 	@Override
-	public void modifyPwd(String npwd, String name) {
-		empMapper.updatePwd(npwd, name);
+	public void modifyPwd(EmpVO vo) {
+		empMapper.updatePwd(vo);
 		
 	}
 	
