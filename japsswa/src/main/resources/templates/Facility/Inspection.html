@@ -28,7 +28,7 @@
     	
     	<!-- 등록 모달 시작 -->
 
-        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
             aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
                 <div class="modal-content">
@@ -196,134 +196,83 @@
     
     
  // 더블클릭시 등록모달
-    grid.on('dblclick', function (e) {
+   grid.on('dblclick', function (e) {
 
-                   gridData = grid.getRow(e.rowKey);
-                   console.log(gridData);
-                   //$('#insertModal').modal('show');
-                   //grid.resetData(gridData);
-                   
-                   //setTimeout(() => grid.refreshLayout(), 300);                    
-               }
-    
-    
-    // 모달 상단 그리드
-    const insertUpGrid = new tui.Grid({
+				console.log("로우클릭");
+                    gridData = grid.getRow(e.rowKey);
+                    console.log(gridData);
+
+
+                    $('#insertModal').modal('show');
+                    insertUpGrid.resetData([gridData]);
+                    insertDownGrid.resetData([gridData]);
+                    setTimeout(() => insertUpGrid.refreshLayout(), 300);
+                    setTimeout(() => insertDownGrid.refreshLayout(), 300);
+                
+            });
+ 
+ // 등록모달 상단
+ var insertUpGrid = new tui.Grid({
                 el: document.getElementById('insertUpGrid'),
                 scrollX: false,
                 scrollY: false,
-                pageOptions: {
-                    useClient: true,
-                    perPage: 15
-                },
                 columns: [{
-                        header: '설비코드 ',
-                        name: 'facCode'
-                    },
-                    {
-                        header: '설비명',
+                        header: '설비명 ',
                         name: 'facName'
                     },
                     {
-                    	header: '비가동 코드',
+                        header: '설비코드',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '비가동코드 ',
                         name: 'downCode'
                     },
                     {
-                        header: '점검 코드 ',
-                        name: 'insCode'
+                        header: '투입공정 ',
+                        name: 'facProcess',
+                        editor: 'text'
                     },
                     {
-                        header: '점검날짜 ',
-                        name: 'insDate'
-                    },
-                    {
-                        header: '점검사유 ',
-                        name: 'insReason'
-                    },
-                    {
-                        header: '점검내역 ',
-                        name: 'insHistory'
-                    },
-                    {
-                        header: '적합판정',
-                        name: 'judgment'
-                    },
-                    {
-                        header: '부품교체내역',
-                        name: 'partHistory'
-                    },
-                    {
-                        header: '부품교체사유',
-                        name: 'partReason'
-                    },
-                    {
-                        header: '부품교체날짜',
-                        name: 'partDate'
-                    },
-                    {
-                        header: '관리자',
-                        name: 'insManager'
-                    }]
+                        header: '설비기능',
+                        name: 'facFunction',
+                        editor: 'text'
+                    }
+                ]
+
             });
-    
-    // 모달 하단 그리드
-    
-    const insertDownGrid = new tui.Grid({
+ 
+ // 등록모달 하단
+ var insertDownGrid = new tui.Grid({
                 el: document.getElementById('insertDownGrid'),
                 scrollX: false,
                 scrollY: false,
-                pageOptions: {
-                    useClient: true,
-                    perPage: 15
-                },
                 columns: [{
                         header: '설비코드 ',
                         name: 'facCode'
                     },
                     {
                         header: '설비명',
-                        name: 'facName'
+                        name: 'facName',
+                        editor: 'text'
                     },
                     {
-                    	header: '비가동 코드',
-                        name: 'downCode'
+                        header: '설치날짜 ',
+                        name: 'facDate',
+                        editor: 'datePicker'
                     },
                     {
-                        header: '점검 코드 ',
-                        name: 'insCode'
+                        header: '투입공정 ',
+                        name: 'facProcess',
+                        editor: 'text'
                     },
                     {
-                        header: '점검날짜 ',
-                        name: 'insDate'
-                    },
-                    {
-                        header: '점검사유 ',
-                        name: 'insReason'
-                    },
-                    {
-                        header: '점검내역 ',
-                        name: 'insHistory'
-                    },
-                    {
-                        header: '적합판정',
-                        name: 'judgment'
-                    },
-                    {
-                        header: '부품교체내역',
-                        name: 'partHistory'
-                    },
-                    {
-                        header: '부품교체사유',
-                        name: 'partReason'
-                    },
-                    {
-                        header: '부품교체날짜',
-                        name: 'partDate'
-                    },
-                    {
-                        header: '관리자',
-                        name: 'insManager'
-                    }]
+                        header: '설비기능',
+                        name: 'facFunction',
+                        editor: 'text'
+                    }
+                ]
+
             });
     </script>
 

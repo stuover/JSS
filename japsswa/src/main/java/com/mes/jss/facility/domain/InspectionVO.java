@@ -8,17 +8,21 @@ import lombok.Data;
 public class InspectionVO {
 
 	String insCode;
-	Date insDate;
+	String insDate;
 	String insReason;
 	String insHistory;
 	String judgment;
 	String partHistory;
 	String partReason;
-	Date partDate;
+	String partDate;
 	String insManager;
 	String facCode;
 	String downCode;
 	
+	// 조인
+	String facName;
+	String downReason;
+	String stopDate;
 //	ins_code varchar2(20) PRIMARY KEY,
 //	ins_date date not null,
 //	ins_reason varchar2(20) not null,
