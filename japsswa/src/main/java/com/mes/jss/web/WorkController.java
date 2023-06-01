@@ -90,9 +90,9 @@ public class WorkController {
 	// 제품명 더블클릭 -> 제품의 BOM 및 공정 정보 리스트
 	@RequestMapping("/itemBomInfoAjax")
 	@ResponseBody
-	public List<WorkVO> itemBomInfoAjax(String ingCode, String itemType) {
+	public List<WorkVO> itemBomInfoAjax(String wdetailId, String itemType) {
 		List<WorkVO> inputData = new ArrayList<>();
-		inputData = workService.itemBomInfo(ingCode, itemType);
+		inputData = workService.itemBomInfo(wdetailId, itemType);
 		
 		return inputData;
 	}
@@ -131,6 +131,20 @@ public class WorkController {
 		return inputData;
 		
 	}
+	
+	
+	// 홀드 자재 등록 처리.
+	// 1. 지시 공정 정보 등록
+	// 2. 홀드 자재 등록
+	// 3. 자재 홀드수량 더하기
+	
+	@RequestMapping("/holdMaterialsInsertAjax")
+	@ResponseBody
+	public void holdMaterialsInsertAjax(@RequestBody WorkDatasVO data) {
+		List<WorkVO> detailList = data.getDetailList();
+		workService.holdInsert(detailList);
+	}
+	
 	
 	
 }

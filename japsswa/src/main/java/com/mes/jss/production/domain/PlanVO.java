@@ -12,7 +12,7 @@ public class PlanVO {
 	String planName;
 	long empNo;
 	String itemCode; 
-	int planAmount; 
+	long planAmount; 
 	int planPriority; 
 	@DateTimeFormat(pattern="YYYY-MM-dd") // JSON 무관, 외부에서 값이 입력될 때 정해진 포맷으로 입력받음
 	Date planStart;
