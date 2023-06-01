@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,6 +42,15 @@ public class InspectionController {
 		return list;
 	}
 	
+	@RequestMapping("/insertInsAjax")
+	@ResponseBody
+	public InspectionVO insertInsAjax(@RequestBody InspectionVO vo) {
+		
+		service.saveInspection(vo);
+		System.out.println(vo);
+		
+		return vo;
+	}
 	
 	
 	

@@ -135,6 +135,12 @@ public class FacilityServiceimpl implements FacilityService{
 		return facilityMapper.getInsList();
 	}
 
+	@Override
+	public boolean saveInspection(InspectionVO vo) {
+		
+		return facilityMapper.insertModalIns(vo) == 1;
+	}
+
 
 	
 

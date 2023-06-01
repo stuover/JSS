@@ -44,6 +44,7 @@ public interface FacilityService {
 	// 점검 페이지	
 	public List<InspectionVO> getbeforeInsList();		// 점검 등록 전 리스트
 	public List<InspectionVO> getInspectionList();	// 점검리스트
+	public boolean saveInspection(InspectionVO vo);	// 모달 점검 등록
 	
 
 }
