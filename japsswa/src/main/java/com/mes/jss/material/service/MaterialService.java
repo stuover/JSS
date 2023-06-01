@@ -29,7 +29,19 @@ public interface MaterialService {
 	// 입고 검색
 	public List<MrVO> searchList(String keyword);
 	
-	// 자재 재고
+	// 자재 재고 리스트(총)
+	public List<MrVO> mrInvenList();
+	
+	// 자재 재고 리스트
+	public List<MrVO> mrMatInven();
+		
+	// 반제품 재고 리스트
+	public List<MrVO> mrHalfInven();
+		
+	// 검색 테스트
+	public List<MrVO> mrSearchList();
+		
+	// 자재 안전 재고
 	public List<MrVO> mrCountList();
 	
 	// 자재 lot 재고
@@ -81,6 +93,10 @@ public interface MaterialService {
 	// 자재 조정 등록
 	public void admIn(AdjustmentListVO vo);
 	
+	// 자재 조정 직접 등록
+	public void admRealIn(String keyword);
+		
+	
 	// 자재 조정 입고
 	public void admInsert(AdjustmentListVO vo);
 	
@@ -107,6 +123,12 @@ public interface MaterialService {
 	
 	// 생산 실적 리스트
 	public List<PerformanceVO> mrPerformanceList();
+	
+	
+	
+	
+	
+	
 	
 	
 

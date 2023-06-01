@@ -39,12 +39,37 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.getList();
 	}
 	
-	// 자재 재고 리스트
+	// 자재 안전 재고 
 	@Override
 	public List<MrVO> mrCountList() {
 		
 		return materialMapper.getMrCount();
 	}
+	
+	// 자재 재고(총)
+	@Override
+	public List<MrVO> mrInvenList() {
+		
+		return materialMapper.mrInvenCount();
+	}
+	
+	// 반제품 재고 리스트
+	@Override
+	public List<MrVO> mrHalfInven() {
+		
+		return materialMapper.halfInven();
+	}
+
+	// 자재 재고 리스트
+	@Override
+	public List<MrVO> mrMatInven() {
+		
+		return materialMapper.matInven();
+	}
+
+	
+	
+	
 	
 	// 자재 lot 재고 리스트
 	@Override
@@ -299,6 +324,23 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.ErrorGetList();
 	}
+
+	@Override
+	public List<MrVO> mrSearchList() {
+		
+		return materialMapper.searchMr();
+	}
+
+	@Override
+	public void admRealIn(String keyword) {
+		
+		
+			materialMapper.realIn(keyword);	
+		
+		
+		
+	}
+	
 	
 	
 	

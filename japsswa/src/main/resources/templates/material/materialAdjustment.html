@@ -81,6 +81,8 @@
 	<button type="button" class="btn btn-success" id="storeBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">입고</button>
 	
 	<button type="button" class="btn btn-info" id="searchDelBtn" data-toggle="modal" data-target=".bd-example-modal-lg" style="float:right;  margin-top:100px; height: 30px; padding: 3px; padding-bottom:4px; color:white; margin-right:20px;">조정 확인 및 삭제</button>
+	
+	<button type="button" class="btn btn-warning" id="realBtn">직접 등록</button>	
 	</div>
 	
 	<!--  조정 리스트  -->
@@ -162,6 +164,7 @@
 				success : function(result) {
 					grid2.resetData(result);
 					grid2.refreshLayout();
+					gridInsertRow();
 					
 				},
 				error:function(reject){
@@ -183,39 +186,49 @@
 				
 				columns : [ {
 					header : '조정코드',
-					name : 'adjustmentCode'
+					name : 'adjustmentCode',
+					editor:'text'
 				}, {
 					header : '자재 lot 번호',
-					name : 'mrLotNumber'
+					name : 'mrLotNumber',
+					editor:'text'
 				},{
 					header : '품목 코드',
-					name : 'itemCode'
+					name : 'itemCode',
+					editor:'text'
 				},{
 					header : '구분',
-					name : 'itemType'
+					name : 'itemType',
+					editor:'text'
 				},
 				{
 					header : '품목명',
-					name : 'itemName'
+					name : 'itemName',
+					editor:'text'
 				}, 
 				
 				{
 					header : '등록일자',
-					name : 'registerDate'
+					name : 'registerDate',
+					editor:'datePicker'
 				}, {
 					header : '처리',
-					name : 'process'
+					name : 'process',
+					editor:'text'
 				}, {
 					header : '결과',
-					name : 'change'
+					name : 'change',
+					editor:'text'
 				},
 				{
 					header : '조정일자',
-					name : 'adjustmentDate'
+					name : 'adjustmentDate',
+					editor:'datePicker'
 				},
 				{
 					header : '사원 번호',
-					name : 'empNo'
+					name : 'empNo',
+					editor:'text'
 				}
 				],
 				pageOptions: { 
@@ -239,9 +252,7 @@
 						xhr.setRequestHeader(header, token);
 					},
 					success: function(result){
-						
-			   
-						
+					
 						 $.ajax({
 								url : "/mrAdjustmentAjax",
 
@@ -263,7 +274,38 @@
 					}
 				})
 				
+			});
+			
+	
+	// 직접 등록
+		$('#realBtn').on('click',function(){
+			
+			
+			console.log(grid2.getData()[0].mrLotNumber);
+			
+			keyword = grid2.getData()[0].mrLotNumber;
+			
+			$.ajax({
+				url:"/mrAdmRealInsert",
+				method:"GET",
+				data:{ 'keyword' : keyword },
+			
+				success: function(result){
+					
+					console.log(result);
+					
+				},
+				
+				error: function(reject){
+					console.log(reject);
+				}
+				
+				
+				
 			})
+			
+		});
+	
 			
 			
 	// 입고 
@@ -281,9 +323,10 @@
 					xhr.setRequestHeader(header, token);
 				},
 				success: function(result){
-					
+					editingFinish();
 				},
 				error:function(reject){
+					
 					console.log(reject);
 				}
 			})
@@ -350,40 +393,51 @@
 				
 				columns : [ {
 					header : '조정코드',
-					name : 'adjustmentCode'
+					name : 'adjustmentCode',
+					editor:'text'
 				}, {
 					header : '자재 lot 번호',
-					name : 'mrLotNumber'
+					name : 'mrLotNumber',
+					editor:'text'
 				},{
 					header : '품목 코드',
-					name : 'itemCode'
+					name : 'itemCode',
+					editor:'text'
 				},{
 					header : '구분',
 					name : 'itemType',
-					width:50
+					width:50,
+					editor:'text'
 				},
 				{
 					header : '품목명',
-					name : 'itemName'
+					name : 'itemName',
+					editor:'text'
+					
 				}, 
 				
 				{
 					header : '등록일자',
-					name : 'registerDate'
+					name : 'registerDate',
+					editor:'datePicker'
 				}, {
 					header : '처리',
-					name : 'process'
+					name : 'process',
+					editor:'text'
 				}, {
 					header : '결과',
-					name : 'change'
+					name : 'change',
+					editor:'text'
 				},
 				{
 					header : '조정일자',
-					name : 'adjustmentDate'
+					name : 'adjustmentDate',
+					editor:'datePicker'
 				},
 				{
 					header : '사원 번호',
-					name : 'empNo'
+					name : 'empNo',
+					editor:'text'
 				}
 				],
 				pageOptions: { 
@@ -429,7 +483,20 @@
 		    })
 		
 		
-		
+		    function gridInsertRow(){
+	            let prevData = grid2.getData();
+	            
+	            for(let row of prevData){
+	               row.rowKey += 1;
+	            }
+	            prevData.splice(0, 0, {});
+	            
+	            grid2.resetData(prevData);
+	         }
+		    
+		    
+		    
+		    
 		
 		});
 
