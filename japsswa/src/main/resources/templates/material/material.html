@@ -40,10 +40,13 @@
 					<h3 style="font-weight:bold; margin-left:700px; margin-bottom:30px;">&ensp;자재 재고 조회</h3>
 						
 						<div class="btn-group">
-						   <!-- Button trigger modal -->
-						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
-						  버튼
-						</button>
+						  
+                          	<button type="button" id="allBtn"  class="btn btn-info">전체</button>
+							<button type="button" id="halfBtn" class="btn btn-primary" style="float:left;">반제품</button>
+							<button type="button" id="materialBtn"class="btn btn-success" style="float:left;">자재</button>   
+						
+						
+						
 						</div>
 		
 		<!--  제목 -->		<!-- 검색 버튼 --> 
@@ -53,43 +56,29 @@
 																style="padding: 3px; margin-left: 15px;">검색</button></h5>
 			 <!-- 검색 화면  그리드 -->
 			 	
-						<div id="searchGrid">
+				<div id="searchGrid">
+					<div id="grid3"></div>
+				</div>
 			 
 			 <!-- 재고 화면 그리드 -->			
 						
-							<div id="grid3"></div>
-						</div>
+							
+					
+					
 						<div id="hide">
 							<div id="grid" style="margin-top: 20px;"></div>
 						</div>
-						<div id="grid1" ></div>
+							
 						
 						<h3 style="font-weight:bold; margin-left:680px; margin-top:40px; margin-bottom:40px;">&ensp;lot별 자재 조회</h3>
-						<div id="grid4" style="margin-top:20px;"></div>
-			
+						
+						
+					<div id="grid4" style="margin-top:20px;"></div>	
 						
 					
 					<!-- Modal -->
 					
-					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					  <div class="modal-dialog" role="document">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					          <span aria-hidden="true">&times;</span>
-					        </button>
-					      </div>
-					      <div class="modal-body">
-					        ...
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					        <button type="button" class="btn btn-primary">Save changes</button>
-					      </div>
-					    </div>
-					  </div>
-					</div>             
+					       
 				            
                 </div>
               
@@ -106,11 +95,7 @@
 	
 	
 	<script>
-	
-	
-	
-	
-		
+				
 	// 재고 아작스
 	
 		window.onload = function(){
@@ -118,14 +103,15 @@
 	
 		
 			$('#searchGrid').css('display', 'none');
+			$('#hide2').css('display','none')
 			
 			$.ajax({
-				url : "/mrCount",
+				url : "/mrInventory",
 				method : "GET",
 				success : function(result) {
 					
 					grid.resetData(result);
-					let data3 = grid.getData();
+					
 					
 					grid.getData().forEach((ele, index)=>{
 						
@@ -163,6 +149,172 @@
 
 			
 		});
+			
+	
+	$('#allBtn').on('click',function(){
+		
+		$.ajax({
+			url : "/mrInventory",
+			method : "GET",
+			success : function(result) {
+				
+				grid.resetData(result);
+				
+				
+				grid.getData().forEach((ele, index)=>{
+					
+			
+					
+					if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
+						grid.addCellClassName(index,'itemType','redcolor');
+						grid.addCellClassName(index,'itemName','redcolor');
+						grid.addCellClassName(index,'itemCode','redcolor');
+						grid.addCellClassName(index,'total','redcolor');
+						grid.addCellClassName(index,'saveMaterial','redcolor');
+					} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
+						grid.addCellClassName(index,'itemType','yellowcolor');
+						grid.addCellClassName(index,'itemName','yellowcolor');
+						grid.addCellClassName(index,'itemCode','yellowcolor');
+						grid.addCellClassName(index,'total','yellowcolor');
+						grid.addCellClassName(index,'saveMaterial','yellowcolor');
+						
+						
+					}
+						
+		
+
+		
+		
+				
+			
+				} ) 
+
+			},
+
+			error: function(reject){
+				console.log(reject);
+			}
+			
+				
+			
+		
+		
+		})
+		
+		
+		
+	})		
+			
+			
+			
+			
+			
+			
+			
+	$('#halfBtn').on('click',function(){
+	
+ 	
+		
+		$.ajax({
+			url :"/mrHalfInventory",
+			method : "GET",
+			success : function(result) {
+							
+				
+				
+				grid.resetData(result);
+			
+										
+				
+				
+				grid.getData().forEach((ele, index)=>{
+					
+			
+					
+					if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
+						grid.addCellClassName(index,'itemType','redcolor');
+						grid.addCellClassName(index,'itemName','redcolor');
+						grid.addCellClassName(index,'itemCode','redcolor');
+						grid.addCellClassName(index,'total','redcolor');
+						grid.addCellClassName(index,'saveMaterial','redcolor');
+					} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
+						grid.addCellClassName(index,'itemType','yellowcolor');
+						grid.addCellClassName(index,'itemName','yellowcolor');
+						grid.addCellClassName(index,'itemCode','yellowcolor');
+						grid.addCellClassName(index,'total','yellowcolor');
+						grid.addCellClassName(index,'saveMaterial','yellowcolor');
+						
+						
+					}
+						
+	
+			} ) 
+
+		},
+
+		error: function(reject){
+			console.log(reject);
+		}
+		
+	
+	})		
+	
+	
+});	
+	
+	$('#materialBtn').on('click',function(){
+		
+		$.ajax({
+			url :"/mrMatInventory",
+			method : "GET",
+			success : function(result) {
+							
+				
+				
+				grid.resetData(result);
+			
+										
+				
+				
+				grid.getData().forEach((ele, index)=>{
+					
+			
+					
+					if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
+						grid.addCellClassName(index,'itemType','redcolor');
+						grid.addCellClassName(index,'itemName','redcolor');
+						grid.addCellClassName(index,'itemCode','redcolor');
+						grid.addCellClassName(index,'total','redcolor');
+						grid.addCellClassName(index,'saveMaterial','redcolor');
+					} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
+						grid.addCellClassName(index,'itemType','yellowcolor');
+						grid.addCellClassName(index,'itemName','yellowcolor');
+						grid.addCellClassName(index,'itemCode','yellowcolor');
+						grid.addCellClassName(index,'total','yellowcolor');
+						grid.addCellClassName(index,'saveMaterial','yellowcolor');
+						
+						
+					}
+						
+	
+			} ) 
+
+		},
+
+		error: function(reject){
+			console.log(reject);
+		}
+		
+	
+	})		
+		
+	})
+	
+	
+	
+	
+	
+	
 	// 재고 그리드
 		
 			var grid = new tui.Grid({
@@ -201,10 +353,7 @@
 	
 	
 	
-			
-		
-		
-		
+	
 	// 검색 결과 그리드	
 		
 		
@@ -224,6 +373,10 @@
 			}, {
 				header : '재고량',
 				name : 'total'
+			},
+			{
+				header : '안전재고',
+				name : 'saveMaterial'
 			}
 			
 			
@@ -235,15 +388,11 @@
 			
 		})
 	
-	
-		
-		
 	// 검색 결과 아작스
 		
 		$('#searchBtn').on('click',function(){
 			  
-			$('#hide').css('display', 'none');
-			$('#searchGrid').css('display', 'block');
+			
 				
 			  const result1= $("#mrName").val();
 			  $('#mrName').val('');
@@ -254,8 +403,39 @@
 					data:{'result':result1},
 					dataType:"json",
 				success : function(result) {
-					grid3.resetData(result);
-					grid3.refreshLayout();
+					grid.resetData(result);
+					grid.refreshLayout();
+					
+					
+	grid.getData().forEach((ele, index)=>{
+						
+				
+						
+						if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
+							grid.addCellClassName(index,'itemType','redcolor');
+							grid.addCellClassName(index,'itemName','redcolor');
+							grid.addCellClassName(index,'itemCode','redcolor');
+							grid.addCellClassName(index,'total','redcolor');
+							grid.addCellClassName(index,'saveMaterial','redcolor');
+						} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
+							grid.addCellClassName(index,'itemType','yellowcolor');
+							grid.addCellClassName(index,'itemName','yellowcolor');
+							grid.addCellClassName(index,'itemCode','yellowcolor');
+							grid.addCellClassName(index,'total','yellowcolor');
+							grid.addCellClassName(index,'saveMaterial','yellowcolor');
+							
+							
+						}
+							
+			
+
+			
+			
+					
+				
+					} ) 
+
+					
 					
 				}
 				
@@ -312,22 +492,17 @@
             }
 		})
 		
-			
-			
-			
-		
-			
+	
 			
 	// 새로고침 	
 		
 		$(function(){
 	    	$('#store').on('shown.bs.modal', function(){
 	    		grid.refreshLayout();
+	    		
 	    	})
 	    });
-	   
-	    
-			
+	
 	};
 		
 	    

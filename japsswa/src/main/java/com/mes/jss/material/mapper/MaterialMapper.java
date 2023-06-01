@@ -24,8 +24,19 @@ public interface MaterialMapper {
 	// 코드 검색
 	public List<MrVO> codeList(String keyword);
 	
-	// 자재 재고
+	
+	// 자재 안전 재고
 	public List<MrVO> getMrCount();	
+	
+	// 자재 재고 리스트(총)
+	public List<MrVO> mrInvenCount();
+	
+	// 자재 재고 리스트
+	public List<MrVO> matInven();
+	
+	// 반제품 리스트
+	public List<MrVO> halfInven();
+		
 	
 	// 자재 lot 재고
 	public List<MrVO> getMrLotCount();
@@ -106,6 +117,15 @@ public interface MaterialMapper {
 	
 	// 자재 불량 리스트
 	public List<MrErrorVO> ErrorGetList();
+	
+	// 자재 검색 테스트
+	public List<MrVO> searchMr();
+	
+	// 자재 조정 직접 등록
+	public void realIn(String keyword);
+
+	
+	
 	
 	
 

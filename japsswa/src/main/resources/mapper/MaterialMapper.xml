@@ -27,19 +27,64 @@
   		
   		</select>  
   	
-  	<!-- 자재 조회 리스트 -->
-  	<select id="mrInventory">
+  	<!-- 자재 조회 리스트(총) -->
+  	<select id="mrInvenCount" resultType="MrVO">
   	
-  	select item_code, 
+  	 select item_code, 
   		       item_name, 
   		       item_type, 
   		       save_material, 
   		       sum(store_count) as total 
   		  from itemlist 
   		  join material using(item_code) 
-  		 group by item_code, item_name, item_type, save_material 
+  		 group by item_code, item_name, item_type, save_material
+  		 
   	</select>
   	
+  	<!-- 반제품 조회 리스트 -->
+  	<select id="halfInven" resultType="MrVO">
+  	
+  	   select item_code, 
+  		       item_name, 
+  		       item_type, 
+  		       save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist 
+  		  join material using(item_code)
+  		  where item_type ='반제품' 
+  		 group by item_code, item_name, item_type, save_material
+  		 
+  	</select>
+  	
+  	
+  	<!-- 자재 조회 리스트 -->
+  	
+  	<select id="matInven" resultType="MrVO">
+  		
+  		select item_code, 
+  		       item_name, 
+  		       item_type, 
+  		       save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist 
+  		  join material using(item_code)
+  		  where item_type ='자재' 
+  		 group by item_code, item_name, item_type, save_material
+  	
+  	
+  	</select>
+  	
+  	<!-- 자재 검색 -->
+  	<select id="searchMr" resultType="MrVO">
+		select * from material  
+			
+  	
+  	
+  	
+  	
+  	</select>
+  	
+  
   	
   	
   	
@@ -92,7 +137,8 @@
 			(select sum(store_count) 
 			from material m 
 			join itemlist i on(m.item_code = i.item_code)
-			 where i.item_name = #{keyword}) total
+			 where i.item_name = #{keyword}) total,
+			 i.save_material
            	 from material m 
            	 join itemlist i 
            	 on(m.item_code = i.item_code) 
@@ -287,6 +333,17 @@
   			)
   			}
   		</select>
+  	
+  	<!-- 조정 직접 등록 -->
+  		<select id="realIn" statementType="CALLABLE">
+  			{call ad_real_insert(
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+  			
+  			)
+  			}
+  		
+  		</select>
+  	
   	
   	
   	<!-- 조정 입고 -->

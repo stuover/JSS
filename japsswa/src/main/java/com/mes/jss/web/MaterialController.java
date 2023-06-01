@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,11 +79,43 @@ public class MaterialController {
 		return list;
 	}
 
- // 자재 재고 리스트
+ // 자재 재고 리스트 (총)
+	
+	@ResponseBody
+	@GetMapping("/mrInventory")
+	public List<MrVO> mrInventory(){
+		
+		List<MrVO> list = materialService.mrInvenList();
+		
+		return list;
+		
+	}
+	
+	// 반제품 재고 리스트
+	
+	@ResponseBody
+	@GetMapping("/mrHalfInventory")
+	public List<MrVO> mrHalfInventory(){
+		
+		
+		List<MrVO> list = materialService.mrHalfInven();
+		
+		return list;
+		
+	}
 	
 	
-
+	// 자재 재고 리스트
 	
+	@ResponseBody
+	@GetMapping("/mrMatInventory")
+	public List<MrVO> mrMatInventory(){
+		
+		List<MrVO> list = materialService.mrMatInven();
+		
+		return list;
+		
+	}
 	
 	
 	
@@ -119,6 +152,19 @@ public class MaterialController {
 		return list;
 			
 	}
+	
+	
+ // 자재 검색 테스트
+ @ResponseBody
+ @RequestMapping("/mrSearchAjax")
+ public List<MrVO> mrSearchAjax(@RequestParam String keyword, Criteria Cri){
+	 
+	 List<MrVO> list = materialService.mrSearchList();
+	 
+	 return list;
+	 
+ }
+	
 
 // 자재 입고 처리
 	
@@ -346,6 +392,18 @@ public class MaterialController {
 		System.out.println(vo);
 		
 		materialService.admIn(vo);
+		
+		return null;
+		
+	}
+	
+	// 자재 조정 직접 등록
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmRealInsert")
+	public MrAdjustmentVO mrAdmRealInsert(@RequestParam String keyword) {
+		
+		materialService.admRealIn(keyword);
 		
 		return null;
 		
