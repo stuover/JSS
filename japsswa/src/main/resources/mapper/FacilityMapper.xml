@@ -170,6 +170,19 @@
 		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , #{insDate}, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
   	</insert>
   	
+  	<update id="modifyIns" parameterType="InspectionVO">
+  		update inspection   		
+  					set
+					  		ins_date = #{insDate}, 
+					  		ins_reason = #{insReason} , 
+					  		ins_history = #{insHistory},
+					  		judgment = #{judgment} ,
+					  		ins_manager = #{insManager},
+					  		part_history = #{partHistory}, 
+					  		part_reason = #{partReason},
+					  		part_date = #{partDate}	
+  				  where  ins_code = #{insCode}
+  	</update>
   	
   	
   </mapper>

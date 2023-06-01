@@ -41,5 +41,6 @@ public interface FacilityMapper {
 	public List<InspectionVO> getbeInsList();	// 점검 등록 전 리스트
 	public List<InspectionVO> getInsList();	// 점검 내역 리스트
 	public int insertModalIns(InspectionVO vo);	// 모달 점검 등록
+	public void modifyIns(InspectionVO vo);		// 점검 내역 수정
 	
 }
