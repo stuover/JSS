@@ -163,13 +163,33 @@
 	
 	<!-- HOLD 등록 모달창 : HOLD 처리할 자재 정보 -->
 	<select id="selectHoldMaterial" parameterType="WorkVO" resultType="WorkVO">
-		select 
-		      m.item_code,
-		      mr_lot_number,
-		      item_name, 
-		      (store_count - NVL(hold_count,0)) AS "currentCount"
-		FROM material m JOIN itemlist i ON (m.item_code = i.item_code)
-		WHERE m.item_code = #{itemCode}
+		SELECT * FROM 
+			(
+			SELECT 
+				  item_name, 
+				  hold_lot mr_lot_number, 
+				  hold_count current_count , 
+				  hold_count
+			FROM 
+				 hold_materials h JOIN work_bom w ON (h.wbom_id = w.wbom_id)
+								  JOIN itemlist i ON (h.item_code = i.item_code)
+			WHERE 
+				 wdetail_id = #{wdetailId}
+		
+			UNION
+		
+			SELECT 
+				  item_name, 
+				  mr_lot_number, 
+				  (store_count - hold_count) current_count , 
+				  0
+			FROM 
+				 material m JOIN itemlist i ON (m.item_code = i.item_code)
+			WHERE 
+				 m.item_code = #{itemCode}
+			)
+		ORDER BY hold_count DESC
+
 	</select>
 	
 	

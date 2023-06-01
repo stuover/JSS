@@ -41,7 +41,7 @@ public interface WorkMapper {
 	
 	// 홀드 자재 선택 모달창 : 자재 리스트
 	// BOM정보 그리드에서 선택한 자재 리스트 출력.
-	public List<WorkVO> selectHoldMaterial(String itemCode);
+	public List<WorkVO> selectHoldMaterial(String itemCode, String wdetailId);
 	
 	
 	// 홀드 자재 등록.

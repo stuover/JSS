@@ -101,29 +101,26 @@ public class WorkServiceImpl implements WorkService {
 	// 홀드 자재 선택 모달창 : 자재 리스트
 	// BOM정보 그리드에서 선택한 자재 리스트 출력.
 	@Override
-	public List<WorkVO> selectHoldMaterial(String itemCode) {
-		List<WorkVO> list = workMapper.selectHoldMaterial(itemCode);
+	public List<WorkVO> selectHoldMaterial( String itemCode, String wdetailId) {
+		List<WorkVO> list = workMapper.selectHoldMaterial(itemCode, wdetailId);
 		
 		return list;
 	}
 
 
 	// 홀드 자재 등록 처리.
-	// 1. 지시 공정 정보 등록
-	// 2. 홀드 자재 등록
-	// 3. 자재 홀드수량 더하기
+	// 1. 홀드 자재 등록
+	// 2. 자재 홀드수량 더하기
 	@Override
 	@Transactional
 	public void holdInsert(List<WorkVO> detailList) {
 		
 		for(WorkVO info : detailList) {
-			// 1. 지시 공정 정보 등록 
-			workMapper.workBomInsert(info);
 			
-			// 2. 홀드 자재 등록
+			// 1. 홀드 자재 등록
 			workMapper.holdMaterialInsert(info);
 			
-			// 3. 자재 홀드수량 더하기
+			// 2. 자재 홀드수량 더하기
 			workMapper.holdMaterialAdd(info);
 		}
 
