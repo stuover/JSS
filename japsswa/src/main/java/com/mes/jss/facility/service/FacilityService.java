@@ -42,9 +42,10 @@ public interface FacilityService {
 	
 	
 	// 점검 페이지	
-	public List<InspectionVO> getbeforeInsList();		// 점검 등록 전 리스트
-	public List<InspectionVO> getInspectionList();	// 점검리스트
+	public List<InspectionVO> getbeforeInsList();		// 점검 등록 전 리스트(비가동사유=점검)
+	public List<InspectionVO> getInspectionList();	// 점검내역 리스트
 	public boolean saveInspection(InspectionVO vo);	// 모달 점검 등록
+	public void modifyInspection(InspectionVO vo);	// 점검 내역 수정
 	
 
 }

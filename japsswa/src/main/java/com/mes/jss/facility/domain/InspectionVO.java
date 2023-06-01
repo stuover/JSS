@@ -12,10 +12,10 @@ public class InspectionVO {
 	String insReason;
 	String insHistory;
 	String judgment;
+	String insManager;
 	String partHistory;
 	String partReason;
 	String partDate;
-	String insManager;
 	String facCode;
 	String downCode;
 	

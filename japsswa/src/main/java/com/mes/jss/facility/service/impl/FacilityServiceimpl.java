@@ -141,6 +141,12 @@ public class FacilityServiceimpl implements FacilityService{
 		return facilityMapper.insertModalIns(vo) == 1;
 	}
 
+	@Override
+	public void modifyInspection(InspectionVO vo) {
+
+		facilityMapper.modifyIns(vo);
+	}
+
 
 	
 
