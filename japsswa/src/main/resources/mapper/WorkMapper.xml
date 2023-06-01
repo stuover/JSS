@@ -158,5 +158,40 @@
 		WHERE m.item_code = #{itemCode}
 	</select>
 	
+	
+	<!-- HOLD 등록 모달창 : 지시공정정보 등록 -->
+	<select id="workBomInsert" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
+		{call WORK_BOM_INSERT(
+			#{wdetailId, mode=IN, jdbcType=VARCHAR},
+			#{proCode, mode=IN, jdbcType=VARCHAR},
+			#{proOrder, mode=IN, jdbcType=VARCHAR},
+			#{workAmount, mode=IN, jdbcType=VARCHAR},
+			#{wbomId, mode=INOUT, jdbcType=VARCHAR, javaType=String}
+			)
+		}
+	</select>
+	
+	<!-- HOLD 등록 모달창 : 홀드자재 등록 -->
+	<select id="holdMaterialInsert" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
+		{call HOLD_MATERIALS_INSERT(
+			#{wbomId, mode=IN, jdbcType=VARCHAR},
+			#{itemCode, mode=IN, jdbcType=VARCHAR},
+			#{holdLot, mode=IN, jdbcType=VARCHAR},
+			#{holdAmount, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<!-- HOLD 등록 모달창 : 자재 홀드 수량 더해주기 -->
+	<select id="holdMaterialAdd" statementType="CALLABLE" parameterType="MrVO" resultType="MrVO">
+		{call HOLD_COUNT_ADD(
+			#{holdCount, mode=IN, jdbcType=VARCHAR},
+			#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	
+	
   	
   </mapper>
