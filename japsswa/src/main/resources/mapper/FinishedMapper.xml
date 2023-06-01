@@ -42,6 +42,8 @@
            e.emp_name
 			from finished f join itemlist i on(f.item_code = i.item_code)
 						    join emp e on(f.emp_no = e.emp_no)
+		                    join orddetail d on(i.item_code = d.item_code)
+		    where orddet_status = '입고완료'
             
 	</select>
 	

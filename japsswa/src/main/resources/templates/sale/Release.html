@@ -120,12 +120,12 @@
 	      columns: [
 	    	     {
 				  header: '품목코드',
-				  name: 'itemName',
+				  name: 'itemCode',
 				  hidden : true
 				 },
 				 {
 				  header: '거래처코드',
-				  name: 'itemName',
+				  name: 'customerId',
 				  hidden : true
 				 },
 	    	     {
@@ -294,6 +294,14 @@
 	    			 window.onload = function(){
 	    				 
 	    				 //상단 그리드에 입고완료 품목 리스트
+	    				 $.ajax({
+	    					 url : "/finishedList",
+	    					 method : "get",
+	    					 success : function(result){
+	    						 grid1.resetData(result);
+	    						 grid1.refreshLayout();
+	    					 }
+	    				 })
 	    				 
 	    			 }
 	
