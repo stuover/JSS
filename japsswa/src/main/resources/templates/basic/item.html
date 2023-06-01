@@ -18,7 +18,7 @@
 
 					<select id="item">
 						<option value="null">전체</option>
-						<option th:each="list : ${list}" th:text="${list.detaName}" th:value="${list.detaCode}">fdd
+						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
 						</option>
 					</select> <input id="searchInput" name="searchInput" type="text">
 					<button id="searchButton" name="searchButton" type="button" class="btn btn-primary">검색</button>
@@ -102,7 +102,9 @@
 			</div>
 		</div>
 	</div>
-	<script>
+	<script th:inline = "javascript">
+		let itemTypeList = [[${typeCode}]]; 
+		console.log(itemTypeList)
 
 		const token = $("meta[name='_csrf']").attr("content")
 		const header = $("meta[name='_csrf_header']").attr("content");
@@ -205,6 +207,7 @@
 
 			});
 		});
+		
 
 		var modalGrid = new tui.Grid({
 			el: document.getElementById('modalGrid'),
@@ -224,20 +227,7 @@
 					editor: {
 						type: 'select',
 						options: {
-							listItems: [
-								{
-									text: '완제품',
-									value: '완제품'
-								},
-								{
-									text: '반제품',
-									value: '반제품'
-								},
-								{
-									text: '자제',
-									value: '자제'
-								}
-							]
+							listItems: itemTypeList
 						}
 					}
 				}, {
@@ -320,20 +310,7 @@
 					editor: {
 						type: 'select',
 						options: {
-							listItems: [
-								{
-									text: '완제품',
-									value: '완제품'
-								},
-								{
-									text: '반제품',
-									value: '반제품'
-								},
-								{
-									text: '자제',
-									value: '자제'
-								}
-							]
+							listItems: itemTypeList
 						}
 					}
 				}, {

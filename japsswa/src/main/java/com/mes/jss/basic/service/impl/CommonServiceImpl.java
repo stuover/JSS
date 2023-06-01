@@ -104,4 +104,12 @@ public class CommonServiceImpl implements CommonService{
 		return commMapper.getItemDeta();
 	}
 
+
+
+	@Override
+	public List<CommVO> getTypeList() {
+		// TODO Auto-generated method stub
+		return commMapper.getTypeList();
+	}
+
 }

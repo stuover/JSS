@@ -27,6 +27,8 @@ public class EmpVO implements UserDetails{
 	public String password;
 	public String roleId;
 	
+	public String newPwd;
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 

@@ -30,4 +30,6 @@ public interface CommonMapper {
 
 	public List<CommVO> getItemDeta();
 
+	public List<CommVO> getTypeList();
+
 }
