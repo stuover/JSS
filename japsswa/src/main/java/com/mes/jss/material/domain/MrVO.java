@@ -28,5 +28,9 @@ public class MrVO {              // 자재 vo
 	String saveMaterial;
 	String performanceId;
 	String passItem;
+	String customerId;
+	String customerName;
+	String itemPrice;
+	
 	 
 }

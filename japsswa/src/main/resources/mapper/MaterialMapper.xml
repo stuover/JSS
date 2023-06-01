@@ -27,18 +27,38 @@
   		
   		</select>  
   	
-  	<!-- 자재 재고 리스트 -->
+  	<!-- 자재 조회 리스트 -->
+  	<select id="mrInventory">
   	
-  		<select id="getMrCount" resultType="MrVO">
-  		select item_code, 
+  	select item_code, 
   		       item_name, 
   		       item_type, 
   		       save_material, 
   		       sum(store_count) as total 
   		  from itemlist 
   		  join material using(item_code) 
-  		 group by item_code, item_name, item_type, save_material
-							
+  		 group by item_code, item_name, item_type, save_material 
+  	</select>
+  	
+  	
+  	
+  	
+  	
+  	<!-- 안전재고 미달 리스트 -->
+  	
+  		<select id="getMrCount" resultType="MrVO">
+  		select i.item_code, 
+  	   i.item_name, 
+       c.customer_id,
+       c.customer_name,
+       i.item_price,
+       i.item_type, 
+       i.save_material, 
+  	     sum(m.store_count) as total 
+        from customer c join contract co on(c.CUSTOMER_ID = co.CUSTOMER_ID) join itemlist i 
+          on(co.item_code = i.item_code)
+  		  join material m on(i.item_code = m.item_code) 
+  		 group by c.customer_id, c.customer_name, i.item_price, i.item_code, i.item_name, i.item_type, i.save_material
   		
   		</select>
   		 

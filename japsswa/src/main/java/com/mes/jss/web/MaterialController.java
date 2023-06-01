@@ -78,10 +78,15 @@ public class MaterialController {
 		return list;
 	}
 
- 
+ // 자재 재고 리스트
 	
 	
-	// 자재 재고 리스트
+
+	
+	
+	
+	
+	// 안전 재고 리스트
 	@ResponseBody
 	@GetMapping("/mrCount")
 	public List<MrVO> mrCount(){
