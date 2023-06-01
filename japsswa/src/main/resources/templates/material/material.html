@@ -126,20 +126,18 @@
 					
 					grid.resetData(result);
 					let data3 = grid.getData();
-					console.log(grid.getData());
+					
 					grid.getData().forEach((ele, index)=>{
 						
-					console.log(ele.total);
-					console.log(ele.saveMaterial);
-					console.log(index);
+				
 						
-						if( Number(ele.total) < Number(ele.saveMaterial)){
+						if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
 							grid.addCellClassName(index,'itemType','redcolor');
 							grid.addCellClassName(index,'itemName','redcolor');
 							grid.addCellClassName(index,'itemCode','redcolor');
 							grid.addCellClassName(index,'total','redcolor');
 							grid.addCellClassName(index,'saveMaterial','redcolor');
-						} else if( Number(ele.total) <= Number(ele.saveMaterial/2) ){
+						} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
 							grid.addCellClassName(index,'itemType','yellowcolor');
 							grid.addCellClassName(index,'itemName','yellowcolor');
 							grid.addCellClassName(index,'itemCode','yellowcolor');
