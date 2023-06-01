@@ -31,7 +31,7 @@ public interface FacilityMapper {
 	public List<FacilityVO> getAllList();		// 전체 설비 리스트	
 	public List<FacilityVO> searchFac(FacilityVO vo);	// 설비 단건 조회
 	
-	public int insertFacility(FacilityVO vo);
+	public int insertFacility(FacilityVO vo);	// 설비 등록
 	public void modifyFac(FacilityVO vo);	// 설비 정보 수정
 	public void deleteFac(FacilityVO vo);	// 설비 삭제
 	
@@ -40,5 +40,6 @@ public interface FacilityMapper {
 	// 점검 
 	public List<InspectionVO> getbeInsList();	// 점검 등록 전 리스트
 	public List<InspectionVO> getInsList();	// 점검 내역 리스트
+	public int insertModalIns(InspectionVO vo);	// 모달 점검 등록
 	
 }

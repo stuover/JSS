@@ -3,13 +3,6 @@
     layout:decorate="~{/layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
     <style>
         h2 {
             text-align: center;
@@ -115,9 +108,9 @@
 
             $('#searchBtn').on('click', function () {
 
-            	// 검색조건 날짜, 
-            	// 사유, 설비명은 선택할수있게
-            	
+                // 검색조건 날짜, 
+                // 사유, 설비명은 선택할수있게
+
                 facName = $('#searchInput').val();
                 console.log(facName);
 
@@ -144,11 +137,11 @@
                     }
                 });
             })
-            
-            $('#resetBtn').on('click', function(){
-            	
-            	getDetailList();
-            	
+
+            $('#resetBtn').on('click', function () {
+
+                getDetailList();
+
             })
         </script>
     </th:block>

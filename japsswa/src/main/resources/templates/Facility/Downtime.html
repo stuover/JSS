@@ -3,13 +3,6 @@
     layout:decorate="~{/layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-    <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
-    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen"
         href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
@@ -222,11 +215,6 @@
 
                 facDownList();
 
-                /* $('#stopBtn').hide(); 
-				grid.on('uncheck', function () {
-                    $('#stopBtn').hide();
-                }); */
-
                 /* 체크 한개만 */
 
                 grid.on('check', function (e) {
@@ -241,7 +229,7 @@
 
                 downgrid.on('check', function (e) {
                     var downcheckRows = downgrid.getCheckedRowKeys();
-					grid.uncheckAll(true);
+                    grid.uncheckAll(true);
                     downcheckRows.forEach(function (key, idx) {
                         if (key != e.rowKey) {
                             downgrid.uncheck(key);
@@ -357,12 +345,6 @@
                     })
                 })
 
-                //downgrid.on('check', function(){
-                //var downCheck = downgrid.getCheckedRows()[0];
-                //console.log(downCheck);
-
-                //})                
-
                 $('#startBtn').on('click', function () {
 
                     downCheck = downgrid.getCheckedRows()[0];
@@ -386,8 +368,8 @@
 
                 $('#insertBtn').on('click', function () {
 
-                	// 공통코드로 사유 불러오기 . 수정해야함
-                	
+                    // 공통코드로 사유 불러오기 . 수정해야함
+
                     stopData = modalgrid.getData()[0];
                     status = modalgrid.getData()[0].facStatus;
                     console.log(stopData);
@@ -399,7 +381,7 @@
                             method: "GET",
                             data: stopData,
                             success: function (result) {
-                            	console.log(stopData);
+                                console.log(stopData);
                                 checkfacStatus();
                                 facDownList();
                                 alert("비가동 처리되었습니다");
@@ -587,8 +569,6 @@
                             console.log(reject);
                         }
                     });
-
-
                 })
 
                 // 삭제
@@ -635,7 +615,7 @@
                 })
 
 
-                
+
 
             }
         </script>

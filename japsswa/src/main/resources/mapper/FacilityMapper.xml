@@ -160,9 +160,15 @@
   	</select>
   	
   	<select id="getInsList" resultType="InspectionVO">
-  		select * from inspection
+  		select distinct f.fac_name, f.fac_code, d.down_code, i.ins_code, i.ins_date, i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
+		from facility f right join downtime d on(f.fac_code = d.fac_code) right join inspection i on(d.down_code = i.down_code)
+		where ins_code is not null
   	</select>
   	
+  	<insert id="insertModalIns" parameterType="InspectionVO">
+  		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
+		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , #{insDate}, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
+  	</insert>
   	
   	
   	
