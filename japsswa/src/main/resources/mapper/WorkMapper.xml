@@ -113,29 +113,43 @@
 	
 	<!-- 제품명 더블클릭 -> 해당 제품의 BOM 정보 조회 -->
 	<select id="itemBomInfo" parameterType="WorkVO" resultType="WorkVO">
-		SELECT  DISTINCT
-				LEVEL,
-				b.item_name,
-				b.item_code,
-				a.ing_code,
-				a.item_con,
-				a.pro_code,
-				c.pro_name,
-				a.unit,
-				a.pro_order
-		FROM 
-			 bom a LEFT OUTER JOIN itemlist b
-							  ON a.ing_code = b.item_code
-				   LEFT OUTER JOIN process c
-							  ON a.pro_code = c.pro_code 
-		WHERE
-			  <if test="itemType.equals('반제품')">
-			  	NOT
-			  </if>
-			  a.item_type = '반제품' 
-		START WITH a.ing_code = #{ingCode}
-		CONNECT BY PRIOR a.bom_level = a.level_type
-		ORDER BY level, pro_order
+	
+		WITH d AS(     
+				  SELECT  
+						LEVEL,
+						b.item_name,
+						b.item_code,
+						a.item_con,
+						a.pro_code,
+						c.pro_name,
+						a.unit,
+						a.pro_order
+				  FROM 
+					  bom a JOIN itemlist b
+									  ON a.ing_code = b.item_code
+						   JOIN process c
+									  ON a.pro_code = c.pro_code 
+				  WHERE
+					   <if test="itemType.equals('반제품')">
+						NOT
+					   </if>  
+					   a.item_type = '반제품' 
+				  START WITH a.ing_code = (SELECT item_code FROM work_detail WHERE wdetail_id =#{wdetailId})
+				  CONNECT BY PRIOR a.bom_level = a.level_type
+				  ORDER BY level, pro_order
+		     ),
+		     e AS (
+		           SELECT item_code, sum(hold_count) AS hold_count
+		           FROM hold_materials
+		           WHERE wbom_id  IN(  SELECT wbom_id FROM work_bom WHERE wdetail_id =#{wdetailId})
+		           GROUP BY item_code
+		          )
+		SELECT d.*, d.item_con*c.work_amount  work_amount,  e.hold_count
+		FROM work_detail c , 
+						 d LEFT OUTER JOIN e  on (d.item_code = e.item_code)
+		  
+		WHERE wdetail_id = #{wdetailId}
+
 	</select>
 	
 	
@@ -165,7 +179,7 @@
 			#{wdetailId, mode=IN, jdbcType=VARCHAR},
 			#{proCode, mode=IN, jdbcType=VARCHAR},
 			#{proOrder, mode=IN, jdbcType=VARCHAR},
-			#{workAmount, mode=IN, jdbcType=VARCHAR},
+			#{workAmount, mode=IN, jdbcType=BIGINT},
 			#{wbomId, mode=INOUT, jdbcType=VARCHAR, javaType=String}
 			)
 		}
@@ -176,16 +190,16 @@
 		{call HOLD_MATERIALS_INSERT(
 			#{wbomId, mode=IN, jdbcType=VARCHAR},
 			#{itemCode, mode=IN, jdbcType=VARCHAR},
-			#{holdLot, mode=IN, jdbcType=VARCHAR},
-			#{holdAmount, mode=IN, jdbcType=VARCHAR}
+			#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
+			#{holdCount, mode=IN, jdbcType=BIGINT}
 			)
 		}
 	</select>
 	
 	<!-- HOLD 등록 모달창 : 자재 홀드 수량 더해주기 -->
-	<select id="holdMaterialAdd" statementType="CALLABLE" parameterType="MrVO" resultType="MrVO">
+	<select id="holdMaterialAdd" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
 		{call HOLD_COUNT_ADD(
-			#{holdCount, mode=IN, jdbcType=VARCHAR},
+			#{holdCount, mode=IN, jdbcType=BIGINT},
 			#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
 			)
 		}

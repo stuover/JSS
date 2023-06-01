@@ -33,7 +33,7 @@ public interface WorkMapper {
 	
 	// 작업지시 관리 페이지 : 제품별 BOM 및 공정 정보 조회
 	// 제품명 더블클릭 -> 제품의 BOM 및 공정 정보 리스트
-	public List<WorkVO> itemBomInfo(String ingCode, String itemType);
+	public List<WorkVO> itemBomInfo(String wdetailId, String itemType);
 	
 	// 작업지시 공통 및 세부사항 삭제
 	public int workDelete(String workId);

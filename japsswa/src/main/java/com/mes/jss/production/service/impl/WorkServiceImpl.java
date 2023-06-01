@@ -68,9 +68,9 @@ public class WorkServiceImpl implements WorkService {
 	// 작업지시 관리 페이지 : 제품별 BOM 및 공정 정보 조회
 	// 제품명 더블클릭 -> 제품의 BOM 및 공정 정보 리스트
 	@Override
-	public List<WorkVO> itemBomInfo(String ingCode, String itemType) {
+	public List<WorkVO> itemBomInfo(String wdetailId, String itemType) {
 		List<WorkVO> list = new ArrayList<>();
-		list = workMapper.itemBomInfo(ingCode, itemType);
+		list = workMapper.itemBomInfo(wdetailId, itemType);
 		return list;
 	}
 
@@ -106,8 +106,32 @@ public class WorkServiceImpl implements WorkService {
 		
 		return list;
 	}
+
+
+	// 홀드 자재 등록 처리.
+	// 1. 지시 공정 정보 등록
+	// 2. 홀드 자재 등록
+	// 3. 자재 홀드수량 더하기
+	@Override
+	@Transactional
+	public void holdInsert(List<WorkVO> detailList) {
+		
+		for(WorkVO info : detailList) {
+			// 1. 지시 공정 정보 등록 
+			workMapper.workBomInsert(info);
+			
+			// 2. 홀드 자재 등록
+			workMapper.holdMaterialInsert(info);
+			
+			// 3. 자재 홀드수량 더하기
+			workMapper.holdMaterialAdd(info);
+		}
+
+
+		
+	}
 	
-	
+
 
 
 }

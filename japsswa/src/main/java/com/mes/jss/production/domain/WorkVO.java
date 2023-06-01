@@ -19,7 +19,7 @@ public class WorkVO {
 	String wdetailId;
 	String pdetailId;
 	String itemCode;
-	int workAmount;
+	Long workAmount;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date workStart;
@@ -40,19 +40,19 @@ public class WorkVO {
 	String proName;
 	int proOrder;
 	int proSeq;
-	int instructNum;
-	int passItem;
-	int failItem;
+	long instructNum;
+	long passItem;
+	long failItem;
 	String successStatus;
 	
 	//홀드 자재
 	String holdId;
 	String holdLot;
-	int holdAmount;
+	Long holdCount;
 	
 	// 자재
 	String mrLotNumber;	// 자재lot	
 	int itemCon;	// BOM 소요량
 	String itemType;	// 물품 구분 (완제품, 반제품, 자재)
-	int currentCount;		// 현 재고량 
+	Long currentCount;		// 현 재고량 
 }
