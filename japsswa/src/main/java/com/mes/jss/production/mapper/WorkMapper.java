@@ -44,4 +44,12 @@ public interface WorkMapper {
 	public List<WorkVO> selectHoldMaterial(String itemCode);
 	
 	
+	// 홀드 자재 등록.
+	// 지시 공정 정보 등록
+	public WorkVO workBomInsert(WorkVO vo);
+	// 홀드 자재 등록
+	public WorkVO holdMaterialInsert(WorkVO vo);
+	// 자재 홀드수량 더하기
+	public WorkVO holdMaterialAdd(WorkVO vo);
+	
 }
