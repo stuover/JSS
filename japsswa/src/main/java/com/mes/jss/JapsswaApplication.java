@@ -13,6 +13,5 @@ public class JapsswaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JapsswaApplication.class, args);
 	}
-	
-	
+
 }

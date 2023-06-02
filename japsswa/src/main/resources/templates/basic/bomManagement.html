@@ -138,8 +138,6 @@
 	
 	    
 <script>
-const token = $("meta[name='_csrf']").attr("content")
-	const header = $("meta[name='_csrf_header']").attr("content");
 
 var ingCode=null;
 	var itemName=null;
@@ -353,7 +351,6 @@ modalGrid.on('click',function(e){
 		success : function(result){
 			$('#inBomBtn').css('display','inline');
 			$('#delBomBtn').css('display','inline');
-
 			bomGrid.resetData(result);
 		},
 		error : function(reject){

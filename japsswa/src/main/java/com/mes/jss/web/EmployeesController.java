@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.service.EmployeesService;
 
@@ -35,8 +34,9 @@ public class EmployeesController {
 	// 전체 리스트
 	@ResponseBody
 	@GetMapping("/employeeAjax")
-	public List<EmpVO> employees(Model model) {
-		List<EmpVO> list = empService.getEmpList();
+	public List<EmpVO> employees(SearchDTO dto ) {
+		System.err.println(dto);
+		List<EmpVO> list = empService.getEmpList(dto);
 
 		return list;
 	}
@@ -94,14 +94,6 @@ public class EmployeesController {
 	@RequestMapping("/modifyEmpAjax")
 	public String modifyEmp(EmpVO vo, Model model) {
 		System.err.println(vo);
-		if (vo.getPosition().equals("대리") || vo.getPosition().equals("부장")) {
-			vo.setRoleId("ROLE_ADMIN");
-		} else {
-			vo.setRoleId("ROLE_USER");
-		}
-
-		System.out.println(vo);
-
 		if (empService.modifyEmp(vo)) {
 			return "Success";
 		} else {

@@ -2,12 +2,13 @@ package com.mes.jss.basic.mapper;
 
 import java.util.List;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.EmpVO;
 
 public interface EmployeesMapper {
 	
 	// 사원 List
-	public List<EmpVO> getList();
+	public List<EmpVO> getList(SearchDTO dto);
 
 	public String getNextSeq();
 

@@ -5,6 +5,8 @@
   
   
   <mapper namespace="com.mes.jss.basic.mapper.BomMapper">
+  
+  <!-- 완제품 BOM -->
   	<select id="getBomList" resultType="BomVO">
   		SELECT 
     LEVEL,
@@ -68,8 +70,10 @@ ORDER SIBLINGS BY a.level_type
 		order by a.bom_code
   	</select>
   	
+  	
+  	<!-- 반제품 BOM 조회 -->
   	<select id="getSmaBomList" resultType = "BomVO">
-  		SELECT
+  		  SELECT
 				distinct
 			    LEVEL,
 			    LPAD(' ', 2*LEVEL-1) || SYS_CONNECT_BY_PATH(b.item_name, '/') PATH,
