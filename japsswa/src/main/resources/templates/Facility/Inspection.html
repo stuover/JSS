@@ -7,11 +7,13 @@
         h2 {
             text-align: center;
         }
+
         .tui-grid-cell-content {
             text-align: center;
         }
-        #searchInput{
-        	width: 300px;
+
+        #searchInput {
+            width: 300px;
         }
     </style>
 </head>
@@ -20,12 +22,12 @@
     <th:block layout:fragment="content">
         <h2>점검 페이지</h2>
         <!-- 비가동 설비중 사유가 점검인 리스트 조회 그리드  -->
-        <div id="grid">
-        </div>
-        <input type="text" id="searchInput" name="fac_code" placeholder="설비이름을 입력하세요">
+        <button id="insertBtn" type="button" class="btn btn-primary">점검등록</button>
+        <div id="grid"></div>
+
         <!-- 비가동 설비중 사유가 점검인 리스트 조회 그리드  끝 -->
 
-        <!-- 등록 모달 시작 -->
+        <!-- 점검등록 모달 시작 -->
 
         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
             aria-hidden="true">
@@ -38,28 +40,85 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- 모달 그리드 시작 -->
+                        <!-- 점검모달 그리드 시작 -->
                         <div id="insertUpGrid"></div>
+
+                        <!-- fac 모달 시작 -->
+
+                        <div class="modal fade" id="facModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document"
+                                style="width:1500px">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- fac 모달그리드 시작 -->
+                                        <div id="facGrid"></div>
+                                        <!-- fac 모달그리드 끝 -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- fac 모달 끝 -->
+
                         <div id="insertDownGrid"></div>
-                        <!-- 모달 그리드 끝 -->
+                        <!-- 점검모달 그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button id="downSaveBtn" type="button" class="btn btn-primary">등록</button>                        
-                        <button type="button" class="btn btn-secondary" data-dismiss="insertModal">닫기</button>
+                        <button id="saveBtn" type="button" class="btn btn-primary">등록</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 등록 모달 끝 -->
+        <!-- 점검등록 모달 끝 -->
 
-		<h2>점검 설비 리스트</h2>
+        <!-- 비가동 목록 점검등록 모달 시작 -->
+
+        <div class="modal fade" id="downInsertModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 모달 그리드 시작 -->
+                        <div id="inUpGrid"></div>
+                        <div id="inDownGrid"></div>
+                        <!-- 모달 그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button id="downSaveBtn" type="button" class="btn btn-primary">등록</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 비가동 목록 점검등록 모달 끝 -->
+
+        <h2>점검 설비 리스트</h2>
         <!-- 점검 내역 그리드 -->
         <div id="insGrid"></div>
         <!-- 점검 내역 그리드 끝 -->
-        
-        
-        
+
+
+
         <!-- 상세점검내역 모달 시작 -->
 
         <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -80,7 +139,7 @@
                     </div>
                     <div class="modal-footer">
                         <button id="modBtn" type="button" class="btn btn-primary">수정</button>
-                        <button id="delBtn" type="button" class="btn btn-primary">삭제</button>                        
+                        <button id="delBtn" type="button" class="btn btn-primary">삭제</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
@@ -88,12 +147,10 @@
         </div>
 
         <!-- 상세점검내역 모달 끝 -->
-        
 
 
-        <script>
-        
-        
+
+        <script th:inline="javascript">
             // 비가동 설비중 사유가 점검인 리스트 조회 그리드    
             const grid = new tui.Grid({
                 el: document.getElementById('grid'),
@@ -103,21 +160,21 @@
                 columns: [{
                         header: '설비코드 ',
                         name: 'facCode',
-                        width : 100
+                        width: 100
                     },
                     {
                         header: '설비명',
                         name: 'facName',
-                        	width : 100
+                        width: 100
                     },
                     {
                         header: '비가동 코드',
                         name: 'downCode',
-                        	width : 100
+                        width: 100
                     }, {
                         header: '비가동 사유',
                         name: 'downReason',
-                        	width : 100
+                        width: 100
                     }, {
                         header: '설비 비가동일시',
                         name: 'stopDate'
@@ -136,7 +193,7 @@
                         grid.resetData(result);
                         console.log(result);
                     },
-                    error: function (reject) {                        
+                    error: function (reject) {
                         console.log(reject);
                     }
                 });
@@ -144,7 +201,7 @@
 
             facDownList();
 
-            
+
             // 점검 내역 그리드
             const insGrid = new tui.Grid({
                 el: document.getElementById('insGrid'),
@@ -155,11 +212,11 @@
                     perPage: 15
                 },
                 columns: [{
-	                	header: '설비명',
-	                    name: 'facName'
+                        header: '설비명',
+                        name: 'facName'
                     },
                     {
-                    	header: '설비코드 ',
+                        header: '설비코드 ',
                         name: 'facCode'
                     },
                     {
@@ -185,7 +242,7 @@
                     {
                         header: '적합판정',
                         name: 'judgment'
-                    },                    
+                    },
                     {
                         header: '관리자',
                         name: 'insManager'
@@ -216,40 +273,40 @@
             insGrid.on('dblclick', function (e) {
 
 
-                	insGridData = insGrid.getRow(e.rowKey);
-                    //console.log(insGridData);
-                    
-                    let firstIns = {
-                    		facName : insGridData.facName,
-                    		facCode : insGridData.facCode,
-                    		downCode : insGridData.downCode,
-                    		insCode : insGridData.insCode,
-                    		insDate : insGridData.insDate,
-                    		insReason : insGridData.insReason
-                    }
-                    
-                    let secondIns = {
-                    		insHistory : insGridData.insHistory,
-                    		judgment : insGridData.judgment,
-                    		partHistory : insGridData.partHistory,
-                    		partReason : insGridData.partReason,
-                    		partDate : insGridData.partDate,
-                    		insManager : insGridData.insManager
-                    }
-					
-                    $('#detailModal').modal('show');
-                    //console.log("first, second");
-                    //console.log(firstIns);
-                    //console.log(secondIns);
-                    
-                    detailUpGrid.resetData([firstIns]);
-                    detailDownGrid.resetData([secondIns]);
-                    setTimeout(() => detailUpGrid.refreshLayout(), 300);
-                    setTimeout(() => detailDownGrid.refreshLayout(), 300);
+                insGridData = insGrid.getRow(e.rowKey);
+                //console.log(insGridData);
+
+                let firstIns = {
+                    facName: insGridData.facName,
+                    facCode: insGridData.facCode,
+                    downCode: insGridData.downCode,
+                    insCode: insGridData.insCode,
+                    insDate: insGridData.insDate,
+                    insReason: insGridData.insReason
+                }
+
+                let secondIns = {
+                    insHistory: insGridData.insHistory,
+                    judgment: insGridData.judgment,
+                    partHistory: insGridData.partHistory,
+                    partReason: insGridData.partReason,
+                    partDate: insGridData.partDate,
+                    insManager: insGridData.insManager
+                }
+
+                $('#detailModal').modal('show');
+                //console.log("first, second");
+                //console.log(firstIns);
+                //console.log(secondIns);
+
+                detailUpGrid.resetData([firstIns]);
+                detailDownGrid.resetData([secondIns]);
+                setTimeout(() => detailUpGrid.refreshLayout(), 300);
+                setTimeout(() => detailDownGrid.refreshLayout(), 300);
             });
-            
+
             // 점검 상세내역 상단 그리드
-            
+
             var detailUpGrid = new tui.Grid({
                 el: document.getElementById('detailUpGrid'),
                 scrollX: false,
@@ -285,7 +342,7 @@
             });
 
 
-         	// 점검 상세내역 하단 그리드
+            // 점검 상세내역 하단 그리드
 
             var detailDownGrid = new tui.Grid({
                 el: document.getElementById('detailDownGrid'),
@@ -323,7 +380,7 @@
                     }
                 ]
             });
-         	
+
             // 객체 합치기(수정용)
             function mergeModFac(firstIns, secondIns) {
 
@@ -334,23 +391,23 @@
                 }
 
                 for (let att in secondIns) {
-                	newModIns[att] = secondIns[att];
+                    newModIns[att] = secondIns[att];
                 }
 
                 return newModIns;
                 console.log(newModIns);
             }
-            
+
             // 수정 ajax 함수
-            function modifyIns(){
-            	
-            	let firstIns = detailUpGrid.getData()[0];
-            	let secondIns = detailDownGrid.getData()[0];
-            	
-            	let modobj = mergeModFac(firstIns, secondIns);
-            	console.log(modobj);
-            	
-            	var token = $("meta[name='_csrf']").attr("content");
+            function modifyIns() {
+
+                let firstIns = detailUpGrid.getData()[0];
+                let secondIns = detailDownGrid.getData()[0];
+
+                let modobj = mergeModFac(firstIns, secondIns);
+                console.log(modobj);
+
+                var token = $("meta[name='_csrf']").attr("content");
                 var header = $("meta[name='_csrf_header']").attr("content");
 
                 $.ajax({
@@ -373,13 +430,50 @@
                     }
                 });
             }
-            
-            $('#modBtn').on('click', function(){
-            	
-            	console.log("수정");
-            	detailUpGrid.finishEditing();
-            	detailDownGrid.finishEditing();
-            	modifyIns();
+
+            $('#modBtn').on('click', function () {
+
+                console.log("수정");
+                detailUpGrid.finishEditing();
+                detailDownGrid.finishEditing();
+                modifyIns();
+            })
+
+            // 삭제 함수
+            function delIns() {
+
+                let deletetIns = detailUpGrid.getData()[0];
+                console.log(deletetIns);
+
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                $.ajax({
+
+                    url: "/RemoveInspection",
+                    method: "POST",
+                    data: JSON.stringify(deletetIns),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("삭제 되었습니다");
+                        $('#detailModal').modal('hide');
+                        insList();
+
+                    },
+                    error: function (reject) {
+                        console.log("reject");
+                        console.log(reject);
+                    }
+                });
+            }
+
+            $('#delBtn').on('click', function () {
+
+                console.log("삭제");
+                delIns();
             })
 
             // 더블클릭시 등록모달
@@ -389,20 +483,20 @@
                 //console.log(gridData);
 
 
-                $('#insertModal').on('shown.bs.modal', function () {
-                	insertUpGrid.refreshLayout()
-                    insertDownGrid.refreshLayout()
+                $('#downInsertModal').on('shown.bs.modal', function () {
+                    inUpGrid.refreshLayout()
+                    inDownGrid.refreshLayout()
                 })
-                
-                $('#insertModal').modal('show');
-                insertUpGrid.resetData([gridData]);                
-                insertDownGrid.appendRow();
+
+                $('#downInsertModal').modal('show');
+                inUpGrid.resetData([gridData]);
+                inDownGrid.appendRow();
 
             });
 
-            // 등록모달 상단
-            var insertUpGrid = new tui.Grid({
-                el: document.getElementById('insertUpGrid'),
+            // 비가동 점검등록모달 상단
+            var inUpGrid = new tui.Grid({
+                el: document.getElementById('inUpGrid'),
                 scrollX: false,
                 scrollY: false,
                 columns: [{
@@ -423,7 +517,7 @@
                     },
                     {
                         header: '점검일',
-                        name: 'insDate',                        
+                        name: 'insDate',
                         editor: 'datePicker'
                     },
                     {
@@ -435,7 +529,141 @@
 
             });
 
-            // 등록모달 하단
+            // 비가동 점검등록모달 상단 하단
+            var inDownGrid = new tui.Grid({
+                el: document.getElementById('inDownGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '점검내역 ',
+                        name: 'insHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '적합판정',
+                        name: 'judgment',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품 교체내역 ',
+                        name: 'partHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품 교체사유 ',
+                        name: 'partReason',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품교체일',
+                        name: 'partDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+            // 객체합치기(등록)
+            function megeIns(upIns, downIns) {
+
+                const newIns = {};
+
+                for (let att in upIns) {
+                    newIns[att] = upIns[att];
+                }
+
+                for (let att in downIns) {
+                    newIns[att] = downIns[att];
+                }
+                return newIns;
+                console.log(newIns);
+            }
+
+            function saveInspection() {
+
+                let upIns = inUpGrid.getData()[0];
+                console.log("insertgrid");
+                console.log(inUpGrid);
+                let downIns = inDownGrid.getData()[0];
+                console.log(inDownGrid);
+
+                let obj = megeIns(upIns, downIns);
+                console.log(obj);
+
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                $.ajax({
+
+                    url: "/insertInsAjax",
+                    method: "POST",
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("등록되었습니다");
+                        console.log(obj);
+                        $('#downInsertModal').modal('hide');
+                        facDownList();
+                        insList();
+                    },
+                    error: function (reject) {
+                        console.log("오류");
+                        console.log(reject);
+                    }
+                });
+            }
+
+            $('#downSaveBtn').on('click', function () {
+
+                inUpGrid.finishEditing();
+                inDownGrid.finishEditing();
+
+                saveInspection();
+            })
+
+
+         
+
+            // 기본점검 등록모달 상단
+            var insertUpGrid = new tui.Grid({
+                el: document.getElementById('insertUpGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비 코드',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '점검 코드 ',
+                        name: 'insCode'
+                    },
+                    {
+                        header: '점검일',
+                        name: 'insDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '점검 사유',
+                        name: 'insReason',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+            // 기본점검 등록모달 하단
             var insertDownGrid = new tui.Grid({
                 el: document.getElementById('insertDownGrid'),
                 scrollX: false,
@@ -474,43 +702,109 @@
 
             });
             
-            // 객체합치기(등록)
-            function megeIns(upIns, downIns){
-            	
-            	const newIns = {};
-            	
-            	for (let att in upIns) {
-            		newIns[att] = upIns[att];
+            // 기본점검 등록
+            $('#insertBtn').on('click', function () {
+            	insertUpGrid.removeRow(0);
+            	insertDownGrid.removeRow(0);
+                $('#insertModal').on('shown.bs.modal', function () {
+                    insertUpGrid.refreshLayout()
+                    insertDownGrid.refreshLayout()
+                })
+                $('#insertModal').modal('show');
+                insertUpGrid.appendRow();
+                insertDownGrid.appendRow();
+            })
+
+            // facCode 리스트 조회 함수
+            function selectFac() {
+                $.ajax({
+                    url: "/getSelectList",
+                    method: "get",
+                    dataType: "json",
+                    success: function (result) {
+                        facGrid.resetData(result);
+                    },
+                    error: function (reject) {
+                        console.log(reject)
+                    }
+                })
+            }
+
+            // facCode 그리드
+            var facGrid = new tui.Grid({
+                el: document.getElementById('facGrid'),
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                },
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    }
+                ]
+            });
+
+            insertUpGrid.on('dblclick', function (e) {
+                console.log("123");
+                insertRowKey = e.rowKey;
+                //console.log(insertrowKey);
+
+                if (e.columnName == "facName" || e.columnName == "facCode") {
+
+
+                    $('#facModal').modal('show');
+                    $('#facModal').on('shown.bs.modal', function (e) {
+                        setTimeout(() => facGrid.refreshLayout(), 300);
+                    })
+                    selectFac();
+                }
+            })
+
+
+            facGrid.on('click', function (e) {
+
+                console.log("클릭");
+
+                fac = facGrid.getRow(e.rowKey);
+                console.log(fac);
+
+                $('#facModal').modal('hide');
+                insertUpGrid.resetData([fac]);
+
+
+            })
+
+
+
+            // 객체합치기(기본점검 등록)
+            function megeBasicIns(basicUpIns, basicDownIns) {
+
+                const newBasicIns = {};
+
+                for (let att in basicUpIns) {
+                    newBasicIns[att] = basicUpIns[att];
                 }
 
-                for (let att in downIns) {
-                	newIns[att] = downIns[att];
+                for (let att in basicDownIns) {
+                    newBasicIns[att] = basicDownIns[att];
                 }
-                return newIns;
-                console.log(newIns);
+                return newBasicIns;
+                console.log(newBasicIns);
             }
-            
-            function saveInspection(){
-            	
-            	let upIns = insertUpGrid.getData()[0];
-            	console.log("insertgrid");
-            	console.log(insertUpGrid);
-            	let downIns = insertDownGrid.getData()[0];
-            	console.log(insertDownGrid);
-            	
-            	let obj = megeIns(upIns, downIns);
-            	console.log(obj);
-            	
-            	var token = $("meta[name='_csrf']").attr("content");
-                var header = $("meta[name='_csrf_header']").attr("content");
-            	
-            	$.ajax({
-            		
-            		url : "/insertInsAjax",
-            		method : "POST",
-            		data : JSON.stringify(obj),
-            		contentType : "application/json",
-            		beforeSend: function (xhr) {
+
+            function basicSaveInspection(obj) {
+
+                $.ajax({
+
+                    url: "/insertBasicInsAjax",
+                    method: "POST",
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
                         xhr.setRequestHeader(header, token);
                     },
                     success: function (result) {
@@ -523,20 +817,42 @@
                     error: function (reject) {
                         console.log("오류");
                         console.log(reject);
-                    }            		
-            	});            	            	
+                    }
+                });
             }
-            
-            $('#downSaveBtn').on('click', function(){
-            	
+		
+            $('#saveBtn').on('click', function () {
+
             	insertUpGrid.finishEditing();
-            	insertDownGrid.finishEditing();
-            	
-            	saveInspection();            	
+                insertDownGrid.finishEditing();
+                
+                let basicUpIns = insertUpGrid.getData()[0];
+                let basicDownIns = insertDownGrid.getData()[0];
+
+
+                let obj = megeBasicIns(basicUpIns, basicDownIns);
+                console.log(obj);
+
+                basicSaveInspection(obj);
+             
+         })
+            
+            $('#downSaveBtn').on('click', function () {
+
+            	inUpGrid.finishEditing();
+                inDownGrid.finishEditing();
+                
+                let basicUpIns = inUpGrid.getData()[0];
+                let basicDownIns = inDownGrid.getData()[0];
+
+
+                let obj = megeBasicIns(basicUpIns, basicDownIns);
+                console.log(obj);
+
+                basicSaveInspection(obj);
+                
             })
-            
-            
-            
+               
         </script>
     </th:block>
 </body>

@@ -44,8 +44,12 @@ public interface FacilityService {
 	// 점검 페이지	
 	public List<InspectionVO> getbeforeInsList();		// 점검 등록 전 리스트(비가동사유=점검)
 	public List<InspectionVO> getInspectionList();	// 점검내역 리스트
+	public boolean saveBaiscInspection(InspectionVO vo);	// 기본 점검 등록
+	public List<FacilityVO> getSelectList();		// 점검 등록 - facCode 리스트 불러오기
 	public boolean saveInspection(InspectionVO vo);	// 모달 점검 등록
 	public void modifyInspection(InspectionVO vo);	// 점검 내역 수정
+	public void RemoveInspection(InspectionVO vo);	// 점검 내역 삭제
+
 	
 
 }

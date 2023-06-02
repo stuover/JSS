@@ -72,7 +72,7 @@ public class FacilityController {
 		return vo;
 	}
 
-	@RequestMapping("/RemoveFacility")
+	@RequestMapping("/RemoveFacility")	// 설비 정보 삭제
 	@ResponseBody
 	public FacilityVO RemoveFacility(@RequestBody FacilityVO vo) {
 		
@@ -81,6 +81,7 @@ public class FacilityController {
 		
 		return vo;
 	}
+	
 	@RequestMapping("/test0001")
 	public String test() {
 
