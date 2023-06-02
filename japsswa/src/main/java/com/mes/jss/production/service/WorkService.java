@@ -43,13 +43,12 @@ public interface WorkService {
 	
 	// 홀드 자재 선택 모달창 : 자재 리스트
 	// BOM정보 그리드에서 선택한 자재 리스트 출력.
-	public List<WorkVO> selectHoldMaterial(String itemCode);
+	public List<WorkVO> selectHoldMaterial(String itemCode, String wdetailId);
 	
 	
 	// 홀드 자재 등록 처리.
-	// 1. 지시 공정 정보 등록
-	// 2. 홀드 자재 등록
-	// 3. 자재 홀드수량 더하기
+	// 1. 홀드 자재 등록
+	// 2. 자재 홀드수량 더하기
 	public void holdInsert(List<WorkVO> detailList);
 	
 

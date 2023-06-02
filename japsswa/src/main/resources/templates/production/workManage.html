@@ -6,8 +6,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 <style>
 	.tui-grid-cell-content {
     	text-align: center;
@@ -163,8 +162,8 @@
 
 						<div class="col-12 col-md-6">
 							<div class="input-group">
-							<label for="requiredItem" class="form-label p-2">필요한 자재 수량</label>
-								<input type="text" class="form-control form-control-sm" id="requiredItem" name="requiredItem">
+							<label for="requiredItem" class="form-label p-2">필요한 자재 수량 :</label>
+								<input type="text" class="form-control form-control-sm" id="requiredItem" name="requiredItem" readonly>
 							</div>
 						</div>
 					</div>
@@ -208,8 +207,7 @@
   		
 
   		<script>
-  		const token = $("meta[name='_csrf']").attr("content")
-  		const header = $("meta[name='_csrf_header']").attr("content");
+
   		const Grid = tui.Grid;
   		
   		// 초기화면 데이터 및 설정.
@@ -958,7 +956,8 @@
 					console.log('iType : ' + iType);
 					console.log('wdetailId : ' + wCode);
 					console.log('itemKeyNum : '+ itemKeyNum);								
-
+					
+					// 더블클릭한 제품의 BOM 및 공정정보 조회 ajax
 					$.ajax({
 						url : "/itemBomInfoAjax", 
 						data : {wdetailId : wCode, itemType : iType},
@@ -973,6 +972,10 @@
 						}
 					});
 					
+					// 선택한 제품(지시상세)에 대한 지시 공정 정보 등록 ajax
+					
+					
+					
 					// 홀드 자재 여부 색 변화
 					for(let i=0; i < bomInfoGrid.getRowCount(); i++){
 						if(bomInfoGrid.getData()[i].holdCount == null ){
@@ -986,13 +989,9 @@
 					}	
 
 					
-					// 필요자재량 값 입력
-					// 선택한 제품의 지시수량 X BOM 소요량
-					workNum = detailGrid.getData()[itemKeyNum].workAmount;	// 선택한 제품의 지시수량
+					// 세부지시코드 입력
 					for(let i=0; i < bomInfoGrid.getRowCount(); i++){
-						let result = bomInfoGrid.getValue(i,'itemCon') * workNum;
-						console.log('result = ' + result);
-						bomInfoGrid.setValue( i, 'requiredItem', result, false);
+						bomInfoGrid.setValue( i, 'wdetailId', wCode, false);
 					};	
 					
 				}		
@@ -1066,35 +1065,46 @@
 			// HOLD 자재 모달창 : 자재 정보 리스트
 			let bItemCode = '';		// bom 정보 그리드에서 선택한 자재의 품목코드
 			let bRequire = 0;		// bom 정보 그리드에서 선택한 자재의 hold 해야 하는 수량
+			let bProCode = '';		// bom 정보 그리드에서 선택한 자재의 공정 코드
 			$('#selectHoldBtn').click(function (){
+				
+				// 모달창 필요자재량 input 테두리 및 배경 안보이게 설정.
+				$('#requiredItem').css({'background' : 'transparent', 'border' : 'none'});
+				
+				// 선택한 세부 작업지시 내용의 작업지시량 
+				bRequire = detailGrid.getData()[itemKeyNum].workAmount;
+				// bom 정보 그리드에서 선택하 자재의 품목코드
 				bItemCode = bomInfoGrid.getCheckedRows()[0].itemCode;
-				bRequire = bomInfoGrid.getCheckedRows()[0].requiredItem;
-				bProCode = bomInfoGrid.getCheckedRows()[0].proCode;
-				bProOrder = bomInfoGrid.getCheckedRows()[0].proOrder;
+				// 작업지시 상세 내용에서 선택한 제품의 세부지시코드 : wCode				
+				console.log('bItemCode : ' + bItemCode);
+				console.log('wCode : ' + wCode);
+				bProCode =  bomInfoGrid.getCheckedRows()[0].proCode;
 				
 				
+				// 자재 및 홀드등록한 자재 내역 조회 ajax.
 				$.ajax({
 					url: "/selectHoldMaterialAjax" ,
-					data: {itemCode : bItemCode},
+					data: {itemCode : bItemCode , wdetailId : wCode},
 					method: "GET",
 					success: function(result) {
 						console.log(result);
 						holdSelectGrid.resetData(result);
 						$('#requiredItem').val(bRequire);
 						
-						// 작업지시량, 세부지시코드, 공정코드, 공정순서
+						// 세부지시코드 입력
 						for(let i=0; i < holdSelectGrid.getRowCount(); i++){
-							holdSelectGrid.setValue( i, 'workAmount', workNum, false);
 							holdSelectGrid.setValue( i, 'wdetailId', wCode, false);
 							holdSelectGrid.setValue( i, 'proCode', bProCode, false);
-							holdSelectGrid.setValue( i, 'proOrder', bProOrder, false);
-						};						
+						};	
 						
 					},
 					error: function(reject) {
 						console.log(reject);
 					}
 				});
+				
+
+				
 			});
 			
 			

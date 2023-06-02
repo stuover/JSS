@@ -44,8 +44,8 @@
                         <!-- 모달 그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button id="saveBtn" type="button" class="btn btn-primary">등록</button>                        
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button id="downSaveBtn" type="button" class="btn btn-primary">등록</button>                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="insertModal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,8 @@
                         <!-- 모달 그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button id="saveBtn" type="button" class="btn btn-primary">등록</button>                        
+                        <button id="modBtn" type="button" class="btn btn-primary">수정</button>
+                        <button id="delBtn" type="button" class="btn btn-primary">삭제</button>                        
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
@@ -216,7 +217,7 @@
 
 
                 	insGridData = insGrid.getRow(e.rowKey);
-                    console.log(insGridData);
+                    //console.log(insGridData);
                     
                     let firstIns = {
                     		facName : insGridData.facName,
@@ -237,9 +238,9 @@
                     }
 					
                     $('#detailModal').modal('show');
-                    console.log("first, second");
-                    console.log(firstIns);
-                    console.log(secondIns);
+                    //console.log("first, second");
+                    //console.log(firstIns);
+                    //console.log(secondIns);
                     
                     detailUpGrid.resetData([firstIns]);
                     detailDownGrid.resetData([secondIns]);
@@ -322,12 +323,70 @@
                     }
                 ]
             });
+         	
+            // 객체 합치기(수정용)
+            function mergeModFac(firstIns, secondIns) {
+
+                const newModIns = {};
+
+                for (let att in firstIns) {
+                    newModIns[att] = firstIns[att];
+                }
+
+                for (let att in secondIns) {
+                	newModIns[att] = secondIns[att];
+                }
+
+                return newModIns;
+                console.log(newModIns);
+            }
+            
+            // 수정 ajax 함수
+            function modifyIns(){
+            	
+            	let firstIns = detailUpGrid.getData()[0];
+            	let secondIns = detailDownGrid.getData()[0];
+            	
+            	let modobj = mergeModFac(firstIns, secondIns);
+            	console.log(modobj);
+            	
+            	var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                $.ajax({
+                    url: "/modifyInspection",
+                    method: "POST",
+                    data: JSON.stringify(modobj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("수정 완료되었습니다");
+                        $('#detailModal').modal('hide');
+                        insList();
+
+                    },
+                    error: function (reject) {
+                        console.log("reject");
+                        console.log(reject);
+                    }
+                });
+            }
+            
+            $('#modBtn').on('click', function(){
+            	
+            	console.log("수정");
+            	detailUpGrid.finishEditing();
+            	detailDownGrid.finishEditing();
+            	modifyIns();
+            })
 
             // 더블클릭시 등록모달
             grid.on('dblclick', function (e) {
 
                 gridData = grid.getRow(e.rowKey);
-                console.log(gridData);
+                //console.log(gridData);
 
 
                 $('#insertModal').on('shown.bs.modal', function () {
@@ -415,6 +474,7 @@
 
             });
             
+            // 객체합치기(등록)
             function megeIns(upIns, downIns){
             	
             	const newIns = {};
@@ -457,6 +517,7 @@
                         alert("등록되었습니다");
                         console.log(obj);
                         $('#insertModal').modal('hide');
+                        facDownList();
                         insList();
                     },
                     error: function (reject) {
@@ -466,13 +527,15 @@
             	});            	            	
             }
             
-            $('#saveBtn').on('click', function(){
+            $('#downSaveBtn').on('click', function(){
             	
             	insertUpGrid.finishEditing();
             	insertDownGrid.finishEditing();
             	
             	saveInspection();            	
             })
+            
+            
             
         </script>
     </th:block>
