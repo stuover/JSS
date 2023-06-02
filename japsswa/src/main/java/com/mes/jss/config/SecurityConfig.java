@@ -33,8 +33,9 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests((requests) -> 
 
-			requests.antMatchers("/top", "/login", "/logout","/**").permitAll()
+			requests.antMatchers("/top", "/login", "/logout","/**").permitAll() // 공통 
 						.antMatchers("/**").hasAuthority("ROLE_ADMIN")
+						//.antMatchers("/**").hasAnyAuthority("ROLE_ADMIN")
 						.anyRequest().authenticated())
 			     .formLogin(login-> login.loginPage("/login")
 			    		 							.usernameParameter("empNo")

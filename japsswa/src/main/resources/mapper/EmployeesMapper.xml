@@ -3,14 +3,29 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-  <mapper namespace="com.mes.jss.basic.mapper.EmployeesMapper">
+<mapper namespace="com.mes.jss.basic.mapper.EmployeesMapper">
+	<sql id="criteria">
+	<where>
+              	 <if test="searchSel != null and searchSel != ''.toString()">
+                  	dept_name = #{searchSel}
+                  </if>
+                  
+                  <if test="searchInp != null and searchInp != ''.toString()">
+                   	 and ( to_char(emp_no) like '%'||#{searchInp}||'%'
+                     or emp_name Like '%'||#{searchInp}||'%')
+                  </if>
+
+      </where>
+   </sql>
+
+
 
   	<!-- 사원 전체 리스트 -->
-  	<select id="getList" resultType="EmpVO">
+  	<select id="getList" parameterType="SearchDTO" resultType="EmpVO">
   		select rownum, emp_no "empNo", emp_name "empName", hire_date "hireDate", phone_num "phoneNum", dept_name "deptName", position "position", email "email"
   	    from emp
+  	   <include refid="criteria"></include>
   	    order by rownum
-
   	</select>
 	
 	<!-- 사원번호 시퀀스 -->

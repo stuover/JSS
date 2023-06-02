@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.mapper.EmployeesMapper;
 import com.mes.jss.basic.service.EmployeesService;
@@ -44,8 +45,8 @@ public class EmployeesServiceImpl implements EmployeesService, UserDetailsServic
 	}
 	
 	@Override
-	public List<EmpVO> getEmpList(){
-		return empMapper.getList();
+	public List<EmpVO> getEmpList(SearchDTO dto){
+		return empMapper.getList(dto);
 	}
 
 
@@ -69,8 +70,45 @@ public class EmployeesServiceImpl implements EmployeesService, UserDetailsServic
 
 	@Override
 	public boolean modifyEmp(EmpVO vo) {
+		System.err.println(vo);
+		
+		if(vo.getPosition().equals("관리자")) {
+			if(vo.getDeptName().equals("인사")) {
+				vo.setRoleId("EMP_ADMIN");
+			}else if(vo.getDeptName().equals("자재")) {
+				vo.setRoleId("MAT_ADMIN");
+			}else if(vo.getDeptName().equals("품질")) {
+				vo.setRoleId("QUA_ADMIN");
+			}else if(vo.getDeptName().equals("영업")) {
+				vo.setRoleId("SAL_ADMIN");
+			}else if(vo.getDeptName().equals("설비")) {
+				vo.setRoleId("FAC_ADMIN");
+			}else if(vo.getDeptName().equals("생산")) {
+				vo.setRoleId("PRO_ADMIN");
+			}
+		}else {
+			if(vo.getDeptName().equals("인사")) {
+				vo.setRoleId("EMP_USER");
+			}else if(vo.getDeptName().equals("자재")) {
+				vo.setRoleId("MAT_USER");
+			}else if(vo.getDeptName().equals("품질")) {
+				vo.setRoleId("QUA_USER");
+			}else if(vo.getDeptName().equals("영업")) {
+				vo.setRoleId("SAL_USER");
+			}else if(vo.getDeptName().equals("설비")) {
+				vo.setRoleId("FAC_USER");
+			}else if(vo.getDeptName().equals("생산")) {
+				vo.setRoleId("PRO_USER");
+			}
+			
+		}
+		
+		System.err.println(vo);
+		
 		return empMapper.updateEmp(vo);
 	}
+	
+	
 
 	@Override
 	public boolean removeEmp(EmpVO vo) {

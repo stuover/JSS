@@ -14,26 +14,31 @@
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<h1 class="card-title">사원 등록</h1>
-					
-					 <form class="pt-3" role="form" action="/employee" method="post">
+					<h1 class="card-title">사원 등록</h1>				
+					 <form id="ragister" class="pt-3" role="form" action="/employee" method="post">
 					 	<p>입사일<p>
 					 	<div class="form-group">
-		                  <input type="date" class="form-control form-control-lg" name="hireDate" id="hireDate" placeholder="입사일">
+					 	입사일
+		                  <input type="date" class="form-control form-control-lg" name="hireDate" id="hireDate" placeholder="입사일" >
 		                </div>
 		              	<div class="form-group">
-		                  <input type="text" class="form-control form-control-lg" name="empNo" id="empNo" placeholder="사원번호">
+		              	사원번호
+		                  <input type="text" class="form-control form-control-lg" name="empNo" id="empNo" placeholder="사원번호" readonly>
 		                </div>
 		                <div class="form-group">
-		                  <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Password">
+		                패스워드
+		                  <input type="password" class="form-control form-control-lg" name="password" id="password" placeholder="Password" readonly>
 		                </div>
 		                <div class="form-group">
+		                사원이름
 		                  <input type="text" class="form-control form-control-lg" name="empName" id="empName" placeholder="사원이름">
 		                </div>
 		                <div class="form-group">
+		                전화번호
 		                  <input type="text" class="form-control form-control-lg" name="phoneNum" id="phoneNum" placeholder="전화번호">
 		                </div>
 		                <div class="form-group">
+		                e-mail
 		                  <input type="email" class="form-control form-control-lg" name="email" id="email" placeholder="이메일">
 		                </div>
 		                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -42,9 +47,10 @@
 		                  <button id="backBtn">취소</button>		                  
 		                </div>     
 		             </form>
-						
-
-</div></div></div></div>
+		             </div>
+		      </div>
+		</div>
+	</div>
 
 <script>
 	$(document).ready(function () {
@@ -56,8 +62,9 @@
 				data : { hireDate : $('#hireDate').val() },
 				dateType:"JSON",
 				success : function(result) {
-					$('#empNo').val(result);
-					$('#password').val(result);
+					console.log(result)
+					$('#ragister #empNo').val(result);
+					$('#ragister #password').val(result);
 				}
 			})
 		})

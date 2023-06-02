@@ -20,7 +20,7 @@ public class BomServiceImpl implements BomService{
 	public List<BomVO> getBomList(String itemCode) {
 		
 		String type =itemMapper.getItemType(itemCode);
-		if (type.equals("반제품")) {
+		if (type.equals("반제품") || type.equals("자재") ) {
 			return bomMapper.getSmaBomList(itemCode);
 		}else{
 			return bomMapper.getBomList(itemCode);
