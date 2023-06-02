@@ -21,8 +21,9 @@
 
 					<!-- <input id="name" type="hidden" th:value="${#authentication.principal.empName}"> --> 
 					<div>
-						
-									
+									<input type="text" id="itemInput" name="sItem">
+									<button id="itemBtn" type="button" class="btn btn-dark"
+										data-bs-toggle="modal" data-bs-target="#searItemModal">품목 검색</button>
 									<button id="receiptBtn" type="button" class="btn btn-dark"
 										data-bs-toggle="modal" data-bs-target="receiptModal">명세서</button>
 				
@@ -30,18 +31,16 @@
 
 					<div class="row"></div>
 					
-				
+
 					<div id="grid1"></div>
-					<button id="moveBtn" type="button" class="btn btn-danger">이동</button>
+
 					<div id="grid2"></div>
 					
 
 					<div>
 						<form>
-							
-							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
-							<button id="outBtn" type="button" class="btn btn-dark"
-										data-bs-toggle="modal" data-bs-target="outModal">출고</button>
+
+							<button id="outBtn" type="button" class="btn btn-dark">출고</button>
 							
 						</form>
 					</div>
@@ -79,31 +78,13 @@
 	
 	
 	
-	<div class="modal fade" id="outModal" tabindex="-1"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="outModalLabel">출고 수량 입력</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<input type="text" id="outCount" name="oCount">
-					<button id="countBtn" type="button" class="btn btn-dark">확인</button>
-					
-				</div>
-				
-			</div>
-		</div>
-	</div>
-	
+
 
 	<script>
 	
-	/* const token = $("meta[name='_csrf']").attr("content")
-	const header = $("meta[name='_csrf_header']").attr("content") */
+
 	const Grid = tui.Grid;
+
 	
 	//상단 그리드 
 	let grid1Data = [];
@@ -119,6 +100,11 @@
 	      scrollY: false,
 	      columns: [
 	    	     {
+				  header: '주문상세코드',
+				  name: 'ordDetailId',
+				  hidden : true
+				 },
+				 {
 				  header: '품목코드',
 				  name: 'itemCode',
 				  hidden : true
@@ -128,15 +114,23 @@
 				  name: 'customerId',
 				  hidden : true
 				 },
-	    	     {
+			     {
+				  header: '거래처명',
+				  name: 'customerName'
+				 },
+			     {
 				  header: '품목명',
 				  name: 'itemName'
 				 },
 			     
 				 {
-				  header: '거래처명',
-				  name: 'customerName'
+				  header: '주문수량',
+				  name: 'ordCount'
 			     },
+			     {
+				  header: '남은양',
+				  name: 'remain'
+				 },
 			     {
 				  header: '주문날짜',
 				  name: 'ordDate'
@@ -144,22 +138,10 @@
 			     {
 			      header: '납부예정날짜',
 			      name: 'outDate'
-			     },	
-			     {
-				  header: '총 가격',
-				  name: 'eachPrice'
-				 },
+			     },
 				 {
-				  header: '재고량',
-				  name: 'fnCount'
-				 },
-				 {
-				  header: '주문수량',
-				  name: 'ordCount'
-				 },
-				 {
-				  header: '담당자',
-				  name: 'empName'
+				  header : '담당자',
+				  name : 'empName'
 				 }
 		      ],
 		      
@@ -179,6 +161,23 @@
 	    });
 	    
 	    
+	    $('#itemBtn').on('click', function(){
+	    	
+	    	const itemName = $('#itemInput').val();
+	    	$('#itemInput').val('');
+	    	
+	    	$.ajax({
+	    		url : "/showTopList",
+	    		method : "get",
+	    		data : {'itemName' : itemName},
+	    		success : function(result){
+	    			grid1.resetData(result);
+	    			grid1.refreshLayout();
+	    		}
+	    	})
+	    })
+	    
+	    
 	    //하단 그리드
 	    let grid2Data = [];
 		const grid2 = new Grid({
@@ -193,34 +192,28 @@
 	      scrollY: false,
 	      columns: [
 	    	     {
-				  header: '품목명',
-				  name: 'itemName'
+				  header: '완제품 lot번호',
+				  name: 'fnLotNo'
 				 },
 			     
 				 {
-				  header: '거래처명',
-				  name: 'customerName'
+				  header: '품목코드',
+				  name: 'itemCode',
+				  hidden : true
 			     },
 			     {
-				  header: '주문날짜',
-				  name: 'ordDate'
+				  header: '품목명',
+				  name: 'itemName'
 				 }, 
 			     {
-			      header: '납부예정날짜',
-			      name: 'outDate'
+			      header: '재고량',
+			      name: 'fnCount'
 			     },	
-			     {
-				  header: '총 가격',
-				  name: 'eachPrice'
-				 },
-				 {
-				  header: '재고량',
-				  name: 'fnCount'
-				 },
+			    
 				 {
 				  header: '출고량',
 				  name: 'fnRelCount',
-				  editor: 'text'
+				  editor : 'text'
 				 },
 				 {
 				  header: '담당자',
@@ -255,10 +248,10 @@
 		                perPage: 5 
 		                },
 		               columns: [
-		            	   {
-			                   header: '거래처 코드',
-			                   name: 'customerId'
-			                 },
+		            	 {
+			               header: '품목코드',
+			               name: 'customerId'
+			            },
 		                 {
 		                   header: '거래처명',
 		                   name: 'customerName'
@@ -293,20 +286,14 @@
 	    			 
 	    			 window.onload = function(){
 	    				 
-	    				 //상단 그리드에 입고완료 품목 리스트
-	    				 $.ajax({
-	    					 url : "/finishedList",
-	    					 method : "get",
-	    					 success : function(result){
-	    						 grid1.resetData(result);
-	    						 grid1.refreshLayout();
-	    					 }
-	    				 })
+	    				
 	    				 
 	    			 }
-	
-
-	
+	    			 
+	    			 
+	    			
+	    			 
+	    			
 		           
 		           
 		           

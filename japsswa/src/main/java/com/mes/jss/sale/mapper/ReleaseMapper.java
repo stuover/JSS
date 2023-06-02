@@ -6,6 +6,8 @@ import com.mes.jss.sale.domain.ReleaseVO;
 
 public interface ReleaseMapper {
 
-	List<ReleaseVO> finishedList();
+	List<ReleaseVO> showTopList(String itemName);
+
+
 
 }

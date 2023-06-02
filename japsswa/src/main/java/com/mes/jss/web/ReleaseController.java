@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.sale.domain.OrderVO;
 import com.mes.jss.sale.domain.ReleaseVO;
 import com.mes.jss.sale.service.ReleaseService;
 
@@ -21,15 +23,13 @@ public class ReleaseController {
 	public String release() {
 		return "sale/Release";
 	}
-	
-	//상단 그리드에 입고완료 상태 품목 리스트
-	@RequestMapping("/finishedList")
+
+	//품목검색 -> 상단 그리드 자동입력
+	@RequestMapping("/showTopList")
 	@ResponseBody
-	public List<ReleaseVO> finishedListAjax(){
-		List<ReleaseVO> tlist = releaseService.finishedList();
-		
+	public List<ReleaseVO> showTopListAjax(@RequestParam String itemName){
+		List<ReleaseVO> tlist = releaseService.showTopList(itemName);
 		return tlist;
 	}
-	
 	
 }

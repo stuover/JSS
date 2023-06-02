@@ -5,7 +5,13 @@
   
 <mapper namespace="com.mes.jss.sale.mapper.ReleaseMapper">
 
-
+	<select id="showTopList" parameterType="ReleaseVO" resultType="ReleaseVO">
+		{
+			CALL show_list(
+				#{itemName}
+			)
+		}
+	</select>
 
 
 
