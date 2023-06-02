@@ -136,7 +136,19 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public boolean saveInspection(InspectionVO vo) {
+	public boolean saveBaiscInspection(InspectionVO vo) {	// 점검 등록
+		
+		return facilityMapper.insertModalBaiscIns(vo) == 1;
+	}
+	
+	@Override
+	public List<FacilityVO> getSelectList() {		// 점검 등록 - facCode 리스트 불러오기
+
+		return facilityMapper.getSelList();
+	}
+	
+	@Override
+	public boolean saveInspection(InspectionVO vo) {		// 비가동 = 점검등록
 		
 		return facilityMapper.insertModalIns(vo) == 1;
 	}
@@ -146,6 +158,16 @@ public class FacilityServiceimpl implements FacilityService{
 
 		facilityMapper.modifyIns(vo);
 	}
+
+	@Override
+	public void RemoveInspection(InspectionVO vo) {
+		
+		facilityMapper.deleteIns(vo);
+	}
+
+	
+
+	
 
 
 	

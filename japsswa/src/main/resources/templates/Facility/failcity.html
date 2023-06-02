@@ -24,8 +24,7 @@
             <input type="text" id="searchInput" name="fac_code" placeholder="설비이름을 입력하세요">
             <button id="searchBtn" type="button" class="btn btn-dark">검색</button>
             <button id="resetBtn" type="button" class="btn btn-dark">초기화</button>
-            <button id="insertBtn" type="button" class="btn btn-dark">등록</button>
-            <button id="modifyBtn" type="button" class="btn btn-primary">수정</button>
+            <button id="insertBtn" type="button" class="btn btn-dark">설비 등록</button>            
         </div>
 
         <!-- 그리드 -->
@@ -39,7 +38,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="downModalTitle">비가동 내역</h5>
+                        <h5 class="modal-title" id="downModalTitle">설비 정보 등록</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -386,7 +385,7 @@
             })
 
 
-            // 모달 그리드
+            // 등록 모달 그리드
 
             var modalGrid = new tui.Grid({
                 el: document.getElementById('modalGrid'),
@@ -420,7 +419,7 @@
             });
 
 
-            // 모달 하단 그리드
+            // 등록 모달 하단 그리드
 
             var modalDownGrid = new tui.Grid({
                 el: document.getElementById('modalDownGrid'),

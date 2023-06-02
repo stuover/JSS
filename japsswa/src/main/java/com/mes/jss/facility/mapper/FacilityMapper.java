@@ -40,7 +40,10 @@ public interface FacilityMapper {
 	// 점검 
 	public List<InspectionVO> getbeInsList();	// 점검 등록 전 리스트
 	public List<InspectionVO> getInsList();	// 점검 내역 리스트
-	public int insertModalIns(InspectionVO vo);	// 모달 점검 등록
+	public int insertModalBaiscIns(InspectionVO vo);	// 점검등록
+	public List<FacilityVO> getSelList();		// 점검 등록 - facCode 리스트 불러오기
+	public int insertModalIns(InspectionVO vo);	// 비가동 모달 점검 등록
 	public void modifyIns(InspectionVO vo);		// 점검 내역 수정
+	public void deleteIns(InspectionVO vo);	// 점검 내역 삭제
 	
 }

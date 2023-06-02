@@ -155,8 +155,8 @@
   	
   	<select id="getbeInsList" resultType="InspectionVO">
   		select f.fac_name, f.fac_code , d.down_code, d.down_reason, d.stop_date
-		from facility f full outer join downtime d on(f.fac_code = d.fac_code) full outer join inspection i on(d.fac_code = i.fac_code)
-		where down_reason = '점검' and ins_code is null and start_date is null
+		from facility f full outer join downtime d on(f.fac_code = d.fac_code) full outer join inspection i on(d.down_code = i.down_code)
+		where down_reason = '점검' and ins_code is null order by down_code desc
   	</select>
   	
   	<select id="getInsList" resultType="InspectionVO">
@@ -165,11 +165,19 @@
 		where ins_code is not null
   	</select>
   	
+  	<insert id="insertModalBaiscIns " parameterType="InspectionVO">
+  		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
+		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , sysdate, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
+  	</insert>
+  	
   	<insert id="insertModalIns" parameterType="InspectionVO">
   		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
 		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , #{insDate}, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
   	</insert>
   	
+  	<select id="getSelList" resultType="FacilityVO">
+  		select fac_name, fac_code from facility
+  	</select>
   	<update id="modifyIns" parameterType="InspectionVO">
   		update inspection   		
   					set
@@ -183,6 +191,10 @@
 					  		part_date = #{partDate}	
   				  where  ins_code = #{insCode}
   	</update>
+  	  
+  	<delete id="deleteIns">
+  		delete from inspection where ins_code = #{insCode} 
+  	</delete>
   	
   	
   </mapper>
