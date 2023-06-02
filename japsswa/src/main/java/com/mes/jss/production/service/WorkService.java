@@ -46,10 +46,18 @@ public interface WorkService {
 	public List<WorkVO> selectHoldMaterial(String itemCode, String wdetailId);
 	
 	
+	
+	
 	// 홀드 자재 등록 처리.
 	// 1. 홀드 자재 등록
 	// 2. 자재 홀드수량 더하기
 	public void holdInsert(List<WorkVO> detailList);
+	
+	// 홀드 자재 수정 후 등록.
+	// 1. 기존 홀드 자재 삭제
+	// 2. 자재 홀드수량 빼주기
+	// 3. 입력된 자재 등록 처리
+	public void holdReInsert(List<WorkVO> detailList);
 	
 
 }

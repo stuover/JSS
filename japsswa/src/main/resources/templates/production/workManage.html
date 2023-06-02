@@ -971,10 +971,7 @@
 							console.log(reject);
 						}
 					});
-					
-					// 선택한 제품(지시상세)에 대한 지시 공정 정보 등록 ajax
-					
-					
+										
 					
 					// 홀드 자재 여부 색 변화
 					for(let i=0; i < bomInfoGrid.getRowCount(); i++){
@@ -1095,6 +1092,7 @@
 						for(let i=0; i < holdSelectGrid.getRowCount(); i++){
 							holdSelectGrid.setValue( i, 'wdetailId', wCode, false);
 							holdSelectGrid.setValue( i, 'proCode', bProCode, false);
+							holdSelectGrid.setValue( i, 'itemCode', bItemCode, false);
 						};	
 						
 					},
@@ -1107,7 +1105,6 @@
 				
 			});
 			
-			
 
 			// 홀드 선택한 자재 저장.
 			$('#saveHoldBtn').click(function() {
@@ -1117,16 +1114,47 @@
 				// 선택한 홀드 자재수량의 총합
 				let sumHoldCount = 0;
 				for(let i=0; i < holdSelectGrid.getRowCount(); i++){
-					sumHoldCount += holdSelectGrid.getCheckedRows()[i].holdCount;
+					sumHoldCount += Number(holdSelectGrid.getModifiedRows().updatedRows[i].holdCount);
+					console.log(sumHoldCount);
 				};	
 				// 값 비교 : 선택한 홀드 자재수량의 총합 - 필요자재 수량 
 				if(sumHoldCount != bRequire){
 					alert('필요수량과 선택한 홀드자재 수량이 맞지 않습니다!');
 				} else {
-					// 홀드 자재 등록 처리 ajax
+				
+				let holdInsertOption = holdSelectGrid.isModified();
+				console.log(holdInsertOption);
+				// 홀드 자재 등록	
+				if(holdInsertOption = true){
+					// 홀드 자재 재등록 및 자재 홀드수량 업데이트
+					// 1. 기존 홀드 자재 삭제
+					// 2. 자재 홀드수량 빼주기
+					// 3. 입력된 자재 등록 처리
+					$.ajax({
+						url: "/holdMaterialsReInsertAjax",
+						method: "POST",
+						async: false,
+						data: JSON.stringify({detailList : holdSelectGrid.getModifiedRows().updatedRows}),
+						contentType: "application/json",
+						beforeSend: function(xhr) {
+							xhr.setRequestHeader(header, token);
+						},
+						success: function(result) {
+							console.log(result);
+							alert('홀드자재 등록 성공!');
+						},
+						error: function(reject) {
+							console(reject);
+							alert('홀드자재 등록 실패!');
+						}
+					})	
+					
+				} else{
+				   // 홀드 자재 등록 및 자재 홀드수량 업데이트
 					$.ajax({
 						url: "/holdMaterialsInsertAjax",
 						method: "POST",
+						async: false,
 						data: JSON.stringify({detailList : holdSelectGrid.getCheckedRows()}),
 						contentType: "application/json",
 						beforeSend: function(xhr) {
@@ -1140,15 +1168,47 @@
 							console(reject);
 							alert('홀드자재 등록 실패!');
 						}
-					})
+					})	
+				};
 					
 					// 그리드 초기화
 					holdSelectGridData = [];
 					holdSelectGrid.resetData(holdSelectGridData);
+					// 홀드 모달창 닫기
+					$('#holdModal').modal('hide');
 					
+					$.ajax({
+						url : "/itemBomInfoAjax", 
+						data : {wdetailId : wCode, itemType : iType},
+						method : "GET",
+						async: false,
+						success : function(result) {
+							//console.log(result);
+							bomInfoGrid.resetData(result);
+						},
+						error : function(reject) {
+							console.log(reject);
+						}
+					});
+					
+					
+					// 홀드 자재 여부 색 변화
+					for(let i=0; i < bomInfoGrid.getRowCount(); i++){
+						if(bomInfoGrid.getData()[i].holdCount == null ){
+							console.log('홀드등록 해야 함')
+							bomInfoGrid.addRowClassName(i, 'cell-Red');
+						}else if(bomInfoGrid.getData()[i].holdCount != bomInfoGrid.getData()[i].workAmount){
+							console.log('홀드 수정해야 함')
+							bomInfoGrid.addRowClassName(i, 'cell-Red');
+						}else {
+							bomInfoGrid.removeRowClassName(i, 'cell-Red');
+						}					
+					}
+				
 				};
-
 			});
+			
+			
 
 			
 			

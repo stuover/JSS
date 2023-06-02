@@ -14,6 +14,8 @@ public interface WorkMapper {
 	public WorkVO workCommonSave(WorkVO vo);
 	// 작업지시 세부사항 등록처리.
 	public WorkVO workDetailSave(WorkVO vo);
+	// 지시 공정 정보 등록
+	public WorkVO workBomInsert(String wdetailId, String itemType, String itemCode);
 	
 	
 	// 작업지시 조회 모달창 : 초기값 
@@ -45,11 +47,14 @@ public interface WorkMapper {
 	
 	
 	// 홀드 자재 등록.
-	// 지시 공정 정보 등록
-	public WorkVO workBomInsert(WorkVO vo);
 	// 홀드 자재 등록
 	public WorkVO holdMaterialInsert(WorkVO vo);
 	// 자재 홀드수량 더하기
 	public WorkVO holdMaterialAdd(WorkVO vo);
+	
+	// 홀드 자재 삭제
+	public WorkVO holdMaterialDelete(WorkVO vo);
+	// 자재 홀드수량 빼주기
+	public WorkVO holdMaterialMinus(WorkVO vo);
 	
 }

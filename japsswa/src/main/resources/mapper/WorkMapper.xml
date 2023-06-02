@@ -28,7 +28,8 @@
 				#{workAmount, mode=IN, jdbcType=VARCHAR},
 				#{workStart, mode=IN, jdbcType=VARCHAR},
 				#{workEnd, mode=IN, jdbcType=VARCHAR},
-				#{pdetailId, mode=IN, jdbcType=VARCHAR}
+				#{pdetailId, mode=IN, jdbcType=VARCHAR},
+				#{wdetailId, mode=INOUT, jdbcType=VARCHAR, javaType=String}
 				)
 		}
 	
@@ -175,6 +176,7 @@
 								  JOIN itemlist i ON (h.item_code = i.item_code)
 			WHERE 
 				 wdetail_id = #{wdetailId}
+			 AND h.item_code = #{itemCode}
 		
 			UNION
 		
@@ -197,10 +199,8 @@
 	<select id="workBomInsert" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
 		{call WORK_BOM_INSERT(
 			#{wdetailId, mode=IN, jdbcType=VARCHAR},
-			#{proCode, mode=IN, jdbcType=VARCHAR},
-			#{proOrder, mode=IN, jdbcType=VARCHAR},
-			#{workAmount, mode=IN, jdbcType=BIGINT},
-			#{wbomId, mode=INOUT, jdbcType=VARCHAR, javaType=String}
+			#{itemType, mode=IN, jdbcType=VARCHAR},
+			#{itemCode, mode=IN, jdbcType=VARCHAR}
 			)
 		}
 	</select>
@@ -208,7 +208,8 @@
 	<!-- HOLD 등록 모달창 : 홀드자재 등록 -->
 	<select id="holdMaterialInsert" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
 		{call HOLD_MATERIALS_INSERT(
-			#{wbomId, mode=IN, jdbcType=VARCHAR},
+			#{wdetailId, mode=IN, jdbcType=VARCHAR},
+			#{proCode, mode=IN, jdbcType=VARCHAR},
 			#{itemCode, mode=IN, jdbcType=VARCHAR},
 			#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
 			#{holdCount, mode=IN, jdbcType=BIGINT}
@@ -217,7 +218,7 @@
 	</select>
 	
 	<!-- HOLD 등록 모달창 : 자재 홀드 수량 더해주기 -->
-	<select id="holdMaterialAdd" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
+	<select id="holdMaterialAdd"  statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
 		{call HOLD_COUNT_ADD(
 			#{holdCount, mode=IN, jdbcType=BIGINT},
 			#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
@@ -226,6 +227,24 @@
 	</select>
 	
 	
+	<!-- HOLD 등록 모달창 : 홀드자재 삭제 -->
+	<select id="holdMaterialDelete" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
+		{call HOLD_MATERIALS_DELETE(
+			#{wdetailId, mode=IN, jdbcType=VARCHAR},
+			#{proCode, mode=IN, jdbcType=VARCHAR},
+			#{itemCode, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<!-- HOLD 등록 모달창 : 자재 홀드 수량 빼주기 -->
+	<select id="holdMaterialMinus" statementType="CALLABLE" parameterType="WorkVO" resultType="WorkVO">
+		{call HOLD_COUNT_MINUS(
+			#{holdCount, mode=IN, jdbcType=BIGINT},
+			#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
 	
   	
   </mapper>

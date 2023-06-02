@@ -29,6 +29,7 @@ public class WorkServiceImpl implements WorkService {
 		for(WorkVO detail : detailList) {
 			detail.setWorkId(head.getWorkId());
 			workMapper.workDetailSave(detail);
+			workMapper.workBomInsert(detail.getWdetailId(), detail.getItemType(), detail.getItemCode());
 		}
 		
 	}
@@ -116,17 +117,47 @@ public class WorkServiceImpl implements WorkService {
 	public void holdInsert(List<WorkVO> detailList) {
 		
 		for(WorkVO info : detailList) {
-			
 			// 1. 홀드 자재 등록
 			workMapper.holdMaterialInsert(info);
 			
 			// 2. 자재 홀드수량 더하기
 			workMapper.holdMaterialAdd(info);
 		}
-
-
 		
 	}
+
+
+	// 홀드 자재 수정 후 등록.
+	// 1. 기존 홀드 자재 삭제
+	// 2. 자재 홀드수량 빼주기
+	// 3. 입력된 자재 등록 처리
+	@Override
+	@Transactional
+	public void holdReInsert(List<WorkVO> detailList) {
+		// 1. 기존 홀드 자재 삭제
+		WorkVO obj = new WorkVO();
+		obj.setWdetailId(detailList.get(0).getWdetailId());
+		obj.setProCode(detailList.get(0).getProCode());
+		obj.setItemCode(detailList.get(0).getItemCode());
+		
+		workMapper.holdMaterialDelete(obj);
+		
+		for(WorkVO info : detailList) {
+			// 2. 자재 홀드수량 빼주기
+			workMapper.holdMaterialMinus(info);		
+		}
+		
+		for(WorkVO info : detailList) {
+			// 3. 홀드 자재 등록
+			workMapper.holdMaterialInsert(info);
+			
+			// 4. 자재 홀드수량 더하기
+			workMapper.holdMaterialAdd(info);
+		}
+		
+	}
+
+	
 	
 
 
