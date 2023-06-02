@@ -319,10 +319,23 @@
   	
   	<!-- 조정 리스트 -->		
   		<select id="admGetList" resultType="MrAdjustmentVO">
-  			select a.adjustment_code,m.mr_lot_number,i.item_code,i.item_type,i.item_name,a.register_date, a.process,a.change,a.adjustment_date,a.emp_no
+  			select a.adjustment_code,m.mr_lot_number,i.item_code,i.item_type,i.item_name,a.register_date, a.process,a.change,a.adjustment_date,a.emp_no,
+  			a.adm_note
   			from material_adjustment a join material m on(a.mr_lot_number = m.mr_lot_number) join itemlist i on (m.item_code = i.item_code) 
   			where to_char(a.register_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+  			order by a.register_date desc
   		</select>
+  
+  
+  	<!-- 조정 찾기 리스트 -->
+  		<select id="mrAdSearch" resultType="MrAdjustmentVO">
+  		
+  			select m.mr_lot_number, i.item_code, i.item_type, i.item_name, m.store_count
+			from material m join itemlist i on (m.item_code=i.item_code)
+			where i.item_type in('자재','반제품')
+  		
+  		</select>
+  
   
   
   	<!-- 조정 등록 -->

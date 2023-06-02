@@ -33,7 +33,7 @@ import com.mes.jss.quality.domain.QualityVO;
 
 /*
  * 구용억
- * 자재관리   마지막 수정일 (23.05.30)
+ * 자재관리   마지막 수정일 (23.06.01)
  */
 
 
@@ -382,6 +382,19 @@ public class MaterialController {
 		return list;
 		
 	}
+	
+ // 자재 lot별 조정 조회
+	
+	@ResponseBody
+	@GetMapping("/mrAdmSearchAjax")
+	public List<MrAdjustmentVO> admSearchList(){
+		
+		List<MrAdjustmentVO> list = materialService.admSearchList();
+		
+		return list;
+		
+	}
+	
 
 	//자재 조정 등록
 	
@@ -401,9 +414,9 @@ public class MaterialController {
 	
 	@ResponseBody
 	@RequestMapping("/mrAdmRealInsert")
-	public MrAdjustmentVO mrAdmRealInsert(@RequestParam String keyword) {
+	public MrAdjustmentVO mrAdmRealInsert(@RequestBody AdjustmentListVO vo) {
 		
-		materialService.admRealIn(keyword);
+		materialService.admRealIn(vo);
 		
 		return null;
 		

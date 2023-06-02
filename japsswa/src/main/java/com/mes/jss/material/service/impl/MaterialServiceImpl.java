@@ -240,6 +240,14 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.mrAdGetList();
 	}
 	
+	// 자재 조정 찾기 리스트
+	@Override
+	public List<MrAdjustmentVO> admSearchList() {
+		
+		return materialMapper.mrAdSearch();
+	}
+	
+	
 	// 자재 조정 입고
 	@Override
 	public void admIn(AdjustmentListVO vo) {
@@ -332,14 +340,19 @@ public class MaterialServiceImpl implements MaterialService {
 	}
 
 	@Override
-	public void admRealIn(String keyword) {
+	public void admRealIn(AdjustmentListVO vo) {
 		
 		
-			materialMapper.realIn(keyword);	
+		for(int i=0; i<vo.getList().size(); i++) {
+			materialMapper.realIn(vo.getList().get(i).getMrLotNumber());
+		}
+				
 		
 		
 		
 	}
+
+	
 	
 	
 	
