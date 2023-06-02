@@ -160,7 +160,7 @@
   	</select>
   	
   	<select id="getInsList" resultType="InspectionVO">
-  		select distinct f.fac_name, f.fac_code, d.down_code, i.ins_code, i.ins_date, i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
+  		select distinct f.fac_name, f.fac_code, d.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date, i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
 		from facility f right join downtime d on(f.fac_code = d.fac_code) right join inspection i on(d.down_code = i.down_code)
 		where ins_code is not null
   	</select>
