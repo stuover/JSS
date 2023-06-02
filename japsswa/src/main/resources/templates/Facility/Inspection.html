@@ -10,6 +10,9 @@
         .tui-grid-cell-content {
             text-align: center;
         }
+        #searchInput{
+        	width: 300px;
+        }
     </style>
 </head>
 
@@ -17,7 +20,9 @@
     <th:block layout:fragment="content">
         <h2>점검 페이지</h2>
         <!-- 비가동 설비중 사유가 점검인 리스트 조회 그리드  -->
-        <div id="grid"></div>
+        <div id="grid">
+        </div>
+        <input type="text" id="searchInput" name="fac_code" placeholder="설비이름을 입력하세요">
         <!-- 비가동 설비중 사유가 점검인 리스트 조회 그리드  끝 -->
 
         <!-- 등록 모달 시작 -->
@@ -62,7 +67,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>
+                        <h5 class="modal-title" id="downModalTitle">점검 상세 내역</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -94,21 +99,25 @@
                 el: document.getElementById('grid'),
                 scrollX: false,
                 scrollY: false,
-                width: 600,
+                width: 550,
                 columns: [{
                         header: '설비코드 ',
-                        name: 'facCode'
+                        name: 'facCode',
+                        width : 100
                     },
                     {
                         header: '설비명',
-                        name: 'facName'
+                        name: 'facName',
+                        	width : 100
                     },
                     {
                         header: '비가동 코드',
-                        name: 'downCode'
+                        name: 'downCode',
+                        	width : 100
                     }, {
                         header: '비가동 사유',
-                        name: 'downReason'
+                        name: 'downReason',
+                        	width : 100
                     }, {
                         header: '설비 비가동일시',
                         name: 'stopDate'
@@ -125,6 +134,7 @@
                     dataType: "JSON",
                     success: function (result) {
                         grid.resetData(result);
+                        console.log(result);
                     },
                     error: function (reject) {                        
                         console.log(reject);
