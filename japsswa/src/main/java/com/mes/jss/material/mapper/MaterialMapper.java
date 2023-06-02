@@ -90,6 +90,9 @@ public interface MaterialMapper {
 	// 자재 조정 될 리스트
 	public List<MrAdjustmentVO> mrAdGetList();
 	
+	// 자재 조정 찾기 리스트
+	public List<MrAdjustmentVO> mrAdSearch();
+	
 	// 자재 조정 등록
 	public void adjInsert(MrAdjustmentVO vo);
 	
@@ -123,6 +126,8 @@ public interface MaterialMapper {
 	
 	// 자재 조정 직접 등록
 	public void realIn(String keyword);
+	
+	
 
 	
 	

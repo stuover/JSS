@@ -13,7 +13,11 @@
 <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
 
 <style>
-	
+#grid2 .redcolor{
+	background-color:#ffe4e4;
+}
+
+
 </style>
 
 </head>
@@ -54,7 +58,7 @@
 	
 	<!-- 제목 -->
 	
-	<h3 style="font-weight:bold; text-align:center; margin-bottom:100px;">자재 조정 관리</h3>
+	<h3 style="font-weight:bold; text-align:center; margin-bottom:20px;">자재 조정 관리</h3>
 	
 	<div>
 	
@@ -82,7 +86,11 @@
 	
 	<button type="button" class="btn btn-info" id="searchDelBtn" data-toggle="modal" data-target=".bd-example-modal-lg" style="float:right;  margin-top:100px; height: 30px; padding: 3px; padding-bottom:4px; color:white; margin-right:20px;">조정 확인 및 삭제</button>
 	
-	<button type="button" class="btn btn-warning" id="realBtn">직접 등록</button>	
+	<button type="button" class="btn btn-warning" id="realBtn" style="float:right; margin-top:100px; padding:3px; color:white; height:30px; margin-right:20px;  margin-bottom:10px;">직접 등록</button>	
+	
+	<button type="button" class="btn btn-dark"  id="searchBtn" data-toggle="modal" data-target="#exampleModal" style="float:left; margin-top:100px; margin-bottom:10px; padding:3px; margin-left:20px;">찾기</button>
+	
+	<h3>빨간색은 데이터 오입력 [입고,출고] 버튼을 통해 수정하시기 바랍니다.</h3>
 	</div>
 	
 	<!--  조정 리스트  -->
@@ -91,14 +99,45 @@
 	
 		
 	
+
+  
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="margin-left:200px; font-weight:bold;">lot별 조회</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div id="grid5"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="chooseBtn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>	
+		
+		
+		
+		
+		
+	
 	<script>
 	
-	const token = $("meta[name='_csrf']").attr("content")
-	const header = $("meta[name='_csrf_header']").attr("content");
 	
 	
 	
-	$(document).ready(function(){
+	window.onload = function(){
+		
+	
+		
 		
 	
 	// 조정 될 리스트 아작스	
@@ -109,6 +148,8 @@
 			
 			success : function(result){
 				grid1.resetData(result);
+				
+				
 			},
 			error : function(reject){
 				
@@ -146,6 +187,7 @@
 					header : '안전재고',
 					name : 'saveMaterial'
 				}
+				
 				],
 				pageOptions: { 
 	            	useClient: true,
@@ -164,11 +206,37 @@
 				success : function(result) {
 					grid2.resetData(result);
 					grid2.refreshLayout();
-					gridInsertRow();
 					
+				console.log(grid2.getData());	
+					
+ 	grid2.getData().forEach((ele, index)=>{
+						
+				
+						
+							if(ele.admNote =='error') {
+								
+							
+							grid2.addCellClassName(index,'adjustmentCode','redcolor');
+							grid2.addCellClassName(index,'mrLotNumber','redcolor');
+							grid2.addCellClassName(index,'itemCode','redcolor');
+							grid2.addCellClassName(index,'itemType','redcolor');
+							grid2.addCellClassName(index,'itemName','redcolor');
+							grid2.addCellClassName(index,'registerDate','redcolor');
+							grid2.addCellClassName(index,'process','redcolor');
+							grid2.addCellClassName(index,'adjustmentDate','redcolor');
+							grid2.addCellClassName(index,'empNo','redcolor');
+							grid2.addCellClassName(index,'admNote','redcolor');
+							}
+							
+						
+
+					
+					
+				})
 				},
 				error:function(reject){
 					console.log(reject);
+				
 				}
 
 			});
@@ -229,6 +297,12 @@
 					header : '사원 번호',
 					name : 'empNo',
 					editor:'text'
+				},
+				{
+					header : '비고',
+					name : 'admNote'
+					
+					
 				}
 				],
 				pageOptions: { 
@@ -239,7 +313,19 @@
 
 	// 조정 등록 
 	
+		
+	
+	
 			$('#insertBtn').on('click',function(){
+				
+				
+				
+				
+				
+				
+				grid1.setValue(0,'error','error',false); 
+				
+				let checked = grid1.getCheckedRows();
 				
 				
 				
@@ -253,6 +339,13 @@
 					},
 					success: function(result){
 					
+					  
+							  
+					 
+						
+						
+					
+						
 						 $.ajax({
 								url : "/mrAdjustmentAjax",
 
@@ -260,22 +353,31 @@
 								dataType : "json",
 
 								success : function(result) {
-									grid.resetData(result);
+									grid2.resetData(result);
 									
-								},
+									
+									/*grid2.getCheckedRows().forEach((row)=>{
+										  if(grid1.getData()[0].mrLotNumber == grid2.getData().mrLotNumber){
+												grid2.setValue(0,'error','error',false);
+												}
+									
+								})*/
+							},
 								error:function(reject){
 									console.log(reject);
 								}
-					
-							});
-					},
+							}
+						 )
+							
+							
+							},
 					error:function(reject){
 						console.log(reject);
 					}
-				})
 				
-			});
-			
+				}
+			)
+			})
 	
 	// 직접 등록
 		$('#realBtn').on('click',function(){
@@ -287,8 +389,13 @@
 			
 			$.ajax({
 				url:"/mrAdmRealInsert",
-				method:"GET",
-				data:{ 'keyword' : keyword },
+				method:"POST",
+				data:JSON.stringify({list : grid2.getCheckedRows()}) ,
+				contentType:"application/json",
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				
 			
 				success: function(result){
 					
@@ -312,18 +419,19 @@
 	
 		$('#storeBtn').on('click',function(){
 			
-			
+			console.log(grid1.getCheckedRows()[0].error);
 			
 			$.ajax({
 				url:"/mrAdmIn",
 				method:"POST",
 				contentType:"application/json",
-				data:JSON.stringify({list : grid.getCheckedRows()}),
+				data:JSON.stringify({list : grid3.getCheckedRows()}),
 				beforeSend: function(xhr){
 					xhr.setRequestHeader(header, token);
 				},
 				success: function(result){
-					editingFinish();
+					
+					
 				},
 				error:function(reject){
 					
@@ -344,7 +452,7 @@
 				url:"/mrAdmRel",
 				method:"POST",
 				contentType:"application/json",
-				data:JSON.stringify({list : grid.getCheckedRows()}),
+				data:JSON.stringify({list : grid3.getCheckedRows()}),
 				beforeSend: function(xhr){
 					xhr.setRequestHeader(header, token);
 				},
@@ -460,7 +568,8 @@
 						xhr.setRequestHeader(header, token);
 					},
 					succss : function(result){
-						
+						grid3.resetData(result);
+						grid5.resetData(result);
 					},
 					error: function(reject){
 						console.log(reject);
@@ -479,8 +588,17 @@
 			$(function(){
 		    	$('#exampleModalLong').on('shown.bs.modal', function(){
 		    		grid3.refreshLayout();
+		    		
 		    	})
 		    })
+		    
+		    $(function(){
+		    	$('#exampleModal').on('shown.bs.modal', function(){
+		    		grid5.refreshLayout();
+		    		
+		    	})
+		    })
+		    
 		
 		
 		    function gridInsertRow(){
@@ -495,10 +613,93 @@
 	         }
 		    
 		    
-		    
-		    
+		   $('#searchBtn').on('click',function(){
+			   
+			   $.ajax({
+				   url:"/mrAdmSearchAjax",
+				   method:"GET",
+				   success: function(result){
+					   grid5.resetData(result);
+					   
+				   },
+				   error : function(reject){
+					   console.log(reject);
+				   }
+				   
+				   
+				   
+			   })
+			   
+		   })
+	
+		   
+		   
+		   var grid5 = new tui.Grid({
+				el : document.getElementById('grid5'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [  {
+					header : '자재 lot 번호',
+					name : 'mrLotNumber'
+					
+				},{
+					header : '품목 코드',
+					name : 'itemCode'
+					
+				},{
+					header : '구분',
+					name : 'itemType',
+					width:50
+					
+				},
+				{
+					header : '품목명',
+					name : 'itemName'
+					
+					
+				}, {
+					header : '수량',
+					name : 'storeCount'
+					
+					
+				}
+				
+				
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
 		
-		});
+	
+		$('#chooseBtn').on('click',function(){
+			let checked = grid5.getCheckedRows();
+			console.log(checked);
+			checked.forEach(row => {
+				grid2.prependRow(row, {focus:true});
+			});
+			
+	
+			
+		//let le = grid5.getFocusedCell();
+		//console.log(le);
+			
+			}
+			
+			
+			
+		);
+		   
+		   
+	
+
+		
+		}
 
 	
 		</script>
@@ -509,4 +710,4 @@
 
 </body>
 
-</html>	
+</html>

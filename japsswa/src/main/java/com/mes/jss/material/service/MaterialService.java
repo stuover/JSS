@@ -90,11 +90,16 @@ public interface MaterialService {
 	// 자재 조정 될 리스트
 	public List<MrAdjustmentVO> adList();
 	
+	// 자재 조정 찾기 리스트
+	public List<MrAdjustmentVO> admSearchList();
+		
+	
+	
 	// 자재 조정 등록
 	public void admIn(AdjustmentListVO vo);
 	
 	// 자재 조정 직접 등록
-	public void admRealIn(String keyword);
+	public void admRealIn(AdjustmentListVO vo);
 		
 	
 	// 자재 조정 입고
@@ -123,6 +128,7 @@ public interface MaterialService {
 	
 	// 생산 실적 리스트
 	public List<PerformanceVO> mrPerformanceList();
+	
 	
 	
 	
