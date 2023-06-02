@@ -19,7 +19,7 @@ public class WorkVO {
 	String wdetailId;
 	String pdetailId;
 	String itemCode;
-	Long workAmount;
+	long workAmount;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date workStart;

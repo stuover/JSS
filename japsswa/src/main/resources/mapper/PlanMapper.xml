@@ -65,7 +65,8 @@
 			  plan_start, 
 			  plan_end, 
 			  plan_priority, 
-			  d.item_code
+			  d.item_code,
+			  i.item_type
 		FROM 
 			plan_detail d JOIN itemlist i 
 						  ON (d.item_code = i.item_code)

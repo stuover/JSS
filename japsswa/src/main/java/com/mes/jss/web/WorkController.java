@@ -136,12 +136,23 @@ public class WorkController {
 	// 홀드 자재 등록 처리.
 	// 1. 홀드 자재 등록
 	// 2. 자재 홀드수량 더하기
-	
 	@RequestMapping("/holdMaterialsInsertAjax")
 	@ResponseBody
 	public void holdMaterialsInsertAjax(@RequestBody WorkDatasVO data) {
 		List<WorkVO> detailList = data.getDetailList();
 		workService.holdInsert(detailList);
+	}
+	
+	
+	// 홀드 자재 수정 후 등록.
+	// 1. 기존 홀드 자재 삭제
+	// 2. 자재 홀드수량 빼주기
+	// 3. 입력된 자재 등록 처리
+	@RequestMapping("/holdMaterialsReInsertAjax")
+	@ResponseBody
+	public void holdMaterialsReInsertAjax(@RequestBody WorkDatasVO data) {
+		List<WorkVO> detailList = data.getDetailList();
+		workService.holdReInsert(detailList);
 	}
 	
 	
