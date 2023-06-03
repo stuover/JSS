@@ -34,7 +34,11 @@
     <th:block layout:fragment="content">
         <h2>비가동 내역 리스트</h2>
         <div id="serarchDiv">
-            <input type="text" id="searchInput" name="fac_code" placeholder="설비이름을 입력하세요">
+        <form id="searchForm">
+            <input type="text" id="searchInput" name="facName" placeholder="설비이름을 입력하세요">
+            <input type="date" id="startDate1" name="startDate" placeholder="시작 날짜">
+            <input type="date" id="stopDate1" name="stopDate" placeholder="종료 날짜">
+        </form>
             <button id="searchBtn" type="button" class="btn btn-dark">검색</button>
             <button id="resetBtn" type="button" class="btn btn-dark">초기화</button>
         </div>
@@ -105,25 +109,23 @@
                     }
                 ]
             });
-
+		
+            
 
             $('#searchBtn').on('click', function () {
 
                 // 검색조건 날짜, 
                 // 사유, 설비명은 선택할수있게
 
-                facName = $('#searchInput').val();
-                console.log(facName);
-
-                var token = $("meta[name='_csrf']").attr("content");
-                var header = $("meta[name='_csrf_header']").attr("content");
-
+                //facName = $('#searchInput').val();
+                //console.log(facName);
+				console.log($('#searchForm').serialize());
+                
+                
                 $.ajax({
                     url: "/searchList",
                     method: "POST",
-                    data: {
-                        'facName': facName
-                    },
+                    data: $('#searchForm').serialize(),
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader(header, token);
                     },
@@ -138,6 +140,8 @@
                     }
                 });
             })
+            
+            
 
             $('#resetBtn').on('click', function () {
 

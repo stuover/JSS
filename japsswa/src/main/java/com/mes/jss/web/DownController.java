@@ -135,11 +135,11 @@ public class DownController {
 	
 	@RequestMapping("/searchList")		// 비가동 내역 단건 검색
 	@ResponseBody
-	public List<FacilityVO> searchList(@RequestParam String facName){
+	public List<FacilityVO> searchList(FacilityVO vo){
 		
-		System.err.println(facName);
+		System.out.println(vo);
 		
-		List<FacilityVO> list = service.searchList(facName);
+		List<FacilityVO> list = service.searchList(vo);
 				
 		return list;
 	}

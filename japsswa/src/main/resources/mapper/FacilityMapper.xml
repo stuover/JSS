@@ -101,7 +101,7 @@
   	</select>
   	
   	<select id="searchlist" parameterType="FacilityVO" resultType="FacilityVO">
-  		select  d.down_code, 
+  		select d.down_code, 
   				  f.fac_code,
   				  f.fac_name, 
   				  d.start_date, 
@@ -111,7 +111,10 @@
   				  d.remark
 		from   downtime d join facility f 
 		   on   (f.fac_code = d.fac_code)
-		where fac_name = #{facName}
+		where fac_name like '%' || #{facName} || '%' 
+	    <if test="startDate != '' and stopDate != '' ">	    	    	    
+	    and d.stop_date between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
+	    </if>
   	</select>
   	
   	<!-- 설비 페이지 -->
@@ -160,19 +163,21 @@
   	</select>
   	
   	<select id="getInsList" resultType="InspectionVO">
+  		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date,
+                i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
+		from facility f join inspection i on(f.fac_code = i.fac_code)
+		where ins_code is not null
+  		
+  		<!-- 
   		select distinct f.fac_name, f.fac_code, d.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date, i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
 		from facility f right join downtime d on(f.fac_code = d.fac_code) right join inspection i on(d.down_code = i.down_code)
 		where ins_code is not null
-  	</select>
-  	
-  	<insert id="insertModalBaiscIns " parameterType="InspectionVO">
-  		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
-		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , sysdate, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
-  	</insert>
+		-->
+  	</select>  	
   	
   	<insert id="insertModalIns" parameterType="InspectionVO">
   		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
-		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , #{insDate}, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
+		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , sysdate, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
   	</insert>
   	
   	<select id="getSelList" resultType="FacilityVO">

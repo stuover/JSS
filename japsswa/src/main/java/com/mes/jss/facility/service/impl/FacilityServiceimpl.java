@@ -78,9 +78,9 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public List<FacilityVO> searchList(String facName) {		// 비가동 내역 단건 조회
+	public List<FacilityVO> searchList(FacilityVO vo) {		// 비가동 내역 단건 조회
 
-		return facilityMapper.searchlist(facName);
+		return facilityMapper.searchlist(vo);
 	}
 
 	
@@ -135,12 +135,6 @@ public class FacilityServiceimpl implements FacilityService{
 		return facilityMapper.getInsList();
 	}
 
-	@Override
-	public boolean saveBaiscInspection(InspectionVO vo) {	// 점검 등록
-		
-		return facilityMapper.insertModalBaiscIns(vo) == 1;
-	}
-	
 	@Override
 	public List<FacilityVO> getSelectList() {		// 점검 등록 - facCode 리스트 불러오기
 

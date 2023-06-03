@@ -23,7 +23,7 @@ public interface FacilityMapper {
 	
 	// 비가동 내역
 	public List<DowntimeVO> getDownDetailList();		// 비가동 내역 전체 조회
-	public List<FacilityVO> searchlist(String facName);	// 비가동 내역 단건 조회
+	public List<FacilityVO> searchlist(FacilityVO vo);	// 비가동 내역 단건 조회
 	
 	
 	
@@ -40,7 +40,6 @@ public interface FacilityMapper {
 	// 점검 
 	public List<InspectionVO> getbeInsList();	// 점검 등록 전 리스트
 	public List<InspectionVO> getInsList();	// 점검 내역 리스트
-	public int insertModalBaiscIns(InspectionVO vo);	// 점검등록
 	public List<FacilityVO> getSelList();		// 점검 등록 - facCode 리스트 불러오기
 	public int insertModalIns(InspectionVO vo);	// 비가동 모달 점검 등록
 	public void modifyIns(InspectionVO vo);		// 점검 내역 수정
