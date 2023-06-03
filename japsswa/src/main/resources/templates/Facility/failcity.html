@@ -548,6 +548,7 @@
                     success: function (result) {
                         console.log("성공");
                         grid.resetData(result);
+                        $('#searchInput').val('');
                     },
                     error: function (reject) {
                         console.log("reject");

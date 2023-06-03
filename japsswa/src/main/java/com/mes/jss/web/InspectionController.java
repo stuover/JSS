@@ -44,15 +44,6 @@ public class InspectionController {
 		return list;
 	}
 	
-	@RequestMapping("/insertBasicInsAjax")	// 점검 등록
-	@ResponseBody
-	public InspectionVO insertBasicInsAjax(@RequestBody InspectionVO vo) {
-		
-		service.saveBaiscInspection(vo);
-		System.out.println(vo);
-		
-		return vo;
-	}
 	
 	@RequestMapping("/getSelectList")	// 점검 등록 - facCode 리스트 불러오기
 	@ResponseBody
