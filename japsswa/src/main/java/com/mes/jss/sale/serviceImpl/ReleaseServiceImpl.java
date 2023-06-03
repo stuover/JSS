@@ -21,5 +21,20 @@ public class ReleaseServiceImpl implements ReleaseService {
 		return toplist;
 	}
 
+	@Override
+	public List<ReleaseVO> showBottomList(String iName) {
+		List<ReleaseVO> botlist = releaseMapper.showBottomList(iName);
+		return botlist;
+	}
+
+	@Override
+	public void itemOut(List<ReleaseVO> rlist) {
+		
+		for(ReleaseVO rvo : rlist) {
+			releaseMapper.itemOut(rvo);
+		}
+		
+	}
+
 
 }
