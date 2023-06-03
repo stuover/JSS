@@ -9,5 +9,9 @@ public interface ReleaseService {
 
 	List<ReleaseVO> showTopList(String itemName);
 
+	List<ReleaseVO> showBottomList(String iName);
+
+	public void itemOut(List<ReleaseVO> rlist);
+
 
 }

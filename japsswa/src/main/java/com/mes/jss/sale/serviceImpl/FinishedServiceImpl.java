@@ -1,6 +1,5 @@
 package com.mes.jss.sale.serviceImpl;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,11 @@ public class FinishedServiceImpl implements FinishedService{
 	public void fRegister( List<FinishedVO> flistvo) {
 		
 			
-		for(FinishedVO fvo : flistvo) {
+		for(FinishedVO fvo : flistvo) { 
 			
 					
 			finishedMapper.fRegister(fvo);
-		}
+			 } 
 		
 	}
 

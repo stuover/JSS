@@ -19,7 +19,7 @@
 					<h4 class="page-title">출고 관리</h4>
 					
 
-					<!-- <input id="name" type="hidden" th:value="${#authentication.principal.empName}"> --> 
+					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
 					<div>
 									<input type="text" id="itemInput" name="sItem">
 									<button id="itemBtn" type="button" class="btn btn-dark"
@@ -164,7 +164,7 @@
 	    $('#itemBtn').on('click', function(){
 	    	
 	    	const itemName = $('#itemInput').val();
-	    	$('#itemInput').val('');
+	    	$('#itemInput').val('');	
 	    	
 	    	$.ajax({
 	    		url : "/showTopList",
@@ -173,6 +173,19 @@
 	    		success : function(result){
 	    			grid1.resetData(result);
 	    			grid1.refreshLayout();
+	    			
+	    			$.ajax({
+	    				url : "/showBottomList",
+	    				method : "get",
+	    				data : {'itemName' : itemName},
+	    				success : function(result1){
+	    					grid2.resetData(result1);
+	    					grid2.refreshLayout();
+	    					for(let i=0; i<grid2.getRowCount(); i++){
+	    						grid2.setValue(i, "empName", $('#name').val(), false);
+	    					}
+	    				}
+	    			})
 	    		}
 	    	})
 	    })

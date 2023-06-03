@@ -5,14 +5,26 @@
   
 <mapper namespace="com.mes.jss.sale.mapper.ReleaseMapper">
 
-	<select id="showTopList" parameterType="ReleaseVO" resultType="ReleaseVO">
-		{
-			CALL show_list(
-				#{itemName}
-			)
-		}
-	</select>
 
+
+	<select id="showTopList" resultType="ReleaseVO" >
+		select d.orddetail_id, d.item_code, i.item_name, d.ord_count, r.remain, o.ord_date, d.out_date, o.customer_id, c.customer_name,e.emp_name
+    		from orders o join customer c on(o.customer_id = c.customer_id)
+		                  join orddetail d on(o.ord_id = d.ord_id)
+		                  join itemlist i on(d.item_code = i.item_code)
+		                  join release r on(d.orddetail_id = r.orddetail_id)
+		                  join emp e on(o.emp_no = e.emp_no)
+    		where d.orddet_status = '입고완료' and i.item_name = #{itemName}
+	</select>
+	
+	<select id="showBottomList" resultType="ReleaseVO">
+		select f.fn_lot_no, f.item_code, i.item_name, f.fn_count, r.fn_rel_count, e.emp_name
+			from finished f join itemlist i on(f.item_code = i.item_code)
+			                join emp e on(f.emp_no = e.emp_no)
+			                join release r on(f.fn_lot_no = r.fn_lot_no)
+			                join orddetail d on(r.orddetail_id = d.orddetail_id)
+			where orddet_status = '입고완료' and item_name = #{iName}
+	</select>
 
 
 </mapper>

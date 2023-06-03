@@ -7,13 +7,13 @@ import lombok.Data;
 @Data
 public class ReleaseVO {
 	String fnReleaseId;
-	int fnRelCount;
+	long fnRelCount;
 	Date fnRelDate;
 
 	
 	//주문상세
 	String ordDetailId;
-	int ordCount;
+	long ordCount;
 	Date outDate;
 	
 	//주문
@@ -33,12 +33,12 @@ public class ReleaseVO {
 	String custTel;
 	
 	//사원
-	int empNo;
+	long empNo;
 	String empName;
 	
 	//완제품
 	String fnLotNo;
-	int fnCount;
-	int remain;
+	long fnCount;
+	long remain;
 	
 }

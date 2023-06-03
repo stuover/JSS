@@ -13,10 +13,12 @@
 		       p.pass_item
 				from performance p 
 		        join itemlist i on (p.item_code = i.item_code)
-                join finished f on (i.item_code = f.item_code)
-                join release r on (f.fn_lot_no = r.fn_lot_no)
-                join orddetail d on(r.orddetail_id = d.orddetail_id)
-		       where item_type = '완제품' and end_time is not null and orddet_status = '접수완료'
+                join work_bom w ON (p.wbom_id = w.wbom_id)
+		       where item_type = '완제품' and end_time is not null
+		       and w.pro_code = (
+                  SELECT pro_code
+                  FROM process
+                  WHERE pro_name = '완제품 포장')
 	</select>
 	
 	<select id="fRegister" statementType="CALLABLE">
@@ -31,7 +33,7 @@
 	</select>
 	
 	<select id="storeInItem" resultType = "FinishedVO">
-		select f.performance_id, 
+		select distinct f.performance_id, 
 		   f.item_code, 
 		   i.item_name, 
 		   f.fn_store_in, 
@@ -44,6 +46,7 @@
 						    join emp e on(f.emp_no = e.emp_no)
 		                    join orddetail d on(i.item_code = d.item_code)
 		    where orddet_status = '입고완료'
+		    order by 1
             
 	</select>
 	
