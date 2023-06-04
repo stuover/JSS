@@ -23,10 +23,64 @@
 
 	<th:block layout:fragment="content">
 	
+	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+	
 	<h3 style="text-align:center; font-weight:bold; margin-top:50px;">자재 출고 내역</h3>
 	
-	<div id="grid" style="margin-top:150px;"></div>
+	<div style="width:1050px; heigh:30px; margin-top:50px;">
+		<form action="#" >
+  <label for="lang" ></label>
+  <select name="languages" id="lang" style="margin-left:100px;">
+  <option value="javascript">--출고사유--</option>
+    <option value="php">생산</option>
+    <option value="java">조정</option>
+   
+  </select>
+  
+
+
 	
+  <label for="lang"></label>
+  <select name="languages" id="lang" style="margin-left:20px;margin-right:10px;">
+   <option value="javascript">--구분--</option>
+    <option value="javascript">자재</option>
+    <option value="php">반제품</option>
+   
+  </select>
+  <label for="storeDate" style="margin-left:10px;">출고일</label>
+  <input type="date" style="margin-right:10px;" id="storeDate">~
+  <input type="date" style="margin-left:10px; margin-right:10px;">
+  <label for="mrSearch">자재명</label>
+  <input type="text" id="mrSearch">
+  <button type="button" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
+</form>
+	
+	</div>
+	
+	
+	
+	
+	<div class="btn-group" style="width:300px;">
+		     	<button type="button" id="adjustment"class="btn btn-primary" style="float:right; width:50px; padding:5px;">조정</button> 
+					     	<button type="button" id="product"class="btn btn-success" style="float:right; width:50px;padding:5px; ">생산</button>
+	<button type="button" id="all"  class="btn btn-info" style="float:right; width:50px; padding:5px; ">전체</button>
+	</div>
+	
+	
+	
+	
+	
+	
+	<div id="grid" style=""></div>
+	
+	
+	</div>
+	</div>
+	</div>
+	</div>
 	
 	<script>
 	
@@ -50,9 +104,52 @@
 		}
 	})
 	
+	$('#all').on('click',function(){
+		
+		$.ajax({
+			url:"/mrRelList",
+			method:"GET",
+			success: function(result){
+				grid.resetData(result);
+				
+			},
+			error: function(reject){
+				console.log(reject);
+				
+			}
+		
+	})
+	})
 	
+	$('#product').on('click',function(){
+		
+		$.ajax({
+			url:"/RelProReason",
+			method:"GET",
+			success: function(result){
+				grid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject);
+			}
+		})
+	})
 	
-	
+	$('#adjustment').on('click',function(){
+		
+		$.ajax({
+			url:"/RelAdmReason",
+			method:"GET",
+			success: function(result){
+				grid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject);
+			}
+		
+		})
+		
+	})
 	
 	
 	
@@ -61,25 +158,37 @@
 		el : document.getElementById('grid'),
 		scollX : false,
 		scollY : false,	
-		rowHeaders: ['checkbox'],
+		
 		columns : [ {
 			header : '자재 출고 코드',
-			name : 'mrRelCode',
+			name : 'mrRealCode',
 			
 		}, {
 			header : '품목코드',
 			name : 'itemCode'
 		},{
+			header : '구분',
+			name : 'itemType'
+		},
+		{
+			header : '품목명',
+			name : 'itemName'
+		},		
+		{
 			header : '자재lot번호',
 			name : 'mrLotNumber'
 		},
 		{
 			header : '출고수량',
-			name : 'mrRelCount'
-		},  
+			name : 'mrRealCount'
+		},
+		{
+			header : '출고 사유',
+			name : 'mrRealReasonType'
+		}, 
 		{
 			header : '출고 사유 코드',
-			name : 'mrRelReasonCode'
+			name : 'mrRealReasonCode'
 		}
 					
 		],

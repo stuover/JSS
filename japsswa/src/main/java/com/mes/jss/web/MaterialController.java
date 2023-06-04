@@ -132,6 +132,42 @@ public class MaterialController {
 	}
 	
 	
+	// 입고 사유별 리스트(품질)
+	
+	@ResponseBody
+	@GetMapping("/qualityReason")
+	public List<MrVO> materialQualityReason(){
+		
+		List<MrVO> list = materialService.mrQualityList();
+		
+		return list;
+		
+	}
+	
+	// 입고 사유별 리스트(생산)
+	
+		@ResponseBody
+		@GetMapping("/productReason")
+		public List<MrVO> materialProReason(){
+			
+			List<MrVO> list = materialService.mrProList();
+			
+			return list;
+			
+		}
+		
+	// 입고 사유별 리스트(조정)
+		
+	@ResponseBody
+	@GetMapping("/AdjustmentReason")
+		public List<MrVO> materialAdmReason(){
+				
+			List<MrVO> list = materialService.mrAdmReasonList();
+				
+			return list;
+				
+			}	
+	
 	
 	// 안전 재고 리스트
 	@ResponseBody
@@ -269,6 +305,35 @@ public class MaterialController {
 		
 		return list;
 	}
+	
+	
+	// 출고 사유별 리스트(생산)
+	
+    @ResponseBody
+	@GetMapping("/RelProReason")
+	public List<MrVO> mrRelProReason(){
+			
+		List<MrVO> list = materialService.mrRelProList();
+			
+		return list;
+			
+		}
+		
+	// 출고 사유별 리스트(조정)
+		
+	@ResponseBody
+	@GetMapping("/RelAdmReason")
+	public List<MrVO> mrRelAdmReason(){
+				
+		List<MrVO> list = materialService.mrRelAdmList();
+				
+		return list;
+				
+			}
+			
+	
+	
+	
 	
 // 자재 발주 화면
 	
