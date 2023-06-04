@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.domain.ProcessVO;
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.production.domain.WorkVO;
 import com.mes.jss.production.mapper.PerformanceMapper;
 import com.mes.jss.production.service.PerformanceService;
@@ -50,6 +51,31 @@ public class PerformanceServiceImpl implements PerformanceService{
 		List<EmpVO> list = performanceMapper.empList();
 		return list;
 	}
+
+	
+	// 생산실적 등록 모달창 :  설비 리스트
+	// 설비 조회 모달창 : 비가동 사유가 점검이나 세척이 아닌 설비 리스트
+	@Override
+	public List<PerformanceVO> performanceFacList(String podCode) {
+		List<PerformanceVO> list = performanceMapper.performanceFacList(podCode);
+		return list;
+	}
+
+	// 생산실적 등록 : 작업 시작
+	@Override
+	public void performanceStart(PerformanceVO vo) {
+		performanceMapper.performanceStart(vo);
+		
+	}
+
+	// 생산실적 등록 :  작업 완료
+	@Override
+	public void performanceEnd(PerformanceVO vo) {
+		performanceMapper.performanceEnd(vo);
+		
+	}
+
+
 	
 	
 	

@@ -24,7 +24,7 @@
                 <div class="card-body">
                 <!-- Body Start -->
                 
-                  <h4 class="page-title">작업 지시 관리</h4>
+                  <h4 class="page-title">공정 이동표 조회</h4>
                   
                   <input id="saveOption" type="hidden" name="selectResult" value="insert">
                   <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
@@ -43,11 +43,6 @@
 				        
 	                  <div id="commonGrid"></div>
 	                  
-						<!-- 버튼 : 제품 추가 및 삭제 -->
-						<div class="m-1 d-grid gap-2 d-md-flex justify-content-md-start">
-					        <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#itemSearchModal">추가</button>				
-					        <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
-						</div>
 	                  
 	                  <div id="detailGrid"></div>
 				        
@@ -61,13 +56,13 @@
 					<div class="col-sm-12">
 					 <div class="card">
 					  <div class="card-body">
-					 	<h5 class="page-title">BOM 및 공정 정보</h5>
+					 	<h5 class="page-title">공정 현황</h5>
 						  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-							<button type="button" id="selectHoldBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">자재 홀드</button>
+							<button type="button" id="selectHoldBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">공정 이동표</button>
 							</div>
 							<!-- card-body start -->
 						
-							<div id="bomInfoGrid"></div>
+							<div id="processInfoGrid"></div>
 						
 							<!-- card-body end -->
 							</div>
@@ -854,10 +849,10 @@
 
 			
 			// BOM 및 공정 정보
-			let bomInfoGridData = [];
-			const bomInfoGrid = new tui.Grid({
-			  el: document.getElementById('bomInfoGrid'),
-			  data: bomInfoGridData,
+			let processInfoGridData = [];
+			const processInfoGrid = new tui.Grid({
+			  el: document.getElementById('processInfoGrid'),
+			  data: processInfoGridData,
 			  rowHeaders: [{ type: 'checkbox', header: " ", align: 'left', valign: 'middle' }],
 			  scrollX: false,
 			  scrollY: true,

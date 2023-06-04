@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.domain.ProcessVO;
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.production.domain.WorkVO;
 
 public interface PerformanceService {
@@ -21,6 +22,18 @@ public interface PerformanceService {
 	
 	// 생산실적 등록 모달창 : 사원 리스트
 	List<EmpVO> empList();
+	
+	// 생산실적 등록 모달창 :  설비 리스트
+	// 설비 조회 모달창 : 비가동 사유가 점검이나 세척이 아닌 설비 리스트
+	List<PerformanceVO> performanceFacList(String podCode);
+	
+	
+	// 생산실적 등록 : 작업 시작
+	public void performanceStart(PerformanceVO vo);
+	
+	// 생산실적 등록 :  작업 완료
+	public void performanceEnd(PerformanceVO vo);
+	
 	
 	
 }

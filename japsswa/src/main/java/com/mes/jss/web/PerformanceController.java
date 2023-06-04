@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.basic.domain.ProcessVO;
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.production.domain.WorkVO;
 import com.mes.jss.production.service.PerformanceService;
 
@@ -70,7 +72,30 @@ public class PerformanceController {
 	}
 	
 	
+	// 생산실적 등록 모달창 :  설비 리스트
+	// 설비 조회 모달창 : 비가동 사유가 점검이나 세척이 아닌 설비 리스트
+	@RequestMapping("/performanceFacListAjax")
+	@ResponseBody
+	public List<PerformanceVO> performanceFacListAjax(String proCode){
+		List<PerformanceVO> result = performanceService.performanceFacList(proCode);
+		
+		return result;
+	}
 	
+	// 생산실적 등록 : 작업 시작
+	@RequestMapping("/performanceStartAjax")
+	@ResponseBody
+	public void performanceStartAjax(@RequestBody PerformanceVO vo) {
+		performanceService.performanceStart(vo);
+	}
+	
+	
+	// 생산실적 등록 : 작업 완료
+	@RequestMapping("/performanceEndAjax")
+	@ResponseBody
+	public void performanceEndAjax(@RequestBody PerformanceVO vo) {
+		performanceService.performanceStart(vo);
+	}
 	
 	
 }

@@ -56,7 +56,7 @@
 		WHERE TO_DATE(work_end, 'yyyy-MM-dd') = TO_DATE(SYSDATE, 'yyyy-MM-dd') 
 	</select>
 	
-	
+	<!-- 작업자 조회 모달창 : 작업자 리스트 -->
 	<select id="empList" resultType="EmpVO">
 		SELECT emp_no, emp_name 
 		FROM emp
@@ -64,6 +64,45 @@
 		            dept_name='생산'
 		    AND position = '사원' 
 	</select>
+	
+	<!-- 설비 조회 모달창 : 투입공정이 현재 공정인 설비 중 비가동인 설비 리스트 -->
+	<select id="performanceFacList" parameterType="PerformanceVO" resultType="PerformanceVO">
+		SELECT fac_code, fac_name
+		FROM facility
+		WHERE fac_code IN (
+		                   SELECT fac_code 
+		                   FROM downtime
+		                   WHERE down_reason = '작업대기'
+		                  )
+		    AND pro_code = #{proCode}
+	</select>
+
+
+	<!-- 생산실적 등록 모달창 : 작업시작 -->
+	<select id="performanceStart" statementType="CALLABLE" parameterType="PerformanceVO" resultType="PerformanceVO">
+		{call START_PERFORMANCE_INSERT(
+			#{wdetailId, mode=IN, jdbcType=VARCHAR},
+			#{itemCode, mode=IN, jdbcType=VARCHAR},
+			#{proCode, mode=IN, jdbcType=VARCHAR},
+			#{facCode, mode=IN, jdbcType=VARCHAR},
+			#{workAmount, mode=IN, jdbcType=BIGINT},
+			#{empName, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	
+	<!-- 생산실적 등록 모달창 : 작업완료 -->
+	<select id="performanceEnd" statementType="CALLABLE" parameterType="PerformanceVO" resultType="PerformanceVO">
+		{call END_PERFORMANCE_INSERT(
+			#{wdetailId, mode=IN, jdbcType=VARCHAR},
+			#{itemCode, mode=IN, jdbcType=VARCHAR},
+			#{proCode, mode=IN, jdbcType=VARCHAR},
+			#{failItem, mode=IN, jdbcType=BIGINT}
+			)
+		}
+	</select>
+
 
   	
   </mapper>

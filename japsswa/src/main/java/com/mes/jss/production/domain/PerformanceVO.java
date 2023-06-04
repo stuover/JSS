@@ -24,9 +24,12 @@ public class PerformanceVO {
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date endTime;
+	String empName;
 	Long empNo;
 	
-	
+	String proCode;
+	String facName;
+	String downReason;
 	
 	
 	
