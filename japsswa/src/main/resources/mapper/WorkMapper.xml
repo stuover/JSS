@@ -56,7 +56,6 @@
 								ON(w.work_id = d.work_id)
 				  WHERE 
 					   work_date >= (SYSDATE - 3)
-			           AND work_start > (SYSDATE)
 				  )
 			WHERE 
 				 work_date <= (SYSDATE + 3)
