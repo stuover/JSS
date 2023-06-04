@@ -16,7 +16,6 @@ public class FacilityVO {
 	String facDate;
 	String facFunction;
 	String facPicture;
-	String facProcess;
 	String facStatus;
 	String washCycle;
 	String insCycle;
@@ -30,11 +29,15 @@ public class FacilityVO {
 	String startDate;
 	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy hh:mm:ss a", timezone = "Asia/Seoul")
 	String stopDate;
+	String insDate;
 	
 	String downReason;
 	String downManager;
 	String remark;
-
+	
+	// 공정 불러오기
+	String proCode;
+	String proName;
 //	facName
 //	facCode
 //	facManager

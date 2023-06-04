@@ -59,7 +59,6 @@
 
         <!-- 등록 모달 끝 -->
 
-
         <!-- 상세내역 모달 시작 -->
 
         <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -88,6 +87,35 @@
         </div>
 
         <!-- 상세내역 모달 끝 -->
+        
+         
+        <!-- process 모달 시작 -->
+
+                        <div class="modal fade" id="processModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document"
+                                style="width:1500px">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="downModalTitle">공정 목록</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- fac 모달그리드 시작 -->
+                                        <div id="processGrid"></div>
+                                        <!-- fac 모달그리드 끝 -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+       <!-- process 모달 끝 -->
 
         <script>
             // 변수
@@ -124,6 +152,7 @@
                 el: document.getElementById('grid'),
                 scrollX: false,
                 scrollY: false,
+                rowHeaders: ['rowNum'],
                 pageOptions: {
                     useClient: true,
                     perPage: 15
@@ -136,20 +165,14 @@
                         header: '설비명',
                         name: 'facName'
                     },
+                    
                     {
-                        header: '설치날짜 ',
-                        name: 'facDate'
-                    },
-                    {
-                        header: '투입공정 ',
-                        name: 'facProcess'
+                        header: '투입 공정 ',
+                        name: 'proName'
                     },
                     {
                         header: '설비가동상태 ',
-                        name: 'facStatus',
-                        validation: {
-                            regExp: /[x-yX-Y]/
-                        }
+                        name: 'facStatus'
                     },
                     {
                         header: '세척주기 ',
@@ -191,7 +214,8 @@
                         facCode: gridData.facCode,
                         facName: gridData.facName,
                         facDate: gridData.facDate,
-                        facProcess: gridData.facProcess,
+                        proCode: gridData.proCode,
+                        proName: gridData.proName,
                         facFunction: gridData.facFunction
                     }
 
@@ -237,9 +261,12 @@
                         editor: 'datePicker'
                     },
                     {
-                        header: '투입공정 ',
-                        name: 'facProcess',
-                        editor: 'text'
+                        header: '공정코드 ',
+                        name: 'proCode'
+                    },
+                    {
+                        header: '투입 공정 ',
+                        name: 'proName'
                     },
                     {
                         header: '설비기능',
@@ -287,6 +314,10 @@
                     }
                 ]
             });
+            
+         
+            
+            
 
 
             // 객체 합치기(수정용)
@@ -316,8 +347,7 @@
                 let modobj = mergeModFac(firstFac, secondFac);
                 console.log(modobj);
 
-                var token = $("meta[name='_csrf']").attr("content");
-                var header = $("meta[name='_csrf_header']").attr("content");
+                
 
                 $.ajax({
                     url: "/modifyFacility",
@@ -354,8 +384,7 @@
                 let firstFac = detailGrid.getData()[0];
                 console.log(firstFac);
 
-                var token = $("meta[name='_csrf']").attr("content");
-                var header = $("meta[name='_csrf_header']").attr("content");
+                
 
                 $.ajax({
 
@@ -406,14 +435,17 @@
                         editor: 'datePicker'
                     },
                     {
-                        header: '투입공정 ',
-                        name: 'facProcess',
-                        editor: 'text'
+                        header: '공정코드 ',
+                        name: 'proCode'
+                    },
+                    {
+                        header: '투입 공정',
+                        name: 'proName'
                     },
                     {
                         header: '설비가동상태 ',
                         name: 'facStatus',
-                        editor: 'text'
+                        defaultValue: 'Y'
                     }
                 ]
             });
@@ -457,10 +489,118 @@
                 ]
             });
 
+         // process 리스트 조회 함수
+            function selectProcess() {
+                $.ajax({
+                    url: "/processList",
+                    method: "get",
+                    dataType: "json",
+                    success: function (result) {
+                    	processGrid.resetData(result);
+                    },
+                    error: function (reject) {
+                        console.log(reject)
+                    }
+                })
+            }   
+            
+            
+         // process 그리드
+            var processGrid = new tui.Grid({
+                el: document.getElementById('processGrid'),
+                width: 700,
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                },
+                columns: [{
+                    header: '투입 공정',
+                    name: 'proName'
+                },
+                {
+                    header: '공정코드 ',
+                    name: 'proCode'
+                }]
+            });
+            var insertRowKey =null;
+            var fecCode = null;
+            
+            // 투입공정 더블클릭시 리스트 조회
+            modalGrid.on('dblclick', function (e) {
+                console.log("더블클릭");
+                insertRowKey = e.rowKey;
+                //console.log(insertrowKey);
+				facCode = modalGrid.getRow(insertRowKey).facCode;
+                if (e.columnName == "proCode" || e.columnName == "proName") {
 
+
+                    $('#processModal').modal('show');
+                    $('#processModal').on('shown.bs.modal', function (e) {
+                        setTimeout(() => processGrid.refreshLayout(), 300);
+                    })
+                    
+                    
+                    selectProcess();
+                }
+            })
+
+            // 투입공정 더블클릭시 리스트 조회(수정)
+            detailGrid.on('dblclick', function (e) {
+                console.log("더블클릭");
+                insertRowKey = e.rowKey;
+                //console.log(insertrowKey);
+				facCode = detailGrid.getRow(insertRowKey).facCode;
+                if (e.columnName == "proCode" || e.columnName == "proName") {
+
+
+                    $('#processModal').modal('show');
+                    $('#processModal').on('shown.bs.modal', function (e) {
+                        setTimeout(() => processGrid.refreshLayout(), 300);
+                    })
+                    selectProcess();
+                }
+            })
+            
+            processGrid.on('click', function (e) {
+
+                if(facCode != null){
+                	
+                	proCode = processGrid.getRow(e.rowKey).proCode;
+    				proName = processGrid.getRow(e.rowKey).proName;
+    				pro = processGrid.getRow(e.rowKey);
+                	
+                	let facCode = detailGrid.getRow(insertRowKey).facCode; 
+                	let facName = detailGrid.getRow(insertRowKey).facName;
+                    let facDate = detailGrid.getRow(insertRowKey).facDate;
+                    let facStatus = detailGrid.getRow(insertRowKey).facStatus;
+                    
+                    detailGrid.setRow(insertRowKey, {facCode, facName, facDate, facStatus, proCode, proName} )
+                    $('#processModal').modal('hide');
+                    
+                }else {
+                	proCode = processGrid.getRow(e.rowKey).proCode;
+    				proName = processGrid.getRow(e.rowKey).proName;
+    				pro = processGrid.getRow(e.rowKey);
+                	
+                	let facName = modalGrid.getRow(insertRowKey).facName;
+                    let facDate = modalGrid.getRow(insertRowKey).facDate;
+                    let facStatus = modalGrid.getRow(insertRowKey).facStatus;
+                    
+                	modalGrid.setRow(insertRowKey, {facName, facDate, facStatus, proCode, proName} )
+                    $('#processModal').modal('hide');
+                  
+                }
+            })
+            
+            
+
+            
+            
             // 등록버튼 클릭시 , 오류있음 모달끄면 로우가 하나씩 계속 증가, 수정필요
             $('#insertBtn').on('click', function () {
-
+				
+            	modalGrid.removeRow(0);
+            	modalDownGrid.removeRow(0);
                 $('#insertModal').on('shown.bs.modal', function () {
                     modalGrid.refreshLayout()
                     modalDownGrid.refreshLayout()
@@ -498,8 +638,6 @@
                 let obj = mergeFac(upFac, downFac);
                 console.log(obj)
 
-                var token = $("meta[name='_csrf']").attr("content");
-                var header = $("meta[name='_csrf_header']").attr("content");
 
                 $.ajax({
                     url: "/insertAjax",
@@ -562,6 +700,18 @@
 
                 getFacList();
             })
+            
+            
+            
+            
+            /* 마지막점검일과 점점주기 계산해서 점검예정일 조회
+            changeGrid.on('editingFinish', function(ev){
+			       	  let row = changeGrid.getRow(ev.rowKey);
+			       	  if((ev.columnName=="unitPrice" || ev.columnName=="ordCount")&&row.unitPrice&&row.ordCount){
+			       		  changeGrid.setValue(ev.rowKey, "eachPrice", row.unitPrice*row.ordCount, false)
+			       	  }
+			       	  
+			         }) */
         </script>
 
     </th:block>

@@ -2,6 +2,7 @@ package com.mes.jss.facility.service;
 
 import java.util.List;
 
+import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.domain.InspectionVO;
@@ -27,13 +28,13 @@ public interface FacilityService {
 	
 	// 비가동 내역 페이지
 	public List<DowntimeVO> getDownDetail();	// 비가동 내역 전체 조회
-	public List<FacilityVO> searchList(FacilityVO vo);	// 비가동 내역 단건 조회
+	public List<FacilityVO> searchList(FacilityVO vo);	// 비가동 내역 검색
 		
 	
 	
 	// 설비 페이지
 	public List<FacilityVO> getAllList();		// 전체 설비 리스트
-	public List<FacilityVO> searchFacility(FacilityVO vo);	// 설비 단건 조회
+	public List<FacilityVO> searchFacility(FacilityVO vo);	// 설비 검색
 	
 	public boolean saveFacility(FacilityVO vo);		// 설비 정보 등록
 	public void modifyFacility(FacilityVO vo);		// 설비 정보 수정
@@ -48,6 +49,9 @@ public interface FacilityService {
 	public boolean saveInspection(InspectionVO vo);	// 모달 점검 등록
 	public void modifyInspection(InspectionVO vo);	// 점검 내역 수정
 	public void RemoveInspection(InspectionVO vo);	// 점검 내역 삭제
+	public List<FacilityVO> searchInsList(FacilityVO vo);	// 점검 내역 검색
+	public List<CommVO> getDetailList();
+	
 
 	
 

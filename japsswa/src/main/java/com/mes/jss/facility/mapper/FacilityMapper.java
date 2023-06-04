@@ -2,6 +2,7 @@ package com.mes.jss.facility.mapper;
 
 import java.util.List;
 
+import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.domain.InspectionVO;
@@ -23,13 +24,13 @@ public interface FacilityMapper {
 	
 	// 비가동 내역
 	public List<DowntimeVO> getDownDetailList();		// 비가동 내역 전체 조회
-	public List<FacilityVO> searchlist(FacilityVO vo);	// 비가동 내역 단건 조회
+	public List<FacilityVO> searchlist(FacilityVO vo);	// 비가동 내역 검색
 	
 	
 	
 	// 설비 페이지
 	public List<FacilityVO> getAllList();		// 전체 설비 리스트	
-	public List<FacilityVO> searchFac(FacilityVO vo);	// 설비 단건 조회
+	public List<FacilityVO> searchFac(FacilityVO vo);	// 설비 검색
 	
 	public int insertFacility(FacilityVO vo);	// 설비 등록
 	public void modifyFac(FacilityVO vo);	// 설비 정보 수정
@@ -44,5 +45,7 @@ public interface FacilityMapper {
 	public int insertModalIns(InspectionVO vo);	// 비가동 모달 점검 등록
 	public void modifyIns(InspectionVO vo);		// 점검 내역 수정
 	public void deleteIns(InspectionVO vo);	// 점검 내역 삭제
+	public List<FacilityVO> searchInsList(FacilityVO vo);	// 점검 내역 검색
+	public List<CommVO> getDetailList();
 	
 }

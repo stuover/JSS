@@ -27,7 +27,7 @@ public class DownController {
 
 	@GetMapping("/downtime")
 	public String  downtime(Model model) {
-		
+		model.addAttribute("detail", service.getDetailList());
 		return "Facility/Downtime";
 	}	
 	
@@ -133,7 +133,7 @@ public class DownController {
 		return list;
 	}
 	
-	@RequestMapping("/searchList")		// 비가동 내역 단건 검색
+	@RequestMapping("/searchList")		// 비가동 내역 검색
 	@ResponseBody
 	public List<FacilityVO> searchList(FacilityVO vo){
 		

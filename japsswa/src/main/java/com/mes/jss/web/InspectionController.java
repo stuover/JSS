@@ -85,7 +85,16 @@ public class InspectionController {
 		return vo;
 	}
 	
-	
+	@RequestMapping("/searchInsList")		// 점검 검색
+	@ResponseBody
+	public List<FacilityVO> searchInsList(FacilityVO vo){
+		
+		System.out.println(vo);
+		
+		List<FacilityVO> list = service.searchInsList(vo);
+				
+		return list;
+	}
 	
 	
 	

@@ -34,15 +34,42 @@
     <th:block layout:fragment="content">
         <h2>비가동 내역 리스트</h2>
         <div id="serarchDiv">
-        <form id="searchForm">
-            <input type="text" id="searchInput" name="facName" placeholder="설비이름을 입력하세요">
-            <input type="date" id="startDate1" name="startDate" placeholder="시작 날짜">
-            <input type="date" id="stopDate1" name="stopDate" placeholder="종료 날짜">
+        <form id="searchForm" name="searchForm">
+            <input type="text" id="searchInput" name="facName" placeholder="설비를 선택해주세요" readonly>
+            <input type="date" id="startDate" name="startDate" placeholder="시작 날짜">
+            <input type="date" id="stopDate" name="stopDate" placeholder="종료 날짜">
         </form>
             <button id="searchBtn" type="button" class="btn btn-dark">검색</button>
             <button id="resetBtn" type="button" class="btn btn-dark">초기화</button>
         </div>
         <div id="grid"></div>
+        
+        <!-- fac 모달 시작 -->
+
+                        <div class="modal fade" id="facModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document"
+                                style="width:1500px">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- fac 모달그리드 시작 -->
+                                        <div id="facGrid"></div>
+                                        <!-- fac 모달그리드 끝 -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- fac 모달 끝 -->
 
         <script>
             var name = '';
@@ -70,6 +97,7 @@
                 el: document.getElementById('grid'),
                 scrollX: false,
                 scrollY: false,
+                rowHeaders: ['rowNum'],
                 pageOptions: {
                     useClient: true,
                     perPage: 15
@@ -110,7 +138,61 @@
                 ]
             });
 		
+         // facCode 리스트 조회 함수
+            function selectFac() {
+                $.ajax({
+                    url: "/getSelectList",
+                    method: "get",
+                    dataType: "json",
+                    success: function (result) {
+                        facGrid.resetData(result);
+                    },
+                    error: function (reject) {
+                        console.log(reject)
+                    }
+                })
+            }
             
+         // facCode 그리드
+            var facGrid = new tui.Grid({
+                el: document.getElementById('facGrid'),
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                },
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    }
+                ]
+            });
+            
+            $('#searchInput').on('click', function(){
+            	
+            	$('#facModal').modal('show');
+                $('#facModal').on('shown.bs.modal', function (e) {
+                    setTimeout(() => facGrid.refreshLayout(), 300);
+                }) 
+                
+                selectFac();
+            })
+            
+            facGrid.on('click', function (e) {
+
+                console.log("facGrid클릭");
+
+                fac = facGrid.getRow(e.rowKey).facName;                
+				console.log(fac)
+                $('#facModal').modal('hide');
+                $('#searchInput').attr('value', fac);
+                //insertUpGrid.resetData([fac]); 인풋에 데이터넣기
+
+
+            })
 
             $('#searchBtn').on('click', function () {
 
@@ -133,6 +215,8 @@
                     success: function (result) {
                         console.log("성공");
                         grid.resetData(result);
+                        $('#searchInput').val();	// 안됨
+                        $('#searchForm')[0].reset();
 
                     },
                     error: function (reject) {

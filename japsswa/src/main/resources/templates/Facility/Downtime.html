@@ -96,7 +96,9 @@
         </div>
         <!-- /.modal -->
 
-        <script>
+        <script th:inline = "javascript">
+        
+        	
             window.onload = function () {
 
                 var modalgrid = null;
@@ -286,19 +288,7 @@
                             editor: {
                                 type: 'select',
                                 options: {
-                                    listItems: [{
-                                            text: '세척',
-                                            value: '세척'
-                                        },
-                                        {
-                                            text: '정비',
-                                            value: '정비'
-                                        },
-                                        {
-                                            text: '점검',
-                                            value: '점검'
-                                        }
-                                    ]
+                                    listItems: [[${detail}]]
                                 }
                             },
                             rowSpan: true
@@ -517,9 +507,14 @@
                             name: 'downCode'
                         },
                         {
-                            header: '비가동 사유',
+                        	header: '비가동 사유',
                             name: 'downReason',
-                            editor: 'text'
+                            editor: {
+                                type: 'select',
+                                options: {
+                                    listItems:  [[${detail}]]
+                                }
+                            }
                         },
 
                         {

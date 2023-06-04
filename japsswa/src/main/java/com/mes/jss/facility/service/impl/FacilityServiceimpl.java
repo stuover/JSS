@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.domain.InspectionVO;
@@ -154,10 +155,24 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public void RemoveInspection(InspectionVO vo) {
+	public void RemoveInspection(InspectionVO vo) {	
 		
 		facilityMapper.deleteIns(vo);
 	}
+
+	@Override
+	public List<FacilityVO> searchInsList(FacilityVO vo) {	// 점검 내역 검색
+		
+		return facilityMapper.searchInsList(vo);
+	}
+
+	@Override
+	public List<CommVO> getDetailList() {
+		// TODO Auto-generated method stub
+		return facilityMapper.getDetailList();
+	}
+
+	
 
 	
 

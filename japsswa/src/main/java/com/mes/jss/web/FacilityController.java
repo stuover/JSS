@@ -40,6 +40,8 @@ public class FacilityController {
 
 		return list;
 	}
+	
+	
 
 	@RequestMapping("/searchFacility") // 설비 단건 조회
 	@ResponseBody

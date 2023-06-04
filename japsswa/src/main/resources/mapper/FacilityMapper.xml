@@ -120,18 +120,32 @@
   	<!-- 설비 페이지 -->
   	
   	<select id="getAllList" resultType="FacilityVO">
+  		select f.fac_code, fac_name, to_char(f.fac_date, 'YYYY-MM-DD') as fac_date ,f.pro_code, p.pro_name, f.fac_status, f.wash_cycle, f.ins_cycle, 
+		to_char(f.last_inspection, 'YYYY-MM-DD') as last_inspection, f.fac_manager, f.fac_function, f.fac_picture
+		from facility f join process p on(f.pro_code = p.pro_code)
+  		
+  		
+  		<!--  
   		select fac_code, fac_name, to_char(fac_date, 'YYYY-MM-DD') as fac_date , fac_process, fac_status, wash_cycle, ins_cycle, to_char(last_inspection, 'YYYY-MM-DD') as last_inspection, fac_manager, fac_function, fac_picture
 		from facility
+		-->
   	</select>
   	
   	<select id="searchFac" parameterType="FacilityVO" resultType="FacilityVO">
+  		select f.fac_code, fac_name, to_char(f.fac_date, 'YYYY-MM-DD') as fac_date , p.pro_name, f.fac_status, f.wash_cycle, f.ins_cycle, 
+		to_char(f.last_inspection, 'YYYY-MM-DD') as last_inspection, f.fac_manager, f.fac_function, f.fac_picture 
+		from facility f join process p on(f.pro_code = p.pro_code)
+		where fac_name like '%' || #{facName} || '%'
+  		
+  		<!-- 
   		select * from facility where fac_name like '%' || #{facName} || '%'
+  		-->
   	</select>
   	
   	<insert id="insertFacility" parameterType="FacilityVO">
-  		insert into facility (fac_code , fac_name , fac_date, fac_process , fac_status,
+  		insert into facility (fac_code , fac_name , fac_date, pro_code ,
   		wash_cycle, ins_cycle, last_inspection, fac_manager, fac_function)
-        values(('FAC' || lpad(facility_seq.nextval, 4,'0')) , #{facName} , #{facDate} , #{facProcess}, #{facStatus}, 
+        values(('FAC' || lpad(facility_seq.nextval, 4,'0')) , #{facName} , #{facDate} , #{proCode}, 
         #{washCycle},#{insCycle}, #{lastInspection}, #{facManager}, #{facFunction})
   	</insert>
   	
@@ -140,7 +154,7 @@
   					set
 					  		fac_name = #{facName}, 
 					  		fac_date = #{facDate} , 
-					  		fac_process = #{facProcess},
+					  		pro_code = #{proCode},
 					  		wash_cycle = #{washCycle} ,
 					  		ins_cycle = #{insCycle},
 					  		last_inspection = #{lastInspection}, 
@@ -201,6 +215,20 @@
   		delete from inspection where ins_code = #{insCode} 
   	</delete>
   	
+  	<select id="searchInsList" parameterType="FacilityVO" resultType="FacilityVO">
+  		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date,
+                i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
+		from facility f join inspection i on(f.fac_code = i.fac_code)
+		where ins_code is not null and f.fac_name like '%' || #{facName} || '%'
+         <if test="startDate != '' and stopDate != '' ">	    	    	    
+	    and i.ins_date between to_date(#{insDate}, 'yyyy-MM-dd') and to_date(#{insDate}, 'yyyy-MM-dd')
+	    </if>
+  	</select>
+  	
+  	
+  	<select id="getDetailList" resultType ="CommVO">
+  		select deta_code value , deta_name text from details_comm where comm_code = UPPER('ins')
+  	</select>
   	
   </mapper>
   
