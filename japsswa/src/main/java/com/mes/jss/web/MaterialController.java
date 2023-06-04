@@ -33,7 +33,7 @@ import com.mes.jss.quality.domain.QualityVO;
 
 /*
  * 구용억
- * 자재관리   마지막 수정일 (23.06.01)
+ * 자재관리   마지막 수정일 (23.06.02)
  */
 
 
@@ -78,6 +78,18 @@ public class MaterialController {
 		List<MrVO> list = materialService.searchList(result);
 		return list;
 	}
+	
+ // 자재 검색(동적쿼리)
+	
+	@ResponseBody
+	@RequestMapping("/multi")
+	public List<MrVO> mrMultiSearch(MrVO vo){
+		
+		List<MrVO> list = materialService.MultiSearchList(vo);
+		return list;
+		
+	}
+	
 
  // 자재 재고 리스트 (총)
 	
@@ -90,6 +102,8 @@ public class MaterialController {
 		return list;
 		
 	}
+	
+  	
 	
 	// 반제품 재고 리스트
 	
@@ -457,6 +471,20 @@ public class MaterialController {
 		return null;
 	}
 	
+	// 자재 조정 수량 조정
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmCount")
+	public MrAdjustmentVO mrAdmCount(@RequestBody AdjustmentListVO vo) {
+		
+		System.err.println(vo);
+		
+		materialService.admCount(vo);
+		
+		return null;
+		
+	}
+	
 // 자재 반품 화면
 	
 	@GetMapping("/mrReturn")
@@ -529,7 +557,8 @@ public class MaterialController {
 		return list;
 	}
 	
-	
+  
+	//
 	
 	
 	

@@ -27,6 +27,31 @@
   		
   		</select>  
   	
+  	<!-- 자재 멀티 검색 -->
+  	
+  	<select id="MrCountMulti" resultType="MrVO">
+  	
+  		select i.item_code, 
+  		       i.item_name, 
+  		       i.item_type, 
+  		       i.save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist i join material m on(i.item_code = m.item_code)
+  		<where>
+  			<if test="itemType !=null and itemType !='' ">
+  				and i.item_type =#{itemType}
+  				
+  			
+  			</if>
+  			<if test="itemName !=null and itemName !=''">
+  				and i.item_name like '%'||#{itemName}||'%'
+  			
+  			</if>
+  		</where>
+  		 group by i.item_code, i.item_name, i.item_type, i.save_material
+  	
+  	</select>
+  		
   	<!-- 자재 조회 리스트(총) -->
   	<select id="mrInvenCount" resultType="MrVO">
   	
@@ -397,6 +422,19 @@
   			)}
   			
   		</select>
+  	
+  	<!-- 조정 수량 조정 -->	
+  		<select id="admCountChange" statementType="CALLABLE">
+  			{call adm_count_change(
+  				#{adjustmentCode, mode=IN, jdbcType=VARCHAR},
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
+  				#{process, mode=IN, jdbcType=VARCHAR},
+  				#{change, mode=IN, jdbcType=VARCHAR},
+  				#{itemCode, mode=IN, jdbcType=VARCHAR}
+  			)
+  			}
+  		
+  		</select>	
   		
   		
   <!-- 발주 리스트 -->		

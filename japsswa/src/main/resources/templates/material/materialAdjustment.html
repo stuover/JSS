@@ -86,11 +86,14 @@
 	
 	<button type="button" class="btn btn-info" id="searchDelBtn" data-toggle="modal" data-target=".bd-example-modal-lg" style="float:right;  margin-top:100px; height: 30px; padding: 3px; padding-bottom:4px; color:white; margin-right:20px;">조정 확인 및 삭제</button>
 	
-	<button type="button" class="btn btn-warning" id="realBtn" style="float:right; margin-top:100px; padding:3px; color:white; height:30px; margin-right:20px;  margin-bottom:10px;">직접 등록</button>	
 	
 	<button type="button" class="btn btn-dark"  id="searchBtn" data-toggle="modal" data-target="#exampleModal" style="float:left; margin-top:100px; margin-bottom:10px; padding:3px; margin-left:20px;">찾기</button>
 	
-	<h3>빨간색은 데이터 오입력 [입고,출고] 버튼을 통해 수정하시기 바랍니다.</h3>
+	<button type="button" class="btn btn-warning" id="realBtn" style="float:left; margin-top:100px; padding:3px; color:white; height:30px;  margin-bottom:10px; margin-left:10px;">직접 등록</button>	
+	
+	<button type="button" class="btn btn-success" id="changeBtn" style="float:left; margin-top:100px; padding:3px; margin-bottom:10px; margin-left:10px;s">수량 변경</button>
+	
+	<p><span class="text-danger" style="float:right; margin-top:110px; margin-right:20px; font-weight:bold;"> ■ 데이터 오입력은 [입고,출고] 버튼을 통해 수정하시기 바랍니다.</span></p>
 	</div>
 	
 	<!--  조정 리스트  -->
@@ -223,16 +226,13 @@
 							grid2.addCellClassName(index,'itemName','redcolor');
 							grid2.addCellClassName(index,'registerDate','redcolor');
 							grid2.addCellClassName(index,'process','redcolor');
+							grid2.addCellClassName(index,'change','redcolor')
 							grid2.addCellClassName(index,'adjustmentDate','redcolor');
 							grid2.addCellClassName(index,'empNo','redcolor');
 							grid2.addCellClassName(index,'admNote','redcolor');
 							}
 							
-						
-
-					
-					
-				})
+						})
 				},
 				error:function(reject){
 					console.log(reject);
@@ -300,7 +300,8 @@
 				},
 				{
 					header : '비고',
-					name : 'admNote'
+					name : 'admNote',
+					hidden:true
 					
 					
 				}
@@ -686,14 +687,37 @@
 			
 	
 			
-		//let le = grid5.getFocusedCell();
-		//console.log(le);
+		
 			
 			}
+		
+		
 			
 			
 			
 		);
+		   
+		  $('#changeBtn').on('click',function(){
+			
+			  $.ajax({
+				  url:"/mrAdmCount",
+				  method:"POST",
+				  contentType:"application/json",
+					  
+				  data:JSON.stringify({list : grid2.getCheckedRows()}),
+				  beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+					},
+					  
+				  success: function(result){
+					  
+				  },
+				  error: function(reject){
+					  console.log(reject);
+				  }
+			  })
+			  
+		  })
 		   
 		   
 	

@@ -3,6 +3,7 @@ package com.mes.jss.material.mapper;
 import java.util.List;
 
 import com.mes.jss.basic.domain.CustomerVO;
+import com.mes.jss.material.domain.AdjustmentListVO;
 import com.mes.jss.material.domain.MrAdjustmentVO;
 import com.mes.jss.material.domain.MrErrorVO;
 import com.mes.jss.material.domain.MrOrderDetailVO;
@@ -126,6 +127,12 @@ public interface MaterialMapper {
 	
 	// 자재 조정 직접 등록
 	public void realIn(String keyword);
+	
+	// 자재 조정 수량 조정
+	public void admCountChange(MrAdjustmentVO vo);
+	
+	// 자재 다중 검색
+	public List<MrVO> MrCountMulti(MrVO vo);
 	
 	
 

@@ -31,6 +31,9 @@ public class MrVO {              // 자재 vo
 	String customerId;
 	String customerName;
 	String itemPrice;
+	String mrType;
+	String searchText;
+	String Name;
 	
 	 
 }

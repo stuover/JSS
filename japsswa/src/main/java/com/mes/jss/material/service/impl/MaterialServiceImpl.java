@@ -346,10 +346,29 @@ public class MaterialServiceImpl implements MaterialService {
 		for(int i=0; i<vo.getList().size(); i++) {
 			materialMapper.realIn(vo.getList().get(i).getMrLotNumber());
 		}
-				
+		
+	}
+	
+	//자재 조정 수량 조정
+	
+	@Override
+	public void admCount(AdjustmentListVO vo) {
+		
+		for(int i=0; i<vo.getList().size(); i++) {
+			materialMapper.admCountChange(vo.getList().get(i));
+		}
+		
+	}
+	
+	
+	// 자재 다중 검색 처리
+	
+	
+	@Override
+	public List<MrVO> MultiSearchList(MrVO vo) {
 		
 		
-		
+		return materialMapper.MrCountMulti(vo);
 	}
 
 	
