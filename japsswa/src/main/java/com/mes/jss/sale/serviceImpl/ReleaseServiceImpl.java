@@ -30,6 +30,8 @@ public class ReleaseServiceImpl implements ReleaseService {
 	@Override
 	public void itemOut(List<ReleaseVO> rlist) {
 		
+		releaseMapper.commItemOut(rlist.get(0).getOrdDetailId());
+		
 		for(ReleaseVO rvo : rlist) {
 			releaseMapper.itemOut(rvo);
 		}

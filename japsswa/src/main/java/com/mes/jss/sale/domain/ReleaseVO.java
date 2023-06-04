@@ -9,12 +9,15 @@ public class ReleaseVO {
 	String fnReleaseId;
 	long fnRelCount;
 	Date fnRelDate;
+	String relDetailId;
+	long relEachCount;
 
 	
 	//주문상세
 	String ordDetailId;
 	long ordCount;
 	Date outDate;
+	String orddetStatus;
 	
 	//주문
 	String ordId;

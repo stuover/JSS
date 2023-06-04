@@ -10,7 +10,10 @@ public interface ReleaseMapper {
 
 	List<ReleaseVO> showBottomList(String iName);
 
+	public void commItemOut(String ordDetailId);
+	
 	public void itemOut(ReleaseVO rvo);
+
 
 
 
