@@ -59,23 +59,23 @@
 		
   <!-- <select name="mr" id="mrType" name="i">
 		    <option name="itemType" value="">----구분----</option>
-		    <option id="Name" name="itemType" value="자재">자재</option>
-		    <option  id="Name" name="itemType" value="반제품">반제품</option>
+		    <option value="자재">자재</option>
+		    <option value="반제품">반제품</option>
     
    	 -->
   
   
- <div class="form-check form-check-inline">
+ <div class="form-check form-check-inline" style="margin-left:300px;">
      <input class="form-check-input" type="radio" name="itemType" id="alladj" value="">
-     <label class="form-check-label" for="alladj">전체</label>
+     <label class="form-check-label" for="alladj" style="margin-left:0px;">전체</label>
    </div>
    <div class="form-check form-check-inline">   
      <input class="form-check-input" type="radio" name="itemType" id="dli" value="자재">
-     <label class="form-check-label" for="dli">자재</label>
-   </div>
+     <label class="form-check-label" for="dli" style="margin-left:0px;">자재</label>
+   </div> 
    <div class="form-check form-check-inline">
      <input class="form-check-input" type="radio" name="itemType" id="inv" value="반제품">
-     <label class="form-check-label" for="inv">반제품</label>
+     <label class="form-check-label" for="inv" style="margin-left:0px;">반제품</label>
    </div>
   <input type="text" name="itemName" />
 
@@ -84,7 +84,7 @@
    
   <!-- </select> -->
 	
-	<button type="button" class="btn btn-dark" id="multi">검색</button>		
+	<button type="button" class="btn btn-dark" id="multi" style="margin-left:20px; padding:3px;">검색</button>		
 		</form>														
 																
 				
@@ -108,6 +108,17 @@
 							
 						
 						<h3 style="font-weight:bold; margin-left:480px; margin-top:40px; margin-bottom:40px;">&ensp;lot별 자재 조회</h3>
+						
+						<div class="btn-group">
+						  
+                          	<button type="button" id="all"  class="btn btn-info">전체</button>
+							<button type="button" id="half" class="btn btn-primary" style="float:left;">반제품</button>
+							<button type="button" id="material"class="btn btn-success" style="float:left;">자재</button>   
+						
+						
+						
+						</div>
+						
 						
 						
 					<div id="grid4" style="margin-top:20px;"></div>	
@@ -537,6 +548,35 @@
 			success: function(result){
 				grid.resetData(result);
 				
+				grid.getData().forEach((ele, index)=>{
+					
+					
+					
+					if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
+						grid.addCellClassName(index,'itemType','redcolor');
+						grid.addCellClassName(index,'itemName','redcolor');
+						grid.addCellClassName(index,'itemCode','redcolor');
+						grid.addCellClassName(index,'total','redcolor');
+						grid.addCellClassName(index,'saveMaterial','redcolor');
+					} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
+						grid.addCellClassName(index,'itemType','yellowcolor');
+						grid.addCellClassName(index,'itemName','yellowcolor');
+						grid.addCellClassName(index,'itemCode','yellowcolor');
+						grid.addCellClassName(index,'total','yellowcolor');
+						grid.addCellClassName(index,'saveMaterial','yellowcolor');
+						
+						
+					}
+						
+		
+
+		
+		
+				
+			
+				} ) 
+				
+				
 				
 			},
 			error: function(reject){
@@ -546,6 +586,20 @@
 		})
 	})
 	
+	
+	$('#all').on('click',function(){
+		
+		$.ajax({
+			url:"/mrLotCount",
+			method:"GET",
+			success: function(result){
+				grid4.resetData(result);
+			},
+			error: function(reject){
+				console.log(reject)
+			}
+		})
+	})
 	
 	
 	

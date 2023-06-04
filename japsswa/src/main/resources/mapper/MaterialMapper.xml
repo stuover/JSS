@@ -38,12 +38,12 @@
   		       sum(store_count) as total 
   		  from itemlist i join material m on(i.item_code = m.item_code)
   		<where>
-  			<if test="itemType !=null and itemType !='' ">
+  			<if test="itemType !=null and itemType !=''.toString() ">
   				and i.item_type =#{itemType}
   				
   			
   			</if>
-  			<if test="itemName !=null and itemName !=''">
+  			<if test="itemName !=null and itemName !=''.toString()">
   				and i.item_name like '%'||#{itemName}||'%'
   			
   			</if>
@@ -176,7 +176,7 @@
 		
 			select i.item_type,
   		       m.mr_lot_number,
-  		       i.item_name,
+  		       i.item_type,
   		       m.item_code,
   		       i.item_name,
   		       e.emp_name,
@@ -187,10 +187,77 @@
   		       m.store_reason_code 
   		 from emp e 
   		 join material m on (e.emp_no=m.emp_no) 
-  		 join itemlist i on (m.item_code=i.item_code) 
-  		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 order by m.store_date desc 
+  		
 			
 		</select>	
+		
+	
+	<!-- 자재 품질 입고 내역 -->
+		<select id="MrQuality" resultType="MrVO">
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_type,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 where m.store_reason_type ='품질통과'
+  		 order by m.store_date desc
+		
+		</select>	
+	
+	<!-- 자재 생산 입고 내역 -->
+		<select id="MrPro" resultType="MrVO">
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_type,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 where m.store_reason_type ='생산'
+  		 order by m.store_date desc
+		
+		</select>
+		
+	<!-- 자재 조정 입고 내역 -->
+		<select id="MrAdm" resultType="MrVO">
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_type,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 where m.store_reason_type ='조정'
+  		 order by m.store_date desc
+		
+		</select>		
+		
+				
 
 	
 	<!-- 자재 입고 -->	
@@ -235,13 +302,31 @@
   		
   	<!-- 자재 출고 내역 -->
   	
-  		<select id="RelGetList" resultType="mrReleaseVO">
+  		<select id="RelGetList" resultType="MrReleaseVO">
   			
-  			select * from material_release	
+  			select r.mr_real_code,i.item_code,i.item_type,i.item_name,r.mr_lot_number,r.mr_real_count,r.mr_real_reason_type,r.mr_real_reason_code 
+  			from material_release r join itemlist i on(r.item_code=i.item_code) 
+  			
+  		</select>
+  				
+  	<!-- 자재 출고 생산 리스트 -->
   		
-  		
-  		
+  		<select id="MrRelPro" resultType="MrReleaseVO">
+  			
+  			select * from material_release
+  			where mr_real_reason_type='생산'
+  			
   		</select>	
+  		
+  	<!-- 자재 출고 조정 리스트 -->
+  	
+  		<select id="MrRelAdm" resultType="MrReleaseVO">
+  			
+  			select * from material_release
+  			where mr_real_reason_type='조정'
+  			
+  		</select>	
+  			
   		
   	<!-- 반제품 입고 -->	
   		<select id="halfInsert" statementType="CALLABLE">

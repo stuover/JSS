@@ -134,6 +134,21 @@ public interface MaterialMapper {
 	// 자재 다중 검색
 	public List<MrVO> MrCountMulti(MrVO vo);
 	
+	// 자재 입고 품질 리스트
+	public List<MrVO> MrQuality();
+	
+	// 자재 입고 생산 리스트
+	public List<MrVO> MrPro();
+	
+	// 자재 입고 조정 리스트
+	public List<MrVO> MrAdm();
+	
+	// 자재 출고 생산 리스트
+	public List<MrVO> MrRelPro();
+	
+	// 자재 출고 조정 리스트
+	public List<MrVO> MrRelAdm();
+	
 	
 
 	

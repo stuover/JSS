@@ -43,7 +43,7 @@ public class ReleaseController {
 		List<ReleaseVO> blist = releaseService.showBottomList(iName);
 		return blist;
 	}
-	
+
 	//출고처리
 	@RequestMapping("/itemOut")
 	@ResponseBody

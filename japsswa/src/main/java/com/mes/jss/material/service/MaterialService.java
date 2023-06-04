@@ -162,6 +162,21 @@ public interface MaterialService {
 	// 자재 재고 다중 검색
 	public List<MrVO> MultiSearchList(MrVO vo);
 	
+	// 자재 입고 품질 사유 리스트
+	public List<MrVO> mrQualityList();
+	
+	// 자재 입고 생산 사유 리스트
+	public List<MrVO> mrProList();
+	
+	// 자재 입고 조정 사유 리스트
+	public List<MrVO> mrAdmReasonList();
+	
+	// 자재 출고 생산 사유 리스트
+	public List<MrVO> mrRelProList();
+	
+	// 자재 출고 조정 사유 리스트
+	public List<MrVO> mrRelAdmList();
+	
 	
 	
 	

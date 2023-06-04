@@ -20,7 +20,7 @@ public interface SaleService {
 	public void entDel(String delId);
 	//List<OrderVO> delDet(SaleListVO svo);
 	public void delDet(List<OrderVO> list);
-	void ordUpdate(SaleListVO slist);
+	public void ordUpdate(SaleListVO slist);
 
 	
 }
