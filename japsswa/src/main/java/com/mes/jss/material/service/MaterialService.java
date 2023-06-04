@@ -20,14 +20,13 @@ import com.mes.jss.quality.domain.QualityListVO;
 import com.mes.jss.quality.domain.QualityVO;
 
 public interface MaterialService {
-
+	
 	public int mrStore(MrVO vo);
 	
 	// 자재 리스트
 	public List<MrVO> mrlist();
 	
-	// 입고 검색
-	public List<MrVO> searchList(String keyword);
+	
 	
 	// 자재 재고 리스트(총)
 	public List<MrVO> mrInvenList();
@@ -47,8 +46,15 @@ public interface MaterialService {
 	// 자재 lot 재고
 	public List<MrVO> mrLotCountList();
 	
+	
+	
+	
+	
 	// 자재 검색
 	public List<MrVO> mrCount(String keyword);
+	
+	// 입고 검색
+	public List<MrVO> searchList(String keyword);
 	
 	// 입고 처리
 	public void mrIn(QualityListVO vo);
@@ -59,11 +65,19 @@ public interface MaterialService {
 	// 자재 입고 취소
 	public void mrDelete(MrListVO vo);
 	
+	
+	
+	
+	
 	// 자재 입고 내역
 	public List<MrVO> stList();
-		
+	
 	// 자재 출고 내역
 	public List<MrReleaseVO> mrRelGetList();
+	
+	
+	
+	
 	
 	
 	// 거래처 리스트
@@ -84,6 +98,10 @@ public interface MaterialService {
 	// 자재 발주 상세 조회
 	public List<MrOrderDetailVO> OrderDetail(String keyword);
 	
+	
+	
+	
+	
 	// 자재 조정 리스트
 	public List<MrAdjustmentVO> admList();
 	
@@ -92,8 +110,6 @@ public interface MaterialService {
 	
 	// 자재 조정 찾기 리스트
 	public List<MrAdjustmentVO> admSearchList();
-		
-	
 	
 	// 자재 조정 등록
 	public void admIn(AdjustmentListVO vo);
@@ -101,7 +117,6 @@ public interface MaterialService {
 	// 자재 조정 직접 등록
 	public void admRealIn(AdjustmentListVO vo);
 		
-	
 	// 자재 조정 입고
 	public void admInsert(AdjustmentListVO vo);
 	
@@ -110,6 +125,14 @@ public interface MaterialService {
 		
 	// 자재 조정 취소
 	public void admDel(AdjustmentListVO vo);
+	
+	// 자재 조정 수량 조정
+	public void admCount(AdjustmentListVO vo);
+	
+	
+	
+	
+	
 	
 	// 자재 반품 품질 리스트
 	public List<QualityVO> retList();
@@ -123,11 +146,23 @@ public interface MaterialService {
 	// 자재 반품 취소
 	public void returnDelete(ReturnListVO vo);
 	
+	
+	
+	
+	
+	
+	
 	// 자재 불량 리스트
 	public List<MrErrorVO> ErrorList();
 	
 	// 생산 실적 리스트
 	public List<PerformanceVO> mrPerformanceList();
+	
+	
+	// 자재 재고 다중 검색
+	public List<MrVO> MultiSearchList(MrVO vo);
+	
+	
 	
 	
 	
