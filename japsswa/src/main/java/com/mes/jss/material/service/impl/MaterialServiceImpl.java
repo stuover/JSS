@@ -370,6 +370,40 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.MrCountMulti(vo);
 	}
+	
+	
+	// 품질 사유 리스트 
+	@Override
+	public List<MrVO> mrQualityList() {
+		
+		return materialMapper.MrQuality();
+	}
+	
+	// 생산 사유 리스트
+	@Override
+	public List<MrVO> mrProList() {
+		
+		return materialMapper.MrPro();
+	}
+	
+	// 조정 사유 리스트
+	@Override
+	public List<MrVO> mrAdmReasonList() {
+		
+		return materialMapper.MrAdm();
+	}
+
+	@Override
+	public List<MrVO> mrRelProList() {
+		
+		return materialMapper.MrRelPro();
+	}
+	
+	
+	@Override
+	public List<MrVO> mrRelAdmList() {
+		return materialMapper.MrRelAdm();
+	}
 
 	
 	

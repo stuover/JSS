@@ -12,4 +12,6 @@ public class MrReleaseVO {   // 자재 출고
 	 int mrRealCount;
 	 String mrRealReasonType;
 	 String mrRealReasonCode;
+	 String itemType;
+	 String itemName;
 }
