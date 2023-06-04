@@ -41,9 +41,7 @@ public class WorkVO {
 	int proOrder;
 	int proSeq;
 	long instructNum;
-	long passItem;
-	long failItem;
-	String successStatus;
+
 	
 	//홀드 자재
 	String holdId;
@@ -55,4 +53,9 @@ public class WorkVO {
 	int itemCon;	// BOM 소요량
 	String itemType;	// 물품 구분 (완제품, 반제품, 자재)
 	Long currentCount;		// 현 재고량 
+
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd")
+	Date endTime;		// 작업 완료 시간
+	
 }

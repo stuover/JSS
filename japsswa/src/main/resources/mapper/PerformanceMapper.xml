@@ -6,7 +6,7 @@
   <mapper namespace="com.mes.jss.production.mapper.PerformanceMapper">
   
 	
-	
+	<!-- 공정정보 조회 모달창 : 공정 내역 (초기값) -->
 	<select id="processList" resultType="ProcessVO">
 		SELECT 
 			  pro_code, 
@@ -16,7 +16,8 @@
 		ORDER BY 1
 	</select>
 	
-	<select id="processListResult" resultType="ProcessVO">
+	<!-- 공정정보 조회 모달창 : 공정내역 (키워드로 검색한 결과) -->
+	<select id="processListResult" parameterType="ProcessVO" resultType="ProcessVO">
 		SELECT 
 			  pro_code, 
 			  pro_name
@@ -27,6 +28,42 @@
 		ORDER BY 1
 	</select>
 	
+	
+	<!-- 작업지시 조회 모달창 : 작업지시 내역 -->
+	<!-- 작업이 완료된 작업지시 제외 -->
+	<!-- 작업 시작 시간이 현재 날짜인 것만 조회 -->
+	<select id="todayWorkModalList" resultType="WorkVO">
+		SELECT work_id, work_name, work_date, emp_name
+		FROM (
+		            SELECT DISTINCT
+		                        w.work_id, 
+		                        w.work_name, 
+		                        w.work_date, 
+		                        d.work_end, 
+		                        e.emp_name
+		            FROM 
+		                      work_detail d JOIN work w ON  (w.work_id = d.work_id)
+		                                           LEFT OUTER JOIN performance p ON (d.wdetail_id = p.wdetail_id)
+		                                           JOIN work_bom b ON (d.wdetail_id = b.wdetail_id) ,
+		                    work a JOIN emp e ON (a.emp_no = e.emp_no)
+		            WHERE p.end_time IS NULL
+		                 AND b.pro_code = (
+		                                                SELECT pro_code
+		                                                FROM process
+		                                                WHERE pro_name = '완제품 포장'
+		                                             )
+		            )
+		WHERE TO_DATE(work_end, 'yyyy-MM-dd') = TO_DATE(SYSDATE, 'yyyy-MM-dd') 
+	</select>
+	
+	
+	<select id="empList" resultType="EmpVO">
+		SELECT emp_no, emp_name 
+		FROM emp
+		WHERE 
+		            dept_name='생산'
+		    AND position = '사원' 
+	</select>
 
   	
   </mapper>
