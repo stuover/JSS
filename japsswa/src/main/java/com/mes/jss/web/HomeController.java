@@ -44,7 +44,7 @@ public class HomeController {
 	//로그인 페이지
 	@GetMapping("/login")
 	public String login() {
-		return "/login";
+		return "login";
 	}
 
 	@GetMapping("/top")
@@ -63,7 +63,7 @@ public class HomeController {
 		System.out.println(userDetails.getUsername());
 		
 //		System.out.println(uservo.getName());		// userId
-		return "/top";
+		return "top";
 	}
 	
 	@GetMapping("/admin/admin")
