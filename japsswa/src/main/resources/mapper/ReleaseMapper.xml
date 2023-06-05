@@ -21,7 +21,7 @@
 		                  join itemlist i on(d.item_code = i.item_code)
                           full outer join release r on(d.orddetail_id = r.orddetail_id)
 		                  join emp e on(o.emp_no = e.emp_no)
-    		where (d.orddet_status = '입고완료' or d.orddet_status ='부분출고') and i.item_name = #{itemName}
+    		where (d.orddet_status = '접수완료' or d.orddet_status ='부분출고') and i.item_name = #{itemName}
             group by d.orddetail_id, 
                        d.item_code, 
                        i.item_name, 
@@ -38,13 +38,25 @@
 			where item_name = #{iName}
 	</select>
 	
-	<insert id="commItemOut" parameterType="ReleaseVO">
+	<select id="commItemOut" statementType="CALLABLE">
+		{
+			CALL comm_rel(
+				#{ordDetailId},
+				#{empName},
+				#{remain},
+				#{ordCount}
+			)
+		}
+	</select>
 	
-	</insert>
-	
-	<insert id="itemOut" parameterType="ReleaseVO">
-	
-	</insert>
+	<select id="itemOut" statementType="CALLABLE">
+		{
+			CALL rel_det(
+				#{fnLotNo},
+				#{relEachCount}
+			)
+		}
+	</select>
 	
 	
 
