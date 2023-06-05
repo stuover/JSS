@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class PerformanceVO {
 	String performanceId;
-	String wDetailId;
+	String wdetailId;
 	String itemCode;
 	String wBomId;
 	String facCode;
@@ -24,13 +24,13 @@ public class PerformanceVO {
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date endTime;
-	String empName;
+	String worker;
 	Long empNo;
 	
 	String proCode;
 	String facName;
 	String downReason;
-	
+	long workAmount;
 	
 	
 }
