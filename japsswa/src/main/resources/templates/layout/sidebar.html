@@ -15,14 +15,17 @@
 			<li class="nav-item">
 				<a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
 						<i class="typcn typcn-document-text menu-icon"></i>
-						<span class="menu-title">UI Elements</span>
+						<span class="menu-title">공통 정보</span>
 						<i class="menu-arrow"></i>
 				</a>
 				<div class="collapse" id="ui-basic">
 					<ul class="nav flex-column sub-menu">
-						<li class="nav-item"><a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-						<li class="nav-item"><a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a></li>
-						<li class="nav-item"><a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+						<li class="nav-item"><a class="nav-link" href="employee">사원 정보 조회/관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="common">공통 코드 조회/관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="bom">BOM 조회</a></li>
+						<li class="nav-item"><a class="nav-link" href="bomManage">BOM 관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="item">품목 조회/관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="process">공정 정보 조회/관리</a></li>
 					</ul>
 				</div>
 			</li>
@@ -30,43 +33,64 @@
 			<li class="nav-item">
 				<a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
 					<i class="typcn typcn-film menu-icon"></i>
-					<span class="menu-title">Form elements</span>
+					<span class="menu-title">영업</span>
 					<i class="menu-arrow"></i>
 				</a>
 				<div class="collapse" id="form-elements">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link"href="pages/forms/basic_elements.html">Basic Elements</a>
+							<a class="nav-link" href="sale/insertorder">주문서 관리</a>
+							<a class="nav-link" href="orderShow">주문서 조회</a>
+							<a class="nav-link" href="finished">완제품 입고 관리</a>
+							<a class="nav-link" href="finishedShow">완제품 입고 조회</a>
+							<a class="nav-link" href="release">출고 관리</a>
+							<a class="nav-link" href="releaseShow">출고 조회</a>
+							<a class="nav-link" href="return">반품 관리</a>
+							<a class="nav-link" href="returnShow">반품 조회</a>
+							<a class="nav-link" href="saleShow">판매실적 조회</a>
 						</li>
 					</ul>
 				</div>
 			</li>
-			
-			<li class="nav-item">
-				<a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts"> 
-					<i class="typcn typcn-chart-pie-outline menu-icon"></i> 
-					<span class="menu-title">Charts</span>
-					<i class="menu-arrow"></i>
-				</a>
-				<div class="collapse" id="charts">
-					<ul class="nav flex-column sub-menu">
-						<li class="nav-item">
-							<a class="nav-link" href="pages/charts/chartjs.html">ChartJs</a>
-						</li>
-					</ul>
-				</div>
-			</li>
+	
 			
 			<li class="nav-item">
 				<a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
 					 <i class="typcn typcn-th-small-outline menu-icon"></i> 
-					 <span class="menu-title">Tables</span> <i class="menu-arrow"></i>
+					 <span class="menu-title">자재</span> <i class="menu-arrow"></i>
 				</a>
 				<div class="collapse" id="tables">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="pages/tables/basic-table.html">Basic table</a>
+							<a class="nav-link" href="mrlist">자재 입고</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="mrStoreList">자재 입고 내역</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="mslist">자재 재고</a>
+						</li>
+						
+						<li class="nav-item">
+							<a class="nav-link" href="mrOrder">자재 발주</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="mrOrderList">자주 발주 내역</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="mrReturn">자주 반품</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="mrReturnList">자주 반품 내역</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="mrAdjustment">자주 조정 </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="mrAdjustmentList">자주 조정 내역</a>
+						</li>
+						
+						
 					</ul>
 				</div>
 			</li>
@@ -74,13 +98,19 @@
 			<li class="nav-item">
 				<a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons"> 
 					<i class="typcn typcn-compass menu-icon"></i>
-					<span class="menu-title">Icons</span>
+					<span class="menu-title">품질</span>
 					<i class="menu-arrow"></i>
 				</a>
 				<div class="collapse" id="icons">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="pages/icons/mdi.html">Mdi icons</a>
+							<a class="nav-link" href="quality">품질검사 예정 자재</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="passQuality">품질검사 완료 자재</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="errQuality">불합격 자재</a>
 						</li>
 					</ul>
 				</div>
@@ -89,16 +119,22 @@
 			<li class="nav-item">
 				<a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
 					<i class="typcn typcn-user-add-outline menu-icon"></i>
-					<span class="menu-title">User Pages</span>
+					<span class="menu-title">설비</span>
 					<i class="menu-arrow"></i>
 				</a>
 				<div class="collapse" id="auth">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="pages/samples/login.html"> Login </a>
+							<a class="nav-link" href="facility"> 설비관리 </a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="pages/samples/register.html"> Register </a>
+							<a class="nav-link" href="downDetail"> 비가동 조회 </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="downtime"> 비가동 관리 </a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="inspection"> 점검 관리 </a>
 						</li>
 					</ul>
 				</div>
@@ -108,27 +144,28 @@
 			<li class="nav-item">
 				<a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
 					<i class="typcn typcn-globe-outline menu-icon"></i> 
-						<span class="menu-title">Error pages</span>
+						<span class="menu-title">생산</span>
 						<i class="menu-arrow"></i>
 				</a>
 				<div class="collapse" id="error">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="pages/samples/error-404.html"> 404 </a>
-						</li>
+							<a class="nav-link" href="planManage">생산계획 관리</a>
+						</li>					
 						<li class="nav-item">
-							<a class="nav-link" href="pages/samples/error-500.html"> 500 </a>
+							<a class="nav-link" href="workManage">작업지시 관리</a>
+						</li>				
+						<li class="nav-item">
+							<a class="nav-link" href="proOutput">공정 이동표</a>
+						</li>					
+						<li class="nav-item">
+							<a class="nav-link" href="performanceManage">생산실적 등록</a>
 						</li>
+						
 					</ul>
 				</div>
 			</li>
 			
-			<li class="nav-item">
-				<a class="nav-link" href="https://bootstrapdash.com/demo/polluxui-free/docs/documentation.html">
-						<i class="typcn typcn-mortar-board menu-icon"></i>
-						<span class="menu-title">Documentation</span>
-				</a>
-			</li>
 		</ul>
 	</nav>
 

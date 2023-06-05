@@ -139,14 +139,17 @@
 	    
 <script>
 
-var ingCode=null;
+	var ingCode=null;
 	var itemName=null;
 	var itemType=null;
 	var proCode=null;
 	var proName=null;
 	
-var count = 0;
+	
+	var count = 0;  // LEVEL MAX 값에서 부터 카운트
 
+
+// bom 그리드 
 var bomGrid = new tui.Grid({
 	el : document.getElementById('bomGrid'),
 	rowHeaders: ['checkbox'],
@@ -244,6 +247,7 @@ var bomGrid = new tui.Grid({
 });
 
 
+// 아이템 목록 그리드 (조회)
 var modalGrid = new tui.Grid({
 	el : document.getElementById('modalGrid'),
 	pageOptions : {
@@ -271,6 +275,7 @@ var modalGrid = new tui.Grid({
 });
 
 
+//아이템 목록 함수
 function itemList(){
 	$.ajax({
 		url : "/getItemList",
@@ -297,6 +302,7 @@ $('#searchBtn').on('click', function(){
 	
 })
 
+// 아이템 목록 체인지 이벤트(조회)
 $('input[name="itemType"]').on('change', function() {	
 	let itemType = $('input[name="itemType"]:checked').val();
 	if(itemType == "all"){
@@ -317,6 +323,8 @@ $('input[name="itemType"]').on('change', function() {
 	}
 })
 
+
+// 품목 모달 검색 버튼 이벤트
 $('#selectBtn').on('click', function() {
 	count=0;
 	console.log($('#search').val());
@@ -335,6 +343,7 @@ $('#selectBtn').on('click', function() {
 })
 
 
+// 선택 품목으로 bom 정보 가져오기
 modalGrid.on('click',function(e){
 	itemCode = modalGrid.getRow(e.rowKey).itemCode;
 	itemName = modalGrid.getRow(e.rowKey).itemName;
@@ -363,29 +372,7 @@ modalGrid.on('click',function(e){
 
 
 
-$('#inProBtn').on('click', function(){
-	$('#proModal').modal('show');
-	
-	$('#proModal').on('shown.bs.modal', function (e) {
-		console.log('open');
-		setTimeout(()=> proModalGrid.refreshLayout(), 300);	
-	})
-	
-	$.ajax({
-		url : "/getProcess",
-		method : "get",
-		dataType : "json",
-		success : function(result){
-			proModalGrid.resetData(result);
-		
-		},error : function(reject){
-			console.log(reject)
-		}
-	})
-
-	
-})
-
+// 추가 버튼 눌렀을때 비오엠 LEVEL 가져오기
 $('#inBomBtn').on('click', function(){
 	if(count == 0){
 	 	 $.ajax({
@@ -414,7 +401,7 @@ $('#inBomBtn').on('click', function(){
 
 })
 
-
+// 아이템 목록 그리드
 var itemGrid = new tui.Grid({
 	el : document.getElementById('itemGrid'),
 	pageOptions : {
@@ -441,6 +428,7 @@ var itemGrid = new tui.Grid({
 	]
 });
 
+// 품목정보 그리드
 var proGrid = new tui.Grid({
 	el : document.getElementById('proGrid'),
 	pageOptions : {
@@ -464,6 +452,7 @@ var proGrid = new tui.Grid({
 
 
 
+// bom 그리드 품목, 공정 정보 불러오기
 var bomKey = null;
 bomGrid.on('dblclick', function (e){
 	
@@ -508,6 +497,7 @@ bomGrid.on('dblclick', function (e){
 })
 
 
+// 품목 type 별 체인지 이벤트
 $('#itemPix input[name="itemTypeModal"]').on('change', function() {
 	let itemType = $('input[name="itemTypeModal"]:checked').val();
 	if(itemType == "all"){
