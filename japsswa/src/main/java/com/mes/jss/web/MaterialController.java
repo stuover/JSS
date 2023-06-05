@@ -51,7 +51,7 @@ public class MaterialController {
 	@GetMapping("/mslist")     
 	public String mrList() {
 			
-		return "/material/material";
+		return "material/material";
 						
 	}
 	
@@ -272,7 +272,7 @@ public class MaterialController {
 	@GetMapping("/mrStoreList")
 	public String mrStoreList() {
 		
-		return "/material/materialStoreList";
+		return "material/materialStoreList";
 	}
 	
 // 자재 입고 내역 리스트
@@ -291,7 +291,7 @@ public class MaterialController {
 	@GetMapping("/mrReleaseList")
 	public String mrReleaseList() {
 		
-		return "/material/materialRelease";
+		return "material/materialRelease";
 	}
 	
 
@@ -340,7 +340,7 @@ public class MaterialController {
 	@GetMapping("/mrOrder")
 	public String mrOrder() {   
 		
-		return "/material/materialOrder";
+		return "material/materialOrder";
 		
 	}
 
@@ -399,7 +399,7 @@ public class MaterialController {
 	public String MrOrderList() {
 		
 		
-		return "/material/materialOrderList";
+		return "material/materialOrderList";
 		
 	}
 	
@@ -433,7 +433,7 @@ public class MaterialController {
 	@GetMapping("/mrAdjustment")
 	public String MrAdjustment(){
 		
-		return "/material/materialAdjustment";
+		return "material/materialAdjustment";
 		
 	}
 
