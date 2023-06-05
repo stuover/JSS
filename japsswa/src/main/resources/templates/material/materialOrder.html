@@ -19,6 +19,19 @@
 
 <style>
 
+.input {
+  width: 500px;
+  height: 32px;
+  font-size: 15px;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  font-weight:bold;
+}
+
+
 </style>
 </head>
 <body>
@@ -33,22 +46,32 @@
 	<!-- 제목 -->
 	
 		<h3 style="font-weight: bold; margin-bottom:70px; margin-left:700px;">&ensp;자재 발주</h3>
+	
+	<h5 class="page-title" style=" margin-top:5px; font-weight:bold; margin-left:10px;">발주 주문창</h5>	
 		
+	<div class="p-2 row">
+					<div class="col-sm-7">
+					 <div class="card">
+					  <div class="card-body">	
+		
+	
 		
 	<div style="display:flex;">
+	
+	
 	
 	<!-- 거래처 코드 인풋 -->
 	
 		<div style="float:left;">
 			<label for="cusId" style=" margin-left:20px; font-weight:bold;">거래처 코드</label><br>
-			  <input type=text id="cusId" style="width:180px; margin-left:20px;">
+			  <input type=text id="cusId" class="input" style="width:180px; margin-left:20px;">
 				</div> 
 		<div style="float:left;">
 		
 	<!-- 거래처 인풋 -->
 			
 		<label for="cusName" style=" margin-left:100px; font-weight:bold; margin-bottom:5px;">거래처 &ensp;</label><br>  
-	   <input type=text id="cusName" style="width:180px; margin-left:100px; margin-bottom:5px;">       
+	   <input type=text id="cusName" class="input" style="width:180px; margin-left:100px; margin-bottom:5px;">       
 	   
 	   </div>
 	   
@@ -69,7 +92,7 @@
 	 
 		<div style="float:left;">
 		<label for="proId" style=" margin-left:20px; margin-top:20px;font-weight:bold;">품목 코드 &ensp;</label><br>
-	    <input type=text id="proId" style="width:180px; margin-left:20px;">	
+	    <input type=text id="proId" class="input" style="width:180px; margin-left:20px;">	
 		</div>
 		
 		
@@ -77,7 +100,7 @@
 		
 		<div style="float:left;">
 		 <label for="proName" style=" margin-left:100px; margin-top:20px;font-weight:bold;">품목 &ensp;</label><br>	 
-		 <input type=text id="proName" style="width:180px; margin-left:100px;">
+		 <input type=text id="proName" class="input" style="width:180px; margin-left:100px;">
 		 </div> 
 	</div>
 		
@@ -86,14 +109,14 @@
 		<div style="display:flex;">	
 			<div style="float:left;">
 		<label for="proPrice" style=" margin-left:20px; margin-top:20px;font-weight:bold;" >가격 &ensp;</label><br>
-			 <input type=text id="proPrice" style="width:180px; margin-left:20px;" >	
+			 <input type=text id="proPrice" class="input" style="width:180px; margin-left:20px;" >	
 			</div>
 			
 	<!-- 수량 인풋 -->
 			
 			<div style="float:left;">
 			<label for="count" style=" margin-left:100px; margin-top:20px;font-weight:bold;" >수량 &ensp;</label><br>
-			 <input type=text id="count" style="width:180px; margin-left:100px;" >
+			 <input type=text id="count" class="input" style="width:180px; margin-left:100px;" >
 			</div>
 	
 	
@@ -101,69 +124,34 @@
 			
 			<div style="float:left;">
 			<label for="delivery" style=" margin-left:100px; margin-top:20px;font-weight:bold;">납품일 &ensp;</label><br>
-			 <input type=date id="delivery" style="width:180px; margin-left:100px" >
+			 <input type=date id="delivery" class="input" style="width:180px; margin-left:100px" >
 			</div> 
 		</div>	
 			
 		
-		
-	<!-- Large modal -->
-
-
-		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-
-			<div class="modal-dialog modal-sm">
-
-				<div class="modal-content">
-					<div class="modal-header">
-					
-				<!-- 모달 제목 -->
-					
-						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: bold; margin-left: 50px;">거래처 및 자재 찾기</h4>
-
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-
-					</div>
-					<div>
-					
-					<!-- 모달 검색 창 -->	
-					
-						<h6 style="font-weight: bold; text-align: center;">
-												
-							거래처명 :<input type=text id="searchcode"
-								style="margin-left: 15px; padding: 1px; width:130Px; ">
-						
-					<!-- 모달 검색 버튼 -->	
-							
-							<button type="button" class="btn btn-dark" id="searchBtn"
-								style="padding: 8px; margin-left:10px;">검색</button>
-						</h6>
-					</div>
-					
-				<!-- 검색 그리드 -->
-					
-					<div id="grid"></div>
-					
-				<!-- 선택 버튼 -->	
-				
-					<div>
-						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
-							style="width: 50px; height: 30px; margin-left:10px; padding: 3px;">선택</button>
-					</div>
-				</div>
-
-			</div>
-		</div>
-	<div style="width:500px; margin-left:1000px; margin-top:180px;">
+	</div>
+	</div>
+	</div>
+	</div>
 	
+	<div class="p-2 row">
+					<div class="col-sm-12">
+					 <div class="card">
+					  <div class="card-body">
+		
+		
+		<h5 class="page-title" style="margin-top:10px;">발주 주문서</h5>
+		
+	
+	<div style="width:500px; margin-left:1000px; margin-top:50px;">
+	
+	
+	
+	
+		
 	<!-- 삭제 버튼 -->
 	
-		<button type="button" id="deleteBtn" class="btn btn-dark" style="float:right; margin-left:10px;height: 30px; width: 50px; margin-bottom:10px; padding: 3px; margin-right:5px;">삭제</button>
+		<button type="button" id="deleteBtn" class="btn btn-dark" style="float:right; margin-left:10px;height: 30px; width: 50px; margin-bottom:10px; padding: 3px; margin-right:50px;">삭제</button>
 	
 	<!-- 등록 버튼 -->
 	
@@ -171,7 +159,7 @@
 		
 	<!-- 안전재고 미달 -->
 	
-		<button type="button" id="lackBtn" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" style="float:right; width:150px; height: 30px; padding:3px; margin-bottom:10px; margin-right:10px; margin-left:5px; ">안전 재고 미달</button>	 
+		<button type="button" id="lackBtn" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" style="float:right; width:150px; height: 30px; padding:3px; margin-bottom:10px; margin-right:10px; margin-left:5px; color:white; ">안전 재고 미달</button>	 
 			
 		</div>
 	
@@ -193,7 +181,59 @@
 
 <!-- Button trigger modal -->
 
+<!-- Large modal -->
 
+
+		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+			<div class="modal-dialog modal-sm-6">
+
+				<div class="modal-content">
+					<div class="modal-header">
+					
+				<!-- 모달 제목 -->
+					
+						<h4 class="modal-title" id="exampleModalLabel"
+							style="font-weight: bold; margin-left:120px;">거래처 및 자재 찾기</h4>
+
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+					</div>
+					<div>
+					
+					<!-- 모달 검색 창 -->	
+					
+						<h6 style="font-weight: bold; text-align: center;">
+												
+							거래처명 :<input type=text id="searchcode" class="input"
+								style="margin-left: 15px; padding: 1px; width:130Px; ">
+						
+					<!-- 모달 검색 버튼 -->	
+							
+							<button type="button" class="btn btn-dark" id="searchBtn"
+								style="padding: 8px; margin-left:10px; padding:5px;">검색</button>
+						</h6>
+					</div>
+					
+				<!-- 검색 그리드 -->
+					
+					<div id="grid"></div>
+					
+				<!-- 선택 버튼 -->	
+				
+					<div>
+						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
+							style="width: 50px; height: 35px; margin-left:230px; padding: 5px;">선택</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -214,15 +254,23 @@
       </div>
     </div>
   </div>
+</div>    
+       
+       
+       
+      </div>
+    </div>
+  </div>
 </div>
 
+	
+
+
 
 </div>
 </div>
 </div>
 </div>
-
-
 
 
 
@@ -423,6 +471,7 @@
 				scrollX : false,
 				scrollY : false,
 				rowHeaders: ['checkbox'],
+				
 				columns : [ {
 					header : '코드(거)',
 					name : 'customerId'
