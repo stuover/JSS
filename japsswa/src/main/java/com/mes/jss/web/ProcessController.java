@@ -21,7 +21,7 @@ public class ProcessController {
 	@GetMapping("/process")
 	public String process() {
 		
-		return "basic/Process";
+		return "basic/process";
 		
 	}
 	
