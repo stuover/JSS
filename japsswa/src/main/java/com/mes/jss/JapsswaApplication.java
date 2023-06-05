@@ -1,4 +1,4 @@
-package com.mes.jss;
+		package com.mes.jss;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
