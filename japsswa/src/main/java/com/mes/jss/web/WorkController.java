@@ -30,7 +30,7 @@ public class WorkController {
 
 	@RequestMapping("/workManage")
 	public String workManagement(){
-		return "production/workManage";
+		return "0production/workManage";
 	}
 	
 	
