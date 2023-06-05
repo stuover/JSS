@@ -85,7 +85,7 @@ public class PerformanceController {
 	// 생산실적 등록 : 작업 시작
 	@RequestMapping("/performanceStartAjax")
 	@ResponseBody
-	public void performanceStartAjax(@RequestBody PerformanceVO vo) {
+	public void performanceStartAjax(PerformanceVO vo) {
 		performanceService.performanceStart(vo);
 	}
 	
@@ -93,7 +93,7 @@ public class PerformanceController {
 	// 생산실적 등록 : 작업 완료
 	@RequestMapping("/performanceEndAjax")
 	@ResponseBody
-	public void performanceEndAjax(@RequestBody PerformanceVO vo) {
+	public void performanceEndAjax(PerformanceVO vo) {
 		performanceService.performanceStart(vo);
 	}
 	

@@ -86,7 +86,7 @@
 			#{proCode, mode=IN, jdbcType=VARCHAR},
 			#{facCode, mode=IN, jdbcType=VARCHAR},
 			#{workAmount, mode=IN, jdbcType=BIGINT},
-			#{empName, mode=IN, jdbcType=VARCHAR}
+			#{worker, mode=IN, jdbcType=VARCHAR}
 			)
 		}
 	</select>
