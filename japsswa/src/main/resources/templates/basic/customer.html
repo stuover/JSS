@@ -103,10 +103,8 @@
 	
 <script>
 
-const token = $("meta[name='_csrf']").attr("content")
-const header = $("meta[name='_csrf_header']").attr("content");
 
-
+// 거래처 그리드
 var cusGrid = new tui.Grid({
 	el : document.getElementById('cusGrid'),
 	scrollX:true,
@@ -158,6 +156,7 @@ var cusGrid = new tui.Grid({
 	]
 });	
 
+// 거래처 등록 그리드
 var insertGrid = new tui.Grid({
 	el : document.getElementById('insertGrid'),
 	scrollX:true,
