@@ -75,6 +75,23 @@ public class PerformanceServiceImpl implements PerformanceService{
 		
 	}
 
+	
+	// 생산실적 등록 : 등록 모달창 오픈 -> 작업시작 or 작업완료 여부
+	@Override
+	public PerformanceVO performanceInsertCondition(PerformanceVO vo) {
+		PerformanceVO result = performanceMapper.performanceInsertCondition(vo);
+		return result;
+	}
+
+	
+	// 생산실적 : 작업완료 등록인 경우
+	// 입력했던 생산실적 등록정보 가져오기
+	@Override
+	public PerformanceVO searchPerformanceStart(PerformanceVO vo) {
+		PerformanceVO result = performanceMapper.searchPerformanceStart(vo);
+		return result;
+	}
+
 
 	
 	
