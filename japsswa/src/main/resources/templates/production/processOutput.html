@@ -36,8 +36,6 @@
 				      <h5 class="page-title">작업지시</h5>
                   <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
-                  	<button id="saveBtn" class="btn btn-primary">저장</button>
-                  	<button id="deleteBtn" class="btn btn-danger">삭제</button>
                   </div>
 				      <!-- card-body start -->
 				        
@@ -80,81 +78,7 @@
 		
 		<!-- Modal List Start -->
 		
-		<!-- 생산계획 조회 모달창 -->
-	    <div class="modal fade" id="planSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	        <div class="modal-dialog modal-dialog-centered">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	            <h5 class="modal-title" id="searchModalLabel">생산계획 조회</h5>
-	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	            </div>
-		            <div class="modal-body">
-		            
-			            <input type="date" id="plan-st-date"></input> ~ <input type="date" id="plan-end-date"></input>
-			            <button id="plan-search-btn" class="m-2 btn btn-success btn-sm">검색</button>
-			            <div id="planSearchGrid"></div>
-		            
-		            </div>
-	            <div class="modal-footer">
-	            <button id="selectPlanBtn" type="button" class="btn btn-primary">선택</button>
-	            </div>
-	        </div>
-	        </div>
-	    </div>
-	    
-	    
-		<!-- 제품 조회 모달창 -->
-	    <div class="modal fade" id="itemSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	        <div class="modal-dialog modal-dialog-centered">
-	        <div class="modal-content">
-	            <div class="modal-header">
-	            	<h5 class="modal-title" id="">제품 선택</h5>
-	            	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	            </div>
-	            <div class="modal-body">
-	            	<input type="text" id="searchItemResult"></input>
-	            	<button id="item-search-btn" class="m-2 btn btn-success btn-sm">검색</button>
-	            <div id="itemSearchGrid"></div>
-	            </div>
-	            	<div class="modal-footer">
-	            		<button id="selectItemBtn" type="button" class="btn btn-primary">선택</button>
-	            	</div>
-	        </div>
-	        </div>
-	    </div>   
-	     
-		<!-- Hold 모달창 -->
-		<div class="modal fade" id="holdModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="">Hold 자재 선택</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					
-					<!-- 선택한 자재명과 필요한 자재 수량 모달 상단에 기재 -->
-					<div class="row gy-2 gy-xl-2 p-4 p-xl-2">
 
-						<div class="col-12 col-md-6">
-							<div class="input-group">
-							<label for="requiredItem" class="form-label p-2">필요한 자재 수량 :</label>
-								<input type="text" class="form-control form-control-sm" id="requiredItem" name="requiredItem" readonly>
-							</div>
-						</div>
-					</div>
-					
-					<!-- 자재 정보 그리드 -->
-					<div id="holdSelectGrid"></div>
-				
-				</div>
-					<div class="modal-footer">
-						<button id="saveHoldBtn" type="button" class="btn btn-primary">저장</button>
-					</div>
-			</div>
-			</div>
-		</div>
-		
 		<!-- 작업지시 조회 모달창 -->
 		<div class="modal fade" id="workSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg modal-dialog-centered">
@@ -236,13 +160,11 @@
 			    },		        
 		        {
 		          header: '지시명',
-		          name: 'workName',
-				  editor: 'text'
+		          name: 'workName'
 		        },
 		        {
 		          header: '지시날짜',
-		          name: 'workDate',
-		          editor: 'datePicker',
+		          name: 'workDate'
 		        },
 		        {
 		          header: '담당자',
@@ -259,7 +181,7 @@
 		const detailGrid = new tui.Grid({
 		el: document.getElementById('detailGrid'),
 		data: detailGridData,
-		rowHeaders: ['checkbox'],
+		rowHeaders: [{type: 'checkbox', header: " "}],
 		scrollX: false,
 		scrollY: false,
 		columns: [
@@ -285,8 +207,7 @@
 			  },
 		      {
 		        header: '제품명',
-		        name: 'itemName',
-				editot: 'text'
+		        name: 'itemName'
 		      },
 		      {
 		        header: '계획수량',
@@ -294,18 +215,15 @@
 		      },
 		      {
 		        header: '지시 시작날짜',
-		        name: 'workStart',
-				editor: 'datePicker'
+		        name: 'workStart'
 		      },
 			  {
 		        header: '지시 완료날짜',
-		        name: 'workEnd',
-				editor: 'datePicker'
+		        name: 'workEnd'
 		      },
 		      {
 		        header: '지시수량',
-		        name: 'workAmount',
-				editor: 'text'
+		        name: 'workAmount'
 		      },
 		      {
 			    header: '수정 가능 여부',

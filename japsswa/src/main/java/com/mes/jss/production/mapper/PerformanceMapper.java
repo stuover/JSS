@@ -34,5 +34,12 @@ public interface PerformanceMapper {
 	// 생산실적 등록 :  작업 완료
 	public PerformanceVO performanceEnd(PerformanceVO vo);
 	
+	// 생산실적 등록 : 등록 모달창 오픈 -> 작업시작 or 작업완료 여부
+	public PerformanceVO performanceInsertCondition(PerformanceVO vo);
+	
+	// 생산실적 : 작업완료 등록인 경우
+	// 입력했던 생산실적 등록정보 가져오기
+	public PerformanceVO searchPerformanceStart(PerformanceVO vo);
+	
 	
 }

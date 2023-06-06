@@ -31,7 +31,7 @@
 	
 	<!-- 작업지시 조회 모달창 : 작업지시 내역 -->
 	<!-- 작업이 완료된 작업지시 제외 -->
-	<!-- 작업 시작 시간이 현재 날짜인 것만 조회 -->
+	<!-- 작업 완료 시간이 현재 날짜인 것만 조회 -->
 	<select id="todayWorkModalList" resultType="WorkVO">
 		SELECT work_id, work_name, work_date, emp_name
 		FROM (
@@ -98,11 +98,40 @@
 			#{wdetailId, mode=IN, jdbcType=VARCHAR},
 			#{itemCode, mode=IN, jdbcType=VARCHAR},
 			#{proCode, mode=IN, jdbcType=VARCHAR},
+			#{facCode, mode=IN, jdbcType=VARCHAR},
+			#{workAmount, mode=IN, jdbcType=BIGINT},
 			#{failItem, mode=IN, jdbcType=BIGINT}
 			)
 		}
 	</select>
-
+	
+	<!-- 생산실적 등록 여부 확인 -->
+	<select id="performanceInsertCondition" parameterType="PerformanceVO" resultType="PerformanceVO">
+		SELECT COUNT(performance_id) condition
+		FROM performance
+		WHERE wdetail_id = #{wdetailId}
+		  AND item_code = #{itemCode}
+		  AND wbom_id = (
+		                 SELECT wbom_id
+		                 FROM work_bom
+		                 WHERE wdetail_id = #{wdetailId}
+		                   AND pro_code= #{proCode} 
+		                 )	
+	</select>
+	
+	<!-- 등록한 생산실적 정보 가져오기 -->
+	<select id="searchPerformanceStart" parameterType="PerformanceVO" resultType="PerformanceVO">
+		SELECT start_time, p.fac_code, fac_name, worker
+		FROM performance p JOIN facility f ON (p.fac_code = f.fac_code)
+		WHERE wdetail_id = #{wdetailId}
+		AND item_code = #{itemCode}
+		AND wbom_id = ( 
+						SELECT wbom_id 
+						FROM work_bom 
+						WHERE wdetail_id = #{wdetailId} 
+						  AND pro_code= #{proCode}
+					   )		
+	</select>
 
   	
   </mapper>

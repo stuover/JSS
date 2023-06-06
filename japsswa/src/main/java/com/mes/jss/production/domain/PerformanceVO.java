@@ -1,11 +1,5 @@
 package com.mes.jss.production.domain;
 
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Data;
 
 @Data
@@ -13,17 +7,14 @@ public class PerformanceVO {
 	String performanceId;
 	String wdetailId;
 	String itemCode;
-	String wBomId;
+	String wbomId;
 	String facCode;
 	long outPut;
 	long passItem;
 	long failItem;
-	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd")
-	Date startTime;
-	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd")
-	Date endTime;
+
+	String startTime;
+	String endTime;
 	String worker;
 	Long empNo;
 	
@@ -31,6 +22,9 @@ public class PerformanceVO {
 	String facName;
 	String downReason;
 	long workAmount;
+	
+	//등록시 작업시작 or 작업완료 여부
+	String condition;
 	
 	
 }

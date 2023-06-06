@@ -94,7 +94,26 @@ public class PerformanceController {
 	@RequestMapping("/performanceEndAjax")
 	@ResponseBody
 	public void performanceEndAjax(PerformanceVO vo) {
-		performanceService.performanceStart(vo);
+		performanceService.performanceEnd(vo);
+	}
+	
+	// 생산실적 등록 : 등록 모달창 오픈 -> 작업시작 or 작업완료 여부
+	@RequestMapping("/perforInsertConditionAjax")
+	@ResponseBody
+	public PerformanceVO perforInsertConditionAjax(@RequestBody PerformanceVO vo) {
+		PerformanceVO result = performanceService.performanceInsertCondition(vo);
+		
+		return result;
+	}
+	
+	// 생산실적 : 작업완료 등록인 경우
+	// 입력했던 생산실적 등록정보 가져오기
+	@RequestMapping("/searchPerforStartAjax")
+	@ResponseBody
+	public PerformanceVO searchPerforStartAjax(@RequestBody PerformanceVO vo) {
+		PerformanceVO result = performanceService.searchPerformanceStart(vo);
+		
+		return result;
 	}
 	
 	
