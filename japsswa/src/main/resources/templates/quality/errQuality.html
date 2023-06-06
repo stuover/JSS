@@ -30,13 +30,25 @@
 </head>
 
     <th:block layout:fragment="content">
+    	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
         <h4>불량 자재</h4>
+        <div>
+        <input type ="text" id="searchInp"> <button id="searchButoon">검색</button><br><br>
+        </div>
         <div id="qualityGrid"></div>
 
-        <!-- /.modal -->
-
-		<div id="CheckList" style = "display : none;">
+		<hr>
+		
+		<div id="CheckList">
 	        <h4>검사 목록</h4>
+	        <div>
+	        	<input type ="text" id="getTestCode" placeholder="검사코드" readonly>
+	        	<input type ="text" id="getItemCode" placeholder="품목코드" readonly>
+	        	<input type ="text" id="getItemName" placeholder="품목명" readonly>
+	        </div>
 	        <div id="testGrid"></div>
 	        <div>
 	            <button id="modBtn" type="button">수정</button>
@@ -44,7 +56,7 @@
 	            
 	        </div>
 		</div>
-
+</div></div></div></div>
 
 <script>
 
@@ -89,7 +101,7 @@ var qualityGrid = new tui.Grid({
     	}
 	    ]
 });
-
+qualityGrid.setBodyHeight(200);
 function qualityGridList(){
 	$.ajax({
 		url : "/errList",
@@ -155,38 +167,51 @@ var testGrid = new tui.Grid({
     }
     ]
 });
+testGrid.setBodyHeight(200);
 
 var qualityKey = null;
 qualityGrid.on('click', function(e){
 	qualityKey = e.rowKey;
-	$.ajax({
-		url : '/getHistoryList',
-		method:"get",
-		dataType : "json",
-		data : {testCode : qualityGrid.getRow(e.rowKey).testCode},
-		success: function(result){
-			testGrid.resetData(result)
-			
-			result.forEach(function(a, index) {
-				testGrid.setValue(index, "passQuantity", qualityGrid.getRow(e.rowKey).testQuantity - testGrid.getRow(index).mrCount, false)
-				testGrid.setValue(index, "defectiveRate",  testGrid.getRow(index).mrCount/qualityGrid.getRow(e.rowKey).testQuantity*100+"%", false)
-			})
-			
-			
-			$('#CheckList').css("display", 'block')
-			testGrid.refreshLayout();
-		}, error : function(reject){
-			console.log(reject)
-		}
+	if(qualityKey != null ){
 		
-	})
+		$.ajax({
+			url : '/getHistoryList',
+			method:"get",
+			dataType : "json",
+			data : {testCode : qualityGrid.getRow(e.rowKey).testCode},
+			success: function(result){
+				testGrid.resetData(result)
+				
+				result.forEach(function(a, index) {
+					testGrid.setValue(index, "passQuantity", qualityGrid.getRow(e.rowKey).testQuantity - testGrid.getRow(index).mrCount, false)
+					testGrid.setValue(index, "defectiveRate",  testGrid.getRow(index).mrCount/qualityGrid.getRow(e.rowKey).testQuantity*100+"%", false)
+				})
+				$('#getTestCode').val(qualityGrid.getRow(e.rowKey).testCode)
+					$('#getItemCode').val(qualityGrid.getRow(e.rowKey).itemCode)
+					$('#getItemName').val(qualityGrid.getRow(e.rowKey).itemName)
+				
+				$('#CheckList').css("display", 'block')
+				testGrid.refreshLayout();
+			}, error : function(reject){
+				console.log(reject)
+			}
+			
+		})
+	}
 	
 })
 
 testGrid.on('editingFinish', function(e){
 	let row = testGrid.getRow(e.rowKey);
-    testGrid.setValue(e.rowKey, "mrCount", qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity, false)
-    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100+"%", false)
+	if(qualityGrid.getRow(qualityKey).testQuantity < row.passQuantity){
+		alert('잘 못 입력!!')
+		testGrid.setValue(e.rowKey, "passQuantity", "", false)
+	}else{
+		
+	    testGrid.setValue(e.rowKey, "mrCount", qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity, false)
+	    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100+"%", false)
+	    
+	}
 })
 
 
@@ -205,7 +230,6 @@ testGrid.on('editingFinish', function(e){
 			xhr.setRequestHeader(header, token);    
 		},
  		success : function(result) {
-			$('#CheckList').css("display", 'none')
 			qualityGridList();
  		}, error : function (reject) {
  			console.log(reject)
@@ -225,7 +249,6 @@ testGrid.on('editingFinish', function(e){
 				xhr.setRequestHeader(header, token);    
 			},
 	 		success : function(result) {
-				$('#CheckList').css("display", 'none')
 				qualityGridList();
 	 		}, error : function (reject) {
 	 			console.log(reject)

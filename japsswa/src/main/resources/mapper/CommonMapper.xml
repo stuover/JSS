@@ -46,12 +46,12 @@
 		set deta_code = upper(#{detaCode}),
 			deta_name = #{detaName},
 			deta_note = #{detaNote},
-			deta_modify_date = to_char(sysdate, 'yyyy/MM/dd')
+			deta_modify_date = to_date(sysdate, 'yyyy/MM/dd')
 		where details_index = #{detailsIndex}
 	</update>
 	
 	<insert id="insertDetails" parameterType ="CommVO">
-		insert into details_comm values(upper(#{detaCode}), #{detaName}, #{detaNote}, to_char(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'), #{commCode},details_comm_seq.nextval)	
+		insert into details_comm values(upper(#{detaCode}), #{detaName}, #{detaNote}, to_date(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'), #{commCode},details_comm_seq.nextval)	
 	</insert>
 	
 	<delete id="deleteDetails" >
@@ -62,12 +62,12 @@
 		update common
 		set comm_name = #{commName},
 			comm_note = #{commNote},
-			modify_date = to_char(sysdate, 'yyyy/MM/dd')
+			modify_date = to_date(sysdate, 'yyyy/MM/dd')
 		where comm_code = #{commCode}
 	</update>
 	
 	<insert id="insertCommCode" parameterType = "CommVO">
-		insert into common values( upper(#{commCode}), #{commName}, #{commNote}, to_char(sysdate, 'yyyy/MM/dd'), to_char(sysdate, 'yyyy/MM/dd'))	
+		insert into common values( upper(#{commCode}), #{commName}, #{commNote}, to_date(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'))	
 	</insert>
 	
 	<select id="getItemDeta" resultType = "CommVO">
