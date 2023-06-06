@@ -22,6 +22,7 @@ public class InspectionVO {
 	// 조인
 	String facName;
 	String downReason;
+	String startDate;
 	String stopDate;
 //	ins_code varchar2(20) PRIMARY KEY,
 //	ins_date date not null,

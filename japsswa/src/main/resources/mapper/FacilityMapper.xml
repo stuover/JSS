@@ -113,7 +113,7 @@
 		   on   (f.fac_code = d.fac_code)
 		where fac_name like '%' || #{facName} || '%' 
 	    <if test="startDate != '' and stopDate != '' ">	    	    	    
-	    and d.stop_date between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
+	    and TRUNC(d.stop_date) between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
 	    </if>
   	</select>
   	
@@ -181,6 +181,7 @@
                 i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null
+		order by ins_code desc
   		
   		<!-- 
   		select distinct f.fac_name, f.fac_code, d.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date, i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
@@ -215,13 +216,13 @@
   		delete from inspection where ins_code = #{insCode} 
   	</delete>
   	
-  	<select id="searchInsList" parameterType="FacilityVO" resultType="FacilityVO">
+  	<select id="searchInsList" parameterType="InspectionVO" resultType="InspectionVO">
   		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date,
                 i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null and f.fac_name like '%' || #{facName} || '%'
-         <if test="insDate != '' and insDate != '' ">	    	    	    
-	    and i.ins_date between to_date(#{insDate}, 'yyyy-MM-dd') and to_date(#{insDate}, 'yyyy-MM-dd')
+         <if test="startDate != '' and stopDate != '' ">	    	    	    
+	    and TRUNC(i.ins_date) between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
 	    </if>
   	</select>
   	
