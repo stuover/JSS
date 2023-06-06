@@ -5,7 +5,7 @@
   
   <mapper namespace="com.mes.jss.basic.mapper.ProcessMapper">
   		<select id="getList" parameterType="ProcessVO" resultType = "ProcessVO">
-  			select pro_code, pro_name, to_char(insert_date, 'yyyy/MM/dd') insertDate, to_char(modify_date, 'yyyy/MM/dd') modifyDate from process order by pro_code
+  			select pro_code, pro_name, to_date(insert_date, 'yyyy/MM/dd') insertDate, to_date(modify_date, 'yyyy/MM/dd') modifyDate from process order by pro_code
   		</select>
   		
   		<select id = "getProCode" resultType="ProcessVO">
@@ -13,13 +13,13 @@
   		</select>
   		
   		<insert id="insertProcess" parameterType="ProcessVO">
-  			insert into process values(#{proCode}, #{proName}, to_char(sysdate, 'yyyy/MM/dd'),to_char(sysdate, 'yyyy/MM/dd'))
+  			insert into process values(#{proCode}, #{proName}, to_date(sysdate, 'yyyy/MM/dd'),to_date(sysdate, 'yyyy/MM/dd'))
   		</insert>
   		
   		<update id="updateProcess" parameterType="ProcessVO">
   			update process
   			set pro_name = #{proName},
-  				modify_date  = to_char(sysdate, 'yyyy/MM/dd')
+  				modify_date  = to_date(sysdate, 'yyyy/MM/dd')
   			where pro_code = #{proCode}
   		</update>
   		

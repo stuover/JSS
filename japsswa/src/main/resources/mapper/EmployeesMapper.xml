@@ -25,7 +25,7 @@
   		select rownum, emp_no "empNo", emp_name "empName", hire_date "hireDate", phone_num "phoneNum", dept_name "deptName", position "position", email "email"
   	    from emp
   	   <include refid="criteria"></include>
-  	    order by rownum
+  	    order by emp_no desc
   	</select>
 	
 	<!-- 사원번호 시퀀스 -->
