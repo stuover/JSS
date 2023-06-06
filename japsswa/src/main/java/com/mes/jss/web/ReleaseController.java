@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mes.jss.sale.domain.OrderVO;
+import com.mes.jss.sale.domain.ReleaseListVO;
 import com.mes.jss.sale.domain.ReleaseVO;
 import com.mes.jss.sale.service.ReleaseService;
 
@@ -47,10 +47,14 @@ public class ReleaseController {
 	//출고처리
 	@RequestMapping("/itemOut")
 	@ResponseBody
-	public ReleaseVO itemOutAjax(@RequestBody List<ReleaseVO> rlist) {
-		releaseService.itemOut(rlist);
+	public ReleaseVO itemOutAjax(@RequestBody ReleaseListVO releaseList) {
 		
-		return null;
+		ReleaseVO volist = releaseList.getVolist();
+		
+		List<ReleaseVO> rlist = releaseList.getReleaseList();
+		releaseService.itemOut(volist, rlist);
+		
+		return volist;
 	}
 	
 }

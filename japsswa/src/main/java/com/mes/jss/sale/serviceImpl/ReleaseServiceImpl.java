@@ -28,15 +28,15 @@ public class ReleaseServiceImpl implements ReleaseService {
 	}
 
 	@Override
-	public void itemOut(List<ReleaseVO> rlist) {
+	public void itemOut(ReleaseVO volist, List<ReleaseVO> rlist) {
+		releaseMapper.commOut(volist);
 		
-		releaseMapper.commItemOut(rlist.get(0).getOrdDetailId());
-		
-		for(ReleaseVO rvo : rlist) {
-			releaseMapper.itemOut(rvo);
+		for(ReleaseVO rVo : rlist) {
+			releaseMapper.itemOut(rVo);
 		}
-		
 	}
+
+
 
 
 }

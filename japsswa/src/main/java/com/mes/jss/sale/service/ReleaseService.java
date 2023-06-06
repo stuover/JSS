@@ -11,7 +11,9 @@ public interface ReleaseService {
 
 	List<ReleaseVO> showBottomList(String iName);
 
-	public void itemOut(List<ReleaseVO> rlist);
+	public void itemOut(ReleaseVO volist, List<ReleaseVO> rlist);
+
+
 
 
 }
