@@ -36,7 +36,7 @@ public class QualityController {
 	public String mrList(Model model, QualityVO vo) {
 	
 		
-		return "/material/materialStore";
+		return "material/materialStore";
 						
 	}
 	
