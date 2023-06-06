@@ -5,6 +5,11 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"><head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	#logoutBtn{
+		margin-bottom: 20px;
+	}
+</style>
 </head>
 <body>
 
@@ -23,7 +28,7 @@
 			<form th:action="logout" method="post">
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}">
-				<button>로그아웃</button>
+				<button id="logoutBtn">로그아웃</button>
 			</form>
 		</div>
 		<div sec:authorize="hasRole('ROLE_ADMIN')"></div>

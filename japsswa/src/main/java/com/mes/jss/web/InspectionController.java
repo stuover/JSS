@@ -87,11 +87,11 @@ public class InspectionController {
 	
 	@RequestMapping("/searchInsList")		// 점검 검색
 	@ResponseBody
-	public List<FacilityVO> searchInsList(FacilityVO vo){
+	public List<InspectionVO> searchInsList(InspectionVO vo){
 		
 		System.out.println(vo);
 		
-		List<FacilityVO> list = service.searchInsList(vo);
+		List<InspectionVO> list = service.searchInsList(vo);
 				
 		return list;
 	}

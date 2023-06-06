@@ -161,7 +161,7 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public List<FacilityVO> searchInsList(FacilityVO vo) {	// 점검 내역 검색
+	public List<InspectionVO> searchInsList(InspectionVO vo) {	// 점검 내역 검색
 		
 		return facilityMapper.searchInsList(vo);
 	}

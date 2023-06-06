@@ -45,7 +45,7 @@ public interface FacilityMapper {
 	public int insertModalIns(InspectionVO vo);	// 비가동 모달 점검 등록
 	public void modifyIns(InspectionVO vo);		// 점검 내역 수정
 	public void deleteIns(InspectionVO vo);	// 점검 내역 삭제
-	public List<FacilityVO> searchInsList(FacilityVO vo);	// 점검 내역 검색
+	public List<InspectionVO> searchInsList(InspectionVO vo);	// 점검 내역 검색
 	public List<CommVO> getDetailList();
 	
 }
