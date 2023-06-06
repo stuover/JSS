@@ -28,7 +28,7 @@ public class DownController {
 	@GetMapping("/downtime")
 	public String  downtime(Model model) {
 		model.addAttribute("detail", service.getDetailList());
-		return "Facility/Downtime";
+		return "Facility/downtime";
 	}	
 	
 	@GetMapping("/facilityAjax")		// 전체 설비 리스트 조회
@@ -121,7 +121,7 @@ public class DownController {
 	@RequestMapping("/downDetail")
 	public String getDowndetail(Model model) {
 				
-		return "Facility/DownDetail";
+		return "Facility/downDetail";
 	}
 	
 	@GetMapping("/downDetailAjax")		// 비가동 내역 조회
@@ -143,6 +143,7 @@ public class DownController {
 				
 		return list;
 	}
+	
 	
 	
 }

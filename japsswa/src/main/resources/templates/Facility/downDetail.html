@@ -199,8 +199,6 @@
                 // 검색조건 날짜, 
                 // 사유, 설비명은 선택할수있게
 
-                //facName = $('#searchInput').val();
-                //console.log(facName);
 				console.log($('#searchForm').serialize());
                 
                 
@@ -214,9 +212,7 @@
 
                     success: function (result) {
                         console.log("성공");
-                        grid.resetData(result);
-                        //$('#searchInput').val() = ' ';	// 안됨
-                        $('#searchForm')[0].reset();
+                        grid.resetData(result);                        
 
                     },
                     error: function (reject) {
@@ -229,7 +225,7 @@
 
             $('#resetBtn').on('click', function () {
 
-                getDetailList();
+            	$('#searchForm')[0].reset();
 
             })
         </script>

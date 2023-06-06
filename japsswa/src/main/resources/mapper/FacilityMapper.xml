@@ -220,7 +220,7 @@
                 i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null and f.fac_name like '%' || #{facName} || '%'
-         <if test="startDate != '' and stopDate != '' ">	    	    	    
+         <if test="insDate != '' and insDate != '' ">	    	    	    
 	    and i.ins_date between to_date(#{insDate}, 'yyyy-MM-dd') and to_date(#{insDate}, 'yyyy-MM-dd')
 	    </if>
   	</select>
