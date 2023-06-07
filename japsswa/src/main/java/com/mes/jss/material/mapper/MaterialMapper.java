@@ -150,6 +150,17 @@ public interface MaterialMapper {
 	public List<MrVO> MrRelAdm();
 	
 	
+	// 자재 입고내역 검색 쿼리
+	public List<MrVO> MrStoreList(MrVO vo);
+	
+	
+	// 자재 lot 조회
+	public List<MrVO> MrLotList(String itemName);
+	
+	// 자재 발주 조회용
+	public List<MrOrderDetailVO> MrOrmGetList();
+	
+	
 
 	
 	

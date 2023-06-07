@@ -4,6 +4,52 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.mes.jss.material.mapper.MaterialMapper">
+	
+	<!-- 다중 검색 조건 -->  		
+    	
+    	<sql id="search">
+    		<where>
+              	 <if test=" storeReasonType != null and storeReasonType != ''.toString()">
+                  	store_reason_type like '%'||#{storeReasonType}||'%'
+                  </if>
+                  
+                  <if test="itemType != null and itemType != ''.toString()">
+                   	 and item_type like '%'||#{itemType}||'%'
+                     
+                  </if>
+                  
+                  <if test="storeDate1 != null and storeDate2 != null">
+                  	 and store_date between #{storeDate1} and #{storeDate2}
+                  	 
+                  </if>
+                  
+                   <if test="mrSearch != null and mrSearch != ''.toString()">
+                   	 and item_name like '%'||#{mrSearch}||'%'
+                     
+                  </if>
+
+      </where>
+    		
+    	
+    	
+    	</sql> 		
+	
+   
+  		
+   <!-- 입고 내역 검색 -->
+   
+    <select id="MrStoreList" resultType="MrVO" parameterType="MrVO">
+    	select *
+    	from material m join itemlist i on (m.item_code = i.item_code)
+    	
+    	<include refid="search"></include>
+   		
+   		
+    </select>
+  		
+  		
+  		
+  		
   		
   	<!-- 자재 리스트 -->
   	
@@ -133,6 +179,22 @@
   		
   		</select>
   		 
+  		 <!-- 자재 lot 재고 -->
+  		 <select id="MrLotList" resultType="MrVO">
+  		 	select *
+  		 	from material m join itemlist i on(m.item_code=i.item_code)
+  		 	where item_name = #{itemName}
+  		 
+  		 
+  		 
+  		 </select>
+  		 
+  		 
+  		 
+  		 
+  		 
+  		 
+  		 
   	<!-- 자재 lot 재고 리스트 -->
   		<select id="getMrLotCount"	resultType="MrVO">
   			select m.mr_lot_number, i.item_name, i.item_type,sum(store_count) as total, m.expire_date   
@@ -149,8 +211,8 @@
   		<select id="codeList" resultType="MrVO">
   		
   		select * 
-  		from material 
-  		where store_reason_code = #{keyword}
+  		from material m join itemlist i on(m.item_code = i.item_code) 
+  		where i.item_name = #{keyword} and to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   		
   		</select>
 	
@@ -211,7 +273,7 @@
   		 from emp e 
   		 join material m on (e.emp_no=m.emp_no) 
   		 join itemlist i on (m.item_code=i.item_code)
-  		 where m.store_reason_type ='품질통과'
+  		 where m.store_reason_type ='발주'
   		 order by m.store_date desc
 		
 		</select>	
@@ -410,17 +472,21 @@
   	<!-- 조정 될 리스트 -->	
   		<select id="mrAdGetList" resultType="MrAdjustmentVO">
   		
-  		  select i.item_code,
+  		 select i.item_code,
   		  i.item_name,
   		  m.store_count, 
   		  sum(r.mr_real_count) as totalRel,
   		  m.mr_lot_number,
   		  i.save_material
 			from itemlist i 
-			join material m on(i.item_code = m.item_code) 
+			 join material m on(i.item_code = m.item_code)
+             left outer join material_adjustment a on(m.mr_lot_number = a.mr_lot_number)
 			join material_release r on(m.mr_lot_number=r.mr_lot_number)
-			where m.hold_count = m.store_count  
-			group by i.item_code, i.item_name, m.store_count, m.mr_lot_number, i.save_material
+            
+			where m.hold_count = m.store_count
+            and a.adjustment_code is null
+            
+            group by i.item_code,i.item_name, m.store_count,m.mr_lot_number, i.save_material
 			
   		 
   		</select>
@@ -521,6 +587,28 @@
   			}
   		
   		</select>	
+  		
+  <!-- 발주 조회용 리스트 -->		
+  	<select id="MrOrmGetList" resultType="MrOrderVO">
+  		
+  		select o.mr_order_date,
+  			o.mr_order_code,
+  			c.customer_id,
+  			c.customer_name,
+  			e.emp_no,
+  			e.emp_name,
+  			o.product_count,
+  			o.all_count 
+  			from customer c 
+  			join material_order o on(c.customer_id = o.customer_id) 
+  			join emp e on(o.emp_no=e.emp_no)
+  			join material_order_detail d on (o.mr_order_code = d.mr_order_code)
+  			 join quality_test q on (d.mr_order_det_code = q.mr_order_det_code)
+            where q.situation = '검사대기'
+  			 
+  	
+  	
+  	</select>	
   		
   		
   <!-- 발주 리스트 -->		

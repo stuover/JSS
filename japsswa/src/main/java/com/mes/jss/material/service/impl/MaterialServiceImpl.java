@@ -404,6 +404,26 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MrVO> mrRelAdmList() {
 		return materialMapper.MrRelAdm();
 	}
+	
+	// 자재 입고 내역 검색 동적 쿼리
+	@Override
+	public List<MrVO> mrStoreListQuery(MrVO vo) {
+		
+		return materialMapper.MrStoreList(vo);
+	}
+
+	@Override
+	public List<MrVO> mrLot(String itemName) {
+		
+		return materialMapper.MrLotList(itemName);
+	}
+
+	//발주 조회용
+	@Override
+	public List<MrOrderDetailVO> orderList() {
+		
+		return materialMapper.MrOrmGetList();
+	}
 
 	
 	

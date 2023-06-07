@@ -17,6 +17,15 @@
 <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
 
 <style>
+
+.modal fade bd-example-modal-lg {
+
+	width:800px;
+	margin:auto;
+	role="document"
+}
+
+
 </style>
 
 </head>
@@ -71,14 +80,16 @@
 <!-- 입고 조회 모달 -->
 
 		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  >
+			
+			
 
-			<div class="modal-dialog modal-lg "  >
+			<div class="modal-dialog modal-lg"  >
 
 				<div class="modal-content" >
 					<div class="modal-header" >
 						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: bold; margin-left: 280px;">입고 처리 확인 및 삭제</h4>
+							style="font-weight: bold; margin-left: 280px;">입고 처리 확인 및 취소</h4>
 <!-- 닫기 버튼 -->
 
 						<button type="button" class="close" data-dismiss="modal"
@@ -91,7 +102,7 @@
 <!-- 검색 인풋-->				
 					<div>
 						<h6 style="font-weight: bold; text-align: center;">
-							입고사유코드 :<input type=text id="searchcode"
+							자재명 :<input type=text id="searchcode"
 			
 								style="margin-left: 15px; padding: 1px;">
 <!-- 검색 버튼 -->
@@ -102,7 +113,7 @@
 <!--  삭제 버튼 -->
 								
 							<button type="button" class="btn btn-dark" id="deleteBtn"
-								style="padding: 3px; margin-left: 15px;">삭제</button>
+								style="padding: 3px; margin-left: 15px;">취소</button>
 									
 						</h6>
 					</div>
@@ -298,52 +309,53 @@
 
 		var modalgrid = new tui.Grid({
 			el : document.getElementById('modalgrid'),
-			scollX : false,
+			bodyHeight:600,
 			scollY : false,	
 			rowHeaders: ['checkbox'],
 			columns : [ {
 				header : '자재lot번호',
 				name : 'mrLotNumber',
-				
+				width : 140
 			}, {
 				header : '품목코드',
-				name : 'itemCode'
+				name : 'itemCode',
+				width : 100
 			},{
 				header : '품목명',
-				name : 'itemName'
+				name : 'itemName',
+				width : 80
 			},
 			{
 				header : '담당자',
-				name : 'empName'
+				name : 'empName',
+				width : 50
 			},  
 			{
 				header : '입고 날짜',
-				name : 'storeDate'
+				name : 'storeDate',
+				width : 75
 			}, {
 				header : '입고 수량',
-				name : 'storeCount'
+				name : 'storeCount',
+				width : 65
 			},
-			{
-				header : '홀드수량',
-				name : 'holdCount'
-			},
+			
 			{
 				header : '유통기한',
-				name : 'expireDate'
+				name : 'expireDate',
+				width : 75
 			},
 			{
 				header : '입고 사유 구분',
-				name : 'storeReasonType'
-			},
-			{
-				header : '입고 사유 코드',
-				name : 'storeReasonCode'
+				name : 'storeReasonType',
+				width : 120
 			}
+			
 						
 			],
 			pageOptions: { 
             	useClient: true,
-               	perPage: 5 
+               	perPage: 10
             }
 			
 		})

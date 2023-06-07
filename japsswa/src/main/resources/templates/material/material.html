@@ -47,8 +47,8 @@
 									<h3 style="font-weight:bold; margin-left:600px; margin-bottom:30px;">&ensp;자재 재고 조회</h3>
 						<div class="btn-group">
 						  
-                          	<button type="button" id="allBtn"  class="btn btn-info">전체</button>
-							<button type="button" id="halfBtn" class="btn btn-primary" style="float:left;">반제품</button>
+                          	<button type="button" id="allBtn"  class="btn btn-success">전체</button>
+							<button type="button" id="halfBtn" class="btn btn-success" style="float:left;">반제품</button>
 							<button type="button" id="materialBtn"class="btn btn-success" style="float:left;">자재</button>   
 						
 						
@@ -119,21 +119,13 @@
 						
 							
 						
-						<h3 style="font-weight:bold; margin-left:600px; margin-top:30px; margin-bottom:40px;">&ensp;lot별 자재 조회</h3>
+					 	
+						 
 						
-						<div class="btn-group">
-						  
-                          	<button type="button" id="all"  class="btn btn-info">전체</button>
-							<button type="button" id="half" class="btn btn-primary" style="float:left;">반제품</button>
-							<button type="button" id="material"class="btn btn-success" style="float:left;">자재</button>   
-						
-						
-						
+					<div id="grid44">	
+					 <div id="grid4" style="margin-top:20px;"></div>	 
 						</div>
 						
-						
-						
-					<div id="grid4" style="margin-top:20px;"></div>	
 						
 					
 					<!-- Modal -->
@@ -162,16 +154,31 @@
 				
 	// 재고 아작스
 	
-		window.onload = function(){
+	
 		
 	
 		
-			$('#searchGrid').css('display', 'none');
-			$('#hide2').css('display','none')
+		
+	
+		
+			
+			
+		
+	
+	
+	$(document).ready(function(){
+		
+		$('#searchGrid').css('display', 'none');
+		$('#hide2').css('display','none')
+		$('#grid44').css('display','none');
+		
+		
+		
 			
 			$.ajax({
 				url : "/mrInventory",
 				method : "GET",
+				
 				success : function(result) {
 					
 					grid.resetData(result);
@@ -205,14 +212,67 @@
 				
 					} ) 
 
+					
+					grid.on('dblclick',(ev) =>{
+		
+		let result5= grid.getRow(ev.rowKey);
+		console.log(result5.itemName);
+		
+		
+					
+			$.ajax({
+				url:"/mrLotList",
+				method:"GET",
+				data:{'itemName' : result5.itemName},
+				success: function(result){
+					
+					grid4.resetData(result);
+					$('#grid44').css('display','block');
+				},
+				
+				
+				error: function(reject){
+					console.log(reject);
+				}
+				
+				
+				
+				
+				
+					
+					
+					
+					
+				
+			
+				
+				
+				
+				
+			})
+					
+		})		
 				},
 
 				error: function(reject){
 					console.log(reject);
 				}
+				
+				
+				
 
 			
 		});
+			
+			
+
+			
+		
+			
+			
+			
+			
+			
 			
 	
 	$('#allBtn').on('click',function(){
@@ -383,7 +443,7 @@
 		
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
-				scollX : false,
+				bodyHeight:250,
 				scollY : false,
 				
 				
@@ -411,9 +471,59 @@
 				],
 				pageOptions: { 
 	            	useClient: true,
-	               	perPage: 4
+	               	perPage: 20
 	            }
 			})
+	
+	grid.on('dblclick',(ev) =>{
+		
+		let result5= grid.getRow(ev.rowKey);
+		console.log(result5.itemName);
+		
+		
+					
+			$.ajax({
+				url:"/mrLotList",
+				method:"GET",
+				data:{'itemName' : result5.itemName},
+				success: function(result){
+					
+					grid4.resetData(result);
+					$('#grid44').css('display','block');
+				},
+				
+				
+				error: function(reject){
+					console.log(reject);
+				}
+				
+				
+				
+				
+				
+					
+					
+					
+					
+				
+			
+				
+				
+				
+				
+			})
+			
+			
+		
+		
+		
+		
+	
+	
+	
+
+	
+	
 	
 	
 	
@@ -508,19 +618,7 @@
 			})
 			
 	
-	// 자재 lot 재고
 	
-		$.ajax({
-			url:"/mrLotCount",
-			method:"GET",
-			success: function(result){
-				grid4.resetData(result);
-			},
-			error: function(reject){
-				console.log(reject)
-			}
-		})
-		
 	
 		
 		var grid4 = new tui.Grid({
@@ -540,8 +638,8 @@
 				header : '구분',
 				name : 'itemType'
 			},{
-				header : '재고량',
-				name : 'total'
+				header : '수량',
+				name : 'storeCount'
 			},{
 				header : '유통기한',
 				name : 'expireDate'
@@ -555,8 +653,13 @@
                	perPage: 5 
             }
 		})
+	
+	
 		
 	$('#multi').on('click',function(){
+		
+		
+		
 		$.ajax({
 			url:"/multi",
 			method:"Get",
@@ -603,19 +706,30 @@
 	})
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
 	$('#all').on('click',function(){
 		
 		$.ajax({
 			url:"/mrLotCount",
 			method:"GET",
 			success: function(result){
-				grid4.resetData(result);
+				grid.resetData(result);
 			},
 			error: function(reject){
 				console.log(reject)
 			}
 		})
 	})
+	
+	
+	
 	
 	
 	
@@ -629,25 +743,19 @@
 	    	})
 	    });
 	
-	};
-		
-	    
+	
+	
+		})
+	})
+
 	</script>
 
 	
 	
 	
+
+
+	</th:block>
+	</body>
+	</html>
 	
-	
-	
-
-
-
-
-
-</th:block>
-
-
-</body>
-
-</html>
