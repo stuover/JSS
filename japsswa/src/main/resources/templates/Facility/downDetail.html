@@ -184,13 +184,17 @@
             
             facGrid.on('click', function (e) {
 
-                console.log("facGrid클릭");
+            	
+            	if(e.rowKEy != null){
+            		console.log("facGrid클릭");
 
-                fac = facGrid.getRow(e.rowKey).facName;                
-				console.log(fac)
-                $('#facModal').modal('hide');
-                $('#searchInput').val(fac);                
-                //insertUpGrid.resetData([fac]); 인풋에 데이터넣기
+                    fac = facGrid.getRow(e.rowKey).facName;                
+    				console.log(fac)
+                    $('#facModal').modal('hide');
+                    $('#searchInput').val(fac);                
+                    //insertUpGrid.resetData([fac]); 인풋에 데이터넣기
+            	}
+                
 
 
             })

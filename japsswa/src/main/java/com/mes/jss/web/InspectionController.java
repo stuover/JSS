@@ -65,6 +65,16 @@ public class InspectionController {
 		return vo;
 	}
 	
+	@RequestMapping("/updateFacDate")	// facility 마지막 점검일 업데이트
+	@ResponseBody
+	public FacilityVO updateFacDate(@RequestBody FacilityVO vo) {
+		
+		System.out.println(vo);
+		service.updateFacDate(vo);
+		
+		return vo;
+	}
+	
 	@RequestMapping("/modifyInspection")	// 점검 내역 수정
 	@ResponseBody
 	public InspectionVO modifyInspection(@RequestBody InspectionVO vo) {

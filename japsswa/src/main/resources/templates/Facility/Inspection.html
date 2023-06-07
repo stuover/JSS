@@ -82,9 +82,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="downModalTitle">설비 점검 등록</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
                     <div class="modal-body">
                         <!-- 점검모달 그리드 시작 -->
@@ -94,7 +91,7 @@
                     </div>
                     <div class="modal-footer">
                         <button id="saveBtn" type="button" class="btn btn-primary">등록</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                        <button id="closeBtn" type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -109,10 +106,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>                        
                     </div>
                     <div class="modal-body">
                         <!-- fac 모달그리드 시작 -->
@@ -137,9 +131,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="downModalTitle">비가동 설비 점검 등록</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
                     <div class="modal-body">
                         <!-- 모달 그리드 시작 -->
@@ -149,7 +140,7 @@
                     </div>
                     <div class="modal-footer">
                         <button id="downSaveBtn" type="button" class="btn btn-primary">등록</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                        <button id="closeBtn2" type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -171,10 +162,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="downModalTitle">점검 상세 내역</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title" id="downModalTitle">점검 상세 내역</h5>                       
                     </div>
                     <div class="modal-body">
                         <!-- 모달 그리드 시작 -->
@@ -185,7 +173,7 @@
                     <div class="modal-footer">
                         <button id="modBtn" type="button" class="btn btn-primary">수정</button>
                         <button id="delBtn" type="button" class="btn btn-primary">삭제</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button id="closeBtn3" type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -199,9 +187,9 @@
             // 비가동 설비중 사유가 점검인 리스트 조회 그리드    
             const grid = new tui.Grid({
                 el: document.getElementById('grid'),
-                scrollX: false,
-                scrollY: false,
+                scrollX: true,
                 width: 550,
+                bodyHeight: 170,
                 columns: [{
                         header: '설비코드 ',
                         name: 'facCode',
@@ -375,8 +363,7 @@
                     },
                     {
                         header: '점검날짜 ',
-                        name: 'insDate',
-                        editor: 'datePicker'
+                        name: 'insDate'
                     },
                     {
                         header: '점검사유 ',
@@ -560,8 +547,7 @@
                     },
                     {
                         header: '점검일',
-                        name: 'insDate',
-                        editor: 'datePicker'
+                        name: 'insDate'
                     },
                     {
                         header: '점검 사유',
@@ -626,6 +612,7 @@
                 console.log(obj);
 
                 saveInspection(obj);
+                updateFacDate(obj);
 
             })
 
@@ -645,6 +632,7 @@
                 console.log(obj);
 
                 saveInspection(obj);
+                updateFacDate(obj);
 
             })
 
@@ -668,6 +656,28 @@
                         insList();
                     },
                     error: function (reject) {
+                        console.log(reject);
+                    }
+                });
+            }
+            
+            // facility 마지막 점검일 업데이트
+            function updateFacDate(obj) {
+
+                $.ajax({
+
+                    url: "/updateFacDate",
+                    method: "POST",
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        console.log("update완료");
+                    },
+                    error: function (reject) {
+                    	console.log("update실패");
                         console.log(reject);
                     }
                 });
@@ -814,9 +824,12 @@
                 facGrid.on('click', function (e) {
 
                     fac = facGrid.getRow(e.rowKey);
-
+					if(e.rowKey != null){
+						
                     $('#facModal').modal('hide');
                     insertUpGrid.resetData([fac]);
+						
+					}
 
                 })
             })
@@ -831,16 +844,18 @@
                 selectFac();
 
                 facGrid.on('click', function (e) {
-					
-                    facName = facGrid.getRow(e.rowKey).facName
-                    $('#facModal').modal('hide');
-                    $('#searchInput').val(facName);
+					if(e.rowKey != null){
+						facName = facGrid.getRow(e.rowKey).facName
+	                    $('#facModal').modal('hide');
+	                    $('#searchInput').val(facName);
+					}
+                    
 
                 })
             })
 
             $('#searchBtn').on('click', function () {
-
+	
 				console.log($('#searchForm').serialize());             
                 $.ajax({
                     url: "/searchInsList",
@@ -863,6 +878,26 @@
 
                 $('#searchForm')[0].reset();
 
+            })
+            
+            $('#closeBtn').on('click', function(){
+            	            	
+              	$('#insertModal').modal('hide');
+            })
+            
+            $('#closeBtn2').on('click', function(){
+            	            	
+              	$('#downInsertModal').modal('hide');
+            })
+            
+            $('#facCloseBtn').on('click', function(){
+            	            	
+              	$('#facModal').modal('hide');
+            })
+            
+            $('#closeBtn3').on('click', function(){
+            	            	
+              	$('#detailModal').modal('hide');
             })
             
             // 종료일 입력란 변경 이벤트
