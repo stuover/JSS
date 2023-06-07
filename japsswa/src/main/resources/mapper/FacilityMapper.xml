@@ -224,6 +224,7 @@
          <if test="startDate != '' and stopDate != '' ">	    	    	    
 	    and TRUNC(i.ins_date) between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
 	    </if>
+	    order by i.ins_code desc
   	</select>
   	
   	
