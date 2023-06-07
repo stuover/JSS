@@ -18,7 +18,7 @@
 <th:block layout:fragment="content">
 
 	
- 		<div class="container-fluid page-body-wrapper">
+ 		<div >
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -33,10 +33,12 @@
 				  <div class="col-sm-12">
 				    <div class="card">
 				      <div class="card-body">
-				      <h5 class="page-title">작업지시</h5>
-                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
-                  </div>
+				      <div class="h-auto d-md-flex justify-content-between">
+					      <div><h5 class="page-title">작업지시</h5></div>
+		                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+		                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
+		                  </div>
+				      </div>
 				      <!-- card-body start -->
 				        
 	                  <div id="commonGrid"></div>
@@ -54,10 +56,12 @@
 					<div class="col-sm-12">
 					 <div class="card">
 					  <div class="card-body">
-					 	<h5 class="page-title">공정 현황</h5>
-						  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+					  <div class="h-auto d-md-flex justify-content-between">
+					 	<div><h5 class="page-title">공정 현황</h5></div>
+						 <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
 							<button type="button" id="selectHoldBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">공정 이동표</button>
-							</div>
+						</div>
+					  </div>
 							<!-- card-body start -->
 						
 							<div id="processInfoGrid"></div>
@@ -84,7 +88,7 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="">작업지시 조회</h5>
+					<h5 class="modal-title" id="">생산 실적 등록한 작업지시 조회</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -181,9 +185,9 @@
 		const detailGrid = new tui.Grid({
 		el: document.getElementById('detailGrid'),
 		data: detailGridData,
-		rowHeaders: [{type: 'checkbox', header: " "}],
 		scrollX: false,
 		scrollY: false,
+		bodyHeight: 160,
 		columns: [
 			{
 		     	header: '지시 상세코드',
@@ -208,10 +212,6 @@
 		      {
 		        header: '제품명',
 		        name: 'itemName'
-		      },
-		      {
-		        header: '계획수량',
-		        name: 'planAmount'
 		      },
 		      {
 		        header: '지시 시작날짜',
@@ -288,14 +288,15 @@
 			
 			
 			// 작업지시 조회 버튼 -> 작업지시 리스트 초기값 
-			//(현재 날짜를 기준으로 일주일동안의 작업지시 조회 - 현재 날짜 포함, 현잰 날짜 전후로 3일)
+			//(현재 날짜를 기준으로 일주일동안의 작업지시 조회 - 현재 날짜 포함, 현잰 날짜 전후로 3일)		
 			$('#searchBtn').click(function() {
 				$.ajax({
-					url: "/modalWorkListAjax",
+					url: "/proMoveWorkModalListAjax",
 					method: "GET",
 					success: function(result){
 						console.log(result);
 						workSearchGrid.resetData(result);
+						
 					},
 					error: function(reject){
 						console.log(reject);
@@ -313,7 +314,7 @@
 				console.log(endTime);
 
 				$.ajax({
-					url : "/workSearchResultAjax",
+					url : "/proMoveWorkModalResultAjax",
 					data : {'startTime' : startTime , 'endTime' : endTime},
 					method :"GET",
 					success : function(result){
@@ -363,91 +364,15 @@
 							}
 						});
 					 
-					 $('#saveOption').attr('value', 'modify');
-					 detailGrid.hideColumn('planAmount');
-					 detailGrid.showColumn('modifyOption');
-					 commonGrid.hideColumn('planName');
 					 
-					 // 수정 여부가 '수정 불가'인 row 고치지 못하게 처리.
-					for(let i=0; i < detailGrid.getRowCount(); i++){
-						
-						let modifyOk = detailGrid.getData()[i].modifyOption
-						
-						if(modifyOk.equals('수정 불가')){
-							detailGrid.disableRow(i, false);
-							detailGrid.disableRowCheck(i);
-						}
-					};
 					 
 				 });	 
 			});
 
 			
-			// BOM 및 공정 정보
-			let processInfoGridData = [];
-			const processInfoGrid = new tui.Grid({
-			  el: document.getElementById('processInfoGrid'),
-			  data: processInfoGridData,
-			  rowHeaders: [{ type: 'checkbox', header: " ", align: 'left', valign: 'middle' }],
-			  scrollX: false,
-			  scrollY: true,
-			  columns: [
-				{
-				  header: '제품코드',
-				  name: 'itemCode',
-				  hidden: true
-				},
-				{
-				  header: '공정코드',
-				  name: 'proCode',
-				  hidden: true
-				},
-				{
-				  header: '공정명',
-				  name: 'proName'
-				},
-				{
-				  header: '공정순서',
-				  name: 'proOrder'
-				},		    
-				{
-				  header: '자재명',
-				  name: 'itemName'
-				},
-				{
-				  header: '소요량',
-				  name: 'itemCon',
-				  width: 120
-				},
-				{
-				  header: '작업지시량',
-				  name: 'workAmount',
-				  width: 120
-				 },				
-				{
-				  header: '홀드수량',
-				  name: 'holdCount',
-				  width: 120
-				}
-			  ]
-			});
-			
-			// bom 정보 하나만 체크할 수 있게 설정.
-			bomInfoGrid.on('check', function (e) {
-				var checkRows = bomInfoGrid.getCheckedRowKeys();
-				checkRows.forEach(function( key, idx){                      
-					if(key != e.rowKey){
-						bomInfoGrid.uncheck(key);
-					}
-				});
-			});	
-			
-			
 			// 작업지시 상세 리스트 :  제품명 더블클릭 -> 제품의 BOM 및 공정 정보 조회.
 			var iCode = '';		// 더블클릭한 제품의 제품코드
-			var iType = '';
 			var itemKeyNum = '';		// 더블클릭한 제품의 rowKey
-			var workNum = 0;			// 더블클릭한 제품의 지시수량
 			var wCode = '';
 			detailGrid.on('dblclick', function(e) {
 
@@ -456,71 +381,37 @@
 					detailGrid.removeRowClassName(itemKeyNum, 'cell-color');
 				}
 				detailGrid.addRowClassName(e.rowKey, 'cell-color');
+				// 클릭한 제품의 rowKey 변수에 담아주기.
 				itemKeyNum = e.rowKey;
 				
-				if(e.columnName == 'itemName') {
-					iCode = detailGrid.getRow(e.rowKey).itemCode;
-					iType = detailGrid.getRow(e.rowKey).itemType;
-					wCode = detailGrid.getRow(e.rowKey).wdetailId;
+				iCode = detailGrid.getRow(e.rowKey).itemCode;
+				wCode = detailGrid.getRow(e.rowKey).wdetailId;						
 					
-					console.log('iCode : ' + iCode);
-					console.log('iType : ' + iType);
-					console.log('wdetailId : ' + wCode);
-					console.log('itemKeyNum : '+ itemKeyNum);								
-					
-					// 더블클릭한 제품의 BOM 및 공정정보 조회 ajax
-					$.ajax({
-						url : "/itemBomInfoAjax", 
-						data : {wdetailId : wCode, itemType : iType},
-						method : "GET",
-						async: false,
-						success : function(result) {
-							//console.log(result);
-							bomInfoGrid.resetData(result);
-						},
-						error : function(reject) {
-							console.log(reject);
-						}
-					});
-										
-					
-					// 홀드 자재 여부 색 부여
-					for(let i=0; i < bomInfoGrid.getRowCount(); i++){
-						if(bomInfoGrid.getData()[i].holdCount == null ){
-							//console.log('홀드등록 해야 함')
-							bomInfoGrid.addRowClassName(i, 'cell-Red');
-						}else if(bomInfoGrid.getData()[i].holdCount != bomInfoGrid.getData()[i].workAmount){
-							//console.log('홀드 수정해야 함')
-							bomInfoGrid.addRowClassName(i, 'cell-Red');
-						}
+				// 더블클릭한 제품의 BOM 및 공정정보 조회 ajax
+				$.ajax({
+					url : "/processCurrInfoAjax", 
+					data : {wdetailId : wCode},
+					method : "GET",
+					async: false,
+					success : function(result) {
+						//console.log(result);
+						processInfoGrid.resetData(result);
+					},
+					error : function(reject) {
+						console.log(reject);
+					}
+				});	
 						
-					}
-					// 색 제거
-					for(let i=0; i < bomInfoGrid.getRowCount(); i++){
-						if(bomInfoGrid.getData()[i].workAmount == '0'){
-							console.log('색 제거해야 함.')
-							bomInfoGrid.removeRowClassName(i, 'cell-Red')
-						}
-					}
-
-					
-					// 세부지시코드 입력
-					for(let i=0; i < bomInfoGrid.getRowCount(); i++){
-						bomInfoGrid.setValue( i, 'wdetailId', wCode, false);
-					};	
-					
-				}		
-			});
-
+			});			
 
 			// 공정 현황 모달창
-			let holdSelectGridData = [];
-			const holdSelectGrid = new tui.Grid({
-			  el: document.getElementById('holdSelectGrid'),
-			  data: holdSelectGridData,
-			  rowHeaders: ['checkbox'],
+			let processInfoGridData = [];
+			const processInfoGrid = new tui.Grid({
+			  el: document.getElementById('processInfoGrid'),
+			  data: processInfoGridData,
 			  scrollX: false,
 			  scrollY: true,
+			  bodyHeight: 200,
 			  columns: [
 				{
 				  header: '지시상세코드',
