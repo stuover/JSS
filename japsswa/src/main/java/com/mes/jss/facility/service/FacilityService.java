@@ -47,10 +47,11 @@ public interface FacilityService {
 	public List<InspectionVO> getInspectionList();	// 점검내역 리스트
 	public List<FacilityVO> getSelectList();		// 점검 등록 - facCode 리스트 불러오기
 	public boolean saveInspection(InspectionVO vo);	// 모달 점검 등록
+	public void updateFacDate(FacilityVO vo);
 	public void modifyInspection(InspectionVO vo);	// 점검 내역 수정
 	public void RemoveInspection(InspectionVO vo);	// 점검 내역 삭제
 	public List<InspectionVO> searchInsList(InspectionVO vo);	// 점검 내역 검색
-	public List<CommVO> getDetailList();
+	public List<CommVO> getDetailList(String commCode);
 	
 
 	

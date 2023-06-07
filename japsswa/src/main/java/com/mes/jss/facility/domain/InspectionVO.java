@@ -24,6 +24,7 @@ public class InspectionVO {
 	String downReason;
 	String startDate;
 	String stopDate;
+	String lastInspection;
 //	ins_code varchar2(20) PRIMARY KEY,
 //	ins_date date not null,
 //	ins_reason varchar2(20) not null,

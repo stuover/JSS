@@ -46,6 +46,7 @@ public interface FacilityMapper {
 	public void modifyIns(InspectionVO vo);		// 점검 내역 수정
 	public void deleteIns(InspectionVO vo);	// 점검 내역 삭제
 	public List<InspectionVO> searchInsList(InspectionVO vo);	// 점검 내역 검색
-	public List<CommVO> getDetailList();
+	public List<CommVO> getDetailList(String commCode);
+	public int modifyFacDate(InspectionVO vo);
 	
 }

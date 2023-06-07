@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.facility.domain.DowntimeVO;
@@ -143,9 +144,16 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 	
 	@Override
+	@Transactional
 	public boolean saveInspection(InspectionVO vo) {		// 비가동 = 점검등록
 		
-		return facilityMapper.insertModalIns(vo) == 1;
+		int i = 0;
+		i=facilityMapper.insertModalIns(vo);
+		if(i == 1) {
+			i+=facilityMapper.modifyFacDate(vo);	
+		}
+		return  i>0;
+		
 	}
 
 	@Override
@@ -167,9 +175,15 @@ public class FacilityServiceimpl implements FacilityService{
 	}
 
 	@Override
-	public List<CommVO> getDetailList() {
+	public List<CommVO> getDetailList(String commCode) {
 		// TODO Auto-generated method stub
-		return facilityMapper.getDetailList();
+		return facilityMapper.getDetailList(commCode);
+	}
+
+	@Override
+	public void updateFacDate(FacilityVO vo) {
+
+		
 	}
 
 	
