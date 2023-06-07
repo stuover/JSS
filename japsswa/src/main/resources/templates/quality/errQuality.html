@@ -26,7 +26,13 @@
         .tui-grid-cell-content {
             text-align: center;
         }
-    </style>
+
+input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
+</style>
+
 </head>
 
     <th:block layout:fragment="content">
@@ -36,6 +42,11 @@
                 <div class="card-body">
         <h4>불량 자재</h4>
         <div>
+        <select id="searchSel">
+						<option value="">전체</option>
+						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
+						</option>
+					</select> 
         <input type ="text" id="searchInp"> <button id="searchButoon">검색</button><br><br>
         </div>
         <div id="qualityGrid"></div>
@@ -102,11 +113,16 @@ var qualityGrid = new tui.Grid({
 	    ]
 });
 qualityGrid.setBodyHeight(200);
-function qualityGridList(){
+
+
+let searchInp = null;
+let searchSel = null;
+function qualityGridList(searchInp, searchSel){
 	$.ajax({
 		url : "/errList",
 		method : "get",
 		dataType : "json",
+		data : {searchInp : searchInp, searchSel : searchSel},
 		success : function (result) {
 			qualityGrid.resetData(result)
 		}, error : function (reject) {
@@ -115,7 +131,13 @@ function qualityGridList(){
 	})	
 }
 
-qualityGridList();
+
+qualityGridList(searchInp, searchSel);
+$('#searchButoon').on('click', function(){
+	searchInp = $('#searchInp').val()
+	searchSel = $('#searchSel').val()
+	qualityGridList(searchInp, searchSel);
+})
 
 var testGrid = new tui.Grid({
     el: document.getElementById("testGrid"),
@@ -185,12 +207,16 @@ qualityGrid.on('click', function(e){
 				result.forEach(function(a, index) {
 					testGrid.setValue(index, "passQuantity", qualityGrid.getRow(e.rowKey).testQuantity - testGrid.getRow(index).mrCount, false)
 					testGrid.setValue(index, "defectiveRate",  testGrid.getRow(index).mrCount/qualityGrid.getRow(e.rowKey).testQuantity*100+"%", false)
+					testGrid.setValue(index,"testQuantity", qualityGrid.getRow(qualityKey).testQuantity, false)
 				})
 				$('#getTestCode').val(qualityGrid.getRow(e.rowKey).testCode)
 					$('#getItemCode').val(qualityGrid.getRow(e.rowKey).itemCode)
 					$('#getItemName').val(qualityGrid.getRow(e.rowKey).itemName)
+					result.forEach(function(data, index){
+					
+
+				})
 				
-				$('#CheckList').css("display", 'block')
 				testGrid.refreshLayout();
 			}, error : function(reject){
 				console.log(reject)
@@ -220,7 +246,8 @@ testGrid.on('editingFinish', function(e){
  $('#modBtn').on('click',function(){
  	console.log(qualityGrid.getRow(qualityKey))
  	console.log(testGrid.getData())
-	
+		testGrid.finishEditing();
+
  	$.ajax({
  		url : "/completeTest",
  		method : "post",

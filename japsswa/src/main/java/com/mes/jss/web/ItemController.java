@@ -27,7 +27,6 @@ public class ItemController {
 	@ResponseBody
 	@RequestMapping("/itemList")
 	public List<ItemVO> itemList(@RequestParam String val, String search){
-		System.err.println(val);
 		if(val == null || val.equals("null")) {
 			return itemAllList();
 		}{
@@ -39,7 +38,6 @@ public class ItemController {
 	@ResponseBody
 	@RequestMapping("/itemAllList")
 	public List<ItemVO> itemAllList(){
-		System.err.println(itemService.getAllItemList());
 		return itemService.getAllItemList();
 	}
 	
@@ -63,7 +61,7 @@ public class ItemController {
 	@ResponseBody
 	@RequestMapping("/addItemAjax")
 	public ItemVO addItemAjax(@RequestBody ItemVO vo) {
-		itemService.addItem(vo);		
+		itemService.addItem(vo);
 		return vo;
 	}
 
@@ -71,7 +69,6 @@ public class ItemController {
 	@ResponseBody
 	@RequestMapping("/modItemAjax")
 	public ItemVO modItemAjax(@RequestBody ItemVO vo) {
-		System.err.println(vo);
 		itemService.modifyItem(vo);		
 		return vo;
 	}
@@ -90,7 +87,6 @@ public class ItemController {
 	@ResponseBody
 	@RequestMapping("/saveItemQuality")
 	public List<CheckListVO> saveItemQuality(@RequestBody List<CheckListVO> vo){
-		System.err.println(vo);
 
 		return 	qcService.updateItemQuality(vo);
 
@@ -99,7 +95,6 @@ public class ItemController {
 	@ResponseBody
 	@RequestMapping("/removeQualityList")
 	public List<CheckListVO> removeQualityList(@RequestBody List<CheckListVO> vo){
-		System.err.println(vo);
 
 		return 	qcService.removeItemQuality(vo);
 

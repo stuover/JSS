@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.quality.domain.TestHistoryListVO;
@@ -27,9 +28,9 @@ public class QualityServiceImpl implements QualityService {
 	}
 
 	@Override
-	public List<QualityVO> qualityList() {
+	public List<QualityVO> qualityList(SearchDTO dto) {
 		// TODO Auto-generated method stub
-		return qualityMapper.qualityList();
+		return qualityMapper.qualityList(dto);
 	}
 
 	@Override
@@ -78,15 +79,15 @@ public class QualityServiceImpl implements QualityService {
 	}
 
 	@Override
-	public List<QualityVO> getPassQualityList() {
+	public List<QualityVO> getPassQualityList(SearchDTO dto) {
 		// TODO Auto-generated method stub
-		return qualityMapper.getPassQualityList();
+		return qualityMapper.getPassQualityList(dto);
 	}
 
 	@Override
-	public List<QualityVO> getErrQualityList() {
+	public List<QualityVO> getErrQualityList(SearchDTO dto) {
 		// TODO Auto-generated method stub
-		return qualityMapper.getErrQualityList();
+		return qualityMapper.getErrQualityList(dto);
 	}
 
 	@Override

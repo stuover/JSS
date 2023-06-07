@@ -4,7 +4,12 @@
 
 <head lang="en">
 	<meta charset="UTF-8">
-
+<style> 
+input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
+</style>
 
 </head>
 
@@ -23,8 +28,7 @@
 					</select> <input id="searchInput" name="searchInput" type="text">
 					<button id="searchButton" name="searchButton" type="button" class="btn btn-primary">검색</button>
 					<div id="grid"></div>
-					<button id="addModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal"
-						data-bs-target="#addModal">등록</button>
+					<button id="addModalBtn" type="button" class="btn btn-primary" >등록</button>
 					<button id="modModalBtn" type="button" class="btn btn-primary">수정</button>
 
 
@@ -33,6 +37,8 @@
 		</div>
 	</div>
 
+
+<!-- 품목 등록 모달 -->
 
 	<div class="modal fade" id="addModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal"
 		aria-hidden="true">
@@ -104,7 +110,6 @@
 	</div>
 	<script th:inline = "javascript">
 		let itemTypeList = [[${typeCode}]]; 
-		console.log(itemTypeList)
 
 		var grid = new tui.Grid({
 			el: document.getElementById('grid'),
@@ -177,7 +182,6 @@
 				method: "get",
 				dataType: "json",
 				success: function (result) {
-					console.log(result)
 					grid.resetData(result);
 				},
 				error: function (reject) {
@@ -221,6 +225,7 @@
 				}, {
 					header: '구분',
 					name: 'itemType',
+					formatter:'listItemText',
 					editor: {
 						type: 'select',
 						options: {
@@ -304,6 +309,7 @@
 				}, {
 					header: '구분',
 					name: 'itemType',
+					formatter :'listItemText',
 					editor: {
 						type: 'select',
 						options: {
@@ -371,49 +377,55 @@
 		});
 
 		$('#addModalBtn').on('click', function () {
-			$.ajax({
+			modalGrid.appendRow();
+		 	$.ajax({
 				url: "/getItemCode",
 				method: "get",
 				dataType: "json",
 				success: function (result) {
-					console.log(result);
+					
 					modalGrid.resetData([result])
+					$('#addModal').modal('show');
+					setTimeout(() => modalGrid.refreshLayout(), 300);
 
-					$('#addModal').on('shown.bs.modal', function (e) {
-						setTimeout(() => modalGrid.refreshLayout(), 300);
-
-					})
 				},
 				error: function (reject) {
 					console.log(reject);
 				}
 
-			})
+			}) 
 		})
 
 		$('#addBtn').on('click', function () {
 			modalGrid.finishEditing();
-			$.ajax({
-				url: "/addItemAjax",
-				contentType: "application/json",
-				data: JSON.stringify(modalGrid.getData()[0]),
-				method: "post",
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader(header, token);
-				}, success: function (result) {
-					itemList();
-					$('#addModal').modal('hide');
-
-				}, error: function (reject) {
-					console.log(reject)
-				}
-			})
+			if(modalGrid.getData()[0].itemName != null ||  modalGrid.getData(0)[0].itemType != null || modalGrid.getData(0)[0].unit !=null || modalGrid.getData(0)[0].standard != null){
+				$.ajax({
+					url: "/addItemAjax",
+					contentType: "application/json",
+					data: JSON.stringify(modalGrid.getData()[0]),
+					method: "post",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(header, token);
+					}, success: function (result) {
+						
+						itemList();
+						$('#addModal').modal('hide');
+	
+					}, error: function (reject) {
+						console.log(reject)
+					}
+				})
+			}else {
+				alert('모든 값을 이력하세요!');
+			}
 		})
 
 		$('#modModalBtn').on('click', function () {
 			if (grid.getCheckedRows().length != 0) {
 				$('#modModal').modal('show');
 				modModalGrid.resetData(grid.getCheckedRows());
+
+
 				$('#modModal').on('shown.bs.modal', function (e) {
 					modModalGrid.refreshLayout();
 				})
@@ -444,7 +456,6 @@
 
 
 		$('#delBtn').on('click', function () {
-			console.log(modModalGrid.getData()[0].itemCode)
 			$.ajax({
 				url: "/removeItem",
 				data: { itemCode: modModalGrid.getData()[0].itemCode },
@@ -497,11 +508,7 @@
 				header: " "
 			}],
 			columns: [
-				{
-					header: '검사항목코드',
-					name: 'checklistCode',
-
-				}, {
+				 {
 					header: '검사명',
 					name: 'testName',
 					editor: 'text'
@@ -548,26 +555,42 @@
 		})
 
 		$('#saveQualityBtn').on('click', function () {
+			
+			qualityGrid.finishEditing();
+
 			let itemCode = grid.getRow(gridRowKey).itemCode;
 			let data = qualityGrid.getData();
-			data.forEach(function (i) {
-				i.itemCode = itemCode
-			})
-			$.ajax({
-				url: "/saveItemQuality",
-				method: "post",
-				contentType: "application/json",
-				dataType : "json",
-				data: JSON.stringify(data),
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader(header, token);
-				}, success: function (result) {
-					qualityGrid.resetData(result)
-				}, error: function (reject) {
-					console.log(reject);
+			
+			data.forEach(function (i,index) {
+				if(data[index].testName == null || data[index].testName == ''){
+					qualityGrid.removeRow(index);
 				}
 			})
+			
+			data = qualityGrid.getData();
+			if(data != null && data != ''){
+				data.forEach(function (i) {
+					i.itemCode = itemCode
+				})
+				
+				$.ajax({
+					url: "/saveItemQuality",
+					method: "post",
+					contentType: "application/json",
+					dataType : "json",
+					data: JSON.stringify(data),
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(header, token);
+					}, success: function (result) {
+						qualityGrid.resetData(result)
+					}, error: function (reject) {
+						console.log(reject);
+					}
+				})
+			}
 		})
+		
+		
 		
 		$('#deleteQualityBtn').on('click', function(){
 			let data = qualityGrid.getCheckedRows();

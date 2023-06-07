@@ -6,12 +6,19 @@
 <head lang="en">
 <meta charset="UTF-8">
 
+
+<style> 
+input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
+</style>
 </head>
 
 
 <th:block layout:fragment="content">
 
- 		<div class="container-fluid page-body-wrapper">
+ 		<div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -24,7 +31,6 @@
                     <input type = "text" id="itemCode">
                   	<input type="text" id="itemName">
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
-                  	<button id="saveBtn" class="btn btn-primary">저장</button>
                   </div>
                   
                
@@ -34,9 +40,11 @@
 				    <div class="card">
 				      <div class="card-body">
 				      <!-- card-body start -->
+				      
 				        <h5 class="page-title">BOM</h5>
+				        <button id="saveBtn" class="btn btn-success">저장</button>
 				        <button id="inBomBtn" class="btn btn-primary" style="display:none;">추가</button>
-				        <button id="delBomBtn" class="btn btn-primary" style="display:none">삭제</button>
+				        <button id="delBomBtn" class="btn btn-danger" style="display:none">삭제</button>
 				        
 				        <div id="bomGrid"></div>
 					  <!-- card-body end -->
@@ -50,9 +58,7 @@
               </div>
             </div>
   		</div>
-  		
-  		
-  		
+
   		
   		<!-- 아아템 리스트 조회 -->
   		<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -103,8 +109,8 @@
 						
 			            <div id="itemGrid"></div>
 			            
-			            <input type="text" class="btn-serach" name="selectIn" id="selectIn"  >
-			            <button id="selectBtn" type="button" class="btn btn-primary">검색</button>
+			            <input type="text" class="btn-serach" name="selectIn" id="searchItem"  >
+			            <button id="serachItem" type="button" class="btn btn-primary">검색</button>
 		            </div>
 	            <div class="modal-footer">
 	            </div>
@@ -124,8 +130,8 @@
 
 			            <div id="proGrid"></div>
 			            
-			            <input type="text" class="btn-serach" name="selectIn" id="selectIn"  >
-			            <button id="selectBtn" type="button" class="btn btn-primary">검색</button>
+			            <input type="text" class="btn-serach" name="selectIn" id="searchInpPro"  >
+			            <button id="searchPro" type="button" class="btn btn-primary">검색</button>
 		            </div>
 	            <div class="modal-footer">
 	            </div>
@@ -144,16 +150,13 @@
 	var itemType=null;
 	var proCode=null;
 	var proName=null;
-	
+	var unit=null
 	
 	var count = 0;  // LEVEL MAX 값에서 부터 카운트
-
-
 // bom 그리드 
 var bomGrid = new tui.Grid({
 	el : document.getElementById('bomGrid'),
 	rowHeaders: ['checkbox'],
-	
 	columns : [ 
 		{
 			header : 'BOM번호',
@@ -185,44 +188,7 @@ var bomGrid = new tui.Grid({
 		sortingType : 'desc',
 	}, {
 		header : '단위',
-		name : 'unit',
-		editor: {
-            type: 'select',
-            options: {
-                listItems: [
-               	 {
-                        text: 'mL',
-                        value: 'ml'
-                    },
-                    {
-                        text: 'L',
-                        value: 'L'
-                    },
-                    {
-                        text: 'Kg',
-                        value: 'Kg'
-                    },
-                    {
-                        text: 'g',
-                        value: 'g'
-                    },
-                    ,
-                    {
-                        text: 'EA',
-                        value: 'EA'
-                    }
-                    ,
-                    {
-                        text: 'm',
-                        value: 'm'
-                    } ,
-                    {
-                        text: 'cm',
-                        value: 'cm'
-                    }
-                ]
-            }
-		 }
+		name : 'unit'
 	}, {
 		header : '공정순서',
 		name : 'proOrder',
@@ -290,9 +256,12 @@ function itemList(){
 	})
 }
 
+bomGrid.setBodyHeight(568);
 
 
 $('#searchBtn').on('click', function(){
+	$('#option1').prop("checked", true)
+
 	itemList()
 	$('#searchModal').modal('show');
 	$('#searchModal').on('shown.bs.modal', function (e) {
@@ -457,7 +426,7 @@ var bomKey = null;
 bomGrid.on('dblclick', function (e){
 	
 	bomKey = e.rowKey;
-	if(e.columnName == "ingCode" || e.columnName == "itemName"){
+	if(e.columnName == "ingCode" || e.columnName == "itemName" || e.columnName == "itemType"){
 		console.log(e.rowKey)
 		$('#itemPix').modal('show');
 		$('#itemPix').on('shown.bs.modal', function (e) {
@@ -486,6 +455,7 @@ bomGrid.on('dblclick', function (e){
 			url : "/processList",
 			method : "get",
 			dataType : "json",
+			data : {searchInp : $('#searchInpPro').val()},
 			success : function(result) {
 				proGrid.resetData(result);
 			},
@@ -530,16 +500,47 @@ $('#itemPix input[name="itemTypeModal"]').on('change', function() {
 
 
 
+// 공정 검색
+$('#searchPro').on('click', function(){
+	$.ajax({
+		url : "/processList",
+		method : "get",
+		dataType : "json",
+		data : {searchInp : $('#searchInpPro').val()},
+		success : function(result) {
+			proGrid.resetData(result);
+		},
+		error : function(reject){
+			console.log(reject)
+		}
+	})
+})
+
+// 아이템 검색
+$('#serachItem').on('click', function() {
+	$.ajax({
+		url : "/searchItem",
+		data : {itemName : $('#searchItem').val()},
+		dataType : "json",
+		method : "get",
+		success : function(result) {
+			itemGrid.resetData(result);
+		},error : function(reject){
+			console.log(reject)
+		}
+	})
+})
+
 itemGrid.on('dblclick', function(e){
 	ingCode = itemGrid.getRow(e.rowKey).itemCode;
 	itemName = itemGrid.getRow(e.rowKey).itemName;
 	itemType = itemGrid.getRow(e.rowKey).itemType;
+	unit = itemGrid.getRow(e.rowKey).unit;
 	
 	let bomCode = bomGrid.getRow(bomKey).bomCode;
 	let bomLevel = bomGrid.getRow(bomKey).bomLevel;
 	let itemCon = bomGrid.getRow(bomKey).itemCon;
 	let proOrder = bomGrid.getRow(bomKey).proOrder;
-	let unit =  bomGrid.getRow(bomKey).unit;
 	let proCode = bomGrid.getRow(bomKey).proCode;
 	let proName = bomGrid.getRow(bomKey).proName;
 	let levelType = bomGrid.getRow(bomKey).levelType;

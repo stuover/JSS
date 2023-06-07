@@ -5,33 +5,34 @@
   
   <mapper namespace="com.mes.jss.basic.mapper.ItemMapper">
   		<select id="getItemList" resultType = "ItemVO">
-  			select item_code,item_name,item_type, unit_price, item_price, standard, unit, save_material
+  			select item_code,item_name, GET_CODENAME(item_type) item_Type, unit_price, item_price, standard, unit, save_material
   			from itemlist
-  			where item_type = (select deta_name from details_comm where deta_code = #{val})
+  			where item_type = #{val}
   			order by item_code desc
   		</select>
   		
   		<select id="getAllItemList" resultType = "ItemVO">
-  			select item_code,item_name,item_type, unit_price, item_price, standard, unit, save_material
+  			select item_code,item_name,GET_CODENAME(item_type) itemType, unit_price, item_price, standard, unit, save_material
   			from itemlist
-  			order by item_code
+  			order by item_code desc    
   		</select>
   		
   		
   		<select id="getItemCode" resultType="ItemVO">
   		
-  			select ('ITE' || to_date(sysdate, 'yyMMdd') || lpad(item_seq.nextval, 4, '0')) itemCode from dual 
+  			select ('ITE' || to_char(sysdate, 'yyMMdd') || lpad(item_seq.nextval, 4, '0')) itemCode from dual 
   			
   		</select>
   		
   		<insert id = "insertItem">
-  			insert into itemList values(#{itemCode}, #{itemName}, #{itemType}, #{unitPrice}, #{itemPrice}, #{standard}, #{unit}, #{saveMaterial})
+  			insert into itemList 
+  			values(#{itemCode}, #{itemName}, ( select deta_name from details_comm where deta_code = #{itemType} ), #{unitPrice}, #{itemPrice}, #{standard}, #{unit}, #{saveMaterial})
   		</insert>
   		
   		<update id = "updateItem">
   			update itemList
   			set item_name = #{itemName},
-  				item_type = #{itemType},
+  				item_type = ( select deta_name from details_comm where deta_code = #{itemType} ),
   				item_price = #{itemPrice},
   				unit_price = #{unitPrice},
   				unit = #{unit},
@@ -45,7 +46,7 @@
   		</delete>
   		
   		<select id="searchItem" resultType="ItemVO">
-  			select item_code,item_name,item_type
+  			select item_code,item_name,item_type, unit_price, item_price, standard, unit, save_material
   			from itemlist
   			where item_Name like '%'||#{itemName}||'%'
   			or item_code like '%'||#{itemName}||'%'
