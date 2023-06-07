@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.mes.jss.production.mapper.PlanMapper">
+  
+  	 <!-- 생산계획 조회 모달창 : 생산 계획 리스트(초기값) -->
+	<select id="modalPlanList" resultType="PlanVO">
+		<![CDATA[ 
+			SELECT 
+				  plan_id, 
+				  plan_name, 
+				  plan_date, 
+				  emp_name
+			FROM (
+			      SELECT 
+			      		plan_id, 
+			      		plan_name, 
+			      		plan_date, 
+			      		emp_name
+			      FROM 
+			      	  plan p JOIN emp e 
+			      	  		 ON(p.emp_no = e.emp_no)
+			      WHERE 
+			      	   plan_date >= (SYSDATE - 7)
+			      )
+			WHERE 
+				 plan_date <= (SYSDATE + 7)
+		]]>
+	</select>  	
+	
+	<!-- 생산계획 조회 모달창 : 기간 키워드로 생산계획 검색 결과 -->
+  	<select id="modalPlanResult" resultType="PlanVO">
+		<![CDATA[ 
+			SELECT 
+				  plan_id, 
+				  plan_name, 
+				  plan_date, 
+				  emp_name
+			FROM (
+			      SELECT 
+			      		plan_id, 
+			      		plan_name, 
+			      		plan_date, 
+			      		emp_name
+			      FROM 
+			      	  plan p JOIN emp e 
+			      	  		 ON (p.emp_no = e.emp_no)
+			      WHERE 
+			      	   plan_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
+			      )
+			WHERE 
+				 plan_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')
+		]]>
+
+  	</select>
+
+	<!--생산계획관리 페이지 : 생산 계획 세부내용 검색 결과  -->	
+	<select id="planSearchResult" resultType="PlanVO">
+		SELECT  
+			  pdetail_id, 
+			  item_name, 
+			  plan_amount, 
+			  plan_start, 
+			  plan_end, 
+			  plan_priority, 
+			  d.item_code,
+			  i.item_type
+		FROM 
+			plan_detail d JOIN itemlist i 
+						  ON (d.item_code = i.item_code)
+		WHERE 
+			 plan_id = #{planId}
+	</select>
+	
+	
+	<!-- 제품명 조회 모달창 : 완제품 리스트 (초기값) -->
+	<select id="itemList" resultType="PlanVO">
+		SELECT 
+			  i.item_code,
+			  i.item_type,
+			  item_name, 
+			  sum(nvl(ord_count,0)) as "itemOrders"
+		FROM 
+			itemlist i LEFT OUTER JOIN orddetail o 
+								  ON(i.item_code = o.item_code)
+		WHERE 
+			 item_type = '완제품'
+		GROUP BY i.item_code, item_name, i.item_type
+		ORDER BY 3 DESC
+	</select>
+	
+	<!-- 제품 검색 모달창 : 완제품 리스트 (검색결과) -->
+	<select id ="itemListResult"  resultType="PlanVO">
+		SELECT 
+			  i.item_code,
+			  i.item_type,
+			  item_name, 
+			  sum(nvl(ord_count,0)) as "itemOrders"
+		FROM 
+			 itemlist i LEFT OUTER JOIN orddetail o 
+			 					   ON(i.item_code = o.item_code)
+		WHERE 
+			 item_type = '완제품' 
+		     AND item_name LIKE '%' || #{itemName} || '%'
+		GROUP BY i.item_code, item_name, i.item_type
+		ORDER BY 3 DESC
+	</select>
+	
+	
+	<!-- 제품명 조회 모달창 : 완제품,반제품 리스트 (초기값) -->
+	<select id="itemsList" resultType="PlanVO">
+		SELECT 
+			  i.item_code,
+			  i.item_type, 
+			  item_name
+		FROM 
+			itemlist i LEFT OUTER JOIN orddetail o 
+								  ON(i.item_code = o.item_code)
+		WHERE 
+			 item_type = '완제품' 
+			 OR item_type = '반제품'
+		GROUP BY i.item_code, item_name, i.item_type
+		ORDER BY 1 DESC
+	</select>	
+	
+	<!-- 제품 검색 모달창 : 완제품,반제품 리스트 (검색결과) -->
+	<select id ="itemsListResult"  resultType="PlanVO">
+		SELECT item_code, item_name
+		FROM (
+			  SELECT 
+					i.item_code,
+					i.item_type,
+					item_name
+		      FROM 
+		      	   itemlist i LEFT OUTER JOIN orddetail o 
+		      	   						 ON(i.item_code = o.item_code)
+		      WHERE 
+		      	   item_type = '완제품' 
+		      	   OR item_type = '반제품'
+		      GROUP BY i.item_code, item_name,  i.item_type
+		      )
+		WHERE 
+			 item_name LIKE '%' || #{itemName} || '%'
+		ORDER BY 1 DESC
+	</select>
+
+	<!-- 생산계획 공통 내용 등록처리 -->	
+	<select id="planSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">
+	   
+	   {call PLAN_INSERT(        
+	           #{planName, mode=IN,  jdbcType=VARCHAR},
+	           #{planDate, mode=IN,  jdbcType=VARCHAR},
+	           #{empNo, mode=IN,  jdbcType=VARCHAR},
+	           #{planCode, mode=INOUT,  jdbcType=VARCHAR, javaType=String}
+	         )
+	   }
+	   
+	</select> 
+
+
+	<!-- 생산계획 세부 내용 등록처리 -->	
+	<select id="planDetailSave" statementType="CALLABLE" parameterType="PlanVO" resultType="PlanVO">
+	   
+	   {call PDETAIL_INSERT(        
+	           #{itemName, mode=IN,  jdbcType=VARCHAR},
+	           #{planAmount, mode=IN,  jdbcType=VARCHAR},
+	           #{planEnd, mode=IN,  jdbcType=VARCHAR},
+	           #{planStart, mode=IN,  jdbcType=VARCHAR},
+	           #{planPriority, mode=IN,  jdbcType=VARCHAR},	           	           
+	           #{planCode, mode=IN,  jdbcType=VARCHAR}
+	         )
+	   }
+	   
+	</select> 
+	
+	
+	<!-- 생산계획 공통 내용 수정처리 -->
+	<update id="planModify" parameterType="PlanVO">
+		UPDATE plan 
+		SET plan_name  = #{planName},
+		    plan_date = TO_DATE(TO_CHAR(CAST(#{planDate} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
+		WHERE 
+			 plan_id = #{planId}
+	</update>
+	
+	<!-- 생산계획 세부 내용 수정처리 -->
+	<update id="planDetailModify" parameterType="PlanVO">
+		UPDATE plan_detail
+		SET plan_amount = #{planAmount},
+		    plan_priority = #{planPriority},
+		    plan_start = TO_DATE(TO_CHAR(CAST(#{planStart} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd'),
+		    plan_end = TO_DATE(TO_CHAR(CAST(#{planEnd} AS TIMESTAMP), 'RRRR-MM-dd'), 'RRRR-MM-dd')
+		WHERE 
+			 pdetail_id = #{pdetailId}	
+	</update>
+	
+	
+
+	<!-- 생산계획 공통 내용 삭제 -->
+	<delete id="planDelete" parameterType="PlanVO">
+		DELETE FROM plan
+		WHERE 
+			 plan_id = #{planId}
+	</delete>
+	
+	<!-- 생산계획 세부 내용 삭제 -->
+	<delete id="planDetailDelete" parameterType="PlanVO">
+		DELETE FROM plan_detail
+		WHERE 
+			 pdetail_id = #{pdetailId}
+	</delete>
+
+  	
+  </mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.mes.jss.basic.mapper.ProcessMapper">
+  		<select id="getList" parameterType="ProcessVO" resultType = "ProcessVO">
+  			select pro_code, pro_name, to_date(insert_date, 'yyyy/MM/dd') insertDate, to_date(modify_date, 'yyyy/MM/dd') modifyDate from process order by pro_code
+  		</select>
+  		
+  		<select id = "getProCode" resultType="ProcessVO">
+  			select ('PRO' || to_char(sysdate, 'yyMMdd') || lpad(pro_seq.nextval, 4, '0')) proCode from dual 
+  		</select>
+  		
+  		<insert id="insertProcess" parameterType="ProcessVO">
+  			insert into process values(#{proCode}, #{proName}, to_date(sysdate, 'yyyy/MM/dd'),to_date(sysdate, 'yyyy/MM/dd'))
+  		</insert>
+  		
+  		<update id="updateProcess" parameterType="ProcessVO">
+  			update process
+  			set pro_name = #{proName},
+  				modify_date  = to_date(sysdate, 'yyyy/MM/dd')
+  			where pro_code = #{proCode}
+  		</update>
+  		
+  		<delete id="deleteProcess">
+  			delete from process where pro_code = #{proCode}
+  		</delete>
+  </mapper>

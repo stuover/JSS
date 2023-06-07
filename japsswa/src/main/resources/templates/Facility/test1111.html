@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+    
+
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+        <h2>설비 페이지</h2>
+        <div id="gridContainer">
+  <div id="gridTop">
+    <div id="gridHeader1">Group 1</div>
+    <div id="gridHeader2">Group 2</div>
+    <div id="gridHeader3">Group 3</div>
+  </div>
+  <div id="gridBottom"></div>
+</div>
+
+<script>
+  var data = [
+    { name: 'John', age: 25, city: 'New York', country: 'USA', gender: 'Male' },
+    { name: 'Emma', age: 30, city: 'London', country: 'UK', gender: 'Female' },
+    // 데이터 예시
+  ];
+
+  var columns = [
+    { header: 'Name', name: 'name' },
+    { header: 'Age', name: 'age' },
+    { header: 'City', name: 'city' },
+  ];
+
+  var bottomColumns = [
+    { header: 'Country', name: 'country' },
+    { header: 'Gender', name: 'gender' },
+  ];
+
+  var gridTop = new tui.Grid({
+    el: document.getElementById('gridTop'),
+    data: data,
+    columns: columns,
+  });
+
+  var gridBottom = new tui.Grid({
+    el: document.getElementById('gridBottom'),
+    data: data,
+    columns: bottomColumns,
+  });
+</script>
+</script>
+        
+        
+    </th:block>
+</body>
+
+</html>

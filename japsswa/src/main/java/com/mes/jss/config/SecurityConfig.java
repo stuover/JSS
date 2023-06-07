@@ -32,11 +32,13 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
 		http.authorizeHttpRequests((requests) -> 
-			requests.antMatchers("/top", "/login" ,"/logout").permitAll()
-						.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+
+			requests.antMatchers("/top", "/login", "/logout", "/performanceManage","/**").permitAll() // 공통 
+						.antMatchers("/**").hasAuthority("ROLE_ADMIN")
+						//.antMatchers("/**").hasAnyAuthority("ROLE_ADMIN")
 						.anyRequest().authenticated())
 			     .formLogin(login-> login.loginPage("/login")
-			    		 							.usernameParameter("userid")
+			    		 							.usernameParameter("empNo")
 			    		 							.successHandler(successHandler()))			     									
 			     .logout(logout-> logout.logoutUrl("/logout").logoutSuccessUrl("/top"))
 				 // .csrf().disable()
@@ -48,6 +50,6 @@ public class SecurityConfig {
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 	
-		return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/css/**");
+		return (web) -> web.ignoring().antMatchers("/static/**","/fonts/**","/partials/**","/scss/**","/vendors/**", "/images/**", "/js/**", "/css/**");
 	}
 }

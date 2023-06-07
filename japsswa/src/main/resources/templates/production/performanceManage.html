@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="_csrf" th:content="${_csrf.token}"/>
+		<meta name="_csrf_header" th:content="${_csrf.headerName}"/>	
+<title>PolluxUI Admin</title>
+<!-- base:css -->
+<link rel="stylesheet" href="/vendors/typicons/typicons.css">
+<link rel="stylesheet" href="/vendors/css/vendor.bundle.base.css">
+<!-- endinject -->
+<!-- plugin css for this page -->
+<!-- End plugin css for this page -->
+<!-- inject:css -->
+<link rel="stylesheet" href="/css/vertical-layout-light/style.css">
+<link rel="stylesheet" href="/css/vertical-layout-light/numberpad.css">
+
+<!-- endinject -->
+<link rel="shortcut icon" href="/images/favicon.png" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- <link rel="stylesheet" href="/css/vertical-layout-light/numberpad.css"> -->
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+
+
+</head>
+<body>
+
+	<!-- partial -->
+	<nav class="navbar-breadcrumb col-xl-12 col-12 d-flex flex-row p-0">
+		<div class="navbar-links-wrapper d-flex align-items-stretch">
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-calendar-outline"></i></a>
+			</div>
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-mail"></i></a>
+			</div>
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-folder"></i></a>
+			</div>
+			<div class="nav-link">
+				<a href="javascript:;"><i class="typcn typcn-document-text"></i></a>
+			</div>
+		</div>
+
+	</nav>
+	
+	<div class="container-fluid page-body-wrapper">
+	 	<div class="col-12 grid-margin stretch-card">
+	        <div class="card">
+	            <div class="card-body">
+				
+	            <!-- Body Start -->
+	                
+	                  
+	                <input id="afterSearch" type="hidden" name="selectResult" value="insert">
+	               
+	
+					<div class="h-auto d-md-flex justify-content-between">
+						<div><h3 class="page-title">생산 실적 관리</h3></div>
+						<div><button type="button" id="insertBtn" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#performanceModal">등록</button></div>
+					</div>
+					
+	            <!-- Card Content Start --> 
+					<div class="p-2 row">
+						<div class="col-sm-12">
+							<div class="card">
+								<div class="card-body">
+								<!-- card-body start -->
+					        
+								<div id=""></div>
+		                  
+						     
+								<div class="m-2 col-9">	
+									
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-between">
+										<div><h5 class="m-2 fw-bold fs-4 card-title">공정</h5></div>
+										<div><button type="button" id="searchProBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#processSearchModal">조회</button></div>
+									</div>
+
+									<div id="processGrid"></div>
+								</div>
+								
+								
+								<div class="m-3 row"></div>
+								
+								<div class="m-2 col-9">	
+									
+									
+									<div class="m-2 d-grid gap-2 d-md-flex justify-content-between">
+										<div><h5 class="m-2 fw-bold fs-4 card-title">작업지시</h5></div>
+										<div><button type="button" id="searchWorkBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">조회</button></div>
+									</div>
+										
+									<div id="workGrid"></div>
+								</div>
+									
+								<div class="m-4 row"></div>							
+								<div id="workDetailGrid"></div>
+
+								<!-- Card-body end -->
+								</div>
+							</div>
+						</div>
+					</div>
+				<!-- Card Content End -->      
+	                 
+				<!-- Body End -->
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+	<!-- Modal List Start -->
+	<!-- 생산실적 등록 모달창 -->
+	<div class="modal fade" id="performanceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="searchModalLabel">생산실적 등록</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+	
+				<div class="container">
+				  <div class="row justify-content-lg-center">
+					<div class="col-12 col-lg-12">
+					  <div class="bg-white border rounded shadow-sm overflow-hidden">          
+			  
+						<form id="performanceInsert">
+						  <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
+	
+							<div class="col-12 col-md-6">
+							  <label for="workName" class="form-label">작업지시명</label>
+							  <div class="input-group">
+								<span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+										<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+										<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+									</svg>
+								</span>
+								<input type="text" class="form-control" id="workName" name="workName" readonly>
+								<input id="wdetailId" type="hidden" name="wdetailId">
+							  </div>
+							</div>
+	
+							<div class="col-12 col-md-6">
+							  <label for="itemName" class="form-label">제품명</label>
+							  <div class="input-group">
+								<span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+										<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+										<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+									</svg>
+								</span>
+								<input type="text" class="form-control" id="itemName" name="itemName" readonly>
+								<input id="itemCode" type="hidden" name="itemCode">
+							  </div>
+							</div>
+	
+	
+							<div class="col-12 col-md-6">
+								<label for="proName" class="form-label">공정명</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+										<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+										<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="proName" name="proName" readonly>
+								  <input id="proCode" type="hidden" name="proCode">
+								</div>
+							  </div>             
+	
+							  <div class="col-12 col-md-6">
+								<label for="workAmount" class="form-label">진행 가능한 작업지시량<span class="text-danger">*</span></label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
+										<path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+										<path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+									</svg>
+								  </span>
+								  <input type="number" class="form-control" id="workAmount" name="workAmount" required>
+								</div>
+							  </div> 
+	
+							  <div class="col-12 col-md-6">
+								<label for="facName" class="form-label">설비명<span class="text-danger">*</span></label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">
+										<path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364L.102 2.223zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11l.471.242z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="facName" name="facName" required>
+								  <input id="facCode" type="hidden" name="facCode">
+								</div>
+							  </div> 
+	
+							  <div class="col-12 col-md-6">
+								<label for="workerName" class="form-label">작업자<span class="text-danger">*</span></label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+										<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+										<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="worker" name="worker" required>
+								  <input id="empNo" type="hidden" name="empNo">
+								</div>
+							  </div>
+	
+							  <div class="col-12 col-md-6">
+								<label for="workStart" class="form-label">작업 시작 시간</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hourglass-top" viewBox="0 0 16 16">
+										<path d="M2 14.5a.5.5 0 0 0 .5.5h11a.5.5 0 1 0 0-1h-1v-1a4.5 4.5 0 0 0-2.557-4.06c-.29-.139-.443-.377-.443-.59v-.7c0-.213.154-.451.443-.59A4.5 4.5 0 0 0 12.5 3V2h1a.5.5 0 0 0 0-1h-11a.5.5 0 0 0 0 1h1v1a4.5 4.5 0 0 0 2.557 4.06c.29.139.443.377.443.59v.7c0 .213-.154.451-.443.59A4.5 4.5 0 0 0 3.5 13v1h-1a.5.5 0 0 0-.5.5zm2.5-.5v-1a3.5 3.5 0 0 1 1.989-3.158c.533-.256 1.011-.79 1.011-1.491v-.702s.18.101.5.101.5-.1.5-.1v.7c0 .701.478 1.236 1.011 1.492A3.5 3.5 0 0 1 11.5 13v1h-7z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="workStart" name="workStart" readonly>
+								</div>
+							  </div>
+	
+							  <div class="col-12 col-md-6">
+								<label for="workEnd" class="form-label">작업 종료 시간</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hourglass-bottom" viewBox="0 0 16 16">
+										<path d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5zm2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2h-7z"/>
+									</svg>
+								  </span>
+								  <input type="text" class="form-control" id="workEnd" name="workEnd" readonly>
+								</div>
+							  </div>
+	
+							  <div class="col-12 col-md-6">
+								<label for="failItem" class="form-label">불량품 수</label>
+								<div class="input-group">
+								  <span class="input-group-text">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+										<path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+										<path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+									</svg>
+								  </span>
+								  <input type="number" class="form-control" id="failItem" name="failItem" value="0">
+								</div>
+							  </div>
+	
+							<div class="col-12">
+							  <div class="d-grid justify-content-center">
+									<button class="btn btn-primary btn-lg" type="button" id="performanceSaveBtn">저장</button>
+							  </div>
+							</div>
+						  </div>
+						</form>
+			  
+					  </div>
+					</div>
+				  </div>
+				</div>
+	
+			</div>
+	
+		</div>
+		</div>
+	</div>
+	
+	
+	<!-- 공정 조회 모달창 -->
+	<div class="modal fade" id="processSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">공정 조회</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			<div id="processSearchGrid"></div>
+			</div>
+				<div class="modal-footer">
+					<button id="selectProcessBtn" type="button" class="btn btn-primary">선택</button>
+				</div>
+		</div>
+		</div>
+	</div>
+			
+			
+	
+	<!-- 작업지시 조회 모달창 -->
+	<div class="modal fade" id="workSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">작업지시 조회</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			
+				<div id="workSearchGrid"></div>
+			</div>
+				<div class="modal-footer">
+					<button id="selectWorkBtn" type="button" class="btn btn-primary">선택</button>
+				</div>
+		</div>
+		</div>
+	</div> 
+	
+
+	<!-- 설비 조회 모달창 -->
+	<div class="modal fade" id="facSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">설비 조회</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div id="facSearchGrid"></div>
+			</div>
+				<div class="modal-footer">
+					<button id="selectFacBtn" type="button" class="btn btn-primary">선택</button>
+				</div>
+		</div>
+		</div>
+	</div> 
+	
+	
+	<!-- 작업자 조회 모달창 -->
+	<div class="modal fade" id="workerSearchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">작업자 조회</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div id="workerSearchGrid"></div>
+			</div>
+				<div class="modal-footer">
+					<button id="selectWorkerBtn" type="button" class="btn btn-primary">선택</button>
+				</div>
+		</div>
+		</div>
+	</div>
+	
+	
+	<!-- Modal List End -->
+
+
+	<script>
+	const token = $("meta[name='_csrf']").attr("content")
+	const header = $("meta[name='_csrf_header']").attr("content");
+		
+		// 초기화면 데이터 및 설정.
+		window.onload = function(){
+			
+			// 모달창 열릴 때 레이아웃 깨지지 않게 refreshLayout()
+			// 공정 조회 모달창
+			$('#processSearchModal').on('show.bs.modal', function(e) {
+				setTimeout(() => processSearchGrid.refreshLayout(), 300);
+			})
+			// 작업지시 조회 모달창
+			$('#workSearchModal').on('show.bs.modal', function(e) {
+				setTimeout(() => workSearchGrid.refreshLayout(), 300);
+			})		
+			// 설비 조회 모달창 
+			$('#facSearchModal').on('shown.bs.modal', function (e) {
+				setTimeout(() => facSearchGrid.refreshLayout(), 300);				
+			});
+			
+			
+			//작업자 조회
+			// 작업자 조회 모달창 : 작업자 리스트 
+			$('#workerSearchModal').on('shown.bs.modal', function (e) {
+				$.ajax({
+					url : "/workerListAjax",
+					method :"GET",
+					success : function(result){
+						console.log('result : '+ result);
+						workerSearchGrid.resetData(result);
+						workerSearchGrid.refreshLayout();
+					},
+					error : function(reject){
+						console.log(reject);
+					}
+				});	 
+			});
+			
+			$('#facSearchModal').on('shown.bs.modal', function (e) {
+				// 설비 조회
+				// 설비 조회 모달창 : 비가동 사유가 점검이나 세척이 아닌 설비 리스트
+				$.ajax({
+					url : "/performanceFacListAjax",
+					method :"GET",
+					data: {proCode : pCode},
+					success : function(result){
+						console.log('result : '+ result);
+						facSearchGrid.resetData(result);
+						facSearchGrid.setValue(0,'proName', pName, false);
+					},
+					error : function(reject){
+						console.log(reject);
+					}
+				});		 
+			});	
+			
+		}
+		
+		// 작업자 -> 해당 공정 조회 및 선택
+		// 생산실적 관리 : 공정 정보 
+		let processGridData = [{}];
+		const processGrid = new tui.Grid({
+			el: document.getElementById('processGrid'),
+			data: processGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '공정코드',
+				  name: 'proCode'
+				},
+				{
+				  header: '공정명',
+				  name: 'proName'
+				}
+			]
+		})
+		
+		
+		// 공정 선택 모달창 : 공정 내역
+		let proSearchGridData = [];
+		const processSearchGrid = new tui.Grid({
+			el: document.getElementById('processSearchGrid'),
+			data: proSearchGridData,
+			scrollX: false,
+			scrollY: false,
+			rowHeaders: [{type: 'checkbox', header: " "}],
+			pageOptions: {
+				useClient: true,
+				perPage: 5
+			},
+			columns: [
+				{
+				  header: '공정코드',
+				  name: 'proCode'
+				},
+				{
+				  header: '공정명',
+				  name: 'proName'
+				}
+			]
+		})
+		
+		// 조회 버튼 클릭 -> 공정 조회 모달창 : 전체 공정 정보 내역 (초기값)
+		$('#searchProBtn').click(function () {
+			$.ajax({
+				url: "/searchProcessModalAjax",
+				method: 'GET',
+				success: function(result) {
+					console.log(result);
+					processSearchGrid.resetData(result);
+				},
+				error: function(reject) {
+					console.log(reject);
+				}
+				
+			})
+		})
+		
+		// 공정 조회 모달창 : 하나만 체크할 수 있게 설정.
+		processSearchGrid.on('check', function (e) {
+			let checkRows = processSearchGrid.getCheckedRowKeys();
+			checkRows.forEach(function( key, idx){                      
+				if(key != e.rowKey){
+					processSearchGrid.uncheck(key);
+				}
+			});
+		});
+		
+		// 공정 조회 모달창 :  검색 결과
+		let searchProName = '';
+		$('#process-search-btn').click(function() {
+			searchProName = $('#searchPorcessResult').val();
+			console.log(searchProName);
+			
+			$.ajax({
+				url : "/searchProcessModalResultAjax",
+				data : {proName : searchProName},
+				method :"GET",
+				success : function(result){
+					console.log('result : '+ result);
+					processSearchGrid.resetData(result);
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+			});
+			
+		})
+		
+		
+		// 선택 버튼 -> 모달창 닫기 -> 선택한 공정 정보 출력.
+		let processInfo = [];
+		let proCode = '';
+		$('#selectProcessBtn').click(function () {
+			
+			proCode = processSearchGrid.getCheckedRows()[0].planId;
+			processInfo = [{proCode : processSearchGrid.getCheckedRows()[0].proCode ,proName : processSearchGrid.getCheckedRows()[0].proName}];
+			 console.log('proCode = ' + proCode);
+			 console.log(processInfo);
+ 			
+			 // 공정 조회 모달창 그리드 초기화
+			 proSearchGridData = [];
+			 processSearchGrid.resetData(proSearchGridData);
+			 
+			$('#processSearchModal').modal('hide');
+			
+			 
+			$('#processSearchModal').on('hidden.bs.modal', function (e) {
+				 proSearchGridData= processInfo;
+				 processGrid.resetData(processInfo);
+				
+			 });	
+
+		});
+		
+		
+		// 작업자 -> 해당 작업지시 조회 및 선택
+		// 생산실적 관리 : 작업지시 정보 
+		let workGridData = [{}];
+		const workGrid = new tui.Grid({
+			el: document.getElementById('workGrid'),
+			data: workGridData,
+			scrollX: false,
+			scrollY: false,
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '작업지시명',
+				  name: 'workName'
+				},
+				{
+				  header: '작업지시 날짜',
+				  name: 'workDate'
+				},
+				{
+				  header: '담당자',
+				  name: 'empName'
+				}				
+			]
+		})
+		
+
+
+		// 작업지시 선택 모달창 : 작업지시 내역
+		let workSearchGridData = [];
+		const workSearchGrid = new tui.Grid({
+			el: document.getElementById('workSearchGrid'),
+			data: workSearchGridData,
+			scrollX: false,
+			scrollY: false,
+			rowHeaders: [{type: 'checkbox', header: " "}],
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '작업지시명',
+				  name: 'workName'
+				},
+				{
+				  header: '작업지시 날짜',
+				  name: 'workDate'
+				},
+				{
+				  header: '담당자',
+				  name: 'empName'
+				}				
+			]
+		});
+		
+		
+		
+		
+		// 작업지시 조회결과 : 작업지시 상세내역
+		let workDetailGridData = [];
+		const workDetailGrid = new tui.Grid({
+		el: document.getElementById('workDetailGrid'),
+		data: workDetailGridData,
+		rowHeaders: [{type: 'checkbox', header: " "}],
+		scrollX: false,
+		scrollY: false,
+		columns: [
+			{
+				header: '세부지시 코드',
+				name: 'wdetailId',
+				hidden: true
+			 },
+			 {
+				header: '제품코드',
+				name: 'itemCode',
+				hidden: true
+			  },
+			  {
+				header: '제품명',
+				name: 'itemName'
+			  },
+			  {
+				header: '지시 시작날짜',
+				name: 'workStart'
+			  },
+			  {
+				header: '지시 완료날짜',
+				name: 'workEnd'
+			  },
+			  {
+				header: '지시수량',
+				name: 'workAmount'
+			  }
+			 ]
+		   });
+
+		
+
+		// 작업지시 조회 버튼 -> 작업지시 리스트 (초기값) 
+		// 작업이 완료된 작업지시 제외
+		// 작업 시작 시간이 현재 날짜인 것만 조회
+		$('#searchWorkBtn').click(function() {
+			$.ajax({
+				url: "/searchWorkModalAjax",
+				method: 'GET',
+				success: function(result) {
+					console.log(result);
+					workSearchGrid.resetData(result);
+				},
+				error: function(reject) {
+					console.log(reject);
+				}
+			});
+		});
+
+
+
+
+		// 작업지시 조회 모달창 : 작업지시 선택 버튼 -> 모달창 닫기 
+		// -> 선택한 생산 작업지시 공통 및 세부 내역 조회.
+		let workInfo = [];
+		var workCode = '';
+		$('#selectWorkBtn').click(function () {
+			workCode = workSearchGrid.getCheckedRows()[0].workId;
+			workInfo = [{
+						 workId : workSearchGrid.getCheckedRows()[0].workId,
+						 workName : workSearchGrid.getCheckedRows()[0].workName, 
+						 workDate : workSearchGrid.getCheckedRows()[0].workDate, 
+						 empName : workSearchGrid.getCheckedRows()[0].empName
+						}];
+			 console.log('workId = ' + workCode);
+			 console.log(workInfo);
+			 
+			$('#workSearchModal').modal('hide');
+
+			$('#workSearchModal').on('hidden.bs.modal', function (e) {
+				 workGridData= workInfo;
+				 workGrid.resetData(workInfo);
+				 
+				 $.ajax({
+						url : "/workSelectDetailAjax",
+						data : {workId : workCode},
+						method :"GET",
+						success : function(result){
+							console.log('result : '+ result);
+							workDetailGrid.resetData(result);
+						},
+						error : function(reject){
+							console.log(reject);
+						}
+					});
+				 
+			 });	 
+		});
+		
+
+	
+		// 설비명 입력창 클릭 -> 설비 조회 모달 띄우기
+		$('#facName').click(function() {
+			$('#facSearchModal').modal('show');
+			
+	 
+			
+		})
+		
+		// 설비 조회 모달창 : 설비 리스트 
+		$('#facSearchModal').on('shown.bs.modal', function (e) {
+		     // 
+			 console.log('작업자 리스트 띄우기');  
+			 
+		})		
+		
+		// 등록 버튼 클릭 -> 생산 실적 등록 모달창 띄우기.
+		let processData = [];		// 공정 정보
+		let workData = [];		// 작업지시 공통
+		let workDetailData = [];		// 작업지시 세부사항
+		var pCode = '';
+		var pName = '';
+		$('#insertBtn').click(function(event) {
+			
+			// 공정 정보
+			processData = processGrid.getData()[0];
+			// 작업지시 공통
+			workData = workGrid.getData()[0];
+			// 작업지시 세부사항
+			workDetailData= workDetailGrid.getCheckedRows()[0];
+		
+			pName = processData.proName		// 생산실적관리 페이지에서 선택한 공정명
+			pCode = processData.proCode		// 생산실적관리 페이지에서 선택한 공정코드
+			let wName = workData.workName		// 생산실적관리 페이지에서 선택한 작업지시명
+			let iName = workDetailData.itemName		// 생산실적관리 페이지에서 선택한 제품명
+			let wdetailCode = workDetailData.wdetailId		// 생산실적관리 페이지에서 선택한 지시상세코드
+			let itCode = workDetailData.itemCode		// 생산실적관리 페이지에서 선택한 제품코드
+			let wAmount = workDetailData.workAmount		// 생산실적관리 페이지에서 선택한 작업지시량
+		
+			// 모달창 띄울 때 값 넣어주기
+			$('#workName').val(wName);
+			$('#wdetailId').val(wdetailCode);
+			$('#itemName').val(iName);
+			$('#itemCode').val(itCode);
+			$('#proName').val(pName);
+			$('#proCode').val(pCode);	
+			$('#workAmount').val(wAmount);
+			
+			
+			// 해당 작업에 대한 작업시작 여부 확인
+			// 작업시작 X : 작업시작 등록	
+			// 작업시작 O : 작업완료 등록
+			$.ajax({
+				url: "/perforInsertConditionAjax",
+				method: "POST",
+				async: false,
+				data: JSON.stringify({
+									  proCode: processGrid.getData()[0].proCode, 
+									  itemCode : workDetailGrid.getCheckedRows()[0].itemCode, 
+									  wdetailId : workDetailGrid.getCheckedRows()[0].wdetailId
+									 }),
+				contentType: "application/json",
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(result) {
+					console.log(result);
+					console.log('result = ' + result.condition);
+					if(result.condition == 1){
+						console.log('등록된 생산실적 뿌려줘야 함.');
+						
+						// 작업시작 시 등록한 생산실적 정보 조회.
+						$.ajax({
+							url: "/searchPerforStartAjax",
+							method: "POST",
+							async: false,
+							data: JSON.stringify({
+												  proCode: processGrid.getData()[0].proCode, 
+												  itemCode : workDetailGrid.getCheckedRows()[0].itemCode, 
+												  wdetailId : workDetailGrid.getCheckedRows()[0].wdetailId
+												 }),
+							contentType: "application/json",
+							beforeSend: function(xhr) {
+								xhr.setRequestHeader(header, token);
+							},
+							success: function(result) {
+								console.log(result);
+								console.log(result.facCode)
+								// 작업시작 시 등록한 생산실적 정보 입력해주기
+								$('#facCode').val(result.facCode);
+								$('#facName').val(result.facName);
+								$('#worker').val(result.worker);
+								$('#workStart').val(result.startTime);
+								
+							},
+							error: function(reject) {
+								console(reject);
+								
+							}
+						});	
+						
+					}
+					
+				},
+				error: function(reject) {
+					console(reject);
+					
+				}
+			});		
+			
+		});		
+		
+		
+		// 작업자 입력창 클릭 -> 작업자 조회 모달 띄우기
+		$('#worker').click(function() {
+			$('#workerSearchModal').modal('show');
+		})
+		// 작업자 조회 모달창 : 작업자 리스트 
+		$('#workerSearchModal').on('shown.bs.modal', function (e) {
+		     // 
+			 console.log('작업자 리스트 띄우기')
+			 
+		})
+		
+		
+		
+		
+		
+		// 작업자 조회 모달창
+		let workerSearchGridData = [];
+		const workerSearchGrid = new tui.Grid({
+			el: document.getElementById('workerSearchGrid'),
+			data: workerSearchGridData,
+			scrollX: false,
+			scrollY: false,
+			rowHeaders: [{type: 'checkbox', header: " "}],
+			pageOptions: { 
+				useClient: true,
+				perPage: 5 
+			},
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '작업자 사원번호',
+				  name: 'empNo'
+				},
+				{
+				  header: '작업자명',
+				  name: 'empName'
+				}
+			]
+		});
+		
+		// 작업자 조회 모달창 : 하나만 체크할 수 있게 설정.
+		workerSearchGrid.on('check', function (e) {
+			let checkRows = workerSearchGrid.getCheckedRowKeys();
+			checkRows.forEach(function( key, idx){                      
+				if(key != e.rowKey){
+					workerSearchGrid.uncheck(key);
+				}
+			});
+		});
+		
+
+		
+		// 설비 조회 모달창
+		let facSearchGridData = [];
+		const facSearchGrid = new tui.Grid({
+			el: document.getElementById('facSearchGrid'),
+			data: facSearchGridData,
+			scrollX: false,
+			scrollY: false,
+			rowHeaders: [{type: 'checkbox', header: " "}],
+			pageOptions: { 
+				useClient: true,
+				perPage: 5 
+			},
+			columnOptions: {
+				maxWidth: 180
+			},
+			columns: [
+				{
+				  header: '설비코드',
+				  name: 'facCode'
+				},
+				{
+				  header: '설비명',
+				  name: 'facName'
+				},
+				{
+				  header: '투입공정',
+				  name: 'proName'
+				}		
+			]
+		});
+		
+		// 설비 조회 모달창 : 하나만 체크할 수 있게 설정.
+		facSearchGrid.on('check', function (e) {
+			let checkRows = facSearchGrid.getCheckedRowKeys();
+			checkRows.forEach(function( key, idx){                      
+				if(key != e.rowKey){
+					facSearchGrid.uncheck(key);
+				}
+			});
+		});		
+		
+		
+		// 작업자 조회 모달창 : 선택 버튼 -> 선택한 작업자명으로 입력창에 입력.
+		let worker= '';
+		let workerNo = 0;
+		$('#selectWorkerBtn').click(function() {			
+			
+			// 그리드에서 체크한 작업자명, 사원번호 
+			worker = workerSearchGrid.getCheckedRows()[0].empName;
+			workerNo = workerSearchGrid.getCheckedRows()[0].empNo;
+			
+			// 작업자 조회 모달창 닫기
+			$('#workerSearchModal').modal('hide');
+			
+			// 작업자 조회 모달창 닫은 후 선택한 값 입력.
+			$('#workerSearchModal').on('hidden.bs.modal', function (e) {
+				 $('#worker').val(worker);
+				 $('#empNo').val(workerNo);
+			})	
+			
+		});
+		
+		// 설비 조회 모달창 : 선택 버튼 -> 선택한 설비명 입력창에 입력.
+		let fName= '';
+		let fCode = '';
+		$('#selectFacBtn').click(function() {
+			// 그리드에서 체크한 설비명, 설비코드 
+			fName = facSearchGrid.getCheckedRows()[0].facName;
+			fCode = facSearchGrid.getCheckedRows()[0].facCode;
+			
+			// 설비 조회 모달창 닫기
+			$('#facSearchModal').modal('hide');
+			
+			// 설비 조회 모달창 닫은 후 선택한 값 입력.
+			$('#facSearchModal').on('hidden.bs.modal', function (e) {
+				 $('#facName').val(fName);
+				 $('#facCode').val(fCode);
+			})	
+			
+		});
+
+
+		
+		
+		
+		// 생산실적 등록
+		$('#performanceSaveBtn').click(function(e){
+			console.log('버튼 클릭!')
+			//e.preventDefult();
+			console.log($('#performanceInsert').serialize());
+			if($('#workStart').val() == null || $('#workStart').val() == '') {
+				// 작업시작시간이 값이 없으면 -> 작업 시작 : 생산실적 등록
+				console.log('생산실적 등록 : 작업 시작!');
+				
+				$.ajax({
+					url: "/performanceStartAjax",
+					method: "POST",
+					data: $('#performanceInsert').serialize(),
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success: function(result){
+						console.log(result);
+						alert('등록 성공!');					
+						
+					},
+					error: function(reject) {
+						console.log(reject);
+						alert('등록 실패!');
+					}
+				});
+				
+				// 생산실적 모달창 초기화	
+				$('#performanceModal').modal('hide');
+				$('#workName').val('');
+				$('#wdetailId').val('');
+				$('#itemName').val('');
+				$('#itemCode').val('');
+				$('#proName').val('');
+				$('#proCode').val('');	
+				$('#workAmount').val('');
+				
+				// 메인화면 초기화
+				processGrid.resetData([{}]);
+				workGrid.resetData([{}]);
+				workDetailGrid.resetData([{}]);
+				
+			}else {
+				// 작업시작시간에 값이 있으면 -> 작업 완료 :생산실적 수정
+				console.log('생산실적 등록 : 작업 완료!');
+				
+					$.ajax({
+						url: "/performanceEndAjax",
+						method: "POST",
+						data: $('#performanceInsert').serialize(),
+						beforeSend: function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success: function(result){
+							console.log(result);
+							alert('등록 성공!');
+							
+						},
+						error: function(reject) {
+							console.log(reject);
+							alert('등록 실패!');
+						}
+					});
+						
+				// 생산실적 모달창 초기화		
+				$('#performanceModal').modal('hide');
+				$('#workName').val('');
+				$('#wdetailId').val('');
+				$('#itemName').val('');
+				$('#itemCode').val('');
+				$('#proName').val('');
+				$('#proCode').val('');	
+				$('#workAmount').val('');
+				
+				// 메인화면 초기화
+				processGrid.resetData([{}]);
+				workGrid.resetData([{}]);
+				workDetailGrid.resetData([{}]);
+						
+			};	
+			
+		});
+	
+	
+	</script>
+	
+	
+
+	<!-- base:js -->
+	<script src="/vendors/js/vendor.bundle.base.js"></script>
+	<!-- endinject -->
+	<!-- Plugin js for this page-->
+	<script src="/vendors/chart.js/Chart.min.js"></script>
+	<!-- End plugin js for this page-->
+	<!-- inject:js -->
+	<script src="/js/off-canvas.js"></script>
+	<script src="/js/hoverable-collapse.js"></script>
+	<script src="/js/template.js"></script>
+	<script src="/js/settings.js"></script>
+	<script src="/js/todolist.js"></script>
+	<script src="/js/numberpad.js"></script>
+	<!-- endinject -->
+	<!-- Custom js for this page-->
+	<script src="/js/dashboard.js"></script>
+	<!-- End custom js for this page-->
+</body>
+
+</html>
+

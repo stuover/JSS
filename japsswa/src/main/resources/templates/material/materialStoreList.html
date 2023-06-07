@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+</style>
+
+</head>
+<body>
+
+	<th:block layout:fragment="content">
+	
+	
+	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+	
+	<h3 style="text-align:center; font-weight:bold; margin-top:50px;margin-bottom:30px;">자재 입고 내역</h3>
+	<div style="width:1050px; heigh:30px;">
+		<form action="#" >
+  <label for="lang" ></label>
+  <select name="languages" id="lang" style="margin-left:100px;">
+  <option value="javascript">--입고사유--</option>
+    <option value="javascript">발주</option>
+    <option value="php">생산</option>
+    <option value="java">조정</option>
+   
+  </select>
+  
+
+
+	
+  <label for="lang"></label>
+  <select name="languages" id="lang" style="margin-left:20px;margin-right:10px;">
+   <option value="javascript">--구분--</option>
+    <option value="javascript">자재</option>
+    <option value="php">반제품</option>
+   
+  </select>
+  <label for="storeDate" style="margin-left:10px;">입고일</label>
+  <input type="date" style="margin-right:10px;" id="storeDate">~
+  <input type="date" style="margin-left:10px; margin-right:10px;">
+  <label for="mrSearch">자재명</label>
+  <input type="text" id="mrSearch">
+  
+  <button type="button" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
+</form>
+	
+	</div>
+	
+	
+	<div class="btn-group" style="width:300px;">
+	
+				
+		
+	
+
+	
+			  
+             	<button type="button" id="all"  class="btn btn-info" style="float:right; width:50px; padding:5px; ">전체</button>
+				<button type="button" id="quality" class="btn btn-primary" style="float:right; width:50px; padding:5px;">발주</button>
+		     	<button type="button" id="product"class="btn btn-success" style="float:right; width:50px;padding:5px; ">생산</button>
+		     	<button type="button" id="adjustment"class="btn btn-secondary" style="float:right; width:50px; padding:5px;">조정</button>     
+						
+						
+						
+						</div>
+	
+	<div id="grid"></div>
+	
+	</div></div></div></div>
+	
+	<script>
+	
+	$(document).ready(function(){
+		
+	$.ajax({
+		url:"/StoreList",
+		method:"GET",
+		success : function(result){
+			grid.resetData(result);
+		},
+		error : function(reject){
+			console.log(reject);
+		}
+			
+	})
+
+	$('#all').on('click',function(){
+		$.ajax({
+			url:"/StoreList",
+			method:"GET",
+			success : function(result){
+				grid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject);
+			}
+				
+		})
+		
+	})
+	
+	
+	
+	
+	$('#quality').on('click',function(){
+		
+	
+	$.ajax({
+		url:"/qualityReason",
+		method:"GET",
+		success: function(result){{
+			grid.resetData(result);
+		}},
+		error : function(reject){
+			console.log(reject);
+		}
+		
+		
+	})
+	
+	})
+	
+	$('#product').on('click',function(){
+		
+	
+	
+	$.ajax({
+		url:"/productReason",
+		method:"GET",
+		success: function(result){
+			grid.resetData(result);
+		},
+		error : function(reject){
+			console.log(reject);
+		}
+	})
+	})	
+	
+	$('#adjustment').on('click',function(){
+		$.ajax({
+			url:"/AdjustmentReason",
+			method:"GET",
+			success: function(result){
+				grid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject);
+			}
+			
+		})
+		
+	})
+	
+	var grid = new tui.Grid({
+		el : document.getElementById('grid'),
+		scollX : false,
+		scollY : false,	
+		
+		columns : [ {
+			header : '자재lot번호',
+			name : 'mrLotNumber',
+			
+		}, {
+			header : '품목코드',
+			name : 'itemCode'
+		},{
+			header : '구분',
+			name : 'itemType'
+		},
+		{
+			header : '품목명',
+			name : 'itemName'
+		},
+		{
+			header : '담당자',
+			name : 'empName'
+		},  
+		{
+			header : '입고 날짜',
+			name : 'storeDate'
+		}, {
+			header : '입고 수량',
+			name : 'storeCount'
+		},
+		{
+			header : '홀드수량',
+			name : 'holdCount'
+		},
+		{
+			header : '유통기한',
+			name : 'expireDate'
+		},
+		{
+			header : '입고 사유 구분',
+			name : 'storeReasonType'
+		},
+		{
+			header : '입고 사유 코드',
+			name : 'storeReasonCode'
+		}
+					
+		],
+		pageOptions: { 
+        	useClient: true,
+           	perPage: 5 
+        }
+		
+	})
+	
+	});
+	
+	
+	</script>
+	
+		
+	
+	</th:block>
+
+
+</body>
+
+</html>
+	

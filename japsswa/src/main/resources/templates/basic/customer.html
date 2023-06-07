@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head lang="en">
+<meta charset="UTF-8">
+
+<style>
+	.myTr th{
+		background-color : ;
+	}
+	.myTr th, td{
+		 border: 1px solid #444444;
+	}
+	
+</style>
+
+</head>
+
+
+<th:block layout:fragment="content">
+	<div class="container-fluid page-body-wrapper">
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h1 class="card-title">거래처 관리</h1>
+					<button id="insertBtn" type="button" class="btn btn-primary" style ="display:block;">등록</button>
+					
+					<div id="cusGrid"></div>	
+				</div>
+				<div class="card">
+					<div class="card-body">
+
+						<div id="insertDiv" style="display:none;">
+							<h1 class="card-title">거래처 등록 </h1>
+							<button id="saveBtn" type="button" class="btn btn-primary">저장</button>
+							<div id="insertGrid" ></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+		 <div class="modal fade" id="searchModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
+	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:670px">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" style="padding-right:25px;">거래품목 조회</h5>
+	                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+
+		        <div id="top">
+		            <div id="detaGrid" style="height:82px"></div>
+		        </div>
+				<div id="body" style="z-index : 9999">
+		            <button id="modalInsBtn" type="button" class="btn btn-primary" style="margin-left:10px">추가</button>
+				</div>
+		        <div id="battom">
+		           	<div id="itemGrid"></div>	            
+		        </div>
+	            <div class="modal-footer">
+	            	<button id="saveBtn" type="button" class="btn btn-primary">저장</button>
+	            	<button id="modalDelBtn" type="button" class="btn btn-primary">삭제</button>
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+
+	    
+	    
+	   <div class="modal fade" id="itemSearch" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">품목 조회</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+		            <div class="modal-body">
+		            	<input type="radio" class="btn-check" name="itemType" id="option1"  value = "all" autocomplete="off" checked>
+						<label class="btn btn-secondary" for="option1" >전체</label>
+						<input type="radio" class="btn-check" name="itemType" id="option2" value="FIN"autocomplete="off">
+						<label class="btn btn-secondary" for="option2">완제품</label>
+						<input type="radio" class="btn-check" name="itemType" id="option3" value="SAM" autocomplete="off">
+						<label class="btn btn-secondary" for="option3">반제품</label>
+						<input type="radio" class="btn-check" name="itemType" id="option4" value="MAT" autocomplete="off">
+						<label class="btn btn-secondary" for="option4">자재</label>
+
+			            <div id="modalItemGrid"></div>
+			            <input type="text" class="btn-serach" name="selectIn" id="selectIn"  >
+			            <button id="selectBtn" type="button" class="btn btn-primary">검색</button>
+		            </div>
+	            <div class="modal-footer">
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+	    
+	
+<script>
+
+
+// 거래처 그리드
+var cusGrid = new tui.Grid({
+	el : document.getElementById('cusGrid'),
+	scrollX:true,
+	scrollY:true,
+    rowHeaders: ['rowNum'],
+	columns : [ 
+	{
+		header : '거래처코드',
+		name : 'customerId',
+		sortingType : 'desc',
+		sortable : true
+	}, 
+	{
+		header : '거래처명',
+		name : 'customerName',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '주소',
+		name : 'custAddr',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : 'email',
+		name : 'custMail',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '연락처',
+		name : 'custTel',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '구분',
+		name : 'custPart',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '현거래유무',
+		name : 'contractStatus',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '비고',
+		name : 'custEtc',
+		sortingType : 'desc',
+		sortable : true,
+	}
+	]
+});	
+
+// 거래처 등록 그리드
+var insertGrid = new tui.Grid({
+	el : document.getElementById('insertGrid'),
+	scrollX:true,
+	scrollY:true,
+    rowHeaders: ['rowNum'],
+	columns : [  
+	{
+		header : '거래처명',
+		name : 'customerName',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '주소',
+		name : 'custAddr',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : 'email',
+		name : 'custMail',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '연락처',
+		name : 'custTel',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '구분',
+		name : 'custPart',
+		editor: {
+            type: 'select',
+            options: {
+                listItems: [ 	
+                    {
+                        text: '매입처',
+                        value: '매입처'
+                    } ,
+                    {
+                        text: '판매처',
+                        value: '판매처'
+                    }
+                ]
+            }
+		 },
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '현거래유무',
+		name : 'contractStatus',
+		editor: {
+            type: 'select',
+            options: {
+                listItems: [ 	
+                    {
+                        text: '거래중',
+                        value: '거래중'
+                    } ,
+                    {
+                        text: '거래 중지',
+                        value: '거래 중지'
+                    }
+                ]
+            }
+		 },
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '비고',
+		name : 'custEtc',
+		editor: 'text',
+		sortingType : 'desc',
+		sortable : true,
+	}
+	]
+});
+
+// 거래처 리스트
+function customerList(){
+	$.ajax({
+		url : "/custList",
+		method : "get",
+		dataType : "json",
+		success : function(result){
+			cusGrid.resetData(result)
+		}, error : function(reject){
+			console.log(reject)
+		}
+	})
+}
+customerList();	
+
+// 거래처 상세
+var detaGrid = new tui.Grid({
+	el : document.getElementById('detaGrid'),
+	columns : [ 
+		{
+			header : '거래처코드',
+			name : 'customerId',
+			sortingType : 'desc',
+			sortable : true
+		}, 
+		{
+			header : '거래처명',
+			name : 'customerName',
+			editor: 'text',
+			sortingType : 'desc',
+			sortable : true
+		}, {
+			header : '주소',
+			name : 'custAddr',
+			editor: 'text',
+			sortingType : 'desc',
+			sortable : true
+		}, {
+			header : 'email',
+			name : 'custMail',
+			editor: 'text',
+			sortingType : 'desc',
+			sortable : true,
+		}, {
+			header : '연락처',
+			name : 'custTel',
+			editor: 'text',
+			sortingType : 'desc',
+			sortable : true,
+		}, {
+			header : '구분',
+			name : 'custPart',
+			sortingType : 'desc',
+			sortable : true,
+		}, {
+			header : '현거래유무',
+			name : 'contractStatus',
+			editor: {
+	            type: 'select',
+	            options: {
+	                listItems: [ 	
+	                    {
+	                        text: '거래중',
+	                        value: '거래중'
+	                    } ,
+	                    {
+	                        text: '거래 중지',
+	                        value: '거래 중지'
+	                    }
+	                ]
+	            }
+			 },
+			sortingType : 'desc',
+			sortable : true,
+		}, {
+			header : '비고',
+			name : 'custEtc',
+			editor: 'text',
+			sortingType : 'desc',
+			sortable : true,
+		}]
+});
+
+//거래 품목 리스트
+var itemGrid = new tui.Grid({
+	el : document.getElementById('itemGrid'),
+	rowHeaders : [ {type : 'checkbox', header:" "}],
+	pageOptions : {
+		useClient : true,
+		perPage : 5
+	},
+	columns : [
+	{
+		header : '품목코드',
+		name : 'itemCode',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '품목명',
+		name : 'itemName',
+		sortingType : 'desc',
+		editor: 'text',
+		sortable : true
+	}, {
+		header : '구분',
+		name : 'itemType',
+		sortingType : 'desc',
+		sortable : true,
+	}]
+});
+// 거래처별 거래 품목 받아오기
+var rowKey = null;
+cusGrid.on('dblclick',function(e){
+    detaGrid.resetData([cusGrid.getRow(e.rowKey)]);
+	setTimeout(()=> detaGrid.refreshLayout(), 300);
+	setTimeout(()=> itemGrid.refreshLayout(), 300);
+	rowKey=e.rowKey
+	$.ajax({
+		url : "/transList",
+		method : "get",
+		dataType : "json",
+		data : {cusId : cusGrid.getRow(e.rowKey).customerId},
+		success : function(result){
+			itemGrid.resetData(result);
+		},error : function(reject){
+			console.log(reject)
+		}
+	})
+	$('#searchModal').modal('show');
+
+})
+
+// 전체 품목 리스트
+var modalItemGrid = new tui.Grid({
+	el : document.getElementById('modalItemGrid'),
+	pageOptions : {
+		useClient : true,
+		perPage : 5
+	},
+	columns : [ 
+	{
+		header : '품목코드',
+		name : 'itemCode',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '품목명',
+		name : 'itemName',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '구분',
+		name : 'itemType',
+		sortingType : 'desc',
+		sortable : true
+	}
+	]
+});
+
+//품목 리스트
+function itemList(){
+	$.ajax({
+		url : "/getItemList",
+		method : "get",
+		dataType : "json",
+		success : function(result) {
+			modalItemGrid.resetData(result);
+		},
+		error : function(reject){
+			console.log(reject)
+		}
+	})
+}
+
+// 타입별 검색
+$('input[name="itemType"]').on('change', function() {	
+	let itemType = $('input[name="itemType"]:checked').val();
+	if(itemType == "all"){
+		itemList()
+	}else {
+		$.ajax({
+			url : "/getItemDetaList",
+			method : "get",
+			dataType : "json",
+			data : {itemType : itemType},
+			success : function(result) {
+				modalItemGrid.resetData(result);
+			},
+			error : function(reject){
+				console.log(reject)
+			}
+		})
+	}
+})
+
+// 품목 모달 켜기
+$('#modalInsBtn').on('click',function() {
+	setTimeout(()=> modalItemGrid.refreshLayout(), 300);
+	itemList();
+	$('#itemSearch').modal('show');
+	
+})
+
+modalItemGrid.on('click',function(e){
+	itemGrid.appendRows([modalItemGrid.getRow(e.rowKey)])
+	$('#itemSearch').modal('hide');
+});
+
+// 저장 버튼이벤트
+$('#saveBtn').on('click', function(){
+	let itemgrid = itemGrid.getData();
+	let cusGrid = detaGrid.getRow(rowKey);
+	console.log(cusGrid);
+	$.ajax({
+		url : "/saveCusDeta",
+		contentType : "application/json",
+		data : JSON.stringify( {list : itemgrid, deta : cusGrid }),
+		method :"post",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},
+		success : function(result){
+			$('#searchModal').modal('hide');
+			alert('등록완료!');
+		},
+		error : function(reject){
+			console.log(reject);
+		}
+
+	});
+})
+
+
+//거래 품목 삭제
+$('#modalDelBtn').on('click',function(){
+	var data =  itemGrid.getCheckedRows();
+	cusCode = detaGrid.getRow(rowKey).customerId;
+	
+	$.ajax({
+		url : "/removeItemDeta",
+		contentType : "application/json",
+		data :  JSON.stringify({list : data, cusCode : cusCode }),
+		method :"post",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},
+		success : function(result){
+			itemGrid.removeCheckedRows()
+			alert('삭제완료!');
+		},
+		error : function(reject){
+			console.log(reject);
+		}
+		
+	});
+})
+
+// 버튼 이벤트
+$("#insertBtn").on('click',function(){
+	$('#insertDiv').css("display", "block")
+	$('#insertBtn').css("display", "none")
+	setTimeout(()=> insertGrid.refreshLayout(), 300);
+	insertGrid.appendRow();
+})
+
+
+// 업체 등록
+$("#saveBtn").on('click', function(){
+
+	$.ajax({
+		url : "/saveCustomer",
+		method : "post",
+		contentType : "application/json",
+		data :JSON.stringify( insertGrid.getRow(0)),
+		dataType:"json",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},
+		success : function(result){
+			console.log(result)
+			cusGrid.appendRow(result)
+			insertGrid.removeRow(0);
+			$('#insertDiv').css("display", "none")
+			$('#insertBtn').css("display", "block")
+			
+		},error : function(reject){
+			console.log(reject)
+		}
+	})
+})
+
+</script>
+
+</th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

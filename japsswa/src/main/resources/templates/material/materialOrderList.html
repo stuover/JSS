@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+	
+	
+
+
+<style>
+	
+</style>
+
+</head>
+<body>
+
+
+
+
+
+<th:block layout:fragment="content">
+<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+	
+	<div style="width:1000px;">
+	<p style="font-weight:bold; margin-left:600px; text-align:center; margin-top:30px; font-size:30px;">자재 발주 조회</p>
+	</div>
+
+
+<!-- Large modal -->
+
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+     
+  <!-- 발주 상세 모달 -->
+         <h4 style="text-align:center; font-weight:bold;">상세 내역</h4>
+      <div id="grid2"></div>
+    </div>
+  </div>
+</div>
+	
+        
+   
+	
+	
+	
+	
+ <!-- 발주 메인 -->	
+	
+	<div id="grid1" style="margin-top:100px;"></div>
+	
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	<script>
+	
+	$(document).ready(function(){
+		
+
+// 발주 리스트	
+
+
+	$.ajax({
+				url : "/mrOrderListAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid1.resetData(result);
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+
+			});
+
+			var grid1 = new tui.Grid({
+				el : document.getElementById('grid1'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ 
+					{
+						header : '발주일자',
+						name : 'mrOrderDate'
+					},
+					{
+					header : '발주코드',
+					name : 'mrOrderCode'
+				}, 
+					{
+					header : '거래처코드',
+					name : 'customerId'
+				}, 
+				{
+					header : '거래처명',
+					name : 'customerName'
+				},
+				
+				{
+					header : '사원 코드',
+					name : 'empNo'
+				}, 
+				{
+					header : '사원명',
+					name : 'empName'
+				},
+				{
+					header : '품목 수',
+					name : 'productCount'
+				},				
+				{
+					header : '총 가격',
+					name : 'allCount'
+				} 
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+			
+	
+	
+// 발주 더블 클릭 이벤트
+
+	grid1.on('dblclick',(ev) =>{
+		
+
+		
+				if(ev.columnName=='mrOrderCode'){
+							
+					$('#exampleModalLong').modal('show');
+				
+				
+				
+				let result= grid1.getRow(ev.rowKey);
+				console.log(result.mrOrderCode);
+			
+			
+			
+			console.log(result.mrOrderCode);
+
+// 발주 상세 리스트
+
+			$.ajax({
+				url : "/mrOrderDetailAjax",
+
+				method : "GET",
+				dataType : "json",
+				data : {'result':result.mrOrderCode},
+				
+				success : function(result) {
+					grid2.resetData(result);
+					
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+
+			});
+				}
+			});	
+			
+			
+
+// 발주 상세 리스트
+			var grid2 = new tui.Grid({
+				el : document.getElementById('grid2'),
+				scollX : false,
+				scollY : false,
+				width:1000,
+				rowHeaders: ['checkbox'],
+				
+				columns : [{
+					header : '발주 일자',
+					name : 'mrOrderDate',
+					width:80
+				} , {
+					header : '발주 코드',
+					name : 'mrOrderCode'
+				}, {
+					header : '발주 상세코드',
+					name : 'mrOrderDetCode'
+				},
+				{
+					header : '담당자',
+					name : 'empName',
+					width:50
+				},
+				{
+					header : '거래처 코드',
+					name : 'customerId'
+				},
+				{
+					header : '거래처명',
+					name : 'customerName',
+					width:70
+					
+				},
+				{
+					header : '품목 코드',
+					name : 'itemCode'
+				},
+				{
+					header : '품목명',
+					name : 'itemName',
+					width:70
+				},
+				{
+					header : '수량',
+					name : 'mrCount',
+					width:30
+				}, 
+				{
+					header : ' 가격',
+					name : 'mrPrice',
+					width:50
+				},
+				{
+					header : '총 가격',
+					name : 'priceTotal',
+					width:80
+				},
+				{
+					header : '납품일',
+					name : 'deliveryDate'
+				}
+				
+				],
+				
+			})	
+			
+			
+// 새로고침			
+			$(function(){
+		    	$('#exampleModalLong').on('shown.bs.modal', function(){
+		    		grid2.refreshLayout();
+		    	})
+		    })
+			
+			
+		});
+
+	
+		</script>
+	
+	
+	
+
+</th:block>
+
+
+</body>
+
+</html>	

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+
+</head>
+<th:block layout:fragment="content">
+
+
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="page-title">주문서 관리</h4>
+					
+
+					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
+					<div>
+	
+									<button id="showCust" type="button" class="btn btn-dark"
+										data-bs-toggle="modal" data-bs-target="#showCustModal">거래처 주문 조회</button>
+									<button id="ordDel" type="button" class="btn btn-danger">주문서 삭제</button>
+					</div>
+
+					<div class="row"></div>
+					
+					<div id="grids"></div>
+					<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
+					<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
+					<div id="grid"></div>
+					
+					<div id="changeGrid"></div>
+				
+					<div>
+						<form>
+							
+							<button id="insertBtn" type="button" class="btn btn-dark">등록</button>
+							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
+							<input id="sortBtn" type="hidden" value="insert">
+							
+						</form>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+
+	<div class="modal fade" id="searchModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="searchModalLabel">거래처 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="modalInput" name="cust">
+					<button id="custSearch" type="button" class="btn btn-dark">찾기</button>
+					<div id="modalGrid"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="chooseBtn" type="button" class="btn btn-dark">선택</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="itemSearModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="itemSearModalLabel">품목코드 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="itemInput" name="item">
+					<button id="itemSearch" type="button" class="btn btn-dark">찾기</button>
+					<div id="modalGrids"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="itemChooseBtn" type="button" class="btn btn-dark">선택</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="showCustModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="showCustModalLabel">거래처 주문 조회</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="custShowInput" name="sCust">
+					<button id="showCustBtn" type="button" class="btn btn-dark">찾기</button>
+					<div id="CmodalGrid"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="custChooseBtn" type="button" class="btn btn-dark">선택</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	
+	
+	
+		 
+	 
+
+  		const Grid = tui.Grid;
+  		
+		let gridsData = [{}];
+  		const grids = new Grid({
+		      el: document.getElementById('grids'),
+		      data: gridsData,
+		      pageOptions: { 
+	                useClient: true,
+	                perPage: 5 
+	                },
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+		    	     {
+					  header: '주문코드',
+					  name: 'ordId',
+					  hidden: true
+					 },
+				     {
+					  header: '거래처 명',
+					  name: 'customerName',
+					  editor: 'text'
+					 },
+					 {
+					  header: '주소',
+					  name: 'custAddr',
+					  editor: 'text'
+				     },
+				     {
+					  header: '메일',
+					  name: 'custMail',
+					  editor: 'text'
+					 }, 
+				     {
+				      header: '연락처',
+				      name: 'custTel',
+				      editor: 'text'
+				    
+				     },	
+				     {
+					  header: '주문명',
+					  name: 'ordName',
+					  editor: 'text'
+					  
+					 },
+					 {
+					  header: '담당자',
+					  name: 'empName',
+					  editor: 'text'
+					 }
+			      ],
+			      
+			        
+			    });
+
+			grids.on('check', ev => {
+		      console.log('check!', ev);
+		    });
+
+		    grids.on('uncheck', ev => {
+		      console.log('uncheck!', ev);
+		    });
+
+		    grids.on('focusChange', ev => {
+		      console.log('change focused cell!', ev);
+		    });
+		    
+		    grids.on('click', (e) => {
+
+	    		 if(e.columnName == 'customerName'){
+
+	    			 $('#searchModal').modal('show');
+	    			 
+	    			 $.ajax({
+		    			 url : "/cModal",
+		    			 method : "GET",
+		    			 dataType : "JSON",
+		    			 success : function(result){
+		    				 modalGrid.resetData(result);
+		    				 modalGrid.refreshLayout();
+		    				 console.log(result);
+		    			 }
+		    		 })
+	    			 
+	    			 $('#searchModal').on('shown.bs.modal', function (e) {
+							console.log('open');
+							
+
+							
+							setTimeout(()=> modalGrid.refreshLayout(), 1);
+			  			}); 
+	    		 }
+	    		 
+	    	 })
+		
+		    
+		var unit;
+		var count;
+  		let gridData = [];
+  		const grid = new Grid({
+		      el: document.getElementById('grid'),
+		      data: gridData,
+		      rowHeaders: ['checkbox'],
+		      pageOptions: { 
+	                useClient: true,
+	                perPage: 5 
+	                },
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+		    	     
+		    	     {
+					  header: '품목코드',
+					  name: 'itemCode'
+					 },
+					 {
+					  header: '품목명',
+					  name: 'itemName'
+					 },
+				     {
+					  header: '납부예정일',
+					  name: 'outDate',
+					  editor: 'datePicker'
+					 },
+					 {
+					  header: '단가',
+					  name: 'unitPrice',
+					  editor: 'text'
+				     },
+				     {
+					  header: '수량',
+					  name: 'ordCount',
+					  editor: 'text'
+					 }, 
+					 {
+				      header: '판매가격',
+				      name : 'eachPrice'
+				     }
+			      ],
+			      summary: {
+			          height: 40,
+			          position: 'bottom', // or 'top'
+			          columnContent: {
+			           
+			        	  eachPrice: {
+			              template: function(valueMap) {
+			                return `TOTAL: ${valueMap.sum}`;
+			              }
+			            }
+			          }
+			        }
+			    });
+
+		    grid.on('check', ev => {
+		      console.log('check!', ev);
+		    });
+
+		    grid.on('uncheck', ev => {
+		      console.log('uncheck!', ev);
+		    });
+
+		    grid.on('focusChange', ev => {
+		      console.log('change focused cell!', ev);
+		    });
+		    
+		    
+		    
+		    let changeGridData = [];
+	  		const changeGrid = new Grid({
+			      el: document.getElementById('changeGrid'),
+			      data: changeGridData,
+			      rowHeaders: ['checkbox'],
+			      pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+			      scrollX: false,
+			      scrollY: false,
+			      columns: [
+			    	     {
+						  header: '주문상세코드',
+						  name: 'ordDetailId'
+						 },
+			    	     {
+						  header: '품목코드',
+						  name: 'itemCode'
+						 },
+						 {
+						  header: '품목명',
+						  name: 'itemName'
+						 },
+					     {
+						  header: '납부예정일',
+						  name: 'outDate',
+						  editor: 'datePicker'
+						 },
+						 {
+						  header: '단가',
+						  name: 'unitPrice',
+						  editor: 'text'
+					     },
+					     {
+						  header: '수량',
+						  name: 'ordCount',
+						  editor: 'text'
+						 }, 
+						 {
+					      header: '판매가격',
+					      name : 'eachPrice'
+					     }
+				      ],
+				      summary: {
+				          height: 40,
+				          position: 'bottom', // or 'top'
+				          columnContent: {
+				           
+				        	  eachPrice: {
+				              template: function(valueMap) {
+				                return `TOTAL: ${valueMap.sum}`;
+				              }
+				            }
+				          }
+				        }
+				    });
+
+			    changeGrid.on('check', ev => {
+			      console.log('check!', ev);
+			    });
+
+			    changeGrid.on('uncheck', ev => {
+			      console.log('uncheck!', ev);
+			    });
+
+			    changeGrid.on('focusChange', ev => {
+			      console.log('change focused cell!', ev);
+			    });
+			    
+
+			     changeGrid.on('editingFinish', function(ev){
+			       	  let row = changeGrid.getRow(ev.rowKey);
+			       	  if((ev.columnName=="unitPrice" || ev.columnName=="ordCount")&&row.unitPrice&&row.ordCount){
+			       		  changeGrid.setValue(ev.rowKey, "eachPrice", row.unitPrice*row.ordCount, false)
+			       	  }
+			       	  
+			         }) 
+		    
+		    
+		    
+		    
+	
+		    window.onload = function(){
+		    	$('#changeGrid').hide();
+		    	grids.setValue(0, 'empName', $('#name').val(), false);
+		    	
+	
+				 
+		    	 
+		    	 
+		    	 $('#addBtn').on('click', function(){
+	        		   
+		        	   $.ajax({
+		        		   url : "/itemNamelist",
+		        		   method : "GET",
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   modalGrids.resetData(result);
+		        			   modalGrids.refreshLayout();
+		        		   }
+		        	   })
+	        	   })
+	        	   
+	        	   
+	        	   $('#itemSearModal').on('shown.bs.modal', function(e){
+						 console.log('open2');
+						 setTimeout(()=> modalGrids.refreshLayout(), 1);
+					 });
+		    	 
+			       $('#showCust').on('click', function(){
+			    		 
+			    	   $.ajax({
+			    		   url : "/custOrdModal",
+			    		   method : "GET",
+			    		   dataType : "JSON",
+			    		   success : function(result){
+			    			   CmodalGrid.resetData(result);
+			    			   CmodalGrid.refreshLayout();
+			    		   }
+			    	   })
+			       });
+			       
+			       $('#showCustModal').on('shown.bs.modal', function(e){
+						 console.log('open3');
+						 setTimeout(()=> CmodalGrid.refreshLayout(), 1);
+					 });
+					 
+				
+		    }; 
+		    
+		    
+		    
+		    
+		    
+		    grid.on('editingFinish', function(e){
+		  
+		    	var unit = grid.getRow(e.rowKey).unitPrice;
+		    	var count = grid.getRow(e.rowKey).ordCount;
+		    	
+		    	grid.setValue(e.rowKey, 'eachPrice', unit*count, false);
+
+		    })
+		    
+			
+				const modalGrid = new Grid({
+		               el: document.getElementById('modalGrid'),
+		 		      rowHeaders: ['checkbox'],
+		               scrollX: false,
+		               scrollY: false,
+		              pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+		               columns: [
+		            	   {
+			                   header: '거래처 코드',
+			                   name: 'customerId'
+			                 },
+		                 {
+		                   header: '거래처명',
+		                   name: 'customerName'
+		                 },
+		                 {
+		                   header: '연락처',
+		                   name: 'custTel'
+		                 },
+		                 {
+		                   header: '주소',
+		                   name: 'custAddr'
+		                 },              
+		                 {
+		                   header: '메일주소',
+		                   name: 'custMail'
+		                 }     
+		               ]
+		             });
+
+		            modalGrid.on('check', ev => {
+		               console.log('check!', ev);
+		             });
+
+		            modalGrid.on('uncheck', ev => {
+		               console.log('uncheck!', ev);
+		             });
+
+		            modalGrid.on('focusChange', ev => {
+		               console.log('change focused cell!', ev);
+		             });
+		            
+		           
+		           
+		
+			 
+		            
+		           $('#custSearch').on('click', function(){
+		        	   
+		        	   const result = $('#modalInput').val();
+		        	   $('#modalInput').val('');
+		        	   
+		        	   $.ajax({
+		        		   url : "/custList",
+		        		   method : "GET",
+		        		   data : {'result' : result},
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   modalGrid.resetData(result);
+		        			   modalGrid.refreshLayout();
+		        			  
+		        		   }
+		        		   
+		        	   })
+		           }) 
+
+		           var custInfo = [];
+		           var custId = '';
+		           $('#chooseBtn').on('click', function(){
+		        	   
+		        	   grid.appendRows(custInfo);
+		        	   
+		        	   custId = modalGrid.getCheckedRows()[0].customerId;
+		        	   custInfo = [{ordId : modalGrid.getCheckedRows()[0].ordId, customerName : modalGrid.getCheckedRows()[0].customerName, custAddr : modalGrid.getCheckedRows()[0].custAddr, custMail : modalGrid.getCheckedRows()[0].custMail, custTel : modalGrid.getCheckedRows()[0].custTel}]
+		        	   
+		        	   $('#searchModal').modal('hide');
+
+		        	   $('#searchModal').on('hidden.bs.modal', function(e){
+		        		   gridsData = custInfo;
+		        		   grids.resetData(custInfo);
+			        	   $.ajax({
+			        		   url : "/custInfo",
+			        		   method : "GET",
+			        		   data : {customerId : custId},
+			        		   dataType : "JSON",
+			        		   success : function(result){
+			        			   grids.resetData(result);
+			        			   grids.setValue(0, 'empName', $('#name').val(), false);
+			        			   modalGrid.refreshLayout();
+			        			  
+			        		   }
+			        		   
+			        	   })
+		        	   })
+		        	  
+		        	   
+		           }) 
+		           
+		           modalGrid.on('check', function(e){
+		        	   var checkRows = modalGrid.getCheckedRowKeys();
+		        	   checkRows.forEach(function(key, idx){
+		        		   if(key != e.rowKey){
+		        			   modalGrid.uncheck(key);
+		        		   }
+		        	   })
+		           })
+		          
+		           
+		           const modalGrids = new Grid({
+		               el: document.getElementById('modalGrids'),
+		 		      rowHeaders: ['checkbox'],
+		               scrollX: false,
+		               scrollY: false,
+		             pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+		               columns: [
+		            	     
+		            	     {
+			                   header: '품목코드',
+			                   name: 'itemCode'
+			                 },
+			                 {
+			                   header: '품목명',
+			                   name: 'itemName'
+			                 }   
+		               ]
+		             });
+
+		            modalGrids.on('check', ev => {
+		               console.log('check!', ev);
+		             });
+
+		            modalGrids.on('uncheck', ev => {
+		               console.log('uncheck!', ev);
+		             });
+
+		            modalGrids.on('focusChange', ev => {
+		               console.log('change focused cell!', ev);
+		             });
+		         
+		           
+		           $('#insertBtn').on('click', function(){
+
+		        	   grids.finishEditing();
+		        	   var customerId = grids.getData()[0];	
+		        	   grid.finishEditing();
+		        	   var data = grid.getCheckedRows();
+		        	   console.log(data);
+		        	   $.ajax({
+		        		   url : "/entireRegister",
+		        		   contentType : "application/json",
+		        		   data : JSON.stringify( { commInfo : customerId, list : data } ),
+		        		   method : "post",
+		        		   dataType:"json",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        			   
+		        		   },
+		        		   success:function(result){
+							   
+		        			   if(grids.getData() != null && grid.getCheckedRows() != null){
+			        			   gridsData = [{}];
+			        			   gridData = [];
+			        			   grids.resetData(gridsData);
+			        			   grid.resetData(gridData);
+			        			   grids.setValue(0, 'empName', $('#name').val(), false);
+			        			   alert('등록 완료 되었습니다')
+			        			   } else {
+			        				   alert('값을 모두 입력해주세요')
+			        			   }
+
+		        		   }
+		        	   });
+		        	   
+		        	  
+		        		  
+		           })
+		           
+		           $('#itemSearch').on('click', function(){
+		        	   
+		        	   const code = $('#itemInput').val();
+		        	   $('#itemInput').val('');
+		        	   
+		        	   $.ajax({
+		        		   url : "/itemSearch",
+		        		   method : "GET",
+		        		   data : { code : code},
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   modalGrids.resetData(result);
+		        			   modalGrids.refreshLayout();
+		        			  
+		        		   }
+		        		   
+		        	   });
+		           })
+		           
+		           
+		           var itemInfo = [];
+		           
+		        	   
+		        	   
+		        	   
+		           $('#itemChooseBtn').on('click', function(){
+		        	   
+			           if($('#sortBtn').val()=='insert'){
+	
+			        	   itemInfo = [{itemCode : modalGrids.getCheckedRows()[0].itemCode, itemName : modalGrids.getCheckedRows()[0].itemName}]
+			        	   
+			        	   $('#itemSearModal').modal('hide');
+	
+			        		   gridData = itemInfo;
+			        		   grid.appendRows(itemInfo);
+			           }else if($('#sortBtn').val()=='update'){
+	
+			        		   itemInfo = [{itemCode : modalGrids.getCheckedRows()[0].itemCode, itemName : modalGrids.getCheckedRows()[0].itemName}]
+				        	   
+				        	   $('#itemSearModal').modal('hide');
+								   
+				        		
+				        		   changeGrid.appendRows(itemInfo); 
+			           }
+		           
+		           }) 
+		           
+		           
+		        	   
+		        	   
+		           
+		           
+		           
+		           const CmodalGrid = new Grid({
+		               el: document.getElementById('CmodalGrid'),
+		 		      rowHeaders: ['checkbox'],
+		               scrollX: false,
+		               scrollY: false,
+		             pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+		               columns: [
+		            	     {
+			                   header: '거래처코드',
+			                   name: 'customerId'
+			                 },
+			                 {
+			                   header: '거래처명',
+			                   name: 'customerName'
+			                 },   
+			                 {
+				               header: '주문코드',
+				               name: 'ordId'
+				             },
+				             {
+					           header: '주문명',
+					           name: 'ordName'
+					         }
+		               ]
+		             });
+
+		            CmodalGrid.on('check', ev => {
+		               console.log('check!', ev);
+		             });
+
+		            CmodalGrid.on('uncheck', ev => {
+		               console.log('uncheck!', ev);
+		             });
+
+		            CmodalGrid.on('focusChange', ev => {
+		               console.log('change focused cell!', ev);
+		             });
+		           
+		            
+		           $('#showCustBtn').on('click', function(){
+		        	   
+		        	   const oCode = $('#custShowInput').val();
+		        	   $('#custShowInput').val('');
+		        	   
+		        	   $.ajax({
+		        		   url : "/custShowModal",
+		        		   method : "GET",
+		        		   data : { oCode : oCode},
+		        		   dataType : "JSON",
+		        		   success : function(result){
+		        			   CmodalGrid.resetData(result);
+		        			   CmodalGrid.refreshLayout();
+		        			  
+		        		   }
+		        		   
+		        	   });
+		           })
+		           
+		           var ordId = '';
+		           var customerId = '';
+		           var orderId = '';
+		           $('#custChooseBtn').on('click', function(){
+		        	  
+		        	   $('#sortBtn').val('update');
+		        	   ordId = CmodalGrid.getCheckedRows()[0].ordId;
+		        	   customerId = CmodalGrid.getCheckedRows()[0].customerId;
+		        	   orderId = CmodalGrid.getCheckedRows()[0].ordId;
+		        	   
+		        	    $('#showCustModal').modal('hide'); 
+
+		        	   
+		        	   $('#showCustModal').on('hidden.bs.modal',function(e){
+		        		   grids.refreshLayout();
+		        		   $.ajax({
+		        			   url : "/orderShow",
+		        			   method : "GET",
+		        			   data : {ordId : ordId, customerId : customerId},
+		        			   dataType : "JSON",
+		        			   success : function(result){
+		        				   grids.resetData(result);
+		        				   grids.refreshLayout();
+		        				   
+		        				   $('#grid').hide();
+		        				   
+		        				   $('#changeGrid').show();
+		        				   
+		        				   $.ajax({
+				        			   url : "/ordDetShow",
+				        			   method : "GET",
+				        			   data : {ordId : orderId},
+				        			   dataType : "JSON",
+				        			   success : function(result){
+				        				   changeGrid.resetData(result);
+				        				   changeGrid.refreshLayout();
+				        			   }
+				        		   })
+		        			   }
+		        		   })
+		        		   
+		        		   
+		        	   })
+		           })
+		           
+		           
+		           CmodalGrid.on('check', function(e){
+		        	   var checkRows = CmodalGrid.getCheckedRowKeys();
+		        	   checkRows.forEach(function(key, idx){
+		        		   if(key != e.rowKey){
+		        			   CmodalGrid.uncheck(key);
+		        		   }
+		        	   })
+		           })
+		           
+		           
+		           $('#ordDel').on('click', function(){
+		        	   
+		        	   grids.finishEditing();
+		        	   var ordId = grids.getData()[0].ordId;
+		        	   console.log(ordId);
+		        	  
+		        	   changeGrid.finishEditing();
+		        	  
+		        	   
+		        	   
+		        	   $.ajax({
+		        		   url : "/entDel",
+		        		   method : "POST",
+		        		   data : {ordId : ordId},
+		        		   dataType : "JSON",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        		   },
+		        		   success : function(result){
+		        			   
+		        			   gridsData = [{}];
+		        			   changeGridData = [];
+		        			   grids.resetData(gridsData);
+		        			   changeGrid.resetData(changeGridData);
+		        			   grids.setValue(0, 'empName', $('#name').val(), false);
+		        			   alert('주문서가 삭제되었습니다');
+		        		   }
+		        	   })
+		           })
+		           
+		           
+		           $('#delBtn').on('click', function(){
+		        		
+		        	   var delData = changeGrid.getCheckedRows();
+		        	   console.log(delData);
+		        	   
+		        	   $.ajax({
+		        		   url : "/delDet",
+		        		   method : "POST",
+		        		   contentType : "application/json",
+		        		   data : JSON.stringify({list : delData}),
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        		   },
+		        		   success : function(result){
+		        			     			
+		        			   
+		        			   
+		        			   $.ajax({
+			        			   url : "/ordDetShow",
+			        			   method : "GET",
+			        			   data : {ordId : orderId},
+			        			   dataType : "JSON",
+			        			   success : function(result){
+			        				   changeGrid.resetData(result);
+			        				   changeGrid.refreshLayout();
+			        			   }
+			        		   })
+		        			   
+		        		   },
+		        		   error : function(reject){
+		        			   console.log(reject);		        		   }
+		        		   
+		        	   })
+		           })
+		           
+		          
+		           
+		           $('#updateBtn').on('click', function(){
+		        	   console.log(grids.getData()[0].ordId);
+		        	   changeGrid.finishEditing();
+		        	   var datas = changeGrid.getData();
+		        	   console.log(datas);
+		        	   $.ajax({
+		        		   url : "/ordUpdate",
+		        		   contentType : "application/json",
+		        		   data : JSON.stringify( { list : datas, info : grids.getData()[0].ordId}),
+		        		   method : "post",
+		        		   beforeSend : function(xhr){
+		        			   xhr.setRequestHeader(header, token);
+		        			   
+		        		   },
+		        		   success:function(result){
+							   console.log('성공');
+		        			  /*  if(changeGrids.getData() != null){
+			        			   changeGridData = [{}];
+			        			   changeGrid.resetData(changeGridData);
+			        			   grids.setValue(0, 'empName', $('#name').val(), false);
+			        			   alert('수정 완료 되었습니다')
+			        			   } else {
+			        				   alert('값을 모두 입력해주세요')
+			        			   } */
+
+		        		   },
+		        		   error : function(reject){
+		        			   console.log(reject);
+		        		   }
+						})
+		           }) 
+		           
+		           
+		           
+		           
+
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+
+</th:block>
+
+</html>

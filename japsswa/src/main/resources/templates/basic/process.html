@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head lang="en">
+<meta charset="UTF-8">
+
+
+</head>
+
+
+<th:block layout:fragment="content">
+
+	<div class="container-fluid page-body-wrapper">
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h1 class="card-title">공정 정보</h1>
+					
+
+					<input id="searchInp" name="search" type="text" >
+					<button id="searchButton" type="button" class="btn btn-primary">검색</button>
+						<div id="grid"></div>
+					<button id="addModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">등록</button>
+					<button id="modModalBtn" type="button" class="btn btn-primary"  >수정</button>
+					
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+		 <div class="modal fade" id="addModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
+	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:300px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" style="padding-right:25px;">공정 등록</h5>
+	                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+
+				<div id="modal-body">
+					<div id="modalGrid"></div>
+				</div>
+
+	            <div class="modal-footer">
+	            	<button id="addBtn" type="button" class="btn btn-primary">등록</button>
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+	    
+	    
+	     <div class="modal fade" id="modModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
+	        <div class="modal-dialog modal-lg modal-dialog-centered" style ="width:670px;">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" style="padding-right:25px;">공정 수정</h5>
+	                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+
+				<div id="modal-body">
+					<div id="modModalGrid"></div>
+				</div>
+
+	            <div class="modal-footer">
+	            	<button id="modBtn" type="button" class="btn btn-primary">수정</button>
+	            	<button id="delBtn" type="button" class="btn btn-primary">삭제</button>
+	            	
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+	
+	
+<script>
+
+var grid = new tui.Grid({
+	el : document.getElementById('grid'),
+	scrollX : true,
+	scrollY : true,
+	rowHeaders : [ {type : 'checkbox', header:" "},{type :'rowNum'} ],
+	pageOptions : {
+		useClient : true,
+		perPage : 10
+	},
+	columns : [ 
+	{
+		header : '공정코드',
+		name : 'proCode',
+		width: 100,
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '공정명',
+		name : 'proName',
+		sortingType : 'desc',
+		sortable : true
+	}, {
+		header : '등록일',
+		name : 'insertDate',
+		sortingType : 'desc',
+		sortable : true,
+	}, {
+		header : '수정일',
+		name : 'modifyDate',
+		sortingType : 'desc',
+		sortable : true
+	}
+	]
+});
+
+grid.on('check', function (e) {
+    var checkRows = grid.getCheckedRowKeys();
+    checkRows.forEach(function( key, idx){                      
+       if(key != e.rowKey){
+          grid.uncheck(key);
+       }
+    });
+
+});
+
+// 공정 목록 불러오기
+function  processList(searchInp){
+	$.ajax({
+		url : "/processList",
+		method: "get",
+		dataType : "json",
+		data : {searchInp : searchInp},
+		success: function(result){
+			grid.resetData(result);
+		},
+		error: function(reject){
+			
+		}
+		
+	});
+}
+
+let searchInp = null;
+processList(searchInp);
+
+
+var modalGrid = new tui.Grid({
+	el : document.getElementById('modalGrid'),
+	columns : [ 
+		{
+			header : '공정코드',
+			name : 'proCode',
+			editor: 'text'
+		},{
+			header : '공정명',
+			name : 'proName',
+			editor: 'text'
+		}
+	]
+});
+
+
+
+var modModalGrid = new tui.Grid({
+	el : document.getElementById('modModalGrid'),
+	columns : [ 
+	{
+		header : '공정코드',
+		name : 'proCode',
+		width: 100
+	}, {
+		header : '품목명',
+		name : 'proName',
+		editor: "text"
+	}, {
+		header : '등록일',
+		name : 'insertDate'
+	}, {
+		header : '수정일',
+		name : 'modifyDate'
+	}
+	]
+});
+grid.finishEditing();
+modalGrid.finishEditing();
+
+modModalGrid.finishEditing();
+
+
+// 다음 공정코드 불러오기
+$('#addModalBtn').on('click', function() {
+	$.ajax({
+		url:"/getProCode",
+		method :"get",
+		dataType : "json",
+		success:function(result){
+			console.log(result);
+			modalGrid.resetData([result])
+			
+			$('#addModal').on('shown.bs.modal', function (e) {
+				console.log('open');
+				setTimeout(()=> modalGrid.refreshLayout(), 300);
+			
+			})
+		},
+		error:function(reject){
+			console.log(reject);
+		}
+		
+	})
+});
+
+// 공정등록
+$('#addBtn').on('click', function(){
+	modalGrid.finishEditing();
+	$.ajax({
+		url : "/addProcessAjax",
+		contentType : "application/json",
+		data : JSON.stringify(modalGrid.getData()[0]),
+		method : "post",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},success : function(result) {
+			alert("성공")
+			processList();
+			$('#addModal').modal('hide');
+			
+		},error : function(reject) {
+			console.log(reject)
+		}
+	})
+})
+
+
+//수정 버튼 클릭 이벤트
+$('#modModalBtn').on('click',function() {
+	if(grid.getCheckedRows().length != 0 ){
+		$('#modModal').modal('show');
+		console.log(grid.getCheckedRows())
+		modModalGrid.resetData(grid.getCheckedRows());
+		$('#modModal').on('shown.bs.modal', function (e) {
+			modModalGrid.refreshLayout();
+		})
+	}else {
+		alert("아무것도 선택되지 않았습니다.");
+	}
+})
+
+//공정정보 수정
+$('#modBtn').on('click', function(){
+	modModalGrid.finishEditing();
+	$.ajax({
+		url : "/modProAjax",
+		contentType : "application/json",
+		data : JSON.stringify(modModalGrid.getData()[0]),
+		method : "post",
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},success : function(result) {
+			
+			$('#addModal').modal('hide');
+			processList();
+
+		},error : function(reject) {
+			console.log(reject)
+		}
+	})
+})
+
+
+// 공정정보 삭제
+$('#delBtn').on('click', function(){
+	console.log(modModalGrid.getData()[0].proCode)
+	$.ajax({
+		url : "/removePro",
+		data : {proCode : modModalGrid.getData()[0].proCode},
+		method : "get",
+		dataType : "json",
+		success : function(result){
+			if (result = "success"){
+				alert( modModalGrid.getData()[0].proName + "을 삭제!")
+				processList();
+				$('#modModal').modal('hide');
+			}else {
+				alert("실패!")
+			}
+
+		},error : function(reject) {
+			console.log(reject)
+		}
+	})
+})
+
+
+
+</script>
+
+</th:block>
+</html>

@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <style>
+        h2 {
+            text-align: center;
+        }
+
+        .tui-grid-cell-content {
+            text-align: center;
+        }
+        
+        #topContainer{
+        	display: flex;
+    align-items: flex-start;
+        }
+        
+        #grid {
+    flex-grow: 1;
+  }
+
+  #serarchDiv {
+    margin-left: 10px;
+    margin-top: 60px;
+  }
+  
+  #searchForm input,
+#searchForm button {
+  vertical-align: middle;
+}
+  
+#searchForm input,
+#searchForm button {
+  margin-right: 3px;
+}
+        
+        
+        #insertBtn{
+        	float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+    <div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+        <h2>점검 관리</h2>
+                <div class="card-body">
+        <!-- 비가동 설비중 사유가 점검인 리스트 조회 그리드  -->
+        <button id="insertBtn" type="button" class="btn btn-primary">점검등록</button>
+        <h5>비가동 설비 점검 등록</h5>
+        <div id="topContainer">
+        <div id="grid"></div>
+        <div id="serarchDiv">
+            <form id="searchForm" name="searchForm">
+                <input type="text" id="searchInput" name="facName" placeholder="설비를 선택해주세요" readonly>
+                <input type="date" id="startDate" name="startDate" placeholder="시작 날짜">
+                <input type="date" id="stopDate" name="stopDate" placeholder="종료 날짜">
+            <button id="searchBtn" type="button" class="btn btn-dark">검색</button>
+            <button id="resetBtn" type="button" class="btn btn-dark">초기화</button>
+            </form>
+        </div>
+        </div>
+        <!-- <select id="item">
+						<option value="null">전체</option>
+						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
+						</option>
+			</select> <input id="searchInput" name="searchInput" type="text"> -->
+
+
+        <!-- 비가동 설비중 사유가 점검인 리스트 조회 그리드  끝 -->
+
+        <!-- 점검등록 모달 시작 -->
+
+        <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">설비 점검 등록</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 점검모달 그리드 시작 -->
+                        <div id="insertUpGrid"></div>
+                        <div id="insertDownGrid"></div>
+                        <!-- 점검모달 그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button id="saveBtn" type="button" class="btn btn-primary">등록</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 점검등록 모달 끝 -->
+
+        <!-- fac 모달 시작 -->
+
+        <div class="modal fade" id="facModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- fac 모달그리드 시작 -->
+                        <div id="facGrid"></div>
+                        <!-- fac 모달그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                            data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- fac 모달 끝 -->
+
+        <!-- 비가동 목록 점검등록 모달 시작 -->
+
+        <div class="modal fade" id="downInsertModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">비가동 설비 점검 등록</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 모달 그리드 시작 -->
+                        <div id="inUpGrid"></div>
+                        <div id="inDownGrid"></div>
+                        <!-- 모달 그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button id="downSaveBtn" type="button" class="btn btn-primary">등록</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 비가동 목록 점검등록 모달 끝 -->
+
+        <h2>설비 점검 내역</h2>
+        <!-- 점검 내역 그리드 -->
+        <div id="insGrid"></div>
+        <!-- 점검 내역 그리드 끝 -->
+
+
+
+        <!-- 상세점검내역 모달 시작 -->
+
+        <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downModalTitle">점검 상세 내역</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 모달 그리드 시작 -->
+                        <div id="detailUpGrid"></div>
+                        <div id="detailDownGrid"></div>
+                        <!-- 모달 그리드 끝 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modBtn" type="button" class="btn btn-primary">수정</button>
+                        <button id="delBtn" type="button" class="btn btn-primary">삭제</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상세점검내역 모달 끝 -->
+
+
+
+        <script th:inline="javascript">
+            // 비가동 설비중 사유가 점검인 리스트 조회 그리드    
+            const grid = new tui.Grid({
+                el: document.getElementById('grid'),
+                scrollX: false,
+                scrollY: false,
+                width: 550,
+                columns: [{
+                        header: '설비코드 ',
+                        name: 'facCode',
+                        width: 100
+                    },
+                    {
+                        header: '설비명',
+                        name: 'facName',
+                        width: 100
+                    },
+                    {
+                        header: '비가동 코드',
+                        name: 'downCode',
+                        width: 100
+                    }, {
+                        header: '비가동 사유',
+                        name: 'downReason',
+                        width: 100
+                    }, {
+                        header: '설비 비가동일시',
+                        name: 'stopDate'
+                    }
+                ]
+            });
+
+            // 비가동 설비중 사유가 점검인 리스트 조회 ajax
+            function facDownList() {
+
+                $.ajax({
+                    url: "/beforeInsList",
+                    method: "GET",
+                    dataType: "JSON",
+                    success: function (result) {
+                        grid.resetData(result);
+                        //console.log(result);
+                    },
+                    error: function (reject) {
+                        console.log(reject);
+                    }
+                });
+            }
+
+            facDownList();
+
+
+            // 점검 내역 그리드
+            const insGrid = new tui.Grid({
+                el: document.getElementById('insGrid'),
+                scrollX: false,
+                scrollY: false,
+                rowHeaders: ['rowNum'],
+                pageOptions: {
+                    useClient: true,
+                    perPage: 15
+                },
+                columns: [{
+                        header: '설비명',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '비가동 코드',
+                        name: 'downCode'
+                    },
+                    {
+                        header: '점검 코드 ',
+                        name: 'insCode'
+                    },
+                    {
+                        header: '점검날짜 ',
+                        name: 'insDate'
+                    },
+                    {
+                        header: '점검사유 ',
+                        name: 'insReason'
+                    },
+                    {
+                        header: '점검내역 ',
+                        name: 'insHistory'
+                    },
+                    {
+                        header: '적합판정',
+                        name: 'judgment'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager'
+                    }
+                ]
+            });
+
+            // 점검 내역 ajax
+            function insList() {
+
+                $.ajax({
+                    url: "/inspectionList",
+                    method: "GET",
+                    dataType: "JSON",
+                    success: function (result) {
+                        insGrid.resetData(result);
+                    },
+                    error: function (reject) {
+                        //console.log("reject");
+                        console.log(reject);
+                    }
+                });
+            }
+
+            insList();
+
+            // 더블클릭시 점검 상세내역 모달
+            insGrid.on('dblclick', function (e) {
+
+
+                insGridData = insGrid.getRow(e.rowKey);
+                //console.log(insGridData);
+
+                let firstIns = {
+                    facName: insGridData.facName,
+                    facCode: insGridData.facCode,
+                    downCode: insGridData.downCode,
+                    insCode: insGridData.insCode,
+                    insDate: insGridData.insDate,
+                    insReason: insGridData.insReason
+                }
+
+                let secondIns = {
+                    insHistory: insGridData.insHistory,
+                    judgment: insGridData.judgment,
+                    partHistory: insGridData.partHistory,
+                    partReason: insGridData.partReason,
+                    partDate: insGridData.partDate,
+                    insManager: insGridData.insManager
+                }
+
+                $('#detailModal').modal('show');
+                //console.log("first, second");
+                //console.log(firstIns);
+                //console.log(secondIns);
+
+                detailUpGrid.resetData([firstIns]);
+                detailDownGrid.resetData([secondIns]);
+                setTimeout(() => detailUpGrid.refreshLayout(), 300);
+                setTimeout(() => detailDownGrid.refreshLayout(), 300);
+            });
+
+            // 점검 상세내역 상단 그리드
+
+            var detailUpGrid = new tui.Grid({
+                el: document.getElementById('detailUpGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '비가동 코드 ',
+                        name: 'downCode'
+                    },
+                    {
+                        header: '점검 코드 ',
+                        name: 'insCode'
+                    },
+                    {
+                        header: '점검날짜 ',
+                        name: 'insDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '점검사유 ',
+                        name: 'insReason',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+
+            // 점검 상세내역 하단 그리드
+
+            var detailDownGrid = new tui.Grid({
+                el: document.getElementById('detailDownGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '점검내역  ',
+                        name: 'insHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '적합판정 ',
+                        name: 'judgment',
+                        editor: 'text'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품교체내역',
+                        name: 'partHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품교체사유 ',
+                        name: 'partReason',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품교체일',
+                        name: 'partDate',
+                        editor: 'datePicker'
+                    }
+                ]
+            });
+
+            // 객체 합치기
+            function mergeFac(firstIns, secondIns) {
+
+                const newIns = {};
+
+                for (let att in firstIns) {
+                    newIns[att] = firstIns[att];
+                }
+
+                for (let att in secondIns) {
+                    newIns[att] = secondIns[att];
+                }
+
+                return newIns;
+                //console.log(newIns);
+            }
+
+            // 수정 ajax 함수
+            function modifyIns() {
+
+                let firstIns = detailUpGrid.getData()[0];
+                let secondIns = detailDownGrid.getData()[0];
+
+                let modobj = mergeFac(firstIns, secondIns);
+                console.log("modobj");
+                console.log(modobj);
+
+
+                $.ajax({
+                    url: "/modifyInspection",
+                    method: "POST",
+                    data: JSON.stringify(modobj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("수정 완료되었습니다");
+                        $('#detailModal').modal('hide');
+                        insList();
+
+                    },
+                    error: function (reject) {
+                        //console.log("reject");
+                        console.log(reject);
+                    }
+                });
+            }
+
+            $('#modBtn').on('click', function () {
+
+                console.log("수정");
+                detailUpGrid.finishEditing();
+                detailDownGrid.finishEditing();
+                modifyIns();
+            })
+
+            // 삭제 함수
+            function delIns() {
+
+                let deletetIns = detailUpGrid.getData()[0];
+                console.log(deletetIns);
+
+
+                $.ajax({
+
+                    url: "/RemoveInspection",
+                    method: "POST",
+                    data: JSON.stringify(deletetIns),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("삭제 되었습니다");
+                        $('#detailModal').modal('hide');
+                        insList();
+
+                    },
+                    error: function (reject) {
+                        console.log(reject);
+                    }
+                });
+            }
+
+            $('#delBtn').on('click', function () {
+
+                console.log("삭제");
+                delIns();
+            })
+
+            // 더블클릭시 등록모달
+            grid.on('dblclick', function (e) {
+
+                inDownGrid.removeRow(0);
+                gridData = grid.getRow(e.rowKey);
+                //console.log(gridData);
+
+
+                $('#downInsertModal').on('shown.bs.modal', function () {
+                    inUpGrid.refreshLayout()
+                    inDownGrid.refreshLayout()
+                })
+
+                $('#downInsertModal').modal('show');
+                inUpGrid.resetData([gridData]);
+                inDownGrid.appendRow();
+
+            });
+
+            // 비가동 점검등록모달 상단
+            var inUpGrid = new tui.Grid({
+                el: document.getElementById('inUpGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비 코드',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '비가동 코드 ',
+                        name: 'downCode'
+                    },
+                    {
+                        header: '점검 코드 ',
+                        name: 'insCode'
+                    },
+                    {
+                        header: '점검일',
+                        name: 'insDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '점검 사유',
+                        name: 'insReason',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+            // 비가동 점검등록모달 상단 하단
+            var inDownGrid = new tui.Grid({
+                el: document.getElementById('inDownGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '점검내역 ',
+                        name: 'insHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '적합판정',
+                        name: 'judgment',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품 교체내역 ',
+                        name: 'partHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품 교체사유 ',
+                        name: 'partReason',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품교체일',
+                        name: 'partDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+            $('#saveBtn').on('click', function () {
+
+                insertUpGrid.finishEditing();
+                insertDownGrid.finishEditing();
+
+                let firstIns = insertUpGrid.getData()[0];
+                let secondIns = insertDownGrid.getData()[0];
+
+                let obj = mergeFac(firstIns, secondIns);
+                console.log(firstIns);
+                console.log(secondIns);
+                console.log("obj");
+                console.log(obj);
+
+                saveInspection(obj);
+
+            })
+
+            $('#downSaveBtn').on('click', function () {
+
+                inUpGrid.finishEditing();
+                inDownGrid.finishEditing();
+
+                let firstIns = inUpGrid.getData()[0];
+                let secondIns = inDownGrid.getData()[0];
+
+
+                let obj = mergeFac(firstIns, secondIns);
+                console.log(firstIns);
+                console.log(secondIns);
+                console.log("obj");
+                console.log(obj);
+
+                saveInspection(obj);
+
+            })
+
+            // 등록 펑션
+
+            function saveInspection(obj) {
+
+                $.ajax({
+
+                    url: "/insertInsAjax",
+                    method: "POST",
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        alert("등록되었습니다");
+                        $('#downInsertModal').modal('hide');
+                        facDownList();
+                        insList();
+                    },
+                    error: function (reject) {
+                        console.log(reject);
+                    }
+                });
+            }
+
+
+
+            // 기본점검 등록모달 상단
+            var insertUpGrid = new tui.Grid({
+                el: document.getElementById('insertUpGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비 코드',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '점검 코드 ',
+                        name: 'insCode'
+                    },
+                    {
+                        header: '점검일',
+                        name: 'insDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '점검 사유',
+                        name: 'insReason',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+            // 기본점검 등록모달 하단
+            var insertDownGrid = new tui.Grid({
+                el: document.getElementById('insertDownGrid'),
+                scrollX: false,
+                scrollY: false,
+                columns: [{
+                        header: '점검내역 ',
+                        name: 'insHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '적합판정',
+                        name: 'judgment',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품 교체내역 ',
+                        name: 'partHistory',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품 교체사유 ',
+                        name: 'partReason',
+                        editor: 'text'
+                    },
+                    {
+                        header: '부품교체일',
+                        name: 'partDate',
+                        editor: 'datePicker'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager',
+                        editor: 'text'
+                    }
+                ]
+
+            });
+
+            // 기본점검 등록
+            $('#insertBtn').on('click', function () {
+            	insertUpGrid.resetData([{}]);
+            	insertUpGrid.removeRow(0);
+            	insertDownGrid.removeRow(0);
+                $('#insertModal').on('shown.bs.modal', function () {
+                    insertUpGrid.refreshLayout()
+                    insertDownGrid.refreshLayout()
+                })
+                $('#insertModal').modal('show');
+                                
+                insertUpGrid.appendRow();
+                insertDownGrid.appendRow();
+               
+            })
+
+            // facCode 리스트 조회 함수
+            function selectFac() {
+                $.ajax({
+                    url: "/getSelectList",
+                    method: "get",
+                    dataType: "json",
+                    success: function (result) {
+                        facGrid.resetData(result);
+                    },
+                    error: function (reject) {
+                        console.log(reject)
+                    }
+                })
+            }
+
+            // facCode 그리드
+            var facGrid = new tui.Grid({
+                el: document.getElementById('facGrid'),
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                },
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    }
+                ]
+            });
+
+            var fac = null;
+
+            insertUpGrid.on('dblclick', function (e) {
+                console.log("더블클릭");
+                insertRowKey = e.rowKey;
+                //console.log(insertrowKey);
+
+                if (e.columnName == "facName" || e.columnName == "facCode") {
+
+
+                    $('#facModal').modal('show');
+                    $('#facModal').on('shown.bs.modal', function (e) {
+                        setTimeout(() => facGrid.refreshLayout(), 300);
+                    })
+                    selectFac();
+                }
+
+                facGrid.on('click', function (e) {
+
+                    fac = facGrid.getRow(e.rowKey);
+
+                    $('#facModal').modal('hide');
+                    insertUpGrid.resetData([fac]);
+
+                })
+            })
+
+            $('#searchInput').on('dblclick', function () {
+                console.log("input")
+                $('#facModal').modal('show');
+                $('#facModal').on('shown.bs.modal', function (e) {
+                    setTimeout(() => facGrid.refreshLayout(), 300);
+                })
+
+                selectFac();
+
+                facGrid.on('click', function (e) {
+					
+                    facName = facGrid.getRow(e.rowKey).facName
+                    $('#facModal').modal('hide');
+                    $('#searchInput').val(facName);
+
+                })
+            })
+
+            $('#searchBtn').on('click', function () {
+
+				console.log($('#searchForm').serialize());             
+                $.ajax({
+                    url: "/searchInsList",
+                    method: "POST",
+                    data: $('#searchForm').serialize(),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (result) {
+                        console.log("성공");
+                        insGrid.resetData(result);                        
+                    },
+                    error: function (reject) {
+
+                    }
+                });
+            })
+            
+            $('#resetBtn').on('click', function () {
+
+                $('#searchForm')[0].reset();
+
+            })
+            
+            // 종료일 입력란 변경 이벤트
+            
+            $('#startDate, #stopDate').on('change', function(){
+            	var startDate = new Date($('#startDate').val());
+                var stopDate = new Date($('#stopDate').val());
+                
+            	if (stopDate < startDate) {
+      		      alert("종료일이 시작일보다 빠릅니다!");
+      		    $('#startDate').val('');  // 시작일 값을 비워줌
+      		    $('#stopDate').val('');   // 종료일 값을 비워줌
+      		    }
+            	
+            });
+        </script>
+        </div>
+	        </div>
+	        </div>
+	    </div>
+    </th:block>
+</body>
+
+</html>

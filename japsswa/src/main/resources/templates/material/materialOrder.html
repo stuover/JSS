@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+
+.input {
+  width: 500px;
+  height: 32px;
+  font-size: 15px;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  font-weight:bold;
+}
+
+
+</style>
+</head>
+<body>
+
+	<th:block layout:fragment="content">
+	
+	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+	
+	<!-- 제목 -->
+	
+		<h3 style="font-weight: bold; margin-bottom:70px; margin-left:700px;">&ensp;자재 발주</h3>
+	
+	<h5 class="page-title" style=" margin-top:5px; font-weight:bold; margin-left:10px;">발주 주문창</h5>	
+		
+	<div class="p-2 row">
+					<div class="col-sm-7">
+					 <div class="card">
+					  <div class="card-body">	
+		
+	
+		
+	<div style="display:flex;">
+	
+	
+	
+	<!-- 거래처 코드 인풋 -->
+	
+		<div style="float:left;">
+			<label for="cusId" style=" margin-left:20px; font-weight:bold;">거래처 코드</label><br>
+			  <input type=text id="cusId" class="input" style="width:180px; margin-left:20px;">
+				</div> 
+		<div style="float:left;">
+		
+	<!-- 거래처 인풋 -->
+			
+		<label for="cusName" style=" margin-left:100px; font-weight:bold; margin-bottom:5px;">거래처 &ensp;</label><br>  
+	   <input type=text id="cusName" class="input" style="width:180px; margin-left:100px; margin-bottom:5px;">       
+	   
+	   </div>
+	   
+	<!-- 거래처 및 자재 찾기 버튼 -->
+	   
+	    <button type="button" id="checkBtn" class="btn btn-primary"
+				data-toggle="modal" data-target=".bd-example-modal-lg"
+				data-bs-target="#searchModal"
+				style="height: 60px; width: 120px; padding: 3px; margin-top:3px; margin-bottom: 10px; background-color:green; margin-left:120px;"> 거래처 및 자재 <br> 찾기</button>
+	   
+	</div>
+
+ 
+
+	 <div style="display:flex;">
+	 
+	<!-- 품목 코드 인풋 -->
+	 
+		<div style="float:left;">
+		<label for="proId" style=" margin-left:20px; margin-top:20px;font-weight:bold;">품목 코드 &ensp;</label><br>
+	    <input type=text id="proId" class="input" style="width:180px; margin-left:20px;">	
+		</div>
+		
+		
+	<!-- 품목 인풋 -->
+		
+		<div style="float:left;">
+		 <label for="proName" style=" margin-left:100px; margin-top:20px;font-weight:bold;">품목 &ensp;</label><br>	 
+		 <input type=text id="proName" class="input" style="width:180px; margin-left:100px;">
+		 </div> 
+	</div>
+		
+	<!-- 가격 인풋 -->
+		
+		<div style="display:flex;">	
+			<div style="float:left;">
+		<label for="proPrice" style=" margin-left:20px; margin-top:20px;font-weight:bold;" >가격 &ensp;</label><br>
+			 <input type=text id="proPrice" class="input" style="width:180px; margin-left:20px;" >	
+			</div>
+			
+	<!-- 수량 인풋 -->
+			
+			<div style="float:left;">
+			<label for="count" style=" margin-left:100px; margin-top:20px;font-weight:bold;" >수량 &ensp;</label><br>
+			 <input type=text id="count" class="input" style="width:180px; margin-left:100px;" >
+			</div>
+	
+	
+	<!-- 납품입 인풋 -->
+			
+			<div style="float:left;">
+			<label for="delivery" style=" margin-left:100px; margin-top:20px;font-weight:bold;">납품일 &ensp;</label><br>
+			 <input type=date id="delivery" class="input" style="width:180px; margin-left:100px" >
+			</div> 
+		</div>	
+			
+		
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	<div class="p-2 row">
+					<div class="col-sm-12">
+					 <div class="card">
+					  <div class="card-body">
+		
+		
+		<h5 class="page-title" style="margin-top:10px;">발주 주문서</h5>
+		
+	
+	<div style="width:500px; margin-left:1000px; margin-top:50px;">
+	
+	
+	
+	
+		
+	<!-- 삭제 버튼 -->
+	
+		<button type="button" id="deleteBtn" class="btn btn-dark" style="float:right; margin-left:10px;height: 30px; width: 50px; margin-bottom:10px; padding: 3px; margin-right:50px;">삭제</button>
+	
+	<!-- 등록 버튼 -->
+	
+		<button type="button" id="insertBtn" class="btn btn-dark"style="float:right; height: 30px; width: 50px; margin-bottom:10px; padding: 3px; ">등록</button>
+		
+	<!-- 안전재고 미달 -->
+	
+		<button type="button" id="lackBtn" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" style="float:right; width:150px; height: 30px; padding:3px; margin-bottom:10px; margin-right:10px; margin-left:5px; color:white; ">안전 재고 미달</button>	 
+			
+		</div>
+	
+	<!-- 등록 시킨 빈 그리드 -->
+		
+		<div id="grid1" style="margin-top:5px;"></div>
+		<div style="margin-left:1000px;">
+	
+	<!-- 발주 신청 버튼 -->	
+		
+		<button type="button" id="orderBtn" class="btn btn-success" style="float:right;float:right; margin-left:20px; margin-right:5px;width: 100px; height: 30px; padding: 3px;  margin-top:5px; ">발주 신청</button>
+		
+	<!-- 발주 취소 버튼 -->
+		
+		<button type="button" id="listDeleteBtn" class="btn btn-info"  data-toggle="modal" data-target=".bd-example3-modal-lg" style="float:right; margin-left:5px; width: 200px; height: 30px; padding: 3px;  margin-top:5px; color:white;">발주 조회 및 취소</button>
+		</div>
+		
+
+
+<!-- Button trigger modal -->
+
+<!-- Large modal -->
+
+
+		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+			<div class="modal-dialog modal-sm-6">
+
+				<div class="modal-content">
+					<div class="modal-header">
+					
+				<!-- 모달 제목 -->
+					
+						<h4 class="modal-title" id="exampleModalLabel"
+							style="font-weight: bold; margin-left:120px;">거래처 및 자재 찾기</h4>
+
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+					</div>
+					<div>
+					
+					<!-- 모달 검색 창 -->	
+					
+						<h6 style="font-weight: bold; text-align: center;">
+												
+							거래처명 :<input type=text id="searchcode" class="input"
+								style="margin-left: 15px; padding: 1px; width:130Px; ">
+						
+					<!-- 모달 검색 버튼 -->	
+							
+							<button type="button" class="btn btn-dark" id="searchBtn"
+								style="padding: 8px; margin-left:10px; padding:5px;">검색</button>
+						</h6>
+					</div>
+					
+				<!-- 검색 그리드 -->
+					
+					<div id="grid"></div>
+					
+				<!-- 선택 버튼 -->	
+				
+					<div>
+						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
+							style="width: 50px; height: 35px; margin-left:230px; padding: 5px;">선택</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="grid5"></div>
+      </div>
+      <div class="modal-footer">
+       <button type="button" id="choose2Btn" class="btn btn-primary" data-dismiss="modal">선택</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="margin-right:170px;">Close</button>
+       
+      </div>
+    </div>
+  </div>
+</div>    
+       
+       
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+	
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+		
+		<!-- Large modal -->
+
+
+<div class="modal fade bd-example3-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    
+    <!-- 발주 조회 및 취소 모달 제목 -->
+    
+      	<h4 style="margin-bottom:50px; margin-top:50px; font-weight:bold; text-align:center;">발주 조회 및 취소</h4>
+    
+    <!-- 발주 조회 모달 -->
+      
+      <div id="grid3" ></div>
+      
+    <!-- 삭제 버튼 -->
+      
+      <button type="button" id="orderDeleteBtn" class="btn btn-warning" style="margin-top:50px;">삭제</button>
+    </div>
+    
+  </div>
+</div>
+		
+		
+		
+		
+		
+		<script>
+		
+	// 토큰	
+		
+		
+		
+		
+		$(document).ready(function() {
+		
+			
+	// 거래처 및 자재 찾기 버튼
+	
+			$('#checkBtn').on('click',function(){
+			
+				$('#cusId').val('');
+				 $('#cusName').val('');
+				 $('#proId').val('');
+				 $('#proName').val('');
+				 $('#proPrice').val('');	
+				 $('#count').val('');
+				 $('#delivery').val('');
+	
+				 
+	// 조정 될 리스트 그리드 삭제 버튼
+	
+			$('#deleteBtn').on('click',function(){
+				grid1.removeCheckedRows(false);
+			});	 
+				 
+	//	거래처 검색 아작스
+	
+			$.ajax({
+				url:"/mrCustomerAjax",
+				method:"GET",
+				dataType : "json",
+				
+				success: function(result){
+					grid.resetData(result);
+					
+				}
+				
+				
+			});
+		
+			});
+			
+			
+	
+	// 거래처 및 자재 모달창 검색 버튼
+	
+			$('#searchBtn').on('click',function(){
+				  
+				  const result= $("#searchcode").val();
+				  $('#searchcode').val('');
+					
+				  $.ajax({
+						url:"/searchCustomerAjax",
+						method:"GET",
+						data:{'result':result},
+						dataType:"json",
+					
+					success : function(result) {
+						grid.resetData(result);
+						grid.refreshLayout();
+						console.log(result);
+					}
+					
+						
+			     });
+				  
+				 
+	 
+				 }) 		
+		
+				 
+	// 거래처 및 자재 모달창 선택 버튼
+	
+				 $('#chooseBtn').on('click',function(){
+					 
+					 $('#cusId').val(grid.getCheckedRows()[0].customerId);
+					 $('#cusName').val(grid.getCheckedRows()[0].customerName);
+					 $('#proId').val(grid.getCheckedRows()[0].itemCode);
+					 $('#proName').val(grid.getCheckedRows()[0].itemName);
+					 $('#proPrice').val(grid.getCheckedRows()[0].itemPrice);
+					 
+	// 거래처 아작스
+	
+					 $.ajax({
+							url : "/mrCustomerAjax",
+							method : "GET",
+							dataType : "json",
+							success : function(result) {
+								grid.resetData(result);
+							}
+
+						});
+					})
+	
+	
+  // 빈 그리드 등록 버튼
+  
+				$('#insertBtn').on('click',function(){
+					
+					let order = {
+							customerId : $('#cusId').val(),
+							customerName : $('#cusName').val(),
+							itemCode : $('#proId').val(),
+							itemName : $('#proName').val(),
+							itemPrice : $('#proPrice').val(),
+							mrCount: $('#count').val(),
+							deliveryDate: $('#delivery').val()};
+					
+						grid1.appendRow(order);
+							
+				
+					
+				})
+	
+				
+	// 발주 신청 버튼
+	
+				$('#orderBtn').on('click',function(){
+					
+					$('#cusId').val('');
+					 $('#cusName').val('');
+					 $('#proId').val('');
+					 $('#proName').val('');
+					 $('#proPrice').val('');	
+					 $('#count').val('');
+					 $('#delivery').val('');
+					
+					
+					console.log(grid1.getCheckedRows());
+					
+					
+					
+	// 발주 신청				
+					$.ajax({
+						url : "/Orders",
+						contentType : "application/json",
+						method : "post",
+						data : JSON.stringify({ list : grid1.getCheckedRows()}),
+						dataType: "json",
+						beforeSend: function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success : function(result){
+							
+						}
+					})
+					grid1.removeCheckedRows(false);
+				})	
+		
+	// 거래처 모달창 그리드	
+	
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '코드(거)',
+					name : 'customerId'
+				}, {
+					header : '거래처',
+					name : 'customerName'
+				}, {
+					header : '코드(품)',
+					name : 'itemCode'
+				},  
+					{
+					header : '자재',
+					name : 'itemName'
+				},
+					{
+					header : '가격',
+					name : 'itemPrice'
+				}
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				
+			});
+			
+			
+	
+	// 빈 그리드
+			
+			const grid1 = new tui.Grid({
+				el : document.getElementById('grid1'),
+
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				columns : [ {
+					header : '거래처 코드',
+					name : 'customerId'
+				},{
+					header : '거래처',
+					name : 'customerName'
+				},
+				{
+					header : '품목 코드',
+					name : 'itemCode'
+				},
+				
+				{
+					header : '품목',
+					name : 'itemName'
+				},{
+					header : '가격',
+					name : 'itemPrice'
+				},
+				{
+					header : '수량',
+					name : 'mrCount'
+				}, {
+					header : '납품일',
+					name : 'deliveryDate'
+					
+				} ],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			});
+			
+			
+			
+			
+	// 모달 새로 고침	
+
+			$(function(){
+	    	$('#store').on('shown.bs.modal', function(){
+	    		grid.refreshLayout();
+	    	})
+	    })
+		
+	
+	// 발주 조회 및 삭제 버튼
+	
+	    $('#listDeleteBtn').on('click',function(){
+	    	
+	    
+	// 발주 조회 아작스 
+	
+	    $.ajax({
+				url : "/mrOrderListAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid3.resetData(result);
+					grid3.refreshLayout();
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+
+			});
+	    
+	    
+	    });
+
+	
+	// 발주 조회 리스트 아작스
+	
+			var grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ 
+					{
+						header : '발주일자',
+						name : 'mrOrderDate'
+					},
+					{
+					header : '발주코드',
+					name : 'mrOrderCode'
+				}, 
+					{
+					header : '거래처코드',
+					name : 'customerId'
+				}, 
+				{
+					header : '거래처명',
+					name : 'customerName'
+				},
+				
+				{
+					header : '사원 코드',
+					name : 'empNo'
+				}, 
+				{
+					header : '사원명',
+					name : 'empName',
+					width: 60
+				},
+				{
+					header : '품목 수',
+					name : 'productCount',
+					width: 40
+				},				
+				{
+					header : '총 가격',
+					name : 'allCount',
+					width: 80
+				} 
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+	    
+	
+	// 발주 취소 버튼
+	
+	    $("#orderDeleteBtn").on('click',function(){
+	    	
+	// 발주 취소
+	
+	    	$.ajax({
+				url : "/OrderDelete",
+				contentType : "application/json",
+				method : "post",
+				data : JSON.stringify({ list : grid3.getCheckedRows()}),
+				dataType: "json",
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success : function(result){
+					
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+			})
+			grid3.removeCheckedRows(false);
+	    	
+	    	
+	    })
+			
+			
+	
+	// 안전재고 미달
+	
+	  $('#lackBtn').on('click',function(){
+		
+		  $.ajax({
+				url :"/mrCount",
+				method : "GET",
+				success : function(result) {
+					
+					grid5.resetData(result);
+				},
+				error: function(reject){
+					console.log(reject);	
+				}
+				
+				
+		  
+	  });
+	  })
+	    
+	    var grid5 = new tui.Grid({
+			el : document.getElementById('grid5'),
+			scollX : false,
+			scollY : false,
+			rowHeaders: ['checkbox'],
+			
+			
+			columns : [ {
+				header : '코드(거)',
+				name : 'customerId',
+				hidden : true
+			}, {
+				header : '거래처',
+				name : 'customerName',
+				hidden : true
+			},{
+				header : '가격',
+				name : 'itemPrice',
+				hidden : true
+			},		
+				
+				{
+				header : '구분',
+				name : 'itemType'
+			},
+				{
+				header : '품목코드',
+				name : 'itemCode'
+			}, {
+				header : '자재명',
+				name : 'itemName'
+			},
+			{
+				header : '재고량',
+				name : 'total'
+			},
+			{
+				header : '안전재고',
+				name : 'saveMaterial'
+			}
+			
+			
+			],
+			pageOptions: { 
+            	useClient: true,
+               	perPage: 4
+            }
+		})
+
+	    
+	    
+	
+			 $('#choose2Btn').on('click',function(){
+				 
+				 console.log(grid5.getCheckedRows());
+				 
+				 $('#cusId').val(grid5.getCheckedRows()[0].customerId);
+				 $('#cusName').val(grid5.getCheckedRows()[0].customerName);
+				 $('#proId').val(grid5.getCheckedRows()[0].itemCode);
+				 $('#proName').val(grid5.getCheckedRows()[0].itemName);
+				 $('#proPrice').val(grid5.getCheckedRows()[0].itemPrice);
+	
+				 
+	
+			 });
+	
+			
+	
+	
+	
+	    
+			$(function(){
+		    	$('#exampleModal').on('shown.bs.modal', function(){
+		    		grid5.refreshLayout();
+		    	})
+		    });
+	    
+	    
+	    
+	    
+	    
+	    
+		})
+			
+		
+		
+		
+		
+		
+		
+		
+		</script>
+
+	
+		
+
+
+
+
+
+	</th:block>
+
+
+
+
+
+</body>
+</html>

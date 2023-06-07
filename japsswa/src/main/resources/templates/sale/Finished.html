@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+
+</head>
+<th:block layout:fragment="content">
+
+
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="page-title">완제품 입고 관리</h4>
+					
+
+					<input id="name" type="hidden" th:value="${#authentication.principal.empName}">  
+				
+
+					<div class="row"></div>
+					
+					<div id="topGrid"></div>
+					<button id="inBtn" type="button" class="btn btn-dark">입고처리</button>
+					<div id="botGrid"></div>
+					
+				
+					<div>
+						<form>
+							
+							<button id="inCancelBtn" type="button" class="btn btn-danger">입고취소</button>
+							
+						</form>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+
+	<script>
+	
+
+	const Grid = tui.Grid;
+	
+	//화면 상단 그리드
+	let topGridData = [{}];
+		const topGrid = new Grid({
+	      el: document.getElementById('topGrid'),
+	      data: topGridData,
+	      rowHeaders: ['checkbox'],
+	      pageOptions: { 
+              useClient: true,
+              perPage: 5 
+              },
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '생산실적코드',
+				  name: 'performanceId',
+				  hidden: true
+				 },
+			     {
+				  header: '품목코드',
+				  name: 'itemCode',
+				  hidden: true
+				 },
+				 {
+				  header: '품목명',
+				  name: 'itemName'
+			     },
+			     {
+				  header: '작업완료날짜',
+				  name: 'endTime'
+				 }, 
+			     {
+			      header: '입고량',
+			      name: 'passItem'
+			     },
+			     {
+				  header: '담당자',
+				  name: 'empName',
+				  hidden: true
+				 }
+					 
+				 
+		      ],
+		      
+		        
+		    });
+
+		topGrid.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+		topGrid.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+		topGrid.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+		
+
+		window.onload = function(){
+		
+		
+			
+			//화면 상단 그리드에 생산완료된 완제품 리스트
+			$.ajax({
+				url : "/passItem",
+				method : "get",
+				success : function(result){
+					topGrid.resetData(result);
+					topGrid.refreshLayout();
+					for(let i=0; i<topGrid.getRowCount(); i++){
+						topGrid.setValue(i, "empName", $('#name').val(), false);
+					};
+				
+					
+					
+				}
+			})
+			
+			//화면 하단 그리드에 입고처리된 완제품 리스트
+			$.ajax({
+					  url : "/storeInItem",
+					  method : "get",
+					  success : function(result){
+						  botGrid.resetData(result);
+						  
+					  }
+				  })
+		}
+		
+		
+		//입고처리버튼 누르면 입고처리가 되고 하단 그리드로 이동
+		$('#inBtn').on('click', function(){
+			
+			
+			var data = topGrid.getCheckedRows();
+			
+			
+			console.log(data);
+			
+			$.ajax({
+				url : "/fRegister",
+				contentType : "application/json",
+				data : JSON.stringify(data),
+				method : "post",
+				beforeSend : function(xhr){
+     			   xhr.setRequestHeader(header, token);
+     			   
+     		   },
+     		   success : function(result){
+    			  
+				  alert("입고처리 되었습니다.")
+				  
+				  $.ajax({
+					  url : "/storeInItem",
+					  method : "get",
+					  success : function(result){
+						  console.log(result);
+						  botGrid.resetData(result);
+						  botGrid.refreshLayout();
+						  
+					  },
+					  error : function(reject){
+						  console.log(reject);
+					  }
+					  
+				  })
+				  
+				  
+     		   },
+     		   error : function(reject){
+     			   console.log(reject);
+     		   }
+			})
+		})
+		
+		
+		
+		//화면 하단 그리드
+		let botGridData = [{}];
+  		const botGrid = new Grid({
+		      el: document.getElementById('botGrid'),
+		      data: botGridData,
+		      rowHeaders: ['checkbox'],
+		      pageOptions: { 
+	                useClient: true,
+	                perPage: 5 
+	                },
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+		    	  {
+					  header: '생산실적코드',
+					  name: 'performanceId',
+					  hidden: true
+					 },
+				     {
+					  header: '품목코드',
+					  name: 'itemCode',
+					  hidden: true
+					 },
+					 {
+					  header: '품목명',
+					  name: 'itemName'
+				     },
+				     {
+					  header: '완제품입고날짜',
+					  name: 'fnStoreIn'
+					 }, 
+				     {
+				      header: '입고량',
+				      name: 'fnCount'
+				     },
+				     {
+					  header: 'lot번호',
+					  name: 'fnLotNo'
+					  
+					 },
+					 {
+					  header: '유통기한',
+					  name: 'fnExpiration'
+					 },
+					 {
+				      header: '담당자',
+					  name: 'empName'
+					 }
+			      ],
+			      
+			        
+			    });
+
+  		    botGrid.on('check', ev => {
+		      console.log('check!', ev);
+		    });
+
+  		    botGrid.on('uncheck', ev => {
+		      console.log('uncheck!', ev);
+		    });
+
+  		    botGrid.on('focusChange', ev => {
+		      console.log('change focused cell!', ev);
+		    });
+		 
+	 		//입고 취소
+			$('#inCancelBtn').on('click', function(){
+				var delF = botGrid.getCheckedRows();
+				
+				$.ajax({
+					url : "/delFinished",
+					method : "post",
+					contentType : "application/json",
+					data : JSON.stringify({flist : delF}),
+					beforeSend : function(xhr){
+	        			xhr.setRequestHeader(header, token);
+	        		},
+	        		success : function(result){
+	        			
+	        			$.ajax({
+	  					  url : "/storeInItem",
+	  					  method : "get",
+	  					  success : function(result){
+	  						  alert("입고취소 되었습니다")
+	  						  console.log(result);
+	  						  botGrid.resetData(result);
+	  						  botGrid.refreshLayout();
+	  						  
+	  						$.ajax({
+	  							url : "/passItem",
+	  							method : "get",
+	  							success : function(result){
+	  								topGrid.resetData(result);
+	  								topGrid.refreshLayout();
+	  								for(let i=0; i<topGrid.getRowCount(); i++){
+	  									topGrid.setValue(i, "empName", $('#name').val(), false);
+	  								};
+	  							
+	  								
+	  								
+	  							}
+	  						})
+	  					  },
+	  					  error : function(reject){
+	  						  console.log(reject);
+	  					  }
+	  					  
+	  				  })
+	        		}  
+				})
+			})
+		
+		           
+		           
+		           
+
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+
+</th:block>
+
+</html>

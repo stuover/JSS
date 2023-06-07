@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+	
+</style>
+
+</head>
+<body>
+	
+
+<th:block layout:fragment="content">
+
+<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+
+
+	<h3 style="text-align:center; font-weight:bold;margin-top:10px;"> 자재 반품 </h3>
+
+<!-- 제목 -->
+	
+	<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">
+
+
+	  <h5 class="page-title">반품될 자재(불량률 10%이상)</h5>
+	
+	<div>
+
+<!-- 이동 버튼 -->	
+	<button type="button" id="moveBtn" class="btn btn-dark" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px; width:60px; padding:3px;">이동</button>
+	
+	</div>
+	
+<!-- 반품 될 리스트 -->
+	
+	<div id="grid" ></div>
+	
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	
+	
+	<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">
+	
+<!--  제목 -->
+	
+	 <h5 class="page-title">반품 리스트 및 등록</h5>
+	<div>
+
+<!-- 삭제 -->
+		
+		<button type="button" id="deleteBtn" class="btn btn-dark" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px;  width:60px; padding:3px;">삭제</button>
+		
+		</div>
+
+<!-- 반품 리스트 -->
+	
+	<div id="grid1" ></div>
+	<div>
+
+<!-- 반품 등록 버튼 -->	
+
+	<button type="button" id="insertBtn" class="btn btn-success" style="float:right; margin-bottom:10px; margin-right:20px; margin-left:10px;width:60px; padding:3px;">등록</button>
+	<button type="button" class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" style="float:right; color:white; padding:3px; ">반품 조회 및 취소</button>
+	<button type="button" class="btn btn-warning" onclick="location.href='http://localhost/mrOrder'" style="float:right; padding:3px; color:black; color:black; font-weight:bold; margin-right:10px; color:white;">발주 요청</button>
+	
+	</div>
+	
+<!-- 모달 -->
+
+<div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <h4 style="font-weight:bold; text-align:center; margin-top:20px;">반품 조회    </h4>          
+      <div><button type="button"  id="returnDelBtn"  class="btn btn-warning" style="margin-right:10px; float:right; padding:5px;">삭제</button></div>   
+      <hr>
+      <div id="grid3"></div>
+    </div>
+  </div>
+</div>	
+	
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	
+	
+	
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	<script>
+	
+		
+	
+	
+	$(document).ready(function(){
+
+			
+		
+// 반품 될 리스트	
+		
+	$.ajax({
+				url : "/mrReturnListAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid.resetData(result);
+					
+				}
+
+			});
+
+// 반품 리스트 그리드
+
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				scollX : false,
+				scollY : false,
+				
+				 
+				
+				rowHeaders: ['checkbox'],
+				
+				
+				columns : [ {
+					header : '검사코드',
+					name : 'testCode'
+				},{
+					header : '검사 완료일',
+					name : 'endDate'
+				},{
+					header :'담당자 이름',
+					name : 'empName'
+				},{
+					header : '주문 상세 코드',
+					name : 'mrOrderDetail'
+				},{
+					header : '구분',
+					name : 'itemType'
+				},
+			
+				{
+					header : '품목코드',
+					name : 'itemCode'
+				},{
+					header : '품목코드명',
+					name : 'itemName'
+				},  
+				 
+				{
+					header : '검사량',
+					name : 'testQuantity'
+				},
+				{
+					header : '불량량',
+					name : 'errQuantity'
+				},
+				{
+					header : '합격량',
+					name : 'passQuantity'
+				},
+				{
+					header : '불량률',
+					name : 'error'
+				},
+				{
+					header : '비고',
+					name : 'testNote',
+					editor: 'text'
+				}
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				  
+			})
+	
+// 반품 리스트
+
+			$.ajax({
+				
+				url : "/mrReturnAjax",
+
+				method : "GET",
+				
+
+				success : function(result) {
+					grid3.resetData(result);
+					grid3.refreshLayout();
+				},
+				error: function(reject){
+					console.log(reject);
+				}
+			});
+			
+			
+// 반품 리스트 그리드			
+
+			var grid1 = new tui.Grid({
+				el : document.getElementById('grid1'),
+				scollX : false,
+				scollY : false,
+				rowHeaders: ['checkbox'],
+								
+				columns : [ {
+					header : '반품코드',
+					name : 'mrReturnCode'
+				},{
+					header : '검사코드',
+					name : 'testCode'
+				},{
+					header :'품목코드',
+					name : 'itemCode'
+				},{
+					header : '반품수',
+					name : 'mrReturnCount'
+				},{
+					header : '반품사유',
+					name : 'mrReturnReason',
+					editor: 'text'
+				},
+			
+				{
+					header : '반품일',
+					name : 'mrReturnDate'
+				},{
+					header : '사원코드',
+					name : 'empNo'
+				}
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				  
+			})
+				
+
+	
+			var grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+				scollX : false,
+				scollY : false,
+				rowHeaders: ['checkbox'],
+								
+				columns : [ {
+					header : '반품코드',
+					name : 'mrReturnCode'
+				},{
+					header : '검사코드',
+					name : 'testCode'
+				},{
+					header :'품목코드',
+					name : 'itemCode'
+				},{
+					header : '반품수',
+					name : 'mrReturnCount'
+				},{
+					header : '반품사유',
+					name : 'mrReturnReason',
+					editor: 'text'
+				},
+			
+				{
+					header : '반품일',
+					name : 'mrReturnDate'
+				},{
+					header : '사원코드',
+					name : 'empNo'
+				}
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				  
+			})
+				
+	
+
+
+
+// 이동 버튼 클릭 이벤트
+
+		$('#moveBtn').on('click',function(){
+			
+		let mrReturn = {
+			testCode : grid.getCheckedRows()[0].testCode,
+			itemCode : grid.getCheckedRows()[0].itemCode,
+			mrReturnCount : grid.getCheckedRows()[0].testQuantity
+		}
+			grid.removeCheckedRows(false);
+			grid1.appendRow(mrReturn);
+		})	
+			
+
+// 등록 버튼 클릭 이벤트		
+
+		$('#insertBtn').on('click',function(){
+			
+			grid1.finishEditing();
+			
+			let insertReturn = {
+				testCode : grid1.getCheckedRows()[0].testCode,
+				itemCode : grid1.getCheckedRows()[0].itemCode,
+				mrReturnCount : grid1.getCheckedRows()[0].mrReturnCount
+		}
+
+
+// 등록 기능
+
+			$.ajax({
+			url:"/mrReturnInsert",
+			contentType : "application/json",
+			method: "post",
+			data : JSON.stringify({list : grid1.getCheckedRows()}),
+			dataType: "json",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+				success : function(result){
+					console.log(result);
+					
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+				
+			})
+			
+						
+		
+		
+		
+		
+			
+		})
+		
+		
+
+	
+// 그리드 삭제
+
+		$('#deleteBtn').on('click',function(){
+				grid1.removeCheckedRows(false);
+			})
+		
+		
+		
+			$(function(){
+		    	$('#exampleModalLong').on('shown.bs.modal', function(){
+		    		grid3.refreshLayout();
+		    	})
+		    })
+			
+			
+		    
+		  $('#returnDelBtn').on('click',function(){
+			
+			  
+			  $.ajax({
+					url:"/mrReturnDelete",
+					contentType : "application/json",
+					method: "post",
+					data : JSON.stringify({list : grid3.getCheckedRows()}),
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+							},
+					success: function(result){
+						grid3.resetData(result);
+						grid3.removeCheckedRows(false);  
+					},
+					error: function(reject){
+						console.log(reject);
+					}
+					
+			  })
+		  })  
+		    
+		    
+		    
+		    
+		});	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		
+
+</script>
+
+
+</th:block>
+
+
+</body>
+
+</html>	

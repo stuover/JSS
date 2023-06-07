@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+</head>
+<th:block layout:fragment="content">
+
+	
+	
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="page-title">출고 관리</h4>
+					
+
+					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
+					<div>
+									<input type="text" id="itemInput" name="sItem">
+									<button id="itemBtn" type="button" class="btn btn-dark"
+										data-bs-toggle="modal" data-bs-target="#searItemModal">품목 검색</button>
+									<button id="receiptBtn" type="button" class="btn btn-dark"
+										data-bs-toggle="modal" data-bs-target="receiptModal">명세서</button>
+				
+					</div>
+
+					<div class="row"></div>
+					
+
+					<div id="grid1"></div>
+
+					<div id="grid2"></div>
+					
+
+					<div>
+						<form>
+
+							<button id="outBtn" type="button" class="btn btn-dark">출고</button>
+							
+						</form>
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<!-- 모달 -->
+	
+	<div class="modal fade" id="receiptModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="receiptModalLabel">명세서</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					
+					<div id="recmodalGrid"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="print
+					Btn" type="button" class="btn btn-dark">인쇄</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+
+
+	<script>
+	
+
+	const Grid = tui.Grid;
+
+	
+	//상단 그리드 
+	let grid1Data = [];
+		const grid1 = new Grid({
+	      el: document.getElementById('grid1'),
+	      data: grid1Data,
+	      rowHeaders: ['checkbox'],
+	      pageOptions: { 
+              useClient: true,
+              perPage: 5 
+              },
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '주문상세코드',
+				  name: 'ordDetailId',
+				  hidden : true
+				 },
+				 {
+				  header: '품목코드',
+				  name: 'itemCode',
+				  hidden : true
+				 },
+				 {
+				  header: '거래처코드',
+				  name: 'customerId',
+				  hidden : true
+				 },
+			     {
+				  header: '거래처명',
+				  name: 'customerName'
+				 },
+			     {
+				  header: '품목명',
+				  name: 'itemName'
+				 },
+				 {
+				  header: '주문수량',
+				  name: 'ordCount'
+			     },
+			     {
+				  header: '남은양',
+				  name: 'remain'
+				 },
+			     {
+				  header: '주문날짜',
+				  name: 'ordDate'
+				 }, 
+			     {
+			      header: '납부예정날짜',
+			      name: 'outDate'
+			     },
+			     {
+			      header : '주문상태',
+			      name : 'orddetStatus'
+			     },
+				 {
+				  header : '담당자',
+				  name : 'empName'
+				 }
+		      ],
+		      
+		        
+		    });
+
+		grid1.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+	    grid1.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+	    grid1.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+	    
+	    
+	    $('#itemBtn').on('click', function(){
+	    	
+	    	const itemName = $('#itemInput').val();
+	    	$('#itemInput').val('');	
+	    	
+	    	$.ajax({
+	    		url : "/showTopList",
+	    		method : "get",
+	    		data : {'itemName' : itemName},
+	    		success : function(result){
+	    			grid1.resetData(result);
+	    			grid1.refreshLayout();
+	    			
+	    			
+	    			$.ajax({
+	    				url : "/showBottomList",
+	    				method : "get",
+	    				data : {'itemName' : itemName},
+	    				success : function(result1){
+	    					grid2.resetData(result1);
+	    					grid2.refreshLayout();
+	    					for(let i=0; i<grid2.getRowCount(); i++){
+	    						grid2.setValue(i, "empName", $('#name').val(), false);
+	    					}
+	    				}
+	    			})
+	    		}
+	    	})
+	    })
+	    
+	    
+	    //하단 그리드
+	    let grid2Data = [];
+		const grid2 = new Grid({
+	      el: document.getElementById('grid2'),
+	      data: grid2Data,
+	      rowHeaders: ['checkbox'],
+	      pageOptions: { 
+              useClient: true,
+              perPage: 5 
+              },
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '완제품 lot번호',
+				  name: 'fnLotNo'
+				 },
+			     
+				 {
+				  header: '품목코드',
+				  name: 'itemCode',
+				  hidden : true
+			     },
+			     {
+				  header: '품목명',
+				  name: 'itemName'
+				 }, 
+			     {
+			      header: '재고량',
+			      name: 'fnCount'
+			     },	
+			    
+				 {
+				  header: '출고량',
+				  name: 'fnRelCount',
+				  editor : 'text'
+				 },
+				 {
+				  header: '담당자',
+				  name: 'empName'
+				 }
+		      ],
+		      
+		        
+		    });
+
+		grid2.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+	    grid2.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+	    grid2.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+	    
+	    
+	    //명세서 모달
+	    const recmodalGrid = new Grid({
+		               el: document.getElementById('recmodalGrid'),
+		 		      rowHeaders: ['checkbox'],
+		               scrollX: false,
+		               scrollY: false,
+		              pageOptions: { 
+		                useClient: true,
+		                perPage: 5 
+		                },
+		               columns: [
+		            	 {
+			               header: '품목코드',
+			               name: 'customerId'
+			            },
+		                 {
+		                   header: '거래처명',
+		                   name: 'customerName'
+		                 },
+		                 {
+		                   header: '연락처',
+		                   name: 'custTel'
+		                 },
+		                 {
+		                   header: '주소',
+		                   name: 'custAddr'
+		                 },              
+		                 {
+		                   header: '메일주소',
+		                   name: 'custMail'
+		                 }     
+		               ]
+		             });
+
+	    			 recmodalGrid.on('check', ev => {
+		               console.log('check!', ev);
+		             });
+
+	    			 recmodalGrid.on('uncheck', ev => {
+		               console.log('uncheck!', ev);
+		             });
+
+	    			 recmodalGrid.on('focusChange', ev => {
+		               console.log('change focused cell!', ev);
+		             });
+	    			 
+	    			 
+	    			 window.onload = function(){
+	    				 
+	    				
+	    				 
+	    			 }
+	    			 
+	    			 //출고처리
+	    			$('#outBtn').on('click', function(){
+	    				 
+	    				 grid2.finishEditing();
+	    				 var topdata = grid1.getCheckedRows();
+	    				 var botdata = grid2.getCheckedRows();
+	    				 
+	    				 $.ajax({
+	    					 url : "/itemOut",
+	    					 method : "post",
+	    					 contentType : "application/json"
+	    					 data : JSON.stringify({ volist : topdata, releaseList : botdata }),
+	    					 beforeSend : function(xhr){
+	    						 xhr.setRequestHeader(header, token);
+	    					 },
+	    					 success : function(result){
+	    						 alert('출고처리 되었습니다')
+	    					 }
+	    				 })
+	    				 
+	    			 })
+	    			  
+	    			 
+	    			 
+	    			
+	    			 
+	    			
+		           
+		           
+		           
+		           
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+	
+	
+
+</th:block>
+
+</html>

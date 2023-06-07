@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <style>
+        h2 {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .tui-grid-cell-content {
+            text-align: center;
+        }
+
+         #searchDiv {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+
+  #searchForm {
+    margin-right: 10px;
+  }
+
+    </style>
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+    <div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+        <h2>비가동 내역 조회</h2><br>
+                <div class="card-body">              
+        <div id="searchDiv">
+        <form id="searchForm" name="searchForm">
+        <p style="margin-left: 240px; font-size: 15px;">비가동일시 검색</p>
+            <input type="text" id="searchInput" name="facName" placeholder="설비를 선택해주세요" readonly>
+            <input type="date" id="startDate" name="startDate" placeholder="시작 날짜">
+            <input type="date" id="stopDate" name="stopDate" placeholder="종료 날짜">
+            <button id="searchBtn" type="button" class="btn btn-dark">검색</button>
+            <button id="resetBtn" type="button" class="btn btn-dark">초기화</button>
+        </form>
+        </div>
+        <div id="grid"></div>
+        
+        <!-- fac 모달 시작 -->
+
+                        <div class="modal fade" id="facModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document"
+                                style="width:1500px">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- fac 모달그리드 시작 -->
+                                        <div id="facGrid"></div>
+                                        <!-- fac 모달그리드 끝 -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- fac 모달 끝 -->
+
+        <script>
+            var name = '';
+
+            function getDetailList() {
+
+                $.ajax({
+                    url: "/downDetailAjax",
+                    method: "GET",
+                    dataType: "JSON",
+                    success: function (result) {
+                        grid.resetData(result);
+                        //console.log(result);
+                    },
+                    error: function (reject) {
+                        alert("실패");
+                        console.log(reject);
+                    }
+                });
+            }
+
+            getDetailList();
+
+            const grid = new tui.Grid({
+                el: document.getElementById('grid'),
+                scrollX: false,
+                scrollY: false,
+                rowHeaders: ['rowNum'],
+                pageOptions: {
+                    useClient: true,
+                    perPage: 15
+                },
+                columns: [{
+                        header: '비가동 코드',
+                        name: 'downCode'
+                    },
+                    {
+                        header: '설비 코드',
+                        name: 'facCode'
+                    },
+                    {
+                        header: '설비 이름',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비 가동일시',
+                        name: 'startDate'
+                    },
+                    {
+                        header: '설비 비가동일시',
+                        name: 'stopDate'
+                    },
+                    {
+                        header: '설비 비가동사유',
+                        name: 'downReason',
+                        sortable: true
+                    },
+                    {
+                        header: '관리자',
+                        name: 'downManager'
+                    },
+                    {
+                        header: '비고',
+                        name: 'remark'
+                    }
+                ]
+            });
+		
+         // facCode 리스트 조회 함수
+            function selectFac() {
+                $.ajax({
+                    url: "/getSelectList",
+                    method: "get",
+                    dataType: "json",
+                    success: function (result) {
+                        facGrid.resetData(result);
+                    },
+                    error: function (reject) {
+                        console.log(reject)
+                    }
+                })
+            }
+            
+         // facCode 그리드
+            var facGrid = new tui.Grid({
+                el: document.getElementById('facGrid'),
+                pageOptions: {
+                    useClient: true,
+                    perPage: 5
+                },
+                columns: [{
+                        header: '설비명 ',
+                        name: 'facName'
+                    },
+                    {
+                        header: '설비코드 ',
+                        name: 'facCode'
+                    }
+                ]
+            });
+            
+            $('#searchInput').on('click', function(){
+            	
+            	$('#facModal').modal('show');
+                $('#facModal').on('shown.bs.modal', function (e) {
+                    setTimeout(() => facGrid.refreshLayout(), 300);
+                }) 
+                
+                selectFac();
+            })
+            
+            facGrid.on('click', function (e) {
+
+                console.log("facGrid클릭");
+
+                fac = facGrid.getRow(e.rowKey).facName;                
+				console.log(fac)
+                $('#facModal').modal('hide');
+                $('#searchInput').val(fac);                
+                //insertUpGrid.resetData([fac]); 인풋에 데이터넣기
+
+
+            })
+
+            $('#searchBtn').on('click', function () {
+
+				console.log($('#searchForm').serialize());             
+                $.ajax({
+                    url: "/searchList",
+                    method: "POST",
+                    data: $('#searchForm').serialize(),
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+
+                    success: function (result) {
+                        console.log("성공");
+                        grid.resetData(result);
+
+                    },
+                    error: function (reject) {
+
+                    }
+                });
+            })
+            
+            
+
+            $('#resetBtn').on('click', function () {
+
+            	$('#searchForm')[0].reset();
+
+            })
+            
+            // 종료일 입력란 변경 이벤트
+            
+            $('#startDate, #stopDate').on('change', function(){
+            	var startDate = new Date($('#startDate').val());
+                var stopDate = new Date($('#stopDate').val());
+                
+            	if (stopDate < startDate) {
+      		      alert("종료일이 시작일보다 빠릅니다!");
+      		    $('#startDate').val('');  // 시작일 값을 비워줌
+      		    $('#stopDate').val('');   // 종료일 값을 비워줌
+      		    }
+            	
+            });
+            
+         
+        </script>
+        </div>
+	        </div>
+	        </div>
+	    </div>
+    </th:block>
+</body>
+
+</html>

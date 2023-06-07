@@ -15,9 +15,12 @@ public class CustomLoginSuccessHandler  implements AuthenticationSuccessHandler{
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
-
+		
 		HttpSession session = request.getSession();
-		session.setAttribute("loginId", authentication.getName());
+		session.setAttribute("empNo", authentication.getName());
+		System.err.println(session.getAttribute("empNo"));
+
+		System.err.println(session.getAttribute("password"));
 		// 사용자 롤이면 admin
 		response.sendRedirect(request.getContextPath() + "/top");
 	}

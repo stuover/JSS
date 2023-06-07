@@ -1,0 +1,556 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+</style>
+
+</head>
+<body>
+
+	<th:block layout:fragment="content">
+	
+	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+	
+	
+	<h3 style="font-weight: bold; margin-top:10px; text-align:center; margin-right:40px;">&emsp;자재 입고</h3>
+	
+	
+<!-- 제목 -->
+
+	<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">
+
+ <h5 class="page-title">품질 통과한 자재</h5>
+	
+		
+
+		<form action="/test" method="post">
+		<div>
+		
+<!-- 입고 버튼 -->
+			
+			<button type="button" id="storeBtn" class="btn btn-success"
+				data-bs-toggle="modal" data-bs-target="#searchModal"
+				style="float: right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:25px;">입고</button>
+				<input type="hidden" value="" id="sotre" name="testCode">
+				
+				
+<!-- 입고 확인 및 삭제 -->
+				
+			<button type="button" id="checkBtn" class="btn btn-primary"
+				data-toggle="modal" data-target=".bd-example-modal-lg"
+				data-bs-target="#searchModal"
+				style="float: right; height: 30px; width: 150px; padding: 3px; margin-bottom: 10px; margin-right: 8px; margin-top:25px;">입고확인 및 삭제</button>
+
+		</div>
+		</form>
+
+
+		<!-- Large modal -->
+
+<!-- 입고 조회 모달 -->
+
+		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+
+			<div class="modal-dialog modal-lg "  >
+
+				<div class="modal-content" >
+					<div class="modal-header" >
+						<h4 class="modal-title" id="exampleModalLabel"
+							style="font-weight: bold; margin-left: 280px;">입고 처리 확인 및 삭제</h4>
+<!-- 닫기 버튼 -->
+
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+					</div>
+					
+<!-- 검색 인풋-->				
+					<div>
+						<h6 style="font-weight: bold; text-align: center;">
+							입고사유코드 :<input type=text id="searchcode"
+			
+								style="margin-left: 15px; padding: 1px;">
+<!-- 검색 버튼 -->
+								
+							<button type="button" class="btn btn-dark" id="searchBtn"
+								style="padding: 3px; margin-left: 15px;">검색</button>
+
+<!--  삭제 버튼 -->
+								
+							<button type="button" class="btn btn-dark" id="deleteBtn"
+								style="padding: 3px; margin-left: 15px;">삭제</button>
+									
+						</h6>
+					</div>
+					
+<!-- 입고 조회 리스트 -->	
+				
+					<div id="modalgrid"></div>
+					<div>
+						
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+<!-- 품질 검사 완료 창-->
+
+		<div id="grid"></div>
+		
+		</div>
+		</div>
+		</div>
+		</div>
+		
+
+<!-- 제목 -->
+		
+		<div class="p-2 row">
+					<div class="col-sm-12">
+					 <div class="card">
+					  <div class="card-body">
+		
+		
+		
+		
+		 <h5 class="page-title">반제품 입고</h5>
+		<div>
+		
+<!--  반제품 입고 버튼-->
+		
+		<button type="button" id="halfBtn" class="btn btn-warning" style="float: right; height: 30px; width: 50px; padding: 3px; margin-top:30px; margin-right: 20px; margin-bottom: 10px; color:white;">입고</button>
+		
+		</div>
+
+<!-- 생산 실적 리스트 -->
+		
+		<div id="grid2" style=""></div>
+		
+		</div>
+		</div>
+		</div>
+		</div>
+		
+		
+		
+		</div>
+		</div>
+		</div>
+		</div>
+
+	
+	
+
+		<script>
+		
+		
+		
+		$(document).ready(function() {
+			
+
+// 입고 버튼 클릭 이벤트
+
+			$('#storeBtn').on('click',function(){
+		    	console.log(grid.getCheckedRows()[0].testCode);
+
+// 입고		    	
+		    	$.ajax({
+		    		url : "/mrStore",
+		    		contentType: "application/json",
+					method : "POST",
+					data : JSON.stringify({list : grid.getCheckedRows()}),
+					dataType : "json",
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+					}
+		    	})
+				grid.removeCheckedRows(false);
+
+		    	
+		    })
+			
+			
+// 품질 리스트	아작스
+
+			$.ajax({
+				url : "/mrlistAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid.resetData(result);
+					
+				}
+
+			});
+
+			var grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				scollX : false,
+				scollY : false,
+
+				rowHeaders: ['checkbox'],
+	              
+				columns : [ {
+					header : '검사코드',
+					name : 'testCode'
+				},{
+					header : '검사 완료일',
+					name : 'endDate'
+				},{
+					header :'담당자 이름',
+					name : 'empName'
+				},{
+					header : '주문 상세 코드',
+					name : 'mrOrderDetail'
+				},{
+					header : '구분',
+					name : 'itemType'
+				},
+			
+				{
+					header : '품목코드',
+					name : 'itemCode'
+				},{
+					header : '품목코드명',
+					name : 'itemName'
+				},  
+				 
+				{
+					header : '검사량',
+					name : 'testQuantity'
+				},
+				{
+					header : '불량량',
+					name : 'errQuantity'
+				},
+				{
+					header : '합격량',
+					name : 'passQuantity'
+				},
+				{
+					header : '불량률',
+					name : 'error'
+				},
+				{
+					header : '비고',
+					name : 'testNote'
+				}
+				
+				],
+	            pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				  
+			})
+			
+		
+		
+
+
+		
+			
+		
+		
+// 자재 입고 리스트 모달
+
+		$.ajax({
+			url : "/mslistAjax",
+			method : "GET",
+			dataType : "json",
+			success : function(result) {
+				modalgrid.resetData(result);
+				modalgrid.refreshLayout();
+			}
+
+		});
+
+// 자재입고 리스트 모달 그리드			
+
+		var modalgrid = new tui.Grid({
+			el : document.getElementById('modalgrid'),
+			scollX : false,
+			scollY : false,	
+			rowHeaders: ['checkbox'],
+			columns : [ {
+				header : '자재lot번호',
+				name : 'mrLotNumber',
+				
+			}, {
+				header : '품목코드',
+				name : 'itemCode'
+			},{
+				header : '품목명',
+				name : 'itemName'
+			},
+			{
+				header : '담당자',
+				name : 'empName'
+			},  
+			{
+				header : '입고 날짜',
+				name : 'storeDate'
+			}, {
+				header : '입고 수량',
+				name : 'storeCount'
+			},
+			{
+				header : '홀드수량',
+				name : 'holdCount'
+			},
+			{
+				header : '유통기한',
+				name : 'expireDate'
+			},
+			{
+				header : '입고 사유 구분',
+				name : 'storeReasonType'
+			},
+			{
+				header : '입고 사유 코드',
+				name : 'storeReasonCode'
+			}
+						
+			],
+			pageOptions: { 
+            	useClient: true,
+               	perPage: 5 
+            }
+			
+		})
+	
+		
+		
+		
+		
+		
+// 입고 검색 클릭 이벤트		
+		
+		$('#searchBtn').on('click',function(){
+			  
+			  const result= $("#searchcode").val();
+			  $('#searchcode').val('');
+
+// 입고 검색			  
+			  $.ajax({
+					url:"/searchListAjax",
+					method:"GET",
+					data:{'result':result},
+					dataType:"json",
+				
+				success : function(result) {
+					modalgrid.resetData(result);
+					modalgrid.refreshLayout();
+					console.log(result);
+				}
+				
+					
+		     });
+
+// 닫기 버튼
+
+			 $('#closeBtn').on('click',function(){
+				 $.ajax({
+						url : "/mslistAjax",
+						method : "GET",
+						dataType : "json",
+						success : function(result) {
+							modalgrid.resetData(result);
+						}
+
+					});
+				})
+ 
+			 }) 		
+		
+			
+			
+		
+// 새로고침
+
+		$(function(){
+	    	$('#store').on('shown.bs.modal', function(){
+	    		modalgrid.refreshLayout();
+	    	})
+	    })
+	   
+
+// 생산 실적 리스트
+
+	    $.ajax({
+	    	url:"/mrPerformance",
+	    	method:"GET",
+	    	success: function(result){
+	    		grid2.resetData(result);
+	    	},
+	    	error: function(reject){
+	    		console.log(reject);
+	    	}
+	    	
+	    })
+	    
+// 생산 실적 그리드
+
+	    var grid2 = new tui.Grid({
+				el : document.getElementById('grid2'),
+				scollX : false,
+				scollY : false,
+
+				rowHeaders: ['checkbox'],
+	              
+				columns : [ {
+					header : '생산실적코드',
+					name : 'performanceId'
+				},{
+					header : '지시상세코드',
+					name : 'wDetailId'
+				},{
+					header :'품목코드',
+					name : 'itemCode'
+				},{
+					header : '지시공정코드',
+					name : 'wBomId'
+				},{
+					header : '설비코드',
+					name : 'facCode'
+				},
+			
+				{
+					header : '생산량',
+					name : 'outPut'
+				},{
+					header : '합격량',
+					name : 'passItem'
+				},  
+				 
+				{
+					header : '불량량',
+					name : 'failItem'
+				},
+				{
+					header : '작업시작시간',
+					name : 'startTime'
+				},
+				{
+					header : '작업완료시간',
+					name : 'endTime'
+				},
+				{
+					header : '작업자',
+					name : 'worker'
+				}
+				
+				
+				],
+	            pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				  
+			})
+
+// 반제품 입고 클릭 이벤트
+
+	    $('#halfBtn').on('click',function(){
+	    	
+	    	console.log(grid2.getCheckedRows());
+
+// 반제품 입고
+
+	    $.ajax({
+	    	
+	    	url:"/halfMrInsert",
+	    	method:"POST",
+	    	contentType: "application/json",
+	    	data : JSON.stringify({list : grid2.getCheckedRows()}),
+	    	beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success : function(result){
+				
+			},
+			error : function(reject){
+				console.log(reject);
+			}
+	    	
+	    	
+	    })
+	    
+	    });
+
+
+// 입고 취소 클릭 이벤트
+
+		$('#deleteBtn').on('click',function(){
+
+// 입고 취소
+
+		$.ajax({
+			url:"/mrStoreCancle",
+			method:"POST",
+			contentType:"application/json",
+			data : JSON.stringify({list: modalgrid.getCheckedRows()}),
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success : function(result){
+				
+			},
+			error: function(reject){
+				console.log(reject);
+			}
+			
+			
+		})
+		
+		});
+		
+		
+		
+		
+		});
+	</script>
+
+
+
+
+
+
+
+
+	</th:block>
+
+
+</body>
+
+</html>
+

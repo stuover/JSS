@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/index}" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+
+    <style>
+        button {
+            width: 100px;
+            margin-right: 550px;
+            border-radius: 20px;
+        }
+
+        .modal-header {
+            text-align: center;
+        }
+
+        #cenLbtn {
+            margin-right: 20px;
+        }
+
+        h4 {
+            text-align: center;
+        }
+
+        .tui-grid-cell-content {
+            text-align: center;
+        }
+    </style>
+</head>
+
+    <th:block layout:fragment="content">
+    	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+        <h4>불량 자재</h4>
+        <div>
+        <input type ="text" id="searchInp"> <button id="searchButoon">검색</button><br><br>
+        </div>
+        <div id="qualityGrid"></div>
+
+		<hr>
+		
+		<div id="CheckList">
+	        <h4>검사 목록</h4>
+	        <div>
+	        	<input type ="text" id="getTestCode" placeholder="검사코드" readonly>
+	        	<input type ="text" id="getItemCode" placeholder="품목코드" readonly>
+	        	<input type ="text" id="getItemName" placeholder="품목명" readonly>
+	        </div>
+	        <div id="testGrid"></div>
+	        <div>
+	            <button id="modBtn" type="button">수정</button>
+	           	<button id="delBtn" type="button">검사취소</button>
+	            
+	        </div>
+		</div>
+</div></div></div></div>
+
+<script>
+
+
+
+var qualityGrid = new tui.Grid({
+    el: document.getElementById('qualityGrid'),
+    scrollX: false,
+    scrollY: false,
+    pageOptions: {
+        useClient: true,
+        perPage: 5
+    },
+    columns: [
+    	{
+	         header: '검사코드',
+	         name: 'testCode'
+	   	 }, {
+	   		 header: '상세코드',
+	         name: 'mrOrderDetCode'
+		 }, {
+	        header: '품목코드',
+	        name: 'itemCode'
+	    }, {
+	        header: '품목명',
+	        name: 'itemName'
+	    }, {
+	        header: '구분',
+	        name: 'itemType'
+	    }, {
+	        header: '상세',
+	        name: 'situation'
+	    }, {
+	        header: '검사수량',
+	        name: 'testQuantity',
+    	}, {
+	        header: '담당자',
+	        name: 'empName'
+    	},{
+	        header: '비고',
+	        name: 'testNote'
+    	}
+	    ]
+});
+qualityGrid.setBodyHeight(200);
+function qualityGridList(){
+	$.ajax({
+		url : "/errList",
+		method : "get",
+		dataType : "json",
+		success : function (result) {
+			qualityGrid.resetData(result)
+		}, error : function (reject) {
+			console.log(reject)
+		}
+	})	
+}
+
+qualityGridList();
+
+var testGrid = new tui.Grid({
+    el: document.getElementById("testGrid"),
+    scrollX: false,
+    scrollY: false,
+    pageOptions: {
+        useClient: true,
+        perPage: 7
+    },
+    rowHeaders: [{
+        type: 'checkbox',
+        header: " "
+    }],
+    columns: [
+    	{
+        header: '검사항목코드',
+        name: 'checklistCode'
+    }, {
+        header: '검사명',
+        name: 'testName'
+    }, {
+        header: '검사설비',
+        name: 'facName'
+    }, {
+        header: '검사기준치',
+        name: 'testStandard'
+    }, {
+        header: '합격량',
+        name: 'passQuantity',
+    	editor: 'text'
+    }, {
+        header: '불량량',
+        name: 'mrCount'
+    }, {
+        header: '불량률',
+        name: 'defectiveRate'
+    }, {
+        header: '합격여부',
+        name: 'testResult',
+        editor:{
+        	type : 'radio',
+        	options: {
+        		listItems : [
+        			{text : '합 격', value:'합격'},
+        			{text : '불합격', value:'불합격'}	
+        		]
+        	}
+        }
+    }
+    ]
+});
+testGrid.setBodyHeight(200);
+
+var qualityKey = null;
+qualityGrid.on('click', function(e){
+	qualityKey = e.rowKey;
+	if(qualityKey != null ){
+		
+		$.ajax({
+			url : '/getHistoryList',
+			method:"get",
+			dataType : "json",
+			data : {testCode : qualityGrid.getRow(e.rowKey).testCode},
+			success: function(result){
+				testGrid.resetData(result)
+				
+				result.forEach(function(a, index) {
+					testGrid.setValue(index, "passQuantity", qualityGrid.getRow(e.rowKey).testQuantity - testGrid.getRow(index).mrCount, false)
+					testGrid.setValue(index, "defectiveRate",  testGrid.getRow(index).mrCount/qualityGrid.getRow(e.rowKey).testQuantity*100+"%", false)
+				})
+				$('#getTestCode').val(qualityGrid.getRow(e.rowKey).testCode)
+					$('#getItemCode').val(qualityGrid.getRow(e.rowKey).itemCode)
+					$('#getItemName').val(qualityGrid.getRow(e.rowKey).itemName)
+				
+				$('#CheckList').css("display", 'block')
+				testGrid.refreshLayout();
+			}, error : function(reject){
+				console.log(reject)
+			}
+			
+		})
+	}
+	
+})
+
+testGrid.on('editingFinish', function(e){
+	let row = testGrid.getRow(e.rowKey);
+	if(qualityGrid.getRow(qualityKey).testQuantity < row.passQuantity){
+		alert('잘 못 입력!!')
+		testGrid.setValue(e.rowKey, "passQuantity", "", false)
+	}else{
+		
+	    testGrid.setValue(e.rowKey, "mrCount", qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity, false)
+	    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100+"%", false)
+	    
+	}
+})
+
+
+
+
+ $('#modBtn').on('click',function(){
+ 	console.log(qualityGrid.getRow(qualityKey))
+ 	console.log(testGrid.getData())
+	
+ 	$.ajax({
+ 		url : "/completeTest",
+ 		method : "post",
+ 		contentType : "application/json",
+ 		data : JSON.stringify({list : testGrid.getData(), vo : qualityGrid.getRow(qualityKey)}),
+ 		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);    
+		},
+ 		success : function(result) {
+			qualityGridList();
+ 		}, error : function (reject) {
+ 			console.log(reject)
+ 		}
+ 	})
+ })
+
+ 
+ $('#delBtn').on('click', function(){
+	 
+		$.ajax({
+	 		url : "/removeTest",
+	 		method : "post",
+	 		contentType : "application/json",
+	 		data : JSON.stringify({list : testGrid.getData(), vo : qualityGrid.getRow(qualityKey)}),
+	 		beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);    
+			},
+	 		success : function(result) {
+				qualityGridList();
+	 		}, error : function (reject) {
+	 			console.log(reject)
+	 		}
+	 	})
+
+ })
+ 
+ 
+</script>
+</th:block>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

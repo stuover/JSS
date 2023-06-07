@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+#grid2 .redcolor{
+	background-color:#ffe4e4;
+}
+
+
+</style>
+
+</head>
+<body>
+
+
+
+<th:block layout:fragment="content">
+	
+	<!-- Large modal -->
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    
+  		    <h4 style="text-align:center; font-weight:bold; margin-top:10px;"> 자재 조정 조회</h4>
+  		    <div>
+  		    <button type="button" id="adDelBtn" class="btn btn-danger" style="float:right; padding:3px; margin-right:10px;">취소</button> 
+  		    </div>
+  		    
+  		    <hr>
+  		    
+  		   	<div id="grid3"></div>
+  		   	
+  		   	 
+    </div>
+  </div>
+</div>
+	
+	
+	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+	
+	
+	<h3 style="font-weight:bold; text-align:center; margin-bottom:20px;">자재 조정 관리</h3>
+	
+	
+<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">	
+	
+	<h5 class="page-title">데이터 누락 및 오입력</h5>
+	
+	<!-- 제목 -->
+	
+	
+	
+	<div>
+	
+	<!-- 조정 등록 버튼 -->
+	
+	<button type="button" class="btn btn-primary" id="insertBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:10px;">등록</button>
+	
+	
+	</div>
+	
+	<!-- 조정 될 리스트 -->	
+	
+	<div id="grid1"></div>
+	
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	
+	<div class="p-2 row">
+				  <div class="col-sm-12">
+				    <div class="card">
+				      <div class="card-body">
+	
+	
+	<h5 class="page-title">조정 리스트 및 등록</h5>
+	    
+	    
+	
+	<div>
+	
+	
+	
+	
+	
+	<!-- 출고 버튼 -->
+	
+	<button type="button" class="btn btn-warning" id="relBtn" style="float:right; height: 30px; width: 50px; padding:3px; margin-right: 20px; margin-top:100px; margin-bottom:10px; color:white">출고</button>
+	
+	<!-- 입고 버튼 -->
+	
+	<button type="button" class="btn btn-success" id="storeBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top:100px; margin-bottom:10px;">입고</button>
+	
+	
+		
+			
+	
+	
+	<button type="button" class="btn btn-dark"  id="searchBtn" data-toggle="modal" data-target="#exampleModal" style="float:left; margin-top:100px; margin-bottom:10px; padding:3px; margin-left:20px;">찾기</button>
+	
+	<button type="button" class="btn btn-warning" id="realBtn" style="float:left; margin-top:100px; padding:3px; color:white; height:30px;  margin-bottom:10px; margin-left:10px;">직접 등록</button>	
+	
+	<button type="button" class="btn btn-success" id="changeBtn" style="float:left; margin-top:100px; padding:3px; margin-bottom:10px; margin-left:10px;">수량 변경</button>
+	
+	
+	  
+	<p><span class="text-danger" style="float:right; margin-top:110px; margin-right:20px; font-weight:bold;"> ■ 데이터 오입력은 [입고,출고] 버튼을 통해 수정하시기 바랍니다.</span></p>
+	</div>
+	
+	<!--  조정 리스트  -->
+	
+	<div id="grid2" ></div>
+	<button type="button" class="btn btn-info" id="searchDelBtn" data-toggle="modal" data-target=".bd-example-modal-lg" style="float:right;  margin-top:5px; height: 30px; padding: 3px; padding-bottom:4px; color:white; margin-right:20px;">조정 확인 및 삭제</button>
+		
+	
+
+  
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="margin-left:200px; font-weight:bold;">lot별 조회</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div id="grid5"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" id="chooseBtn">등록</button>
+      </div>
+    </div>
+  </div>
+</div>	
+		
+		</div>
+		</div>
+		</div>
+		</div>
+		
+		
+		</div>
+		</div>
+		</div>
+		</div>
+		
+		
+	
+	<script>
+	
+	
+	
+	
+	window.onload = function(){
+		
+	
+		
+		
+	
+	// 조정 될 리스트 아작스	
+		
+		$.ajax({
+			url:"/mrAdmAjax",
+			method:"GET",
+			
+			success : function(result){
+				grid1.resetData(result);
+				
+				
+			},
+			error : function(reject){
+				
+			}
+		})
+		
+	
+		
+	// 조정 될 그리드
+	
+			var grid1 = new tui.Grid({
+				el : document.getElementById('grid1'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '품목코드',
+					name : 'itemCode'
+				}, {
+					header : '품목명',
+					name : 'itemName'
+				}, {
+					header : '입고수량',
+					name : 'storeCount'
+				}, {
+					header : '출고수량',
+					name : 'totalRel'
+				}, {
+					header : '자재lot번호',
+					name : 'mrLotNumber'
+				},
+				{
+					header : '안전재고',
+					name : 'saveMaterial'
+				}
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+		
+		
+		
+	// 조정 리스트 아작스
+	
+	   $.ajax({
+				url : "/mrAdjustmentAjax",
+
+				method : "GET",
+				success : function(result) {
+					grid2.resetData(result);
+					grid2.refreshLayout();
+					
+				console.log(grid2.getData());	
+					
+ 	grid2.getData().forEach((ele, index)=>{
+						
+				
+						
+							if(ele.admNote =='error') {
+								
+							
+							grid2.addCellClassName(index,'adjustmentCode','redcolor');
+							grid2.addCellClassName(index,'mrLotNumber','redcolor');
+							grid2.addCellClassName(index,'itemCode','redcolor');
+							grid2.addCellClassName(index,'itemType','redcolor');
+							grid2.addCellClassName(index,'itemName','redcolor');
+							grid2.addCellClassName(index,'registerDate','redcolor');
+							grid2.addCellClassName(index,'process','redcolor');
+							grid2.addCellClassName(index,'change','redcolor')
+							grid2.addCellClassName(index,'adjustmentDate','redcolor');
+							grid2.addCellClassName(index,'empNo','redcolor');
+							grid2.addCellClassName(index,'admNote','redcolor');
+							}
+							
+						})
+				},
+				error:function(reject){
+					console.log(reject);
+				
+				}
+
+			});
+		
+		
+		
+	// 조정 리스트 그리드
+	
+			var grid2 = new tui.Grid({
+				el : document.getElementById('grid2'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '조정코드',
+					name : 'adjustmentCode',
+					editor:'text'
+				}, {
+					header : '자재 lot 번호',
+					name : 'mrLotNumber',
+					editor:'text'
+				},{
+					header : '품목 코드',
+					name : 'itemCode',
+					editor:'text'
+				},{
+					header : '구분',
+					name : 'itemType',
+					editor:'text'
+				},
+				{
+					header : '품목명',
+					name : 'itemName',
+					editor:'text'
+				}, 
+				
+				{
+					header : '등록일자',
+					name : 'registerDate',
+					editor:'datePicker'
+				}, {
+					header : '처리',
+					name : 'process',
+					editor:{
+						type: 'select',
+						options: {
+							listItems: [
+							  { text: '입고', value:'입고'},
+							  { text: '출고', value:'출고'}
+								
+								
+							]
+						}
+					}
+				}, {
+					header : '결과',
+					name : 'change',
+					editor:'text'
+				},
+				{
+					header : '조정일자',
+					name : 'adjustmentDate',
+					editor:'datePicker'
+				},
+				{
+					header : '사원 번호',
+					name : 'empNo',
+					editor:'text'
+				},
+				{
+					header : '비고',
+					name : 'admNote',
+					hidden:true
+					
+					
+				}
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+
+	// 조정 등록 
+	
+		
+	
+	
+			$('#insertBtn').on('click',function(){
+				
+				
+				
+				
+				
+				
+				grid1.setValue(0,'error','error',false); 
+				
+				let checked = grid1.getCheckedRows();
+				
+				
+				
+				$.ajax({
+					url:"/mrAdmInsert",
+					contentType:"application/json",
+					method:"POST",
+					data:JSON.stringify({ list : grid1.getCheckedRows()}),
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success: function(result){
+					
+					  
+							  
+					 
+						
+						
+					
+						
+						 $.ajax({
+								url : "/mrAdjustmentAjax",
+
+								method : "GET",
+								dataType : "json",
+
+								success : function(result) {
+									grid2.resetData(result);
+									
+									
+									/*grid2.getCheckedRows().forEach((row)=>{
+										  if(grid1.getData()[0].mrLotNumber == grid2.getData().mrLotNumber){
+												grid2.setValue(0,'error','error',false);
+												}
+									
+								})*/
+							},
+								error:function(reject){
+									console.log(reject);
+								}
+							}
+						 )
+							
+							
+							},
+					error:function(reject){
+						console.log(reject);
+					}
+				
+				}
+			)
+			})
+	
+	// 직접 등록
+		$('#realBtn').on('click',function(){
+			
+			
+			console.log(grid2.getData()[0].mrLotNumber);
+			
+			keyword = grid2.getData()[0].mrLotNumber;
+			
+			$.ajax({
+				url:"/mrAdmRealInsert",
+				method:"POST",
+				data:JSON.stringify({list : grid2.getCheckedRows()}) ,
+				contentType:"application/json",
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				
+			
+				success: function(result){
+					
+					console.log(result);
+					
+				},
+				
+				error: function(reject){
+					console.log(reject);
+				}
+				
+				
+				
+			})
+			
+		});
+	
+			
+			
+	// 입고 
+	
+		$('#storeBtn').on('click',function(){
+			
+			console.log(grid1.getCheckedRows()[0].error);
+			
+			$.ajax({
+				url:"/mrAdmIn",
+				method:"POST",
+				contentType:"application/json",
+				data:JSON.stringify({list : grid3.getCheckedRows()}),
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(result){
+					
+					
+				},
+				error:function(reject){
+					
+					console.log(reject);
+				}
+			})
+			
+			
+		})
+	
+		
+	// 출고
+	
+		$('#relBtn').on('click',function(){
+			
+			
+			$.ajax({
+				url:"/mrAdmRel",
+				method:"POST",
+				contentType:"application/json",
+				data:JSON.stringify({list : grid3.getCheckedRows()}),
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(result){
+					
+				},
+				error:function(reject){
+					console.log(reject);
+				}
+			})
+			
+			
+		})
+		
+			
+		$('#searchDelBtn').on('click',function(){
+			
+			 $.ajax({
+					url : "/mrAdjustmentAjax",
+
+					method : "GET",
+					success : function(result) {
+						grid3.resetData(result);
+						grid3.refreshLayout();
+						
+					},
+					error:function(reject){
+						console.log(reject);
+					}
+
+				});
+		})
+		
+		
+		
+		
+		
+		
+		
+		var grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '조정코드',
+					name : 'adjustmentCode',
+					editor:'text'
+				}, {
+					header : '자재 lot 번호',
+					name : 'mrLotNumber',
+					editor:'text'
+				},{
+					header : '품목 코드',
+					name : 'itemCode',
+					editor:'text'
+				},{
+					header : '구분',
+					name : 'itemType',
+					width:50,
+					editor:'text'
+				},
+				{
+					header : '품목명',
+					name : 'itemName',
+					editor:'text'
+					
+				}, 
+				
+				{
+					header : '등록일자',
+					name : 'registerDate',
+					editor:'datePicker'
+				}, {
+					header : '처리',
+					name : 'process',
+					editor:'text'
+				}, {
+					header : '결과',
+					name : 'change',
+					editor:'text'
+				},
+				{
+					header : '조정일자',
+					name : 'adjustmentDate',
+					editor:'datePicker'
+				},
+				{
+					header : '사원 번호',
+					name : 'empNo',
+					editor:'text'
+				}
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+		
+		
+			$('#adDelBtn').on('click',function(){
+				
+				console.log(grid3.getCheckedRows());
+				
+				$.ajax({
+					url:"/mrAdmDelete",
+					method:"POST",
+					contentType:"application/json",
+					data:JSON.stringify({ list : grid3.getCheckedRows() }),
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					succss : function(result){
+						grid3.resetData(result);
+						grid5.resetData(result);
+					},
+					error: function(reject){
+						console.log(reject);
+					}
+					
+					
+				})
+				
+			})
+	
+	
+	
+	
+	
+		
+			$(function(){
+		    	$('#exampleModalLong').on('shown.bs.modal', function(){
+		    		grid3.refreshLayout();
+		    		
+		    	})
+		    })
+		    
+		    $(function(){
+		    	$('#exampleModal').on('shown.bs.modal', function(){
+		    		grid5.refreshLayout();
+		    		
+		    	})
+		    })
+		    
+		
+		
+		    function gridInsertRow(){
+	            let prevData = grid2.getData();
+	            
+	            for(let row of prevData){
+	               row.rowKey += 1;
+	            }
+	            prevData.splice(0, 0, {});
+	            
+	            grid2.resetData(prevData);
+	         }
+		    
+		    
+		   $('#searchBtn').on('click',function(){
+			   
+			   $.ajax({
+				   url:"/mrAdmSearchAjax",
+				   method:"GET",
+				   success: function(result){
+					   grid5.resetData(result);
+					   
+				   },
+				   error : function(reject){
+					   console.log(reject);
+				   }
+				   
+				   
+				   
+			   })
+			   
+		   })
+	
+		   
+		   
+		   var grid5 = new tui.Grid({
+				el : document.getElementById('grid5'),
+				scollX : false,
+				scollY : false,
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [  {
+					header : '자재 lot 번호',
+					name : 'mrLotNumber'
+					
+				},{
+					header : '품목 코드',
+					name : 'itemCode'
+					
+				},{
+					header : '구분',
+					name : 'itemType',
+					width:50
+					
+				},
+				{
+					header : '품목명',
+					name : 'itemName'
+					
+					
+				}, {
+					header : '수량',
+					name : 'storeCount'
+					
+					
+				}
+				
+				
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+			})
+		
+	
+		$('#chooseBtn').on('click',function(){
+			let checked = grid5.getCheckedRows();
+			console.log(checked);
+			checked.forEach(row => {
+				grid2.prependRow(row, {focus:true});
+			});
+			
+	
+			
+		
+			
+			}
+		
+		
+			
+			
+			
+		);
+		   
+		  $('#changeBtn').on('click',function(){
+			
+			  $.ajax({
+				  url:"/mrAdmCount",
+				  method:"POST",
+				  contentType:"application/json",
+					  
+				  data:JSON.stringify({list : grid2.getCheckedRows()}),
+				  beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+					},
+					  
+				  success: function(result){
+					  
+				  },
+				  error: function(reject){
+					  console.log(reject);
+				  }
+			  })
+			  
+		  })
+		   
+		   
+	
+
+		
+		}
+
+	
+		</script>
+
+
+</th:block>
+
+
+</body>
+
+</html>

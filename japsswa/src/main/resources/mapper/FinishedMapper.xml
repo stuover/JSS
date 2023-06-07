@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.mes.jss.sale.mapper.FinishedMapper">
+
+	<select id="passItem" resultType="FinishedVO">
+		select p.performance_id, 
+		       p.item_code, 
+		       i.item_name, 
+		       p.end_time, 
+		       p.pass_item
+				from performance p 
+		        join itemlist i on (p.item_code = i.item_code)
+                join work_bom w ON (p.wbom_id = w.wbom_id)
+		       where item_type = '완제품' and end_time is not null
+		       and w.pro_code = (
+                  SELECT pro_code
+                  FROM process
+                  WHERE pro_name = '완제품 포장')
+	</select>
+	
+	<select id="fRegister" statementType="CALLABLE">
+		{
+			CALL finished_register(
+				#{empName, mode=IN, jdbcType=VARCHAR},
+				#{performanceId, mode=IN, jdbcType=VARCHAR},
+				#{itemCode, mode=IN, jdbcType=VARCHAR},
+				#{passItem, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	<select id="storeInItem" resultType = "FinishedVO">
+		select distinct f.performance_id, 
+		   f.item_code, 
+		   i.item_name, 
+		   f.fn_store_in, 
+		  f.fn_count, 
+		   f.fn_lot_no, 
+		   f.fn_expiration,
+           e.emp_no,
+           e.emp_name
+			from finished f join itemlist i on(f.item_code = i.item_code)
+						    join emp e on(f.emp_no = e.emp_no)
+		    order by 1
+            
+	</select>
+	
+	<delete id="delFinished">
+		
+		delete from finished where fn_lot_no = #{fnLotNo}
+
+	</delete>
+
+
+</mapper>

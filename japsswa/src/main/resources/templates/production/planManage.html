@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/index}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+<th:block layout:fragment="content">
+
+	
+ 		<div class="container-fluid page-body-wrapper">
+
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="page-title">생산 계획 관리</h4>
+                  
+                  <input id="afterSearch" type="hidden" name="selectResult" value="insert">
+                  <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
+
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+		              <button type="button" id="resetBtn" class="btn btn-dark btn-sm">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+						  <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+						  <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+						</svg>             
+		              </button>
+					</div>
+
+
+                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+                  	<div>
+                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+                  	<button id="saveBtn" class="btn btn-primary">저장</button>
+                  	<button id="deleteBtn" class="btn btn-danger">삭제</button>
+                  	</div>
+
+                  </div>
+                  
+                  <div id="grid2"></div>
+                  
+                  <div id="comResultGrid"></div>
+                  
+                  <div class="row">
+                  	
+                  </div>
+
+				<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-start">
+	              <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#searchItem">추가</button>
+	              <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
+				</div>
+							
+
+                  <div id="grid"></div>
+                  
+                  <div id="detailResultGrid"></div>
+				            
+                </div>
+              
+              </div>
+            </div>
+
+  		</div>
+  		
+		
+  		<!-- Modal List Start -->
+  		
+  		<!-- 생산계획 조회 모달창 -->
+	    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            <h5 class="modal-title" id="searchModalLabel">생산계획 조회</h5>
+	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	            <input type="date" id="startDateOption"></input> ~ <input type="date" id="endDateOption"></input>
+	            <button id="dateSearch">검색</button>
+	            <div id="modalGrid"></div>
+	            </div>
+	            <div class="modal-footer">
+	            <button id="modalSelectBtn" type="button" class="btn btn-primary">선택</button>
+	            </div>
+	        </div>
+	        </div>
+	    </div>
+	    
+	    <!-- 제품 검색 모달창 -->
+	    <div class="modal fade" id="searchItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	        <div class="modal-dialog modal-dialog-centered">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	            	<h5 class="modal-title" id="searchModalLabel">제품 선택</h5>
+	            	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	            </div>
+	            <div class="modal-body">
+	            	<input type="text" id="searchItemResult"></input>
+	            	<button id="searchShow" class="m-2 btn btn-success btn-sm">검색</button>
+	            <div id="itemGrid"></div>
+	            </div>
+	            	<div class="modal-footer">
+	            		<button id="selectItemBtn" type="button" class="btn btn-primary">선택</button>
+	            	</div>
+	        </div>
+	        </div>
+	    </div>
+	    
+  		<!-- Modal List End -->
+
+  		<script>
+
+  		const Grid = tui.Grid;
+  		
+  		 var empName ='';
+  		
+		 // 초기화면 데이터 및 설정.
+		  window.onload = function(){
+			  $('#afterSearch').hide();
+			  $('#empName').hide();
+			  empName = $('#empName').val();
+			  grid2.setValue(0, 'empName', empName, false)
+			  
+	  		   
+	  		  // 모달창 열릴 때 레이아웃 깨지지 않게 refreshLayout()
+	  		  $('#searchModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					setTimeout(()=> modalGrid.refreshLayout(), 300);
+	  			})
+	  		  $('#searchItem').on('shown.bs.modal', function (e) {
+					console.log('open');
+					setTimeout(()=> itemGrid.refreshLayout(), 300);
+	  			})	  		
+		  };  		
+  		
+		
+		// 생산 계획 공통(초기화면)
+		  let gridData2 = [{}];
+		  const grid2 = new Grid({
+		  	el: document.getElementById('grid2'),
+		  	data: gridData2,
+		  	scrollX: false,
+		  	scrollY: false,
+		  	columns: [
+		  		{
+		  			header: '계획코드',
+		  			name: 'planId',
+		  			hidden: true
+		  		},		    	  
+		  		{
+		  			header: '계획명',
+		  			name: 'planName',
+		  			editor: 'text'
+		  		},
+		  		{
+		  			header: '계획날짜',
+		  			name: 'planDate',
+		  			formatter: function (e) {
+		  				 
+		  				let result = e.value;
+		  				if(result == null) {
+		  					result = e.value
+		  					return;
+		  				}else {
+		  					result = e.value.substr(0,10)
+		  					return result;
+		  				}
+		  			},
+		  			editor:  'datePicker'		 
+		  		}, 		    
+		  		{
+		  		 header: '담당자',
+		  		 name: 'empName'
+		  		}	   
+		  	]
+		  });
+  		
+
+		// 생산계획 상세(초기회면)
+		let gridData = [];	 
+		const grid = new Grid({
+			el: document.getElementById('grid'),
+			data: gridData,
+			rowHeaders: ['checkbox'],
+			scrollX: false,
+			scrollY: true,
+			columns: [
+				{
+					header: '계획상세코드',
+					name: 'pdetailId',
+					hidden: true
+				},
+				{
+					header: '제품코드',
+					name: 'itemCode'
+				},
+				{
+					header: '제품명',
+					name: 'itemName'
+				},
+				{
+					header: '계획 수량',
+					name: 'planAmount',   
+					editor: 'text'
+				},
+				{
+					header: '계획시작날짜',
+					name: 'planStart',
+					formatter: function (e) {
+						 
+						let result = e.value;
+						if(result == null) {
+							result = e.value
+							return;
+						}else {
+							result = e.value.substr(0,10)
+							return result;
+						}
+					},      		  
+					editor: 'datePicker'
+				 },
+				 {
+					header: '계획완료날짜',
+					name: 'planEnd',
+					formatter: function (e) {
+						 
+						let result = e.value;
+						if(result == null) {
+							result = e.value
+							return;
+						}else {
+							result = e.value.substr(0,10)
+							return result;
+						}
+					},  
+					editor:  'datePicker'
+				},    		        
+				{
+					header: '작업우선순위',
+					name: 'planPriority',
+					editor: 'text'
+				}	   
+			]
+		});
+  		    
+		// 그리드 edit 시작 -> checkBox : checked
+		grid.on('editingStart', (e) => { grid.check(e.rowKey)})
+ 		    
+    
+  		    
+  		    // 검색
+			let itemGridData = [{}];	 
+  		    const itemGrid = new Grid({
+  		    	el: document.getElementById('itemGrid'),
+  		     	data: gridData,
+  		        rowHeaders: ['checkbox'],
+  		     	scrollX: false,
+  		    	scrollY: true,
+                pageOptions: { 
+               		useClient: true,
+                	perPage: 5 
+                }, 		    	
+  		    	columns: [
+  	  		    {
+    	  		  header: '제품코드',
+    	  		  name: 'itemCode'
+    	  		 },
+  		        {
+  		          header: '제품명',
+  		          name: 'itemName'
+  		        },
+  		        {
+  		          header: '주문량',
+  		          name: 'itemOrders'
+  		        }   
+  		      ]
+  		    });
+  		    
+  		    
+          	// 추가 버튼 -> 제품명 모달창 : 제품명 리스트 초기값 (제품코드 순으로 정렬)
+  		    $('#addRow').click(function (){
+				$.ajax({
+  					url : "/searchItemListAjax",
+  					method :"GET",
+  					dataType : "JSON",
+  					success : function(result){
+  						console.log(result);
+  						itemGrid.resetData(result);
+  					},
+  					error : function(reject){
+  						console.log(reject);
+  					}
+  				});		    	
+  		    });  		    
+  		    
+  			// 검색 버튼 -> 제품명 키워드로 검색내용 출력.
+  		    let item = '';
+  		    $('#searchShow').click(function (){
+  		    	item = $('#searchItemResult').val();
+				console.log(item);
+				
+				 $.ajax({
+						url : "/searchItemResultAjax",
+						data : {itemName : item},
+						method :"GET",
+						success : function(result){
+							console.log('result : '+ result);
+							itemGrid.resetData(result);
+						},
+	  					error : function(reject){
+	  						console.log(reject);
+	  					}
+					});				
+				
+  		    })
+  	
+
+  		    
+  		    // 검색 내용 체크 -> 선택 버튼 클릭 -> 모달창 닫기, 새로운 행 추가.
+  		    let itemInfo = [];
+		    $('#selectItemBtn').click(function() {
+	  		    	itemInfo = [{itemCode : itemGrid.getCheckedRows()[0].itemCode , itemName : itemGrid.getCheckedRows()[0].itemName}];
+	  		    	$('#searchItemResult').val('');	 
+	  		    	itemGridData = [{}];
+	  		    	itemGrid.resetData(itemGridData);
+	  		    	
+	  		    	$('#searchItem').modal('hide');
+	  		    	
+	  		    	if(grid.getData().length == 0) {
+		  		    	gridData = [];
+		  		    	grid.resetData(gridData);
+		  		    	grid.appendRows(itemInfo);
+	  		    		
+	  		    	} else if(grid.getData()[0].itemCode == null && grid.getData().length == 1) {
+		  		    	gridData = [];
+		  		    	grid.resetData(gridData);
+		  		    	grid.appendRows(itemInfo);	
+	  		    	} else {
+	  		    		grid.appendRows(itemInfo);
+	  		    	}
+	  		    	
+	  		    });
+		    
+			// 제품명 검색 결과 하나만 체크할 수 있게 설정.
+        	itemGrid.on('check', function (e) {
+	            var checkRows = itemGrid.getCheckedRowKeys();
+	            checkRows.forEach(function( key, idx){                      
+	                if(key != e.rowKey){
+	                	itemGrid.uncheck(key);
+	                }
+	            });
+	        });
+  		    
+  		    
+			// 삭제버튼 -> 선택한 row 삭제
+			$('#deleteRow').click(function (){
+				grid.removeCheckedRows(false);
+			})  
+			
+
+
+  		  
+  		  // 생산계획 조회 모달창
+          let modalGridData = [];
+          const modalGrid = new Grid({
+               el: document.getElementById('modalGrid'),
+               data: modalGridData,
+               rowHeaders: ['checkbox'],
+               scrollX: false,
+               scrollY: false,
+               pageOptions: { 
+               		useClient: true,
+                	perPage: 5 
+                },
+               columns: [
+                 {
+                   header: '생산계획코드',
+                   name: 'planId'
+                 },
+                 {
+                   header: '계획명',
+                   name: 'planName'
+                 },
+                 {
+                   header: '계획날짜',
+                   name: 'planDate',
+   		           formatter: function (e) {
+ 		        	  return e.value.substr(0,10)
+                   }
+                   
+                 },              
+                 {
+                   header: '담당자',
+                   name: 'empName'
+                 }     
+               ]
+             });
+          		
+			// 생산계획 조회 결과 하나만 체크할 수 있게 설정.
+        	modalGrid.on('check', function (e) {
+	            var checkRows = modalGrid.getCheckedRowKeys();
+	            checkRows.forEach(function( key, idx){                      
+	                if(key != e.rowKey){
+	                	modalGrid.uncheck(key);
+	                }
+	            });
+	        });
+ 		   
+  		   
+          	// 조회 버튼 -> 생산계획 리스트 초기값 (현재 날짜를 기준으로 일주일 생산계획 리스트 조회)
+  		    $('#searchBtn').click(function (){
+  		    	
+				$.ajax({
+  					url : "/modalPlanListAjax",
+  					method :"GET",
+  					success : function(result){
+  						console.log(result);
+  						modalGrid.resetData(result);
+  					},
+  					error : function(reject){
+  						console.log(reject);
+  					}
+  				});		    	
+  		    });
+  		    
+          	// 기간 정한 후 검색 ->  기간 내 수립한 생산계획 리스트 
+  		    $('#dateSearch').click(function (){
+				let startTime = $('#startDateOption').val();
+	  		    let endTime = $('#endDateOption').val();
+	  		    
+	  		    console.log(startTime);
+	  		    console.log(endTime);
+  		    
+  				$.ajax({
+  					url : "/modalPlanResultAjax",
+  					data : {'startTime' : startTime , 'endTime' : endTime},
+  					method :"GET",
+  					dataType : "JSON",
+  					success : function(result){
+  						console.log(result);
+  						modalGrid.resetData(result);
+  					},
+  					error : function(reject){
+  						console.log(reject);
+  					}
+  				});	
+  		    	
+  		  	});
+  		    
+          	// 선택 버튼 -> 모달창 닫기 -> 선택한 생산 계획 및 세부 계획 출력.
+  		    let planInfo = [];
+			let planCode = '';
+			$('#modalSelectBtn').click(function () {
+				planCode = modalGrid.getCheckedRows()[0].planId;
+				planInfo = [{planId : modalGrid.getCheckedRows()[0].planId ,planName : modalGrid.getCheckedRows()[0].planName , planDate : modalGrid.getCheckedRows()[0].planDate , empName : modalGrid.getCheckedRows()[0].empName}];
+				 console.log('planId = ' + planCode);
+				 console.log(planInfo);
+				 if(modalGrid.getCheckedRows().length > 1) {
+					 
+					 alert('수정 및 삭제할 생산계획은 하나만 선택가능합니다.');
+					 
+				 } else {
+					 
+				$('#searchModal').modal('hide');
+	  			$('#addRow').hide();
+	  		    $('#deleteRow').hide();
+	  			  
+				 
+				$('#searchModal').on('hidden.bs.modal', function (e) {
+					 gridData2= planInfo;
+					 grid2.resetData(planInfo);
+					 
+					 $.ajax({
+							url : "/planSearchResultAjax",
+							data : {planId : planCode},
+							method :"GET",
+							success : function(result){
+								console.log('result : '+ result);
+								grid.resetData(result);
+							},
+		  					error : function(reject){
+		  						console.log(reject);
+		  					}
+						});
+					 
+					 $('#afterSearch').attr('value', 'modify');
+					 
+				 });	
+
+				 } 
+			})
+			
+  			
+			// 저장 버튼을 클릭 -> 새로운 계획: 등록, 기존 존재하는 계획: 수정.
+  			$('#saveBtn').click(function (){
+  											grid2.finishEditing();
+  											grid2.getData();
+  											
+  											grid.finishEditing();
+  											grid.getCheckedRows();
+  											
+  											console.log(grid2.getData());
+  											console.log(grid.getData());
+  											
+  											if(grid2.getData() == null || grid.getCheckedRows() == null) {
+  												alert('값을 입력해주세요!');
+  											} else {
+  												
+  											}
+  											
+  											
+  											if( $('#afterSearch').val() == 'insert' ) {
+  												console.log('등록처리 해야 함.');
+	  											$.ajax({
+	  												url : "/savePlanAjax",
+	  												contentType : "application/json", 
+	  												data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
+	  												method :"POST",
+	  												beforeSend: function(xhr){
+	  													xhr.setRequestHeader(header, token);
+	  												},
+	  												success : function(result){
+	  													console.log(result);
+	  													if (result != null) {
+	  														alert('생산계획 등록완료!');
+	  														
+	  														// 화면 초기화
+	  														gridData2 = [{}];
+	  														gridData = [{}];
+
+	  														grid2.resetData(gridData2);
+	  														grid.resetData(gridData);
+
+	  														empName = $('#empName').val();
+	  														grid2.setValue(0, 'empName', empName, false);
+	  														
+	  													} else {
+	  														alert('값을 입력해주세요!');
+	  													}
+	  													
+	  												},
+	  							  					error : function(reject){
+	  							  						console.log(reject);
+	  							  						alert('생산계획 등록실패!');
+	  							  					}
+	  											});
+	  											
+  											} else {
+  												console.log('수정처리 해야 함.');
+  												$.ajax({
+	  												url : "/modifyPlanAjax",
+	  												contentType : "application/json", 
+	  												data :  JSON.stringify({head : grid2.getData()[0], detailList : grid.getCheckedRows()}) ,
+	  												method :"POST",
+	  												dataType : "JSON",
+	  												beforeSend: function(xhr){
+	  													xhr.setRequestHeader(header, token);
+	  												},
+	  												success : function(result){
+	  													console.log(result);
+	  													if (result != null) {
+	  														alert('생산계획 수정완료!');
+	  														
+	  														// 화면 초기화
+	  														gridData2 = [{}];
+	  														gridData = [{}];
+
+	  														grid2.resetData(gridData2);
+	  														grid.resetData(gridData);
+	  														$('#afterSearch').attr('value', 'insert');
+	  														
+	  										  				empName = $('#empName').val();
+	  										  				grid2.setValue(0, 'empName', empName, false)
+	  														
+	  											  			$('#addRow').show();
+	  											  		    $('#deleteRow').show();
+	  														
+	  													} else {
+	  														alert('값을 입력해주세요!');
+	  													}
+	  													
+	  												},
+	  							  					error : function(reject){
+	  							  						console.log(reject);
+	  							  						alert('생산계획 수정실패!');
+	  							  					}
+	  											});
+  											}
+		
+
+  			})
+  			
+  			// 생산계획 삭제.
+  			$('#deleteBtn').click(function () {
+  				
+					grid2.finishEditing();
+					grid2.getData();
+						
+					grid.finishEditing();
+					grid.getCheckedRows();
+					
+					$.ajax({
+							url : "/deletePlanAjax",
+							contentType : "application/json", 
+							data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
+							method :"POST",
+							dataType : "JSON",
+							beforeSend: function(xhr){
+								xhr.setRequestHeader(header, token);
+							},
+							success : function(result){
+								console.log(result);
+								alert('생산계획 삭제완료!');
+								
+								// 화면 초기화
+						  		gridData2 = [{}];
+								gridData = [{}];
+
+								grid2.resetData(gridData2);
+								grid.resetData(gridData);
+								
+							},
+		  					error : function(reject){
+		  						console.log(reject);
+		  						alert('생산계획 삭제실패!');
+		  					}
+						});
+  			})
+  			
+  			//reset 버튼 -> 처음 화면으로 되돌리기
+  			$('#resetBtn').click(function () {
+  				// 화면 초기화
+  				gridData2 = [{}];
+  				gridData = [{}];
+
+  				grid2.resetData(gridData2);
+  				grid.resetData(gridData);
+
+  				$('#afterSearch').attr('value', 'insert');
+
+  				empName = $('#empName').val();
+  				grid2.setValue(0, 'empName', empName, false)
+
+  				$('#addRow').show();
+  				$('#deleteRow').show();  				
+  			})
+		
+
+			
+  		</script>
+    
+	</th:block>
+
+</html>

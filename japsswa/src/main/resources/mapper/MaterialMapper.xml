@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.mes.jss.material.mapper.MaterialMapper">
+  		
+  	<!-- 자재 리스트 -->
+  	
+  		<select id="getList" resultType="MrVO">
+  		
+  		select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_name,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code) 
+  		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+  		
+  		</select>  
+  	
+  	<!-- 자재 멀티 검색 -->
+  	
+  	<select id="MrCountMulti" resultType="MrVO">
+  	
+  		select i.item_code, 
+  		       i.item_name, 
+  		       i.item_type, 
+  		       i.save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist i join material m on(i.item_code = m.item_code)
+  		<where>
+  			<if test="itemType !=null and itemType !=''.toString() ">
+  				and i.item_type =#{itemType}
+  				
+  			
+  			</if>
+  			<if test="itemName !=null and itemName !=''.toString()">
+  				and i.item_name like '%'||#{itemName}||'%'
+  			
+  			</if>
+  		</where>
+  		 group by i.item_code, i.item_name, i.item_type, i.save_material
+  	
+  	</select>
+  		
+  	<!-- 자재 조회 리스트(총) -->
+  	<select id="mrInvenCount" resultType="MrVO">
+  	
+  	 select item_code, 
+  		       item_name, 
+  		       item_type, 
+  		       save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist 
+  		  join material using(item_code) 
+  		 group by item_code, item_name, item_type, save_material
+  		 
+  	</select>
+  	
+  	<!-- 반제품 조회 리스트 -->
+  	<select id="halfInven" resultType="MrVO">
+  	
+  	   select item_code, 
+  		       item_name, 
+  		       item_type, 
+  		       save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist 
+  		  join material using(item_code)
+  		  where item_type ='반제품' 
+  		 group by item_code, item_name, item_type, save_material
+  		 
+  	</select>
+  	
+  	
+  	<!-- 자재 조회 리스트 -->
+  	
+  	<select id="matInven" resultType="MrVO">
+  		
+  		select item_code, 
+  		       item_name, 
+  		       item_type, 
+  		       save_material, 
+  		       sum(store_count) as total 
+  		  from itemlist 
+  		  join material using(item_code)
+  		  where item_type ='자재' 
+  		 group by item_code, item_name, item_type, save_material
+  	
+  	
+  	</select>
+  	
+  	<!-- 자재 검색 -->
+  	<select id="searchMr" resultType="MrVO">
+		select * from material  
+			
+  	
+  	
+  	
+  	
+  	</select>
+  	
+  
+  	
+  	
+  	
+  	
+  	<!-- 안전재고 미달 리스트 -->
+  	
+  		<select id="getMrCount" resultType="MrVO">
+  		select i.item_code, 
+  	   i.item_name, 
+       c.customer_id,
+       c.customer_name,
+       i.item_price,
+       i.item_type, 
+       i.save_material, 
+  	     sum(m.store_count) as total 
+        from customer c join contract co on(c.CUSTOMER_ID = co.CUSTOMER_ID) join itemlist i 
+          on(co.item_code = i.item_code)
+  		  join material m on(i.item_code = m.item_code) 
+  		 group by c.customer_id, c.customer_name, i.item_price, i.item_code, i.item_name, i.item_type, i.save_material
+  		
+  		</select>
+  		 
+  	<!-- 자재 lot 재고 리스트 -->
+  		<select id="getMrLotCount"	resultType="MrVO">
+  			select m.mr_lot_number, i.item_name, i.item_type,sum(store_count) as total, m.expire_date   
+  			from material m join itemlist i on(m.item_code = i.item_code)
+  			group by mr_lot_number, item_name, item_type, expire_date
+  			
+  			
+  		
+  		</select>
+  		
+  		
+  	
+  	<!-- 입고 확인 검색 -->	
+  		<select id="codeList" resultType="MrVO">
+  		
+  		select * 
+  		from material 
+  		where store_reason_code = #{keyword}
+  		
+  		</select>
+	
+	
+	<!-- 자재 재고 확인 -->	
+		<select id="mrCountList" resultType="MrVO">
+		
+			select distinct i.item_name,
+			i.item_type,
+			(select sum(store_count) 
+			from material m 
+			join itemlist i on(m.item_code = i.item_code)
+			 where i.item_name = #{keyword}) total,
+			 i.save_material
+           	 from material m 
+           	 join itemlist i 
+           	 on(m.item_code = i.item_code) 
+           	 where i.item_name = #{keyword} 
+		</select>
+		
+	
+	<!-- 자재 입고 내역 -->
+		<select id="storeGetList" resultType="MrVO">
+		
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_type,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 order by m.store_date desc 
+  		
+			
+		</select>	
+		
+	
+	<!-- 자재 품질 입고 내역 -->
+		<select id="MrQuality" resultType="MrVO">
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_type,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 where m.store_reason_type ='품질통과'
+  		 order by m.store_date desc
+		
+		</select>	
+	
+	<!-- 자재 생산 입고 내역 -->
+		<select id="MrPro" resultType="MrVO">
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_type,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 where m.store_reason_type ='생산'
+  		 order by m.store_date desc
+		
+		</select>
+		
+	<!-- 자재 조정 입고 내역 -->
+		<select id="MrAdm" resultType="MrVO">
+			select i.item_type,
+  		       m.mr_lot_number,
+  		       i.item_type,
+  		       m.item_code,
+  		       i.item_name,
+  		       e.emp_name,
+  		       m.expire_date,
+  		       m.store_date,
+  		       m.store_count,
+  		       m.store_reason_type,
+  		       m.store_reason_code 
+  		 from emp e 
+  		 join material m on (e.emp_no=m.emp_no) 
+  		 join itemlist i on (m.item_code=i.item_code)
+  		 where m.store_reason_type ='조정'
+  		 order by m.store_date desc
+		
+		</select>		
+		
+				
+
+	
+	<!-- 자재 입고 -->	
+		<select id="StoreIn" statementType="CALLABLE">
+			{call MR_INSERT(
+				#{testCode, mode=IN, jdbcType=VARCHAR}
+			
+			)
+		}
+				
+		</select>
+				
+	<!-- 자재 입고 삭제 -->
+		<select id="deleteMr" statementType="CALLABLE">
+			{call mr_store_delete(
+				#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+			)			
+			}
+				
+		</select>	
+  		
+  	<!-- 생산 실적 리스트 -->
+  		<select id="mrPerList" resultType="PerformanceVO">
+  			select p.performance_id, 
+  			p.wdetail_id, 
+  			p.item_code, 
+  			p.wbom_id, 
+  			p.fac_code,
+  			p.output,
+  			p.pass_item,
+  			p.fail_item,
+  			p.start_time,
+  			p.end_time,
+  			p.worker
+ 			from material m 
+ 			right outer join performance p on(m.store_reason_code = p.performance_id) join itemlist i on(p.item_code=i.item_code)
+ 			where m.store_reason_code is null and i.item_type ='반제품'
+ 
+  			
+  		
+  		</select>	
+  		
+  	<!-- 자재 출고 내역 -->
+  	
+  		<select id="RelGetList" resultType="MrReleaseVO">
+  			
+  			select r.mr_real_code,i.item_code,i.item_type,i.item_name,r.mr_lot_number,r.mr_real_count,r.mr_real_reason_type,r.mr_real_reason_code 
+  			from material_release r join itemlist i on(r.item_code=i.item_code) 
+  			
+  		</select>
+  				
+  	<!-- 자재 출고 생산 리스트 -->
+  		
+  		<select id="MrRelPro" resultType="MrReleaseVO">
+  			
+  			select * from material_release
+  			where mr_real_reason_type='생산'
+  			
+  		</select>	
+  		
+  	<!-- 자재 출고 조정 리스트 -->
+  	
+  		<select id="MrRelAdm" resultType="MrReleaseVO">
+  			
+  			select * from material_release
+  			where mr_real_reason_type='조정'
+  			
+  		</select>	
+  			
+  		
+  	<!-- 반제품 입고 -->	
+  		<select id="halfInsert" statementType="CALLABLE">
+  			{call half_mr_insert(
+  				#{performanceId, mode=IN, jdbcType=VARCHAR},
+  				#{itemCode, mode=IN, jdbcType=VARCHAR},
+  				#{passItem, mode=IN, jdbcType=VARCHAR}
+  				
+  			)
+  		
+  		}
+  		
+  		</select>
+  		
+  	<!-- 거래처 리스트 -->	
+  		<select id="customerList" resultType="CustomerVO">
+  			select c.customer_id, 
+  			c.customer_name, 
+  			i.item_name,
+  			i.item_code,
+  			i.item_price 
+  			from customer c 
+  			join contract t on(c.customer_id = t.customer_id) join itemlist i on(t.item_code=i.item_code)
+  			
+  			
+  		
+  		</select>
+  		
+  		
+  	<!-- 거래처 검색 -->	
+  		<select id="searchcustomer" resultType="CustomerVO">
+  			select c.customer_id, 
+  			c.customer_name, 
+  			i.item_name,
+  			i.item_code,
+  			i.item_price 
+  			from customer c 
+  			join contract t on(c.customer_id = t.customer_id) 
+  			join itemlist i on(t.item_code=i.item_code)
+  			where c.customer_name = #{result}
+  		</select>
+  
+  	
+  <!-- 발주 상세 프로시저-->
+  		<select id="orderInsert" statementType="CALLABLE">
+  		
+  			{call MR_ORDER_DETAIL(
+  				#{itemCode, mode=IN, jdbcType=VARCHAR},
+  				#{mrCount, mode=IN, jdbcType=VARCHAR},
+  				#{itemPrice, mode=IN, jdbcType=VARCHAR},
+  				#{deliveryDate, mode=IN, jdbcType=VARCHAR}
+  				)	
+  			}
+  		</select>
+  
+  		
+  	<!-- 발주 프로시저 -->	
+  		<select id="mrorderInsert" statementType="CALLABLE">
+  			{call MR_ORDER(
+  				#{vo.getList().get(0).customerId, mode=IN, jdbcType=VARCHAR}
+  				
+  			
+  			)
+  		}
+  		</select>
+  		
+  	<!--  발주취소 -->	
+  		<select id="mrOrderDelete" statementType="CALLABLE">
+  			{call mr_order_delete(
+  				#{mrOrderCode, mode=IN, jdbcType=VARCHAR}
+  			
+  			)
+  			}
+  			
+  		
+  		
+  		</select>
+  		
+  	
+  	<!-- 조정 될 리스트 -->	
+  		<select id="mrAdGetList" resultType="MrAdjustmentVO">
+  		
+  		  select i.item_code,
+  		  i.item_name,
+  		  m.store_count, 
+  		  sum(r.mr_real_count) as totalRel,
+  		  m.mr_lot_number,
+  		  i.save_material
+			from itemlist i 
+			join material m on(i.item_code = m.item_code) 
+			join material_release r on(m.mr_lot_number=r.mr_lot_number)
+			where m.hold_count = m.store_count  
+			group by i.item_code, i.item_name, m.store_count, m.mr_lot_number, i.save_material
+			
+  		 
+  		</select>
+  	
+  	 	
+  	
+  	
+  	<!-- 조정 리스트 -->		
+  		<select id="admGetList" resultType="MrAdjustmentVO">
+  			select a.adjustment_code,m.mr_lot_number,i.item_code,i.item_type,i.item_name,a.register_date, a.process,a.change,a.adjustment_date,a.emp_no,
+  			a.adm_note
+  			from material_adjustment a join material m on(a.mr_lot_number = m.mr_lot_number) join itemlist i on (m.item_code = i.item_code) 
+  			where to_char(a.register_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+  			order by a.register_date desc
+  		</select>
+  
+  
+  	<!-- 조정 찾기 리스트 -->
+  		<select id="mrAdSearch" resultType="MrAdjustmentVO">
+  		
+  			select m.mr_lot_number, i.item_code, i.item_type, i.item_name, m.store_count
+			from material m join itemlist i on (m.item_code=i.item_code)
+			where i.item_type in('자재','반제품')
+  		
+  		</select>
+  
+  
+  
+  	<!-- 조정 등록 -->
+  		<select id="adjInsert" statementType="CALLABLE">
+  			{call ad_insert(
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+  			
+  			)
+  			}
+  		</select>
+  	
+  	<!-- 조정 직접 등록 -->
+  		<select id="realIn" statementType="CALLABLE">
+  			{call ad_real_insert(
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
+  			
+  			)
+  			}
+  		
+  		</select>
+  	
+  	
+  	
+  	<!-- 조정 입고 -->
+  		<select id="admInsert" statementType="CALLABLE">
+  			{call ad_In(
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
+  				#{adjustmentCode, mode=IN, jdbcType=VARCHAR}
+  				
+  			
+  			)
+  			
+  			}
+  			
+  		
+  		</select>
+  		
+  	<!-- 조정 출고 -->	
+  		<select id="adjRelease" statementType="CALLABLE">
+  			{call ad_rel(
+  					#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
+  					#{adjustmentCode, mode=IN, jdbcType=VARCHAR}
+  			
+  			
+  			)
+  			
+  			}
+  			
+  		
+  		</select>
+  		
+  		
+  	<!-- 조정 삭제 -->
+  		<select id="admDelete" statementType="CALLABLE">
+  			{call mr_ad_delete(
+  				#{adjustmentCode, mode=IN, jdbcType=VARCHAR}
+  			
+  			
+  			)}
+  			
+  		</select>
+  	
+  	<!-- 조정 수량 조정 -->	
+  		<select id="admCountChange" statementType="CALLABLE">
+  			{call adm_count_change(
+  				#{adjustmentCode, mode=IN, jdbcType=VARCHAR},
+  				#{mrLotNumber, mode=IN, jdbcType=VARCHAR},
+  				#{process, mode=IN, jdbcType=VARCHAR},
+  				#{change, mode=IN, jdbcType=VARCHAR},
+  				#{itemCode, mode=IN, jdbcType=VARCHAR}
+  			)
+  			}
+  		
+  		</select>	
+  		
+  		
+  <!-- 발주 리스트 -->		
+  		<select id="OrmGetList" resultType="MrOrderVO">
+  		
+  			select o.mr_order_date,
+  			o.mr_order_code,
+  			c.customer_id,
+  			c.customer_name,
+  			e.emp_no,
+  			e.emp_name,
+  			o.product_count,
+  			o.all_count 
+  			from customer c 
+  			join material_order o on(c.customer_id = o.customer_id) 
+  			join emp e on(o.emp_no=e.emp_no) 
+  		</select>
+  
+  <!-- 발주 상세 리스트 -->		
+  		<select id="OrdGetList" resultType="MrOrderDetailVO">
+  		
+  			select m.mr_order_date,
+  			m.mr_order_code,
+  			d.mr_order_det_code, 
+  			c.customer_id,
+  			c.customer_name,
+  			i.item_code,
+  			i.item_name,
+  			d.mr_count,
+  			d.mr_price,
+  			d.price_total,
+  			d.delivery_date,
+  			e.emp_name
+  			from customer c 
+  			join material_order m on(c.customer_id = m.customer_id)
+         	join emp e on(m.emp_no=e.emp_no) 
+         	join material_order_detail d on(m.mr_order_code=d.mr_order_code) 
+         	join itemlist i on(d.item_code=i.item_code)
+         	where d.mr_order_code = #{keyword}
+  		
+  		</select>	
+  	
+  	<!-- 반품 품질 리스트 -->
+  		<select id="retGetList" resultType="QualityVO">
+  			select q.test_code, 
+  			e.emp_name,
+  			q.item_code,
+  			q.mr_order_det_code,
+  			i.item_type,
+  			i.item_name,
+  			q.situation,
+  			q.end_date,
+  			q.test_quantity,
+  			q.err_quantity,
+  			q.pass_quantity,
+  			(q.err_quantity/q.test_quantity)*100 as error,
+  			q.test_note 
+  			from itemlist i 
+  			join quality_test q on(i.item_code = q.item_code) 
+  			join emp e on(q.emp_no=e.emp_no) 
+           where test_note is null 
+           and (q.err_quantity/q.test_quantity)*100 between 10 and 100
+  		
+  		</select>
+  	
+  	<!-- 반품 리스트 -->
+  		<select id="returnGetList" resultType="MrReturnVO">
+  			select *
+  			from material_return
+  		
+  		
+  		</select>
+  	
+  	<!-- 반품 등록 -->	
+  		<select id="returnInsert" statementType="CALLABLE">
+  			{call MR_RETURN(
+  				#{testCode, mode=IN, jdbcType=VARCHAR},
+  				#{itemCode, mode=IN, jdbcType=VARCHAR},
+  				#{mrReturnCount, mode=IN, jdbcType=VARCHAR},
+  				#{mrReturnReason, mode=IN, jdbcType=VARCHAR}
+  				
+  			)
+  		}
+  		</select>
+  		
+  	<!-- 반품 취소 -->
+  		<select id="returnDel" statementType="CALLABLE">
+  			{call mr_return_delete(
+  				#{mrReturnCode, mode=IN, jdbcType=VARCHAR}	
+  			
+  			
+  			)
+  		}
+  		
+  		</select>	
+  		
+  		
+  		
+  	<!-- 자재 불량 리스트 -->
+  		<select id="ErrorGetList" resultType="MrErrorVO">
+  			
+  			select * from material_error
+	  		
+  		</select>
+  			
+  </mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.mes.jss.production.mapper.PerformanceMapper">
+  
+	
+	<!-- 공정정보 조회 모달창 : 공정 내역 (초기값) -->
+	<select id="processList" resultType="ProcessVO">
+		SELECT 
+			  pro_code, 
+			  pro_name 
+		FROM 
+			process 
+		ORDER BY 1
+	</select>
+	
+	<!-- 공정정보 조회 모달창 : 공정내역 (키워드로 검색한 결과) -->
+	<select id="processListResult" parameterType="ProcessVO" resultType="ProcessVO">
+		SELECT 
+			  pro_code, 
+			  pro_name
+		FROM 
+			process
+		WHERE 
+			 pro_name LIKE '%'|| #{proName} ||'%'
+		ORDER BY 1
+	</select>
+	
+	
+	<!-- 작업지시 조회 모달창 : 작업지시 내역 -->
+	<!-- 작업이 완료된 작업지시 제외 -->
+	<!-- 작업 완료 시간이 현재 날짜인 것만 조회 -->
+	<select id="todayWorkModalList" resultType="WorkVO">
+		SELECT work_id, work_name, work_date, emp_name
+		FROM (
+		            SELECT DISTINCT
+		                        w.work_id, 
+		                        w.work_name, 
+		                        w.work_date, 
+		                        d.work_end, 
+		                        e.emp_name
+		            FROM 
+		                      work_detail d JOIN work w ON  (w.work_id = d.work_id)
+		                                           LEFT OUTER JOIN performance p ON (d.wdetail_id = p.wdetail_id)
+		                                           JOIN work_bom b ON (d.wdetail_id = b.wdetail_id) ,
+		                    work a JOIN emp e ON (a.emp_no = e.emp_no)
+		            WHERE p.end_time IS NULL
+		                 AND b.pro_code = (
+		                                                SELECT pro_code
+		                                                FROM process
+		                                                WHERE pro_name = '완제품 포장'
+		                                             )
+		            )
+		WHERE TO_DATE(work_end, 'yyyy-MM-dd') = TO_DATE(SYSDATE, 'yyyy-MM-dd') 
+	</select>
+	
+	<!-- 작업자 조회 모달창 : 작업자 리스트 -->
+	<select id="empList" resultType="EmpVO">
+		SELECT emp_no, emp_name 
+		FROM emp
+		WHERE 
+		            dept_name='생산'
+		    AND position = '사원' 
+	</select>
+	
+	<!-- 설비 조회 모달창 : 투입공정이 현재 공정인 설비 중 비가동인 설비 리스트 -->
+	<select id="performanceFacList" parameterType="PerformanceVO" resultType="PerformanceVO">
+		SELECT fac_code, fac_name
+		FROM facility
+		WHERE fac_code IN (
+		                   SELECT fac_code 
+		                   FROM downtime
+		                   WHERE down_reason = '작업대기'
+		                  )
+		    AND pro_code = #{proCode}
+	</select>
+
+
+	<!-- 생산실적 등록 모달창 : 작업시작 -->
+	<select id="performanceStart" statementType="CALLABLE" parameterType="PerformanceVO" resultType="PerformanceVO">
+		{call START_PERFORMANCE_INSERT(
+			#{wdetailId, mode=IN, jdbcType=VARCHAR},
+			#{itemCode, mode=IN, jdbcType=VARCHAR},
+			#{proCode, mode=IN, jdbcType=VARCHAR},
+			#{facCode, mode=IN, jdbcType=VARCHAR},
+			#{workAmount, mode=IN, jdbcType=BIGINT},
+			#{worker, mode=IN, jdbcType=VARCHAR}
+			)
+		}
+	</select>
+	
+	
+	<!-- 생산실적 등록 모달창 : 작업완료 -->
+	<select id="performanceEnd" statementType="CALLABLE" parameterType="PerformanceVO" resultType="PerformanceVO">
+		{call END_PERFORMANCE_INSERT(
+			#{wdetailId, mode=IN, jdbcType=VARCHAR},
+			#{itemCode, mode=IN, jdbcType=VARCHAR},
+			#{proCode, mode=IN, jdbcType=VARCHAR},
+			#{facCode, mode=IN, jdbcType=VARCHAR},
+			#{workAmount, mode=IN, jdbcType=BIGINT},
+			#{failItem, mode=IN, jdbcType=BIGINT}
+			)
+		}
+	</select>
+	
+	<!-- 생산실적 등록 여부 확인 -->
+	<select id="performanceInsertCondition" parameterType="PerformanceVO" resultType="PerformanceVO">
+		SELECT COUNT(performance_id) condition
+		FROM performance
+		WHERE wdetail_id = #{wdetailId}
+		  AND item_code = #{itemCode}
+		  AND wbom_id = (
+		                 SELECT wbom_id
+		                 FROM work_bom
+		                 WHERE wdetail_id = #{wdetailId}
+		                   AND pro_code= #{proCode} 
+		                 )	
+	</select>
+	
+	<!-- 등록한 생산실적 정보 가져오기 -->
+	<select id="searchPerformanceStart" parameterType="PerformanceVO" resultType="PerformanceVO">
+		SELECT start_time, p.fac_code, fac_name, worker
+		FROM performance p JOIN facility f ON (p.fac_code = f.fac_code)
+		WHERE wdetail_id = #{wdetailId}
+		AND item_code = #{itemCode}
+		AND wbom_id = ( 
+						SELECT wbom_id 
+						FROM work_bom 
+						WHERE wdetail_id = #{wdetailId} 
+						  AND pro_code= #{proCode}
+					   )		
+	</select>
+
+  	
+  </mapper>

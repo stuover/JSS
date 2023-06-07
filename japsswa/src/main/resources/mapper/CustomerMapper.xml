@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+  <mapper namespace="com.mes.jss.basic.mapper.CustomerMapper">
+  
+  	<select id="getCustomerList" resultType="CustomerVO">
+  		select  customer_id,
+  				customer_name,
+  				cust_addr,
+  				cust_mail,
+  				cust_tel,
+  				cust_part,
+  				contract_status,
+  				cust_etc
+  		from customer
+  		order by customer_id
+  			
+  	</select>
+  	
+  	<update id="updateCus" parameterType="CustomerVO">
+  		update customer 
+  		set    customer_name = #{customerName},
+  			   cust_addr = #{custAddr},
+  			   cust_mail = #{custMail},
+  			   cust_tel = #{custTel},
+  			   cust_Part = #{custPart},
+  			   contract_status = #{contractStatus},
+  			   cust_etc = #{custEtc}
+  		where customer_id = #{customerId}
+  	</update>
+  	
+  	<insert id="insertTrans" parameterType="TransactionItemVO">
+  	
+  		insert into transaction_item
+  		values ( (SELECT NVL(MAX(trans_no),0)+1 FROM transaction_item), #{itemCode}, #{customerId})
+
+  	</insert>
+  	
+  	<select id="getCusItemList" resultType="TransactionItemVO">
+  		select a.item_code, b.item_name, b.item_type
+  		from  transaction_item a join itemList b
+  			  on(a.item_code = b.item_code)
+  		where customer_id = #{cusId}
+  	</select>
+  	
+  	<select id="result" resultType="int">
+  		select count(*) from transaction_item where item_code = #{itemCode} and customer_id = #{customerId}
+  	</select>
+  	
+  	<delete id="deleteitemDeta">
+  		delete
+  		from TRANSACTION_ITEM 
+  		where item_code = #{itemCode}
+  		and customer_id = #{customerId}
+  	</delete>
+  	
+  	<insert id="insertCustomer" parameterType="customervo">
+  		<selectKey keyProperty="customerId" resultType="String" order="BEFORE">
+  			select deta_code from DETAILS_COMM where deta_name = #{custPart}
+  		</selectKey>
+  		
+  		insert into customer 
+  		(CUSTOMER_ID,
+		 CUSTOMER_NAME,
+		 CUST_ADDR,
+		 CUST_MAIL,
+		 CUST_TEL,
+		 CUST_PART,
+		 CONTRACT_STATUS,
+		 CUST_ETC)	
+  		values(#{customerId} || to_date(sysdate, 'yyMMdd') ||  lpad( (select nvl(max(to_number(substr(CUSTOMER_ID, -4))),0)+1 from CUSTOMER), 4, '0') ,
+  			   #{customerName},
+  			   #{custAddr},
+  			   #{custMail},
+  			   #{custTel},
+  			   #{custPart},
+  			   #{contractStatus},
+  			   #{custEtc})
+  	</insert>
+  	
+  	<select id="getCustomer" resultType="customervo">
+  		select * from customer where substr(customer_id, 3) = (select Max(substr(customer_id, 3)) from  CUSTOMER)
+  	</select>
+
+  </mapper>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
