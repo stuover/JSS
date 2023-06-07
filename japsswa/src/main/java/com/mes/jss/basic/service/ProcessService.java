@@ -2,11 +2,12 @@ package com.mes.jss.basic.service;
 
 import java.util.List;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.ProcessVO;
 
 public interface ProcessService {
 
-	List<ProcessVO> getList();
+	List<ProcessVO> getList(SearchDTO dto);
 
 	ProcessVO getProCode();
 
@@ -16,6 +17,6 @@ public interface ProcessService {
 
 	boolean removePro(String proCode);
 
-	List<ProcessVO> getProcess();
+	List<ProcessVO> getProcess(SearchDTO dto);
 
 }

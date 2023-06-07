@@ -26,6 +26,10 @@
         .tui-grid-cell-content {
             text-align: center;
         }
+        input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
     </style>
 </head>
 
@@ -35,7 +39,12 @@
               <div class="card">
                 <div class="card-body">
         <h4>검사 완료</h4>
-        <div>
+       <div>
+        <select id="searchSel">
+						<option value="">전체</option>
+						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
+						</option>
+					</select> 
         <input type ="text" id="searchInp"> <button id="searchButoon">검색</button><br><br>
         </div>
         <div id="qualityGrid"></div>
@@ -110,11 +119,17 @@ var qualityGrid = new tui.Grid({
 	    ]
 });
 qualityGrid.setBodyHeight(200);
-function qualityGridList(){
+
+
+
+let searchInp = null;
+let searchSel = null;
+function qualityGridList(searchInp, searchSel){
 	$.ajax({
 		url : "/passList",
 		method : "get",
 		dataType : "json",
+		data : {searchInp : searchInp, searchSel : searchSel},
 		success : function (result) {
 			qualityGrid.resetData(result)
 		}, error : function (reject) {
@@ -123,7 +138,13 @@ function qualityGridList(){
 	})	
 }
 
-qualityGridList();
+qualityGridList(searchInp, searchSel);
+$('#searchButoon').on('click', function(){
+	searchInp = $('#searchInp').val()
+	searchSel = $('#searchSel').val()
+	qualityGridList(searchInp, searchSel);
+})
+
 
 var testGrid = new tui.Grid({
     el: document.getElementById("testGrid"),
@@ -199,8 +220,10 @@ qualityGrid.on('click', function(e){
 				result.forEach(function(a, index) {
 					testGrid.setValue(index, "passQuantity", qualityGrid.getRow(e.rowKey).testQuantity - testGrid.getRow(index).mrCount, false)
 					testGrid.setValue(index, "defectiveRate",  testGrid.getRow(index).mrCount/qualityGrid.getRow(e.rowKey).testQuantity*100+"%", false)
+					testGrid.setValue(index,"testQuantity", qualityGrid.getRow(qualityKey).testQuantity, false)
 				})
-				$('#getTestCode').val(qualityGrid.getRow(e.rowKey).testCode)
+				
+					$('#getTestCode').val(qualityGrid.getRow(e.rowKey).testCode)
 					$('#getItemCode').val(qualityGrid.getRow(e.rowKey).itemCode)
 					$('#getItemName').val(qualityGrid.getRow(e.rowKey).itemName)
 	
@@ -230,7 +253,8 @@ testGrid.on('editingFinish', function(e){
  $('#modBtn').on('click',function(){
  	console.log(qualityGrid.getRow(qualityKey))
  	console.log(testGrid.getData())
-	
+		testGrid.finishEditing();
+
  	$.ajax({
  		url : "/completeTest",
  		method : "post",
