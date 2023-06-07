@@ -25,6 +25,7 @@
   		 join itemlist i on (m.item_code=i.item_code) 
   		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   		
+  		
   		</select>  
   	
   	<!-- 자재 멀티 검색 -->
