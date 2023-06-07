@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.ProcessVO;
 import com.mes.jss.basic.mapper.ProcessMapper;
 import com.mes.jss.basic.service.ProcessService;
@@ -14,9 +15,9 @@ public class ProcessServiceImpl implements ProcessService{
 	@Autowired ProcessMapper proMapper;
 
 	@Override
-	public List<ProcessVO> getList() {
+	public List<ProcessVO> getList(SearchDTO dto) {
 		// TODO Auto-generated method stub
-		return proMapper.getList();
+		return proMapper.getList(dto);
 	}
 
 	@Override
@@ -42,9 +43,9 @@ public class ProcessServiceImpl implements ProcessService{
 	}
 
 	@Override
-	public List<ProcessVO> getProcess() {
+	public List<ProcessVO> getProcess(SearchDTO dto) {
 		// TODO Auto-generated method stub
-		return proMapper.getList();
+		return proMapper.getList(dto);
 	}
 
 }

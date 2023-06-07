@@ -26,6 +26,10 @@
         .tui-grid-cell-content {
             text-align: center;
         }
+        input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
     </style>
 </head>
 
@@ -37,6 +41,11 @@
                 <div class="card-body">
         <h4>검사 예정</h4>
         <div>
+        <select id="searchSel">
+						<option value="">전체</option>
+						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
+						</option>
+					</select> 
         <input type ="text" id="searchInp"> <button id="searchButoon">검색</button><br><br>
         </div>
         <div id="qualityGrid"></div>
@@ -98,11 +107,15 @@ var qualityGrid = new tui.Grid({
 	    ]
 });
 
-function qualityGridList(){
+let searchInp = null;
+let searchSel = null;
+
+function qualityGridList(searchInp, searchSel){
 	$.ajax({
 		url : "/qualityList",
 		method : "get",
 		dataType : "json",
+		data : {searchInp : searchInp, searchSel : searchSel},
 		success : function (result) {
 			qualityGrid.resetData(result)
 		}, error : function (reject) {
@@ -112,7 +125,13 @@ function qualityGridList(){
 }
 qualityGrid.setBodyHeight(200);
 
-qualityGridList();
+qualityGridList(searchInp, searchSel);
+$('#searchButoon').on('click', function(){
+	searchInp = $('#searchInp').val()
+	searchSel = $('#searchSel').val()
+	qualityGridList(searchInp, searchSel);
+})
+
 
 var testGrid = new tui.Grid({
     el: document.getElementById("testGrid"),
@@ -127,10 +146,7 @@ var testGrid = new tui.Grid({
         header: " "
     }],
     columns: [
-    	{
-        header: '검사항목코드',
-        name: 'checklistCode'
-    }, {
+    	 {
         header: '검사명',
         name: 'testName'
     }, {
@@ -139,6 +155,9 @@ var testGrid = new tui.Grid({
     }, {
         header: '검사기준치',
         name: 'testStandard'
+    },{
+        header: '검사량',
+        name: 'testQuantity'
     }, {
         header: '합격량',
         name: 'passQuantity',
@@ -163,14 +182,15 @@ var testGrid = new tui.Grid({
         }
     }
     ]
-
 });
 
 testGrid.setBodyHeight(200);
-
-
 var qualityKey = null;
 qualityGrid.on('click', function(e){
+	if(e.rowKey != qualityKey){
+		qualityGrid.removeRowClassName(qualityKey, 'cell-color');
+	}
+	qualityGrid.addRowClassName(e.rowKey, 'cell-color');
 	qualityKey = e.rowKey;
 	if (qualityKey !=null){
 		
@@ -184,6 +204,11 @@ qualityGrid.on('click', function(e){
 				$('#getTestCode').val(qualityGrid.getRow(e.rowKey).testCode)
 				$('#getItemCode').val(qualityGrid.getRow(e.rowKey).itemCode)
 				$('#getItemName').val(qualityGrid.getRow(e.rowKey).itemName)
+				result.forEach(function(data, index){
+					testGrid.setValue(index,"testQuantity", qualityGrid.getRow(qualityKey).testQuantity, false)
+
+				})
+
 				testGrid.refreshLayout();
 			}, error : function(reject){
 				console.log(reject)
@@ -217,7 +242,8 @@ testGrid.on('editingFinish', function(e){
  $('#finshBtn').on('click',function(){
  	console.log(qualityGrid.getRow(qualityKey))
  	console.log(testGrid.getData())
-	
+	testGrid.finishEditing();
+
  	$.ajax({
  		url : "/completeTest",
  		method : "post",

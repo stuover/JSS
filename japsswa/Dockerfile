@@ -5,5 +5,3 @@ ENV TZ=Asia/Seoul
 ENV	USE_PROFILE=linux
 ENTRYPOINT ["java","-jar","-Djasypt.encryptor.password=mealkitislove","/app.jar"]
 
-#ENTRYPOINT ["java","-jar","-Dspring.profiles.active=${USE_PROFILE}","/app.jar"]
-

@@ -25,7 +25,9 @@
 			<div class="card">
 				<div class="card-body">
 					<h1 class="card-title">공통 코드 관리</h1>
-					<input id="searchInp" type="text"><button id="searchButton">검색</button><br>
+					<div>
+					<input id="searchInp" type="text"><button class="m-2"id="searchButton">검색</button><br><br>
+					</div>
 					<input id="commCode" name="commCode" type="text" placeholder="공통코드"
 						maxlength='5'> <input id="commName" name="commName"
 						type="text" placeholder="공통코드명"> <input id="commNote"
@@ -77,8 +79,7 @@
 
 
 			window.onload = function() {
-				const token = $("meta[name='_csrf']").attr("content")
-		  		const header = $("meta[name='_csrf_header']").attr("content");
+
 
 				var grid = new tui.Grid({
 					el : document.getElementById('grid'),
@@ -308,17 +309,22 @@
 			});
 	
 
-	 		var commCode;
+	 		var commCode = null;
+	 	
 			grid.on('click',function(e){
 				if(e.columnName != "_checked"){
-				commCode = grid.getRow(e.rowKey).commCode;
-				 grid.setSelectionRange({
-			            start: [e.rowKey, 0],
-			            end: [e.rowKey, grid.getColumns().length - 1]
-			     	});
-					getModal(commCode);
-					getComm(commCode);
-					$('#searchModal').modal('show');
+					if(commCode != null){
+						
+						commCode = grid.getRow(e.rowKey).commCode;
+						grid.setSelectionRange({
+					            start: [e.rowKey, 0],
+					            end: [e.rowKey, grid.getColumns().length - 1]
+					    });
+						
+						getModal(commCode);
+						getComm(commCode);
+						$('#searchModal').modal('show');
+					}
 				}
 			});
 			
@@ -368,20 +374,31 @@
 			
 			$('#modalModBtn').on('click',function(){
 				modalGrid.finishEditing();
+				
+				
 				let commData = detaGrid.getRow(0);
-				let data =  modalGrid.getCheckedRows();
+				let data =  modalGrid.getData();
+				
+				data.forEach(function(i, index){
+					if(i.detaCode == null || i.detaName ==null || i.detaCode == '' || i.detaName == '' ){
+						modalGrid.removeRow(index)
+					}
+				})
+				
+				data =  modalGrid.getCheckedRows();
 				
 				$.ajax({
 					url : "/modifyDetailsAjax",
 					contentType : "application/json",
-					data : JSON.stringify( {code: commCode, list : modalGrid.getData(), comm : commData }),
+					data : JSON.stringify( {code: commCode, list : data, comm : commData }),
 					method :"post",
 					dataType : "json",
 					beforeSend: function(xhr){
 						xhr.setRequestHeader(header, token);    
 					},
 					success : function(result){
-						alert('등록완료!');
+						alert(commCode + '가(이) 저장 되었습니다.');
+						
 						getComm(commCode);
 						getModal(commCode);
 						commList();

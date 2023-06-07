@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.ProcessVO;
 import com.mes.jss.basic.service.ProcessService;
 
@@ -31,8 +32,9 @@ public class ProcessController {
 	
 	@ResponseBody
 	@RequestMapping("/processList")
-	public List<ProcessVO> processList (){
-		return proService.getList();
+	public List<ProcessVO> processList (SearchDTO dto){
+		System.err.println(dto);
+		return proService.getList(dto);
 	}
 	
 	
