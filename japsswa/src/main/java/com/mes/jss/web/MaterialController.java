@@ -79,11 +79,29 @@ public class MaterialController {
 		return list;
 	}
 	
+// 자재 입고내역 검색(동적쿼리)
+	
+	@ResponseBody
+	@RequestMapping("/searchQuery")
+	public List<MrVO> mrStoreListQuery(@RequestBody MrVO vo){
+		System.err.println(vo);
+		List<MrVO> list = materialService.mrStoreListQuery(vo);		
+		
+		
+		
+		return list;
+		
+	}
+	
+	
+	
  // 자재 검색(동적쿼리)
 	
 	@ResponseBody
 	@RequestMapping("/multi")
 	public List<MrVO> mrMultiSearch(MrVO vo){
+		
+		System.err.println(vo);
 		
 		List<MrVO> list = materialService.MultiSearchList(vo);
 		return list;
@@ -102,6 +120,18 @@ public class MaterialController {
 		return list;
 		
 	}
+	
+ // 자재 재고 lot 조회
+	
+	@ResponseBody
+	@RequestMapping("/mrLotList")
+	public List<MrVO> mrLotList(@RequestParam String itemName){
+		
+		List<MrVO> list = materialService.mrLot(itemName);
+		
+		return list;
+	}
+ 	
 	
   	
 	
@@ -367,6 +397,19 @@ public class MaterialController {
 		return null;
 		
 	}
+	
+ // 자재 발주 조회용
+	
+	@ResponseBody
+	@RequestMapping("/OrderList")
+	public List<MrOrderDetailVO> orderList() {
+		
+		List<MrOrderDetailVO> list = materialService.orderList();
+		
+		return list;
+		
+	}
+	
 	
 
 // 거래처 아작스

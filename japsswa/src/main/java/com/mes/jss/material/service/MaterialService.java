@@ -178,6 +178,16 @@ public interface MaterialService {
 	public List<MrVO> mrRelAdmList();
 	
 	
+	// 자재 입고 내역 동적 쿼리 리스트
+	public List<MrVO> mrStoreListQuery(MrVO vo);
+	
+	// 자재 lot 조회
+	public List<MrVO> mrLot(String vo);
+	
+	// 자재 발주 조회용
+	public List<MrOrderDetailVO> orderList();
+	
+	
 	
 	
 	
