@@ -20,7 +20,7 @@
 					
 
 					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
-					<div>
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
 									<input type="text" id="itemInput" name="sItem">
 									<button id="itemBtn" type="button" class="btn btn-dark"
 										data-bs-toggle="modal" data-bs-target="#searItemModal">품목 검색</button>
@@ -33,17 +33,13 @@
 					
 
 					<div id="grid1"></div>
-
+					
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+					<button id="outBtn" type="button" class="btn btn-dark">출고</button>
+					</div>
+					
 					<div id="grid2"></div>
 					
-
-					<div>
-						<form>
-
-							<button id="outBtn" type="button" class="btn btn-dark">출고</button>
-							
-						</form>
-					</div>
 
 
 				</div>
@@ -91,7 +87,7 @@
 		const grid1 = new Grid({
 	      el: document.getElementById('grid1'),
 	      data: grid1Data,
-	      rowHeaders: ['checkbox'],
+	      rowHeaders: [{type:'checkbox', header: " "}],
 	      pageOptions: { 
               useClient: true,
               perPage: 5 
@@ -193,6 +189,15 @@
 	    		}
 	    	})
 	    })
+	    
+	    		       grid1.on('check', function(e){
+		        	   var checkRows = grid1.getCheckedRowKeys();
+		        	   checkRows.forEach(function(key, idx){
+		        		   if(key != e.rowKey){
+		        			   grid1.uncheck(key);
+		        		   }
+		        	   })
+		           })
 	    
 	    
 	    //하단 그리드
@@ -317,7 +322,7 @@
 	    				 $.ajax({
 	    					 url : "/itemOut",
 	    					 method : "post",
-	    					 contentType : "application/json"
+	    					 contentType : "application/json",
 	    					 data : JSON.stringify({ volist : topdata, releaseList : botdata }),
 	    					 beforeSend : function(xhr){
 	    						 xhr.setRequestHeader(header, token);

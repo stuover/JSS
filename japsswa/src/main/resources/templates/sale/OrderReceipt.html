@@ -20,28 +20,34 @@
 					
 
 					<input id="name" type="hidden" th:value="${#authentication.principal.empName}"> 
-					<div>
-	
-									<button id="showCust" type="button" class="btn btn-dark"
-										data-bs-toggle="modal" data-bs-target="#showCustModal">거래처 주문 조회</button>
-									<button id="ordDel" type="button" class="btn btn-danger">주문서 삭제</button>
+					
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+					<button id="showCust" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#showCustModal">거래처 주문 조회</button>
+					<button id="ordDel" type="button" class="btn btn-danger">주문서 삭제</button>
 					</div>
+					
 
 					<div class="row"></div>
 					
 					<div id="grids"></div>
+					
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
 					<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
 					<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
+					</div>
+					
 					<div id="grid"></div>
 					
 					<div id="changeGrid"></div>
 				
 					<div>
 						<form>
-							
+						
+							<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
 							<button id="insertBtn" type="button" class="btn btn-dark">등록</button>
 							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
 							<input id="sortBtn" type="hidden" value="insert">
+							</div>
 							
 						</form>
 					</div>
@@ -132,10 +138,6 @@
   		const grids = new Grid({
 		      el: document.getElementById('grids'),
 		      data: gridsData,
-		      pageOptions: { 
-	                useClient: true,
-	                perPage: 5 
-	                },
 		      scrollX: false,
 		      scrollY: false,
 		      columns: [
@@ -199,6 +201,7 @@
 
 	    			 $('#searchModal').modal('show');
 	    			 
+	    			 //거래처 모달 리스트
 	    			 $.ajax({
 		    			 url : "/cModal",
 		    			 method : "GET",
@@ -386,6 +389,7 @@
 		    	 
 		    	 $('#addBtn').on('click', function(){
 	        		   
+		    		//품목 모달 리스트
 		        	   $.ajax({
 		        		   url : "/itemNamelist",
 		        		   method : "GET",
@@ -404,7 +408,8 @@
 					 });
 		    	 
 			       $('#showCust').on('click', function(){
-			    		 
+			    		
+			    	   //수정 모달 리스트
 			    	   $.ajax({
 			    		   url : "/custOrdModal",
 			    		   method : "GET",
@@ -440,7 +445,7 @@
 			
 				const modalGrid = new Grid({
 		               el: document.getElementById('modalGrid'),
-		 		      rowHeaders: ['checkbox'],
+		 		      rowHeaders: [{type : 'checkbox',  header: " "}],
 		               scrollX: false,
 		               scrollY: false,
 		              pageOptions: { 
@@ -493,6 +498,7 @@
 		        	   const result = $('#modalInput').val();
 		        	   $('#modalInput').val('');
 		        	   
+		        	   //거래처 검색
 		        	   $.ajax({
 		        		   url : "/custList",
 		        		   method : "GET",
@@ -521,6 +527,8 @@
 		        	   $('#searchModal').on('hidden.bs.modal', function(e){
 		        		   gridsData = custInfo;
 		        		   grids.resetData(custInfo);
+		        		   
+		        		   //거래처 자동 입력
 			        	   $.ajax({
 			        		   url : "/custInfo",
 			        		   method : "GET",
@@ -539,6 +547,7 @@
 		        	   
 		           }) 
 		           
+		           //하나만 체크
 		           modalGrid.on('check', function(e){
 		        	   var checkRows = modalGrid.getCheckedRowKeys();
 		        	   checkRows.forEach(function(key, idx){
@@ -591,6 +600,8 @@
 		        	   grid.finishEditing();
 		        	   var data = grid.getCheckedRows();
 		        	   console.log(data);
+		        	   
+		        	   //주문 접수(등록)
 		        	   $.ajax({
 		        		   url : "/entireRegister",
 		        		   contentType : "application/json",
@@ -626,6 +637,7 @@
 		        	   const code = $('#itemInput').val();
 		        	   $('#itemInput').val('');
 		        	   
+		        	   //품목검색
 		        	   $.ajax({
 		        		   url : "/itemSearch",
 		        		   method : "GET",
@@ -721,6 +733,7 @@
 		        	   const oCode = $('#custShowInput').val();
 		        	   $('#custShowInput').val('');
 		        	   
+		        	   //수정할때 모달내에서 거래처 검색
 		        	   $.ajax({
 		        		   url : "/custShowModal",
 		        		   method : "GET",
@@ -750,6 +763,8 @@
 		        	   
 		        	   $('#showCustModal').on('hidden.bs.modal',function(e){
 		        		   grids.refreshLayout();
+		        		   
+		        		   //수정할때 기존 입력값 자동 입력(주문)
 		        		   $.ajax({
 		        			   url : "/orderShow",
 		        			   method : "GET",
@@ -763,6 +778,7 @@
 		        				   
 		        				   $('#changeGrid').show();
 		        				   
+		        				   //수정할때 기존 입력값 자동 입력(주문 상세)
 		        				   $.ajax({
 				        			   url : "/ordDetShow",
 				        			   method : "GET",
@@ -780,7 +796,7 @@
 		        	   })
 		           })
 		           
-		           
+		           //하나만 체크
 		           CmodalGrid.on('check', function(e){
 		        	   var checkRows = CmodalGrid.getCheckedRowKeys();
 		        	   checkRows.forEach(function(key, idx){
@@ -800,7 +816,7 @@
 		        	   changeGrid.finishEditing();
 		        	  
 		        	   
-		        	   
+		        	   //주문서 삭제
 		        	   $.ajax({
 		        		   url : "/entDel",
 		        		   method : "POST",
@@ -827,6 +843,7 @@
 		        	   var delData = changeGrid.getCheckedRows();
 		        	   console.log(delData);
 		        	   
+		        	   //주문서 품목 삭제
 		        	   $.ajax({
 		        		   url : "/delDet",
 		        		   method : "POST",
@@ -838,7 +855,7 @@
 		        		   success : function(result){
 		        			     			
 		        			   
-		        			   
+		        			   //수정할때 기존 입력값 자동 입력(주문 상세)
 		        			   $.ajax({
 			        			   url : "/ordDetShow",
 			        			   method : "GET",
@@ -864,6 +881,8 @@
 		        	   changeGrid.finishEditing();
 		        	   var datas = changeGrid.getData();
 		        	   console.log(datas);
+		        	   
+		        	   //주문서 수정
 		        	   $.ajax({
 		        		   url : "/ordUpdate",
 		        		   contentType : "application/json",
