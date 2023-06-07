@@ -21,14 +21,14 @@
         select  f.fac_name,
         		  f.fac_code,
         		  d.down_code,
-        		  d.stop_date,
-        		  d.down_reason,
+        		  to_char(d.stop_date, 'YYYY/MM/DD HH24:MI:SS') as stop_date,        		  
+        		  get_codeName(d.down_reason) down_reason,
         		  d.down_manager,
         		  d.remark
 		  from  facility f join downtime d 
 		     on  (f.fac_code = d.fac_code)
 		where  d.start_date is null
-     order by fac_code
+     order by down_code desc
   	</select>
   	
   	<insert id="insertDownList" parameterType="DowntimeVO">  				
@@ -39,9 +39,9 @@
 			           down_manager, 
 			           remark, 
 			           fac_code)
-			values  (('DOW' || lpad(downtime_seq.nextval, 4, '0')),
-			           current_date , 
-			           #{downReason} , 
+			values  (('DOW' || to_char(sysdate, 'yyMMdd') || lpad(downtime_seq.nextval, 4, '0')),
+			           to_date(current_date, 'YYYY-MM-DD HH24:MI:SS'),
+			           (select deta_name from details_comm where deta_code =#{downReason}), 
 			           #{downManager} , 
 			           #{remark} , 
 			           #{facCode})
@@ -78,7 +78,7 @@
   	<update id="updateDownTime" parameterType="DowntimeVO">
   		update downtime 
   			set
-  		          down_reason = #{downReason} , 
+  		          down_reason = (select deta_name from details_comm where deta_code =#{downReason}) , 
   		          down_manager = #{downManager} , 
   		          remark = #{remark} 
   		 where down_code = #{downCode}
@@ -113,7 +113,7 @@
 		   on   (f.fac_code = d.fac_code)
 		where fac_name like '%' || #{facName} || '%' 
 	    <if test="startDate != '' and stopDate != '' ">	    	    	    
-	    and TRUNC(d.stop_date) between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
+	    and TRUNC(d.stop_date) between to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS') and to_date(#{stopDate}, 'YYYY-MM-DD HH24:MI:SS')
 	    </if>
   	</select>
   	
@@ -122,7 +122,7 @@
   	<select id="getAllList" resultType="FacilityVO">
   		select f.fac_code, fac_name, to_char(f.fac_date, 'YYYY-MM-DD') as fac_date ,f.pro_code, p.pro_name, f.fac_status, f.wash_cycle, f.ins_cycle, 
 		to_char(f.last_inspection, 'YYYY-MM-DD') as last_inspection, f.fac_manager, f.fac_function, f.fac_picture
-		from facility f join process p on(f.pro_code = p.pro_code)
+		from facility f left outer join process p on(f.pro_code = p.pro_code)
   		
   		
   		<!--  
@@ -145,7 +145,7 @@
   	<insert id="insertFacility" parameterType="FacilityVO">
   		insert into facility (fac_code , fac_name , fac_date, pro_code ,
   		wash_cycle, ins_cycle, last_inspection, fac_manager, fac_function)
-        values(('FAC' || lpad(facility_seq.nextval, 4,'0')) , #{facName} , #{facDate} , #{proCode}, 
+        values(('FAC' || to_char(sysdate, 'yyMMdd') || lpad(facility_seq.nextval, 4,'0')) , #{facName} , TO_DATE(#{facDate}, 'yyyy-MM-dd') , #{proCode}, 
         #{washCycle},#{insCycle}, #{lastInspection}, #{facManager}, #{facFunction})
   	</insert>
   	
@@ -192,8 +192,15 @@
   	
   	<insert id="insertModalIns" parameterType="InspectionVO">
   		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
-		values(('INS' || lpad(inspection_seq.nextval, 4,'0')) , sysdate, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
+		values(('INS' || to_char(sysdate, 'yyMMdd') || lpad(inspection_seq.nextval, 4,'0')) , to_date(sysdate, 'yyyy-MM-dd'), #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
   	</insert>
+  	
+  	<update id="modifyFacDate" parameterType="InspectionVO">
+  		update facility	
+  					set
+					  		last_inspection = sysdate 					  		
+  				  where  fac_code = #{facCode}
+  	</update>
   	
   	<select id="getSelList" resultType="FacilityVO">
   		select fac_name, fac_code from facility
@@ -224,11 +231,14 @@
          <if test="startDate != '' and stopDate != '' ">	    	    	    
 	    and TRUNC(i.ins_date) between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
 	    </if>
+	    order by i.ins_code desc
   	</select>
   	
   	
   	<select id="getDetailList" resultType ="CommVO">
-  		select deta_code value , deta_name text from details_comm where comm_code = UPPER('ins')
+  		select deta_code value , deta_name text 
+  		 from details_comm 
+  		where comm_code = UPPER(#{commCode})
   	</select>
   	
   </mapper>

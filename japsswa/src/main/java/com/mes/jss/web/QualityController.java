@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.DTO.SearchDTO;
+import com.mes.jss.basic.service.CommonService;
 import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.quality.domain.TestHistoryListVO;
@@ -28,13 +30,13 @@ public class QualityController {
 	
 	@Autowired
 	QualityService qualityService;
-	
+	@Autowired
+	CommonService commService;
 	
 	// 품질 검사 페이지
 	
 	@GetMapping("/mrlist")
 	public String mrList(Model model, QualityVO vo) {
-	
 		
 		return "material/materialStore";
 						
@@ -53,8 +55,11 @@ public class QualityController {
 						
 	}
 
-	@GetMapping("/quality")
-	public String quality() {
+	@RequestMapping("/quality")
+	public String quality(Model model) {
+		
+		System.err.println(commService.getTypeList());
+		model.addAttribute("typeCode",commService.getTypeList());
 
 		return "quality/qualityInspection";
 						
@@ -62,10 +67,10 @@ public class QualityController {
 	
 	@ResponseBody
 	@GetMapping("/qualityList")
-	public List<QualityVO>  qualityList() {
+	public List<QualityVO>  qualityList(SearchDTO dto) {
 		
 		
-		return qualityService.qualityList();
+		return qualityService.qualityList(dto);
 		
 	}
 	
@@ -85,15 +90,17 @@ public class QualityController {
 	}
 	
 	
-	@GetMapping("/passQuality")
-	public String passQuality() {
+	@RequestMapping("/passQuality")
+	public String passQuality(Model model) {
+		model.addAttribute("typeCode",commService.getTypeList());
 
 		return "quality/passQuality";
 						
 	}
 	
-	@GetMapping("/errQuality")
-	public String errQuality() {
+	@RequestMapping("/errQuality")
+	public String errQuality(Model model) {
+		model.addAttribute("typeCode",commService.getTypeList());
 
 		return "quality/errQuality";
 						
@@ -101,17 +108,17 @@ public class QualityController {
 	
 	@ResponseBody
 	@GetMapping("/passList")
-	public List<QualityVO> passQualityList(){
+	public List<QualityVO> passQualityList(SearchDTO dto){
 		
-		return qualityService.getPassQualityList();
+		return qualityService.getPassQualityList(dto);
 	}
 	
 	
 	@ResponseBody
 	@GetMapping("/errList")
-	public List<QualityVO> errQualityList(){
+	public List<QualityVO> errQualityList(SearchDTO dto){
 		
-		return qualityService.getErrQualityList();
+		return qualityService.getErrQualityList(dto);
 	}
 	
 	

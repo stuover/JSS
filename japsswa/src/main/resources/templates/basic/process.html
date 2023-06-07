@@ -5,14 +5,19 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="en">
 <meta charset="UTF-8">
-
+<style> 
+input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
+</style>
 
 </head>
 
 
 <th:block layout:fragment="content">
 
-	<div class="container-fluid page-body-wrapper">
+	<div>
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
@@ -141,6 +146,13 @@ function  processList(searchInp){
 let searchInp = null;
 processList(searchInp);
 
+
+// 검색
+$('#searchButton').on('click',function(){
+	searchInp = $('#searchInp').val();
+	processList(searchInp);
+
+})
 
 var modalGrid = new tui.Grid({
 	el : document.getElementById('modalGrid'),

@@ -42,7 +42,9 @@
 				  work_id, 
 				  work_name, 
 				  work_date, 
-				  emp_name
+				  emp_name,
+			      TO_CHAR((SYSDATE - 3), 'yyyy-MM-dd') start_date,
+			      TO_CHAR((SYSDATE + 3), 'yyyy-MM-dd') end_date  
 			FROM (
 				  SELECT 
 						w.work_id,
@@ -72,7 +74,7 @@
 					  emp_name
 				FROM (
 					  SELECT 
-							work_id, 
+							w.work_id, 
 							work_name, 
 							work_date,  
 							emp_name
@@ -83,7 +85,6 @@
 									ON(w.work_id = d.work_id)
 					  WHERE 
 						   work_date >= TO_DATE(#{startTime}, 'yyyy-MM-dd')
-						   AND work_start > (SYSDATE )
 					  )
 				WHERE 
 					 work_date <= TO_DATE(#{endTime}, 'yyyy-MM-dd')	
@@ -243,6 +244,59 @@
 			#{mrLotNumber, mode=IN, jdbcType=VARCHAR}
 			)
 		}
+	</select>
+	
+	<!-- 공정이동표 조회 페이지 -->
+	<!-- 작업지시 조회 모달 : 초기값 -->
+	<select id="proMoveWorkModalList" parameterType="WorkVO" resultType="WorkVO">
+		<![CDATA[
+			SELECT work_id, work_name, work_date, emp_name
+			FROM (
+			        SELECT w.work_id , work_name, work_date, emp_name
+			        FROM work_detail d JOIN work w ON (d.work_id = w.work_id)
+			                           JOIN performance P ON (d.wdetail_id = p.wdetail_id)
+			                           JOIN emp e ON(w.emp_no = e.emp_no)
+			        WHERE end_time IS NOT NULL
+			          AND work_date > TRUNC(SYSDATE - 3)     
+			      )
+			WHERE work_date < TRUNC(SYSDATE + 3)
+		]]>
+	</select>
+		
+	<!-- 작업지시 조회 모달 : 검색 결과 -->
+	<select id="proMoveWorkModalResult" parameterType="WorkVO" resultType="WorkVO">
+		<![CDATA[
+			SELECT work_id, work_name, work_date, emp_name
+			FROM (
+			        SELECT w.work_id , work_name, work_date, emp_name
+			        FROM work_detail d JOIN work w ON (d.work_id = w.work_id)
+			                           JOIN performance P ON (d.wdetail_id = p.wdetail_id)
+			                           JOIN emp e ON(w.emp_no = e.emp_no)
+			        WHERE end_time IS NOT NULL
+			          AND work_date > TO_DATE(#{startTime}, 'yyyy-MM-dd')     
+			      )
+			WHERE work_date < TO_DATE(#{endTime}, 'yyyy-MM-dd')
+		]]>
+	</select>
+	
+	<select id="processCurrInfo" parameterType="PerformanceVO" resultType="PerformanceVO">
+		SELECT 
+			  f.wdetail_id, 
+			  f.wbom_id, 
+			  b.pro_code, 
+			  pro_name, 
+			  f.item_code, 
+			  item_name, 
+			  f.output, 
+			  f.pass_item, 
+			  f.fail_item, 
+			  worker
+		FROM 
+			performance f JOIN work_bom b ON(f.wbom_id =b.wbom_id)
+		                  JOIN itemlist i ON (f.item_code = i.item_code)
+		                  JOIN process p ON (p.pro_code = b.pro_code)
+		WHERE f.wdetail_id = #{wdetailId}
+		  AND f.end_time IS NOT NULL
 	</select>
 	
   	

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/index}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+
+
+</head>
+
+<th:block layout:fragment="content">
+
+	
+ 		<div >
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                <!-- Body Start -->
+                
+                  <h4 class="m-2 page-title">생산 모니터링</h4>
+                  
+                  <div class="p-3"></div>
+                  
+                  <div id="detailGrid"></div>
+                  
+                  
+				<!-- Body End -->				            
+                </div>
+              </div>
+            </div>
+  		</div>
+  		
+		
+		
+		<!-- Modal List Start -->
+		
+
+
+	    <!-- Modal List End -->
+  		
+
+  		<script>
+
+  		const Grid = tui.Grid;
+  		
+  		// 초기화면 데이터 및 설정.
+  		window.onload = function(){
+  			  
+  
+  		  	
+  		};  		
+
+
+  		    
+  		// 생산계획 상세(초기회면)
+		let detailGridData = [];
+		const detailGrid = new tui.Grid({
+		el: document.getElementById('detailGrid'),
+		data: detailGridData,
+		scrollX: false,
+		scrollY: true,
+		bodyHeight: 725,
+		columns: [
+			{
+		     	header: '설비코드',
+		    	name: 'wdetailId'
+		     },
+		     {
+			   header: '설비명',
+			   name: 'pdetailId'
+			  },
+		     {
+		        header: '가동여부',
+		        name: 'itemCode'
+		      },
+			  {
+			    header: '비가동 사유',
+			    name: 'itemType'
+			  },
+		      {
+		        header: '공정코드',
+		        name: 'itemName'
+		      },
+		      {
+		        header: '공정명',
+		        name: 'workStart'
+		      },
+			  {
+		        header: '하루 생산량',
+		        name: 'workEnd'
+		      },
+		      {
+		        header: '하루 불량량',
+		        name: 'workAmount'
+		      }
+		     ]
+		   });
+		
+	
+			
+
+			
+			
+						
+  		</script>
+    
+	</th:block>
+
+</html>

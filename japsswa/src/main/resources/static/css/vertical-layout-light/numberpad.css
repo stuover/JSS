@@ -1,9 +1,9 @@
 /*숫자패드 css*/
 .number_pad {
     position: fixed;
-    left: 25%;
-    right: 25%;
-    bottom: 0;
+
+    right: 6%;
+    bottom: 25%;
     width: 25%;
     height: 40%;
     padding: 10px 0;
@@ -28,7 +28,7 @@
 
 .number_pad__key {
     height: 45px;
-    width: 30%;
+    width: 20%;
     max-width: 120px;
     height: 29%;
     margin: 5px;

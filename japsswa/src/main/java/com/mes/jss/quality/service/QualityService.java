@@ -2,7 +2,7 @@ package com.mes.jss.quality.service;
 
 import java.util.List;
 
-import com.mes.jss.material.domain.MrVO;
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.quality.domain.CheckListVO;
 import com.mes.jss.quality.domain.QualityVO;
 import com.mes.jss.quality.domain.TestHistoryListVO;
@@ -14,15 +14,15 @@ public interface QualityService {
 	
 	public List<QualityVO> qlList();
 
-	public List<QualityVO> qualityList();
+	public List<QualityVO> qualityList(SearchDTO dto);
 
 	public List<CheckListVO> getCheckList(String itemCode);
 
 	public void completeTest(TestHistoryListVO data, long empNo);
 
-	public List<QualityVO> getPassQualityList();
+	public List<QualityVO> getPassQualityList(SearchDTO dto);
 
-	public List<QualityVO> getErrQualityList();
+	public List<QualityVO> getErrQualityList(SearchDTO dto);
 
 	public List<TestHistoryVO> getHistoryList(String testCode);
 

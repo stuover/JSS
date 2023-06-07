@@ -32,6 +32,7 @@ public class PlanVO {
 	// 생산계획 프로시저 : 생산계획 코드
 	String planCode;
 
-
+	String startDate;
+	String endDate;
 	
 }

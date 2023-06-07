@@ -27,7 +27,9 @@ public class DownController {
 
 	@GetMapping("/downtime")
 	public String  downtime(Model model) {
-		model.addAttribute("detail", service.getDetailList());
+						
+		model.addAttribute("downReason", service.getDetailList("ins"));
+		
 		return "Facility/downtime";
 	}	
 	

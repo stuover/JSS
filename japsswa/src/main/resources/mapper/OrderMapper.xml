@@ -8,13 +8,14 @@
 	<select id="custModalList" resultType="OrderVO">
 		select customer_id, customer_name, cust_tel, cust_addr, cust_mail
 		from customer
+		where cust_part = '판매처'
 		
 	</select>
 
 	<select id="itemNamelist" resultType="OrderVO">
 		select item_code, item_name
 		from itemlist
-		where item_type = '완제품'
+		where item_type = 'FIN'
 	</select>
 
 	<select id="custList" parameterType="OrderVO" resultType="OrderVO">
@@ -69,14 +70,13 @@
 	</select>
 		
 	<select id="custOrdModal" resultType="OrderVO">
-		select c.customer_id, 
+		 select c.customer_id, 
 		       c.customer_name, 
 		       o.ord_id, 
 		       o.ord_name
 		  from customer c 
 		  join orders o on c.customer_id = o.customer_id
 		  join orddetail d on o.ord_id = d.ord_id
-		 where orddet_status = '접수완료'
 	</select>
 	
 	<select id="orderShow" parameterType="OrderVO" resultType="OrderVO">

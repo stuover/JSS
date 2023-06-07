@@ -6,17 +6,23 @@
 
 <head lang="en">
 <meta charset="UTF-8">
-
+<style> 
+input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
+</style>
 </head>
 
 <th:block layout:fragment="content">
-	<div class="container-fluid page-body-wrapper">
+	<div>
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<h1 class="card-title">사원 정보</h1>
+					<h1 >사원 정보</h1>
+					<br>
 					
-					<select id="searchSel">
+					<select id="searchSel" class="">
 						<option value="">부서별</option>
 						<option value="인사">인사</option>
 						<option value="영업">영업</option>
@@ -24,14 +30,17 @@
 						<option value="설비">설비</option>
 						<option value="생산">생산</option>
 						<option value="자재">자재</option>
-					</select>검색어 <input id="searchInp" type="text">
-					<button type="button" id="searchButton" class="btn btn-success">검색</button>
-					<button type="button" id="allListBtn" class="btn btn-success">전체보기</button>
+					</select> <input id="searchInp" class="" type="text">
+					<button type="button" id="searchButton" class="btn btn-dark">사원검색</button>
+					<button type="button" id="allListBtn" class="btn btn-dark">전체보기</button>
 					
 					<form id="controller">
-						<button type="button" id="modifyBtn" class="btn btn-success">수정</button>
-						<button id="addEmpBtn">등록</button>
+					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+							<button type="button" id="modifyBtn" class="btn btn-success">수정</button>
+							<button id="addEmpBtn" class="btn btn-primary">등록</button>
+					</div>
 						<div id="grid"></div>
+				
 					</form>
 				</div>
 			</div>
@@ -44,18 +53,18 @@
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="searchModalLabel">
-						<span id="selNo">사원정보 조회</span><span id="selName">사원정보 조회</span>
-					</h5>
+					<h5 class="modal-title" id="searchModalLabel">사원정보 수정</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
+				<div class="modal-header">
+				<div><span>사원번호 :</span>	<span id="selNo">사원정보 조회</span></div><div> <span>이름 :</span> <span id="selName">사원정보 조회</span></div>
+				</div>
 				<div class="modal-body">
-					<span>직책</span> <select id="selPosi">
-						<option value="null">선택해주세요</option>
-						<option value="사원">사원</option>
-						<option value="관리자">관리자</option>
-					</select> <br> <span>부서</span> <select id="selDept">
+					<div class="h-auto d-md-flex justify-content-between">
+
+					 <span>부서 :</span>
+					  <select id="selDept">
 						<option value="null">선택해주세요</option>
 						<option value="인사">인사</option>
 						<option value="영업">영업</option>
@@ -64,11 +73,18 @@
 						<option value="생산">생산</option>
 						<option value="자재">자재</option>
 					</select>
-
+					
+					<span>직책 : </span> <select id="selPosi">
+						<option value="null">선택해주세요</option>
+						<option value="사원">사원</option>
+						<option value="관리자">관리자</option>
+					</select>
+					
+					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="finBtn" class="btn btn-primary">수정</button>
-					<button type="button" id="delBtn" class="btn btn-primary">삭제</button>
+					<button type="button" id="finBtn" class="btn btn-success">수정</button>
+					<button type="button" id="delBtn" class="btn btn-danger">삭제</button>
 				</div>
 			</div>
 		</div>
@@ -179,10 +195,13 @@
 		})
 
 		// 사원 정보 수정(부서, 직급변경)
-		$('#modifyBtn').on('click', function(e) {
-			e.preventDefault();
-			let empNo = grid.getCheckedRows()[0].empNo
-			console.log(empNo)
+		$('#modifyBtn').on('click', function() {
+			let empNo = null;
+			console.log(grid.getCheckedRows()[0])
+			if(grid.getCheckedRows()[0] != null){
+				empNo = grid.getCheckedRows()[0].empNo
+			}
+			
 			if (empNo != null || empNo != "") {
 				$.ajax({
 					url : "/serchEmpAjax",
@@ -194,8 +213,8 @@
 					success : function(result) {
 						$('#modifyModal').modal('show');
 
-						$('.modal-title #selNo').text(result.empNo);
-						$('.modal-title #selName').text(result.empName);
+						$('#selNo').text(result.empNo);
+						$('#selName').text(result.empName);
 
 						if (result.position != null) {
 							$('#selPosi').val(result.position)

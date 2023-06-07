@@ -5,13 +5,18 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head lang="en">
 <meta charset="UTF-8">
-
+<style> 
+input:focus{
+	border-color:#0982f0;
+	ouline:none;
+}
+</style>
 </head>
 
 
 <th:block layout:fragment="content">
 
- 		<div class="container-fluid page-body-wrapper">
+ 		<div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -59,9 +64,9 @@
 	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 		            <div class="modal-body">
-		            	<input type="radio" class="btn-check" name="itemType" id="option1"  value = "all" autocomplete="off" checked>
+		            	<input type="radio" class="btn-check" name="itemType" id="option1"  value = "all" autocomplete="on" checked>
 						<label class="btn btn-secondary" for="option1" >전체</label>
-						<input type="radio" class="btn-check" name="itemType" id="option2" value="FIN"autocomplete="off">
+						<input type="radio" class="btn-check" name="itemType" id="option2" value="FIN" autocomplete="off">
 						<label class="btn btn-secondary" for="option2">완제품</label>
 						<input type="radio" class="btn-check" name="itemType" id="option3" value="SAM" autocomplete="off">
 						<label class="btn btn-secondary" for="option3">반제품</label>
@@ -139,7 +144,7 @@ var bomGrid = new tui.Grid({
 	]
 });
 
-bomGrid.setBodyHeight(580);
+bomGrid.setBodyHeight(568);
 
 
 var modalGrid = new tui.Grid({
@@ -187,14 +192,15 @@ function itemList(){
 
 
 $('#searchBtn').on('click', function(){
+	$('#option1').prop("checked", true)
 	itemList()
-	$('#searchModal').modal('show');
 	$('#searchModal').on('shown.bs.modal', function (e) {
 		console.log('open');
 		setTimeout(()=> modalGrid.refreshLayout(), 300);	
 	})
-	
+
 })
+
 
 $('input[name="itemType"]').on('change', function() {	
 	let itemType = $('input[name="itemType"]:checked').val();
@@ -217,7 +223,6 @@ $('input[name="itemType"]').on('change', function() {
 })
 
 $('#selectBtn').on('click', function() {
-	console.log($('#search').val());
 	$.ajax({
 		url : "/searchItem",
 		data : {itemName : $('#selectIn').val()},

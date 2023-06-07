@@ -34,7 +34,7 @@ const Keyboard = {
       document.body.appendChild(this.elements.main);
 
       // input 창에 포커스가 되면 숫자패드 띄우기
-      document.querySelectorAll("#failItem").forEach(element => {
+      document.querySelectorAll(".number-pad").forEach(element => {
           element.addEventListener("click", () => {
               this.open(element.value, currentValue => {
                   element.value = currentValue;

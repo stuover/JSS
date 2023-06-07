@@ -10,7 +10,8 @@
 		       p.item_code, 
 		       i.item_name, 
 		       p.end_time, 
-		       p.pass_item
+		       p.pass_item,
+		       p.worker
 				from performance p 
 		        join itemlist i on (p.item_code = i.item_code)
                 join work_bom w ON (p.wbom_id = w.wbom_id)
@@ -48,11 +49,15 @@
             
 	</select>
 	
-	<delete id="delFinished">
+	<select id="delFinished" statementType="CALLABLE">
 		
-		delete from finished where fn_lot_no = #{fnLotNo}
+		{
+			CALL del_finished(
+				#{fnLotNo}
+			)
+		}
 
-	</delete>
+	</select>
 
 
 </mapper>

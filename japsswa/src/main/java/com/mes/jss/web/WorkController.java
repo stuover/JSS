@@ -155,6 +155,6 @@ public class WorkController {
 		workService.holdReInsert(detailList);
 	}
 	
-	
+
 	
 }

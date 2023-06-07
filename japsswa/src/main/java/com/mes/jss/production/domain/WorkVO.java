@@ -58,4 +58,7 @@ public class WorkVO {
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date endTime;		// 작업 완료 시간
 	
+	String startDate;
+	String endDate;
+	
 }

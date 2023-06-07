@@ -7,9 +7,10 @@ public class PerformanceVO {
 	String performanceId;
 	String wdetailId;
 	String itemCode;
+	String itemName;
 	String wbomId;
 	String facCode;
-	long outPut;
+	long output;
 	long passItem;
 	long failItem;
 
@@ -19,6 +20,7 @@ public class PerformanceVO {
 	Long empNo;
 	
 	String proCode;
+	String proName;
 	String facName;
 	String downReason;
 	long workAmount;

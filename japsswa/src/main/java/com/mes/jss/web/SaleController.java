@@ -25,7 +25,7 @@ public class SaleController {
 	@Autowired SaleService saleService;
 	
 	//등록화면
-	@RequestMapping("/sale/insertorder")
+	@RequestMapping("/insertorder")
 	public String insertord() {
 		return "sale/OrderReceipt";
 	}

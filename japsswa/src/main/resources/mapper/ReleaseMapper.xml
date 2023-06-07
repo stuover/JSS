@@ -15,7 +15,11 @@
        d.ord_count, 
        d.orddet_status, 
        o.ord_date, 
-       d.out_date, o.customer_id, c.customer_name,e.emp_name, d.ord_count -  sum(nvl(r.fn_rel_count, 0)) remain
+       d.out_date, 
+       o.customer_id, 
+       c.customer_name,
+       e.emp_name, 
+       d.ord_count -  sum(nvl(r.fn_rel_count, 0)) remain
     		from orders o join customer c on(o.customer_id = c.customer_id)
 		                  join orddetail d on(o.ord_id = d.ord_id)
 		                  join itemlist i on(d.item_code = i.item_code)

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.BomListVO;
 import com.mes.jss.basic.domain.BomVO;
 import com.mes.jss.basic.domain.ItemVO;
@@ -70,9 +71,9 @@ public class BomController {
 	
 	@ResponseBody
 	@RequestMapping("/getProcess")
-	public List<ProcessVO> getProcess(){
+	public List<ProcessVO> getProcess(SearchDTO dto){
 		
-		return proService.getProcess();
+		return proService.getProcess(dto);
 	}
 
 	@ResponseBody
