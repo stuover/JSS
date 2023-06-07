@@ -57,4 +57,15 @@ public interface WorkMapper {
 	// 자재 홀드수량 빼주기
 	public WorkVO holdMaterialMinus(WorkVO vo);
 	
+	
+	// 공정이동표 조회 페이지
+	// 작업지시 조회 모달 : 초기값
+	public List<WorkVO> proMoveWorkModalList();
+	
+	// 작업지시 조회 모달 : 결과값
+	public List<WorkVO> proMoveWorkModalResult(SearchVO vo);
+	
+	// 작업지시 상세 더블클릭 -> 해당 작업지시상세에 해당하는 공정현황 조회 
+	public List<WorkVO> processCurrInfo(WorkVO vo);
+	
 }

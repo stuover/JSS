@@ -12,13 +12,17 @@
 				  plan_id, 
 				  plan_name, 
 				  plan_date, 
-				  emp_name
+				  emp_name,
+				  start_date,
+				  end_date
 			FROM (
 			      SELECT 
 			      		plan_id, 
 			      		plan_name, 
 			      		plan_date, 
-			      		emp_name
+			      		emp_name,
+			      		TO_CHAR((SYSDATE - 7), 'yyyy-MM-dd') start_date,
+			      		TO_CHAR((SYSDATE + 7), 'yyyy-MM-dd') end_date 
 			      FROM 
 			      	  plan p JOIN emp e 
 			      	  		 ON(p.emp_no = e.emp_no)

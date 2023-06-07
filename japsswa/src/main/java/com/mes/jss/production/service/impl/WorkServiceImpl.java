@@ -157,6 +157,34 @@ public class WorkServiceImpl implements WorkService {
 		
 	}
 
+
+	// 공정이동표 조회 페이지
+	// 작업지시 조회 모달 : 초기값
+	@Override
+	public List<WorkVO> proMoveWorkModalList() {
+		List<WorkVO> list = workMapper.proMoveWorkModalList();
+				
+		return list;
+	}
+
+
+	// 작업지시 조회 모달 : 결과값
+	@Override
+	public List<WorkVO> proMoveWorkModalResult(SearchVO vo) {
+		List<WorkVO> list = workMapper.proMoveWorkModalResult(vo);
+		
+		return list;
+	}
+
+
+	// 작업지시 상세 더블클릭 -> 해당 작업지시상세에 해당하는 공정현황 조회
+	@Override
+	public List<WorkVO> processCurrInfo(WorkVO vo) {
+		List<WorkVO> list = workMapper.processCurrInfo(vo);
+		
+		return list;
+	}
+
 	
 	
 

@@ -18,7 +18,7 @@
 <th:block layout:fragment="content">
 
 	
- 		<div class="container-fluid page-body-wrapper">
+ 		<div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -33,19 +33,22 @@
 				  <div class="col-sm-12">
 				    <div class="card">
 				      <div class="card-body">
-				      <h5 class="page-title">작업지시</h5>
-                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
-                  	<button id="saveBtn" class="btn btn-primary">저장</button>
-                  	<button id="deleteBtn" class="btn btn-danger">삭제</button>
-                  </div>
+				      
+				      <div class="h-auto d-md-flex justify-content-between">
+					      <div><h5 class="page-title">작업지시</h5></div>
+		                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+		                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
+		                  	<button id="saveBtn" class="btn btn-primary">저장</button>
+		                  	<button id="deleteBtn" class="btn btn-danger">삭제</button>
+		                  </div>
+				      </div>
 				      <!-- card-body start -->
 				        
 	                  <div id="commonGrid"></div>
 	                  
 						<!-- 버튼 : 제품 추가 및 삭제 -->
 						<div class="m-1 d-grid gap-2 d-md-flex justify-content-md-start">
-					        <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#itemSearchModal">추가</button>				
+					        <button type="button" id="addRow" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#itemSearchModal">추가</button>				
 					        <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
 						</div>
 	                  
@@ -61,10 +64,13 @@
 					<div class="col-sm-12">
 					 <div class="card">
 					  <div class="card-body">
-					 	<h5 class="page-title">BOM 및 공정 정보</h5>
-						  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+					  
+					  <div class="h-auto d-md-flex justify-content-between">
+					 	<div><h5 class="page-title">BOM 및 공정 정보</h5></div>
+						<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
 							<button type="button" id="selectHoldBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">자재 홀드</button>
-							</div>
+						 </div>
+					  </div>
 							<!-- card-body start -->
 						
 							<div id="bomInfoGrid"></div>
@@ -95,8 +101,12 @@
 	            </div>
 		            <div class="modal-body">
 		            
-			            <input type="date" id="plan-st-date"></input> ~ <input type="date" id="plan-end-date"></input>
-			            <button id="plan-search-btn" class="m-2 btn btn-success btn-sm">검색</button>
+					<div class="m-2 d-md-flex justify-content-md-center">
+						<input type="date" class="m-2" id="startDateOption"></input> <span>&nbsp;&#126;&nbsp;</span><input type="date" class="m-2" id="endDateOption"></input>
+						<button id="dateSearch" class="btn btn-success btn-sm">검색</button>
+
+					</div>
+		            
 			            <div id="planSearchGrid"></div>
 		            
 		            </div>
@@ -170,8 +180,9 @@
 				</div>
 				<div class="modal-body">
 					<div class="m-2 d-md-flex justify-content-md-center">
-						<input type="date" id="startDateOption"></input> <span>&nbsp;~&nbsp;</span><input type="date" id="endDateOption"></input>
+						<input type="date" class="m-2" id="startDateOption"></input> <span>&nbsp;&#126;&nbsp;</span><input type="date" class="m-2" id="endDateOption"></input>
 						<button id="dateSearch" class="btn btn-success btn-sm">검색</button>
+
 					</div>
 					
 					<div id="workSearchGrid"></div>
@@ -279,7 +290,8 @@
              data: planSearchGridData,
              rowHeaders: ['checkbox'],
              scrollX: false,
-             scrollY: false,
+			  scrollY: false,
+			  bodyHeight: 30,
              pageOptions: { 
              		useClient: true,
               	perPage: 5 
@@ -317,7 +329,8 @@
 		data: detailGridData,
 		rowHeaders: ['checkbox'],
 		scrollX: false,
-		scrollY: false,
+	    scrollY: true,
+		bodyHeight: 160,
 		columns: [
 			{
 		     	header: '지시 상세코드',
@@ -391,6 +404,13 @@
 								success : function(result){
 									console.log(result);
 									planSearchGrid.resetData(result);
+									
+									// 결과가 조회될 때 날짜 조건 입력
+									let sDate = planSearchGrid.getData()[0].startDate;
+									let eDate = planSearchGrid.getData()[0].endDate;
+									$('#plan-st-date').val(sDate);
+									$('#plan-end-date').val(eDate);
+									
 									},
 								error : function(reject){
 									console.log(reject);
@@ -400,6 +420,28 @@
 				}
 				
 			});
+			
+			
+	  		  // 날짜 입력값 비교
+	  		  //
+	  		  $('#plan-st-date').change(function(){
+	  		  	let startInput = Date.parse($('#plan-st-date').val());
+	  		  	let endInput = Date.parse($('#plan-end-date').val());
+	  		  	if(endInput < startInput){
+	  		  		alert('시작날짜보다 완료날짜가 더 빠릅니다!');
+	  		  	} else {
+	  		  		console.log('정상 처리!');
+	  		  	}
+	  		  })		
+	  		  $('#plan-end-date').change(function(){
+	  		  	let startInput = Date.parse($('#plan-st-date').val());
+	  		  	let endInput = Date.parse($('#plan-end-date').val());
+	  		  	if(endInput < startInput){
+	  		  		alert('시작날짜보다 완료날짜가 더 빠릅니다!');
+	  		  	} else {
+	  		  		console.log('정상 처리!');
+	  		  	}
+	  		  })
 			
 
 			// 기간 설정 후 검색 ->  기간 내 수립한 생산계획 리스트 
@@ -724,6 +766,16 @@
 				},
 				columns: [
 			        {
+				     header: '시작날짜 입력값',
+				     name: 'startDate',
+				     hidden: true
+				    },
+			        {
+					 header: '종료날짜 입력값',
+					 name: 'endDate',
+					 hidden: true
+					},
+			        {
 			        header: '작업지시코드',
 			        name: 'workId',
 			        width: 130 
@@ -766,6 +818,12 @@
 					success: function(result){
 						console.log(result);
 						workSearchGrid.resetData(result);
+						
+						// 결과가 조회될 때 날짜 조건 입력
+						let sDate = workSearchGrid.getData()[0].startDate;
+						let eDate = workSearchGrid.getData()[0].endDate;
+						$('#startDateOption').val(sDate);
+						$('#endDateOption').val(eDate);
 					},
 					error: function(reject){
 						console.log(reject);
@@ -773,6 +831,26 @@
 				})
 			});
 			
+			// 날짜 입력값 비교
+			//
+			$('#startDateOption').change(function(){
+				let startInput = Date.parse($('#startDateOption').val());
+				let endInput = Date.parse($('#endDateOption').val());
+				if(endInput < startInput){
+				    alert('시작날짜보다 완료날짜가 더 빠릅니다!');
+				} else {
+				    console.log('정상 처리!');
+				}
+			})		
+			$('#endDateOption').change(function(){
+				let startInput = Date.parse($('#startDateOption').val());
+				let endInput = Date.parse($('#endDateOption').val());
+				if(endInput < startInput){
+					alert('시작날짜보다 완료날짜가 더 빠릅니다!');
+				} else {
+				    console.log('정상 처리!');
+				}
+			})
 
 			// 기간 정한 후 검색 ->  기간 내 수립한 작업지시 리스트 조회
 			$('#dateSearch').click(function (){
@@ -788,7 +866,8 @@
 					method :"GET",
 					success : function(result){
 						console.log(result);
-						workSearchGrid.resetData(result);
+						workSearchGrid.resetData(result);	
+						
 					},
 					error : function(reject){
 						console.log(reject);
@@ -861,6 +940,7 @@
 			  rowHeaders: [{ type: 'checkbox', header: " ", align: 'left', valign: 'middle' }],
 			  scrollX: false,
 			  scrollY: true,
+			  bodyHeight: 200,
 			  columns: [
 				{
 				  header: '제품코드',
@@ -901,6 +981,7 @@
 				}
 			  ]
 			});
+			
 			
 			// bom 정보 하나만 체크할 수 있게 설정.
 			bomInfoGrid.on('check', function (e) {
@@ -1042,6 +1123,8 @@
 			  ]
 			});
 			
+			// 높이 지적
+			//holdSelectGrid.setHeight(300);
 			
 			// 홀드 수량 편집 시 해당 row 자동으로 체크
 			holdSelectGrid.on('editingStart', (e) => {holdSelectGrid.check(e.rowKey)});	

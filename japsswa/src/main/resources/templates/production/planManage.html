@@ -13,7 +13,7 @@
 <th:block layout:fragment="content">
 
 	
- 		<div class="container-fluid page-body-wrapper">
+ 		<div>
 
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
@@ -23,17 +23,17 @@
                   <input id="afterSearch" type="hidden" name="selectResult" value="insert">
                   <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
 
-					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-		              <button type="button" id="resetBtn" class="btn btn-dark btn-sm">
+					
+					
+
+
+                  <div class="m-3 d-grid gap-2 d-md-flex justify-content-md-end">
+	              	<button type="button" id="resetBtn" class="btn btn-dark btn-sm">
 						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
-						  <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
-						  <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+					  		<path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+					  		<path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
 						</svg>             
-		              </button>
-					</div>
-
-
-                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+	              	</button>
                   	<div>
                   	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
                   	<button id="saveBtn" class="btn btn-primary">저장</button>
@@ -50,8 +50,8 @@
                   	
                   </div>
 
-				<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-start">
-	              <button type="button" id="addRow" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#searchItem">추가</button>
+				<div class="m-3 d-grid gap-2 d-md-flex justify-content-md-start">
+	              <button type="button" id="addRow" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#searchItem">추가</button>
 	              <button type="button" id="deleteRow" class="btn btn-secondary btn-sm">삭제</button>
 				</div>
 							
@@ -79,9 +79,15 @@
 	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 	            <div class="modal-body">
-	            <input type="date" id="startDateOption"></input> ~ <input type="date" id="endDateOption"></input>
-	            <button id="dateSearch">검색</button>
+	            
+	            <div class="m-2 d-md-flex justify-content-md-center">
+	            <div><input type="date" class="m-2" id="startDateOption"></input>  </div>
+	            <div><input type="date" class="m-2" id="endDateOption"></input>
+	            <button id="dateSearch" class="btn btn-success btn-sm">검색</button> </div>
+	            </div>
+	            
 	            <div id="modalGrid"></div>
+	            
 	            </div>
 	            <div class="modal-footer">
 	            <button id="modalSelectBtn" type="button" class="btn btn-primary">선택</button>
@@ -188,6 +194,7 @@
 			rowHeaders: ['checkbox'],
 			scrollX: false,
 			scrollY: true,
+			bodyHeight: 450,
 			columns: [
 				{
 					header: '계획상세코드',
@@ -386,12 +393,18 @@
                    name: 'planName'
                  },
                  {
+                   header: '조건start입력날짜',
+                   name: 'startDate',
+                   hidden: true
+                  }, 
+                  {
+                   header: '조건end입력날짜',
+                   name: 'endDate',
+                   hidden: true
+                  },
+                 {
                    header: '계획날짜',
-                   name: 'planDate',
-   		           formatter: function (e) {
- 		        	  return e.value.substr(0,10)
-                   }
-                   
+                   name: 'planDate' 
                  },              
                  {
                    header: '담당자',
@@ -420,12 +433,39 @@
   					success : function(result){
   						console.log(result);
   						modalGrid.resetData(result);
+  						
+  						// 결과가 조회될 때 날짜 조건 입력
+  						let sDate = modalGrid.getData()[0].startDate;
+  						let eDate = modalGrid.getData()[0].endDate;
+  						$('#startDateOption').val(sDate);
+  						$('#endDateOption').val(eDate);
   					},
   					error : function(reject){
   						console.log(reject);
   					}
   				});		    	
   		    });
+          	
+  		  // 날짜 입력값 비교
+  		  //
+  		  $('#startDateOption').change(function(){
+  		  	let startInput = Date.parse($('#startDateOption').val());
+  		  	let endInput = Date.parse($('#endDateOption').val());
+  		  	if(endInput < startInput){
+  		  		swal("날짜 입력 오류", "완료날짜에 시작날짜보다 이전의 날짜를 입력하세요.", "error");
+  		  	} else {
+  		  		console.log('정상 처리!');
+  		  	}
+  		  })		
+  		  $('#endDateOption').change(function(){
+  		  	let startInput = Date.parse($('#startDateOption').val());
+  		  	let endInput = Date.parse($('#endDateOption').val());
+  		  	if(endInput < startInput){
+  		  		swal("날짜 입력 오류", "완료날짜에 시작날짜보다 이전의 날짜를 입력하세요.", "error");
+  		  	} else {
+  		  		console.log('정상 처리!');
+  		  	}
+  		  })
   		    
           	// 기간 정한 후 검색 ->  기간 내 수립한 생산계획 리스트 
   		    $('#dateSearch').click(function (){
@@ -635,7 +675,7 @@
   			$('#resetBtn').click(function () {
   				// 화면 초기화
   				gridData2 = [{}];
-  				gridData = [{}];
+  				gridData = [];
 
   				grid2.resetData(gridData2);
   				grid.resetData(gridData);

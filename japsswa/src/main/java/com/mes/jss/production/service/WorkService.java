@@ -59,5 +59,16 @@ public interface WorkService {
 	// 3. 입력된 자재 등록 처리
 	public void holdReInsert(List<WorkVO> detailList);
 	
+	
+	// 공정이동표 조회 페이지
+	// 작업지시 조회 모달 : 초기값
+	public List<WorkVO> proMoveWorkModalList();
+	
+	// 작업지시 조회 모달 : 결과값
+	public List<WorkVO> proMoveWorkModalResult(SearchVO vo);
+	
+	// 작업지시 상세 더블클릭 -> 해당 작업지시상세에 해당하는 공정현황 조회 
+	public List<WorkVO> processCurrInfo(WorkVO vo);
+	
 
 }
