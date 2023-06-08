@@ -115,12 +115,24 @@ public class SaleServiceImpl implements SaleService {
 		
 	}
 
-	/*
-	 * @Override public List<OrderVO> delDet(SaleListVO svo) {
-	 * 
-	 * for(int i=0; i<svo.getList().size(); i++) {
-	 * orderMapper.delDet(svo.getList().get(i).getOrdDetailId()); } return null; }
-	 */
+	@Override
+	public List<OrderVO> entOrderList() {
+		List<OrderVO> entList = orderMapper.entOrderList();
+		return entList;
+	}
+
+	@Override
+	public List<OrderVO> orderCheck(OrderVO cvo) {
+		List<OrderVO> chList = orderMapper.orderCheck();
+		return chList;
+	}
+
+	@Override
+	public List<OrderVO> detCheck(String ordId) {
+		List<OrderVO> dList = orderMapper.detCheck(ordId); 
+		return dList;
+	}
+
 
 	
 

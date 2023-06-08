@@ -21,6 +21,9 @@ public interface SaleService {
 	//List<OrderVO> delDet(SaleListVO svo);
 	public void delDet(List<OrderVO> list);
 	public void ordUpdate(SaleListVO slist);
+	List<OrderVO> entOrderList();
+	List<OrderVO> orderCheck(OrderVO cvo);
+	List<OrderVO> detCheck(String ordId);
 
 	
 }
