@@ -15,7 +15,7 @@
 				from performance p 
 		        join itemlist i on (p.item_code = i.item_code)
                 join work_bom w ON (p.wbom_id = w.wbom_id)
-		       where item_type = '완제품' and end_time is not null
+		       where ((per_status = '입고취소' and end_time is not null) or (per_status is null and end_time is not null))
 		       and w.pro_code = (
                   SELECT pro_code
                   FROM process
@@ -25,7 +25,7 @@
 	<select id="fRegister" statementType="CALLABLE">
 		{
 			CALL finished_register(
-				#{empName, mode=IN, jdbcType=VARCHAR},
+				#{worker, mode=IN, jdbcType=VARCHAR},
 				#{performanceId, mode=IN, jdbcType=VARCHAR},
 				#{itemCode, mode=IN, jdbcType=VARCHAR},
 				#{passItem, mode=IN, jdbcType=VARCHAR}
@@ -45,6 +45,7 @@
            e.emp_name
 			from finished f join itemlist i on(f.item_code = i.item_code)
 						    join emp e on(f.emp_no = e.emp_no)
+			where item_type = 'FIN'
 		    order by 1
             
 	</select>
@@ -53,7 +54,8 @@
 		
 		{
 			CALL del_finished(
-				#{fnLotNo}
+				#{fnLotNo},
+				#{performanceId}
 			)
 		}
 

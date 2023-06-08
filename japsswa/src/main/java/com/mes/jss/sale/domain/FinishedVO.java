@@ -15,8 +15,10 @@ public class FinishedVO {
 	 long empNo;
 	 String empName;
 	 String performanceId;
-	 Date endTime;
+	 String endTime;
 	 long passItem;
 	 String orddetStatus;
+	 String worker;
+	 String perStatus;
 	
 }
