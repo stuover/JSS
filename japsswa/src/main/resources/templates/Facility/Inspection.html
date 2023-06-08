@@ -184,6 +184,9 @@
 
 
         <script th:inline="javascript">
+        
+        var insReasonList = [[${insReason}]];
+        
             // 비가동 설비중 사유가 점검인 리스트 조회 그리드    
             const grid = new tui.Grid({
                 el: document.getElementById('grid'),
@@ -368,8 +371,14 @@
                     },
                     {
                         header: '점검사유 ',
-                        name: 'insReason',
-                        editor: 'text'
+                        formatter: 'listItemText',
+                        name: 'text',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: insReasonList
+                            }
+                        }
                     }
                 ]
 
@@ -441,26 +450,33 @@
                 console.log("modobj");
                 console.log(modobj);
 
+				
+				
+				if(firstIns.insDate < secondIns.partDate){
+					$.ajax({
+	                    url: "/modifyInspection",
+	                    method: "POST",
+	                    data: JSON.stringify(modobj),
+	                    contentType: "application/json",
+	                    beforeSend: function (xhr) {
+	                        xhr.setRequestHeader(header, token);
+	                    },
+	                    success: function (result) {
+	                        alert("수정 완료되었습니다");
+	                        $('#detailModal').modal('hide');
+	                        insList();
 
-                $.ajax({
-                    url: "/modifyInspection",
-                    method: "POST",
-                    data: JSON.stringify(modobj),
-                    contentType: "application/json",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader(header, token);
-                    },
-                    success: function (result) {
-                        alert("수정 완료되었습니다");
-                        $('#detailModal').modal('hide');
-                        insList();
-
-                    },
-                    error: function (reject) {
-                        //console.log("reject");
-                        console.log(reject);
-                    }
-                });
+	                    },
+	                    error: function (reject) {
+	                        //console.log("reject");
+	                        console.log(reject);
+	                    }
+	                });
+				}else{
+					alert("부품교체일이 점검날짜보다 빠릅니다")
+				}
+                
+                
             }
 
             $('#modBtn').on('click', function () {
@@ -552,8 +568,14 @@
                     },
                     {
                         header: '점검 사유',
-                        name: 'insReason',
-                        editor: 'text'
+                        formatter: 'listItemText',
+                        name: 'text',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: insReasonList
+                            }
+                        }
                     }
                 ]
 
@@ -641,25 +663,40 @@
 
             function saveInspection(obj) {
 
-                $.ajax({
+            	console.log("1")
+            	console.log(obj)
+            	console.log("2")
+            	
+            	if(obj.insDate < obj.partDate){
+            		console.log("큼")
+            	}else{
+            		console.log("작음")
+            	}
+            	
+            	if(obj.insDate < obj.partDate){
+            		$.ajax({
 
-                    url: "/insertInsAjax",
-                    method: "POST",
-                    data: JSON.stringify(obj),
-                    contentType: "application/json",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader(header, token);
-                    },
-                    success: function (result) {
-                        alert("등록되었습니다");
-                        $('#downInsertModal').modal('hide');
-                        facDownList();
-                        insList();
-                    },
-                    error: function (reject) {
-                        console.log(reject);
-                    }
-                });
+                        url: "/insertInsAjax",
+                        method: "POST",
+                        data: JSON.stringify(obj),
+                        contentType: "application/json",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                        success: function (result) {
+                            alert("등록되었습니다");
+                            $('#downInsertModal').modal('hide');
+                            facDownList();
+                            insList();
+                        },
+                        error: function (reject) {
+                            console.log(reject);
+                        }
+                    });
+            	}else{
+            		alert("부품 교체일이 점검일보다 빠릅니다")
+            	}
+                
             }
             
             // facility 마지막 점검일 업데이트
@@ -710,8 +747,14 @@
                     },
                     {
                         header: '점검 사유',
-                        name: 'insReason',
-                        editor: 'text'
+                        formatter: 'listItemText',
+                        name: 'text',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: insReasonList
+                            }
+                        }
                     }
                 ]
 

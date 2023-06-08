@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mes.jss.basic.domain.CommVO;
+import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.domain.InspectionVO;
@@ -184,6 +185,12 @@ public class FacilityServiceimpl implements FacilityService{
 	public void updateFacDate(FacilityVO vo) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<EmpVO> getEmp(String empNo) {
+
+		return facilityMapper.getEmpList(empNo);
 	}
 
 	

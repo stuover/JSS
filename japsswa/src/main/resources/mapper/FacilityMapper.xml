@@ -93,7 +93,7 @@
   				  d.down_code, 
   				  d.start_date, 
   				  d.stop_date, 
-  				  d.down_reason, 
+  				  GET_CODENAME(d.down_reason) downReason, 
   				  d.down_manager, 
   				  d.remark
 		from   facility f join downtime d 
@@ -107,7 +107,7 @@
   				  f.fac_name, 
   				  d.start_date, 
   				  d.stop_date, 
-  				  d.down_reason,
+  				  GET_CODENAME(d.down_reason) downReason,
   				  d.down_manager, 
   				  d.remark
 		from   downtime d join facility f 
@@ -186,7 +186,7 @@
   	
   	<select id="getInsList" resultType="InspectionVO">
   		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD') as ins_date,
-                i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
+                GET_CODENAME(i.ins_reason) insReason, i.ins_history, i.judgment, i.part_history, i.part_reason, to_char(i.part_date, 'yyyy-MM-dd') as part_date, i.ins_manager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null
 		order by ins_code desc
@@ -200,7 +200,7 @@
   	
   	<insert id="insertModalIns" parameterType="InspectionVO">
   		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
-		values(('INS' || to_char(sysdate, 'yyMMdd') || lpad(inspection_seq.nextval, 4,'0')) , current_date, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
+		values(('INS' || to_char(sysdate, 'yyMMdd') || lpad(inspection_seq.nextval, 4,'0')) , current_date, #{text}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, to_date(#{partDate}, 'yyyy-MM-dd'), #{insManager}, #{facCode}, #{downCode})
   	</insert>
   	
   	<update id="modifyFacDate" parameterType="InspectionVO">
@@ -217,13 +217,13 @@
   		update inspection   		
   					set
 					  		ins_date = #{insDate}, 
-					  		ins_reason = #{insReason} , 
+					  		ins_reason = #{text} , 
 					  		ins_history = #{insHistory},
 					  		judgment = #{judgment} ,
 					  		ins_manager = #{insManager},
 					  		part_history = #{partHistory}, 
 					  		part_reason = #{partReason},
-					  		part_date = #{partDate}	
+					  		part_date = 	to_date(#{partDate}, 'yyyy-MM-dd')
   				  where  ins_code = #{insCode}
   	</update>
   	  
@@ -247,6 +247,12 @@
   		select deta_code value , deta_name text 
   		 from details_comm 
   		where comm_code = UPPER(#{commCode})
+  	</select>
+  	
+  	<select id="getEmpList" resultType = "EmpVO">
+  		select emp_no value, emp_name name
+  		from emp
+  		where dept_name = #{empCode}
   	</select>
   	
   </mapper>

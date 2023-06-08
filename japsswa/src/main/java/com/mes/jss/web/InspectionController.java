@@ -23,6 +23,7 @@ public class InspectionController {
 	@GetMapping("/inspection")
 	public String Inspection(Model model) {
 				model.addAttribute("facCode", service.getAllList());
+				model.addAttribute("insReason", service.getDetailList("ins"));
 		return "Facility/Inspection";
 	}
 	
