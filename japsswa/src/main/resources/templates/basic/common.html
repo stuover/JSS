@@ -320,7 +320,7 @@
 	 	
 			grid.on('click',function(e){
 				
-				if(e.columnName != "_checked"){
+				if(e.rowKey != null){
 					commCode = grid.getRow(e.rowKey).commCode;
 
 					if(commCode != null){
@@ -388,14 +388,15 @@
 				let commData = detaGrid.getRow(0);
 				let data =  modalGrid.getData();
 				
+				console.log(data);
+				
 				data.forEach(function(i, index){
-					if(i.detaCode == null || i.detaName ==null || i.detaCode == '' || i.detaName == '' ){
+					if(modalGrid.getData()[index].detaCode == null || modalGrid.getData()[index].detaName ==null || modalGrid.getData()[index].detaCode == '' || modalGrid.getData()[index].detaName == '' ){
 						modalGrid.removeRow(index)
 					}
 				})
 				
-				data =  modalGrid.getCheckedRows();
-				
+				data =  modalGrid.getData();
 				$.ajax({
 					url : "/modifyDetailsAjax",
 					contentType : "application/json",
