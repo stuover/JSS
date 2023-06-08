@@ -23,6 +23,7 @@ public class QualityVO {	// 품질 VO
 	String testNote;
 	double error;
 	String itemName;
+	long EmpNo2;
 	
 	
 }

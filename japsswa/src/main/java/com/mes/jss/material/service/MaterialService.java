@@ -200,6 +200,13 @@ public interface MaterialService {
 	public List<MrAdjustmentVO> mrAdmSearch(MrAdjustmentVO vo);
 	
 	
+	// 자재 입고 확인 검색
+	public List<MrVO> mrStoreQuery(MrVO vo);
+	
+	// 거래처 자재 검색
+	public List<CustomerVO> cusListQuery(CustomerVO vo);
+	
+	
 	
 	
 	

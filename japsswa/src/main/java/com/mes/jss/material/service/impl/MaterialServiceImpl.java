@@ -108,7 +108,8 @@ public class MaterialServiceImpl implements MaterialService {
 	
 	@Override
 	public int mrStore(MrVO vo) {
-
+			
+		
 		return materialMapper.insert(vo);
 	}
 	
@@ -454,6 +455,19 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		System.err.println(vo);
 		return materialMapper.mrAdmSearchQuery(vo);
+	}
+	
+	// 자재 입고 확인 검색
+	@Override
+	public List<MrVO> mrStoreQuery(MrVO vo) {
+		
+		return materialMapper.mrStoreQuery(vo);
+	}
+
+	@Override
+	public List<CustomerVO> cusListQuery(CustomerVO vo) {
+		
+		return materialMapper.cusMrQuery(vo);
 	}
 
 	
