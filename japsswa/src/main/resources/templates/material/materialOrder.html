@@ -10,7 +10,7 @@
 
 
 <style>
-
+ 
 .input {
   width: 500px;
   height: 32px;
@@ -43,6 +43,15 @@
 	<button type="button" id="insertBtn" class="btn btn-dark"style="height: 30px; width: 50px; margin-left:10px; padding: 3px; ">등록</button>	
 	</h5>
 	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 		
 	<div class="p-2 row"  >
@@ -198,21 +207,34 @@
 						</button>
 
 					</div>
-					<div>
 					
-					<!-- 모달 검색 창 -->	
 					
-						<h6 style="font-weight: bold; text-align: center;">
-												
-							거래처명 :<input type=text id="searchcode" class="input"
-								style="margin-left: 15px; padding: 1px; width:130Px; ">
-						
-					<!-- 모달 검색 버튼 -->	
-							
-							<button type="button" class="btn btn-dark" id="searchBtn"
-								style="padding: 8px; margin-left:10px; padding:5px;">검색</button>
-						</h6>
-					</div>
+		<form id="search">
+		
+  
+  
+  
+ 
+   <div class="form-check form-check-inline">   
+     <input class="form-check-input" type="radio" name="div" id="customerName" value="cu">
+     <label class="form-check-label" for="customerName" style="margin-left:0px;">거래처</label>
+   </div> 
+   <div class="form-check form-check-inline">
+     <input class="form-check-input" type="radio" name="div" id="itemName" value="mr">
+     <label class="form-check-label" for="itemName" style="margin-left:0px;">자재</label>
+   </div>
+  <input type="text" name="itemName" />
+
+   
+   
+   
+  <!-- </select> -->
+	
+	<button type="button" class="btn btn-dark" id="multi" style="margin-left:20px; padding:3px;">검색</button>		
+		</form>														
+					
+					
+					
 					
 				<!-- 검색 그리드 -->
 					
@@ -398,6 +420,7 @@
 							dataType : "json",
 							success : function(result) {
 								grid.resetData(result);
+								grid.refreshLayout();
 							}
 
 						});
@@ -747,16 +770,43 @@
 	
 			 });
 	
+		
+	$('#multi').on('click',function(){
+		
+	
+	
+			$.ajax({
+				url:"/CusMrList",
+				method:"GET",
+				data:$('#search').serialize(),
+				
+				
+				success: function(result){
+					grid.resetData(result);
+				},
+					
+				error: function(reject){
+					console.log(reject);
+				}
+			})
 			
 	
 	
-	
+	})
 	    
 			$(function(){
 		    	$('#exampleModal').on('shown.bs.modal', function(){
 		    		grid5.refreshLayout();
 		    	})
 		    });
+			
+			$(function(){
+				
+				$('#searchModal').on('shown.bs.modal',function(){
+					grid.refreshLayout();
+				})
+			});
+			
 	    
 	    
 	    

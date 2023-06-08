@@ -24,7 +24,7 @@
 		error,q.test_note
 		from itemlist i join quality_test q on(i.item_code = q.item_code) join emp
 		e on(q.emp_no=e.emp_no)
-		where test_note is null and (q.err_quantity/q.test_quantity)*100 between 0
+		where q.situation ='검사완료' and q.test_note ='합격' and (q.err_quantity/q.test_quantity)*100 between 0
 		and 9
 
 	</select>

@@ -35,6 +35,7 @@ public class MrVO {              // 자재 vo
 	String searchText;
 	String Name;
 	
+	String mrRealReasonType;
 	String store;
 	String material;
 	Date storeDate1;

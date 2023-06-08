@@ -34,6 +34,8 @@
 	
 	<h3 style="font-weight:semi-bold; margin-top:10px; text-align:center; margin-right:40px;">&emsp;자재 입고</h3>
 	
+	<input class="text1" type="hidden" id="empNo" name="empNo" th:value="${#authentication.principal.username}"  readonly>  
+	
 	
 <!-- 제목 -->
 
@@ -82,7 +84,7 @@
 				<div class="modal-content" >
 					<div class="modal-header" >
 						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: semi-bold; margin-left: 280px;">입고 처리 확인 및 취소</h4>
+							style="font-weight: semi-bold; margin-left: 280px; margin-bottom:20px;">입고 처리 확인 및 취소</h4>
 <!-- 닫기 버튼 -->
 
 						<button type="button" class="close" data-dismiss="modal"
@@ -92,23 +94,45 @@
 
 					</div>
 					
-<!-- 검색 인풋-->				
-					<div>
-						<h6 style="font-weight: bold; text-align: center;">
-							자재명 :<input type=text id="searchcode"
-			
-								style="margin-left: 15px; padding: 1px;">
-<!-- 검색 버튼 -->
-								
-							<button type="button" class="btn btn-dark" id="searchBtn"
-								style="padding: 3px; margin-left: 15px;">검색</button>
+<!-- 검색 인풋-->	
+<div style="margin-bottom:20px;">		
+		<form action="#" >
+  <label for="lang" ></label>
+  <select name="storeReasonType" id="storeReasonType" style="margin-left:100px;">
+  <option value="">--입고구분--</option>
+    <option value="발주">발주</option>
+    <option value="생산">생산</option>
+    <option value="조정">조정</option>
+   
+  </select>
+  
 
+
+	
+  <label for="lang"></label>
+  <select name="material" id="material" style="margin-left:20px;margin-right:10px;">
+   <option value="">--자재구분--</option>
+    <option value="MAT">자재</option>
+    <option value="SAM">반제품</option>
+   
+  </select>
+  
+  <label for="mrSearch">자재명</label>
+  <input type="text" id="mrSearch">
+  
+  <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
+  <button type="button" class="btn btn-dark" id="deleteBtn"
+								style="padding: 3px; margin-left: 10px;">취소</button>
+</form>
+</div>
+	
+					<div>
+						
 <!--  삭제 버튼 -->
 								
-							<button type="button" class="btn btn-dark" id="deleteBtn"
-								style="padding: 3px; margin-left: 15px;">취소</button>
+							
 									
-						</h6>
+						
 					</div>
 					
 <!-- 입고 조회 리스트 -->	
@@ -180,19 +204,24 @@
 // 입고 버튼 클릭 이벤트
 
 			$('#storeBtn').on('click',function(){
-		    	console.log(grid.getCheckedRows()[0].testCode);
-
+		    	
+				
+		    
+		    	
 // 입고		    	
 		    	$.ajax({
 		    		url : "/mrStore",
 		    		contentType: "application/json",
 					method : "POST",
-					data : JSON.stringify({list : grid.getCheckedRows()}),
-					dataType : "json",
+					data : JSON.stringify({list : grid.getCheckedRows()} ),
+					
 					beforeSend: function(xhr){
 						xhr.setRequestHeader(header, token);
 					},
 					success : function(result) {
+					},
+					error : function(reject){
+						console.log(reject);
 					}
 		    	})
 				grid.removeCheckedRows(false);
@@ -234,7 +263,7 @@
 					name : 'empName'
 				},{
 					header : '주문 상세 코드',
-					name : 'mrOrderDetail'
+					name : 'mrOrderDetCode'
 				},{
 					header : '구분',
 					name : 'itemType'
@@ -268,6 +297,7 @@
 					header : '비고',
 					name : 'testNote'
 				}
+				
 				
 				],
 	            pageOptions: { 
@@ -326,7 +356,7 @@
 			{
 				header : '입고 날짜',
 				name : 'storeDate',
-				width : 75
+				width : 80
 			}, {
 				header : '입고 수량',
 				name : 'storeCount',
@@ -336,12 +366,12 @@
 			{
 				header : '유통기한',
 				name : 'expireDate',
-				width : 75
+				width : 80
 			},
 			{
 				header : '입고 사유 구분',
 				name : 'storeReasonType',
-				width : 120
+				width : 80
 			}
 			
 						
@@ -398,7 +428,39 @@
 			 }) 		
 		
 			
+		$('#searchQuery').on('click',function(){
 			
+			
+			
+			
+			let result3 = {
+				storeReasonType : $('#storeReasonType').val(),
+				itemType : $('#material').val(),
+				mrSearch : $('#mrSearch').val()
+			}
+			
+			console.log(result3);
+			
+			$.ajax({
+				url:"/mrStoreListQuery",
+				method:"POST",
+				contentType:"application/json",
+				data:JSON.stringify(result3),
+				
+					beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+				success : function(result){
+					modalgrid.resetData(result);
+				},
+				error: function(reject){
+					console.log(reject);
+				}
+				
+			})
+		})	
+			 
+			 
 		
 // 새로고침
 

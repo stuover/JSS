@@ -93,6 +93,17 @@ public class MaterialController {
 		
 	}
 	
+// 자재 입고확인 검색
+	
+	@ResponseBody
+	@RequestMapping("/mrStoreListQuery")
+	public List<MrVO> mrStoreQueryList(@RequestBody MrVO vo){
+		
+		List<MrVO> list = materialService.mrStoreQuery(vo);
+		
+		return list;
+	}
+	
 	
 	
  // 자재 검색(동적쿼리)
@@ -424,6 +435,19 @@ public class MaterialController {
 		return list;
 		
 	}
+	
+ // 발주 거래처 자재 검색
+	
+	@ResponseBody
+	@RequestMapping("/CusMrList")
+	public List<CustomerVO> cusMrSearchList(CustomerVO vo){
+		
+		List<CustomerVO> list = materialService.cusListQuery(vo);
+		
+		return list;
+		
+	}
+	
 	
 	
 
