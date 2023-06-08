@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+	
+</style>
+
+</head>
+<body>
+	
+
+<th:block layout:fragment="content">
+
+<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+	
+	<h3 style="text-align:center; font-weight:semi-bold; margin-bottom:100px;">자재 반품 내역</h3>
+	
+		
+		<div style="width:1500px; height:30px; margin-top:30px; margin-bottom:100px;">
+		<form action="#" >
+		
+  <label for="customer" style="margin-left:270px;" >거래처</label>
+ 	<input type="text" id="customer" name="customer"  >
+ 
+  <label for="material">자재명</label>
+	<input type="text" id="material" name="material" >
+
+  
+  <label for="mrReturnDate" style="margin-left:10px;">반품일</label>
+  <input type="date" style="margin-right:10px;" id="mrReturnDate1" name="mrReturnDate1">~
+  <input type="date" style="margin-left:10px; margin-right:10px;" id="mrReturnDate2" name="mrReturnDate2">
+  
+  <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
+  <button type="button" id="customerBtn" class="btn btn-dark"  data-toggle="modal" data-target=".bd-example-modal-lg"
+				data-bs-target="#searchModal" style="margin-left:20px; padding:4px;">거래처 검색</button>
+	
+	</form>
+	</div>
+	
+              <div id="grid"></div>  
+              
+              
+   <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+			<div class="modal-dialog modal-sm-6">
+
+				<div class="modal-content">
+					<div class="modal-header">
+					
+				<!-- 모달 제목 -->
+					
+						<h4 class="modal-title" id="exampleModalLabel"
+							style="font-weight: bold; margin-left:120px;">거래처 및 자재 찾기</h4>
+
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+					</div>
+					<div>
+					
+					<!-- 모달 검색 창 -->	
+					
+						<h6 style="font-weight: bold; text-align: center;">
+												
+							거래처명 :<input type=text id="searchcode" class="input"
+								style="margin-left: 15px; padding: 1px; width:130Px; ">
+						
+					<!-- 모달 검색 버튼 -->	
+							
+							<button type="button" class="btn btn-dark" id="searchBtn"
+								style="padding: 8px; margin-left:10px; padding:5px;">검색</button>
+						</h6>
+					</div>
+					
+				<!-- 검색 그리드 -->
+					
+					<div id="grid1"></div>
+					
+				<!-- 선택 버튼 -->	
+				
+					<div>
+						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
+							style="width: 50px; height: 35px; margin-left:230px; padding: 5px;">선택</button>
+					</div>
+				</div>
+
+			</div>
+		</div>           
+              
+                
+                
+                		
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+<script>
+	
+	$(document).ready(function(){
+		
+	
+	
+	
+				$.ajax({
+					url:"/mrReturnAjax",
+					method:"GET",
+					success: function(result){
+						grid.resetData(result);
+					},
+					error : function(reject){
+						
+						console.log(reject);
+					}
+				})
+						
+				
+				 $.ajax({
+					 url : "/mrCustomerAjax",
+					method : "GET",
+					dataType : "json",
+					success : function(result) {
+				grid1.resetData(result);
+						},
+					error : function(reject){
+							console.log(reject);
+							}
+			
+								});
+	
+	var grid = new tui.Grid({
+				bodyHeight:500,
+				el : document.getElementById('grid'),
+				scollX : false,
+				
+				rowHeaders: ['checkbox'],
+								
+				columns : [ {
+					header : '반품코드',
+					name : 'mrReturnCode'
+				},{
+					header : '검사코드',
+					name : 'testCode'
+				},{
+					header :'품목코드',
+					name : 'itemCode'
+				},
+				
+				{
+					header :'품목명',
+					name : 'itemName'
+				},
+				{
+					header : '반품수',
+					name : 'mrReturnCount'
+				},{
+					header : '반품사유',
+					name : 'mrReturnReason'
+					
+				},{
+					header : '거래처',
+					name : 'customerName'
+					
+				},
+				
+				
+			
+				{
+					header : '반품일',
+					name : 'mrReturnDate'
+				},{
+					header : '사원코드',
+					name : 'empNo'
+				}
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 20 
+	            }
+				
+	
+			})
+	
+	
+	
+	
+	var grid1 = new tui.Grid({
+				el : document.getElementById('grid1'),
+
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '코드(거)',
+					name : 'customerId',
+					hidden:true
+				}, {
+					header : '거래처',
+					name : 'customerName'
+				}, {
+					header : '코드(품)',
+					name : 'itemCode',
+					hidden:true
+				},  
+					{
+					header : '자재',
+					name : 'itemName'
+				}
+					
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				
+			});
+	
+	
+	
+	
+	// 거래처 및 자재 찾기 버튼
+	
+			$('#checkBtn').on('click',function(){
+			
+				
+				 $('#cusName').val('');
+				 $('#material').val('');
+	
+				 
+	//	거래처 검색 아작스
+	
+			$.ajax({
+				url:"/mrCustomerAjax",
+				method:"GET",
+				dataType : "json",
+				
+				success: function(result){
+					grid1.resetData(result);
+					
+				}
+				
+				
+			});
+		
+			});
+			
+			
+	
+	// 거래처 및 자재 모달창 검색 버튼
+	
+			$('#searchBtn').on('click',function(){
+				  
+				  const result= $("#searchcode").val();
+				  $('#searchcode').val('');
+					
+				  $.ajax({
+						url:"/searchCustomerAjax",
+						method:"GET",
+						data:{'result':result},
+						dataType:"json",
+					
+					success : function(result) {
+						grid1.resetData(result);
+						grid1.refreshLayout();
+						console.log(result);
+					}
+					
+						
+			     });
+				  
+				 
+	 
+				 }) 		
+		
+				 
+	// 거래처 및 자재 모달창 선택 버튼
+	
+				 $('#chooseBtn').on('click',function(){
+					 
+					 $('#customer').val(grid1.getCheckedRows()[0].customerName);
+					
+					 $('#material').val(grid1.getCheckedRows()[0].itemName);
+					 
+					 
+					 
+	// 거래처 아작스
+		
+					
+					})
+					
+					
+			$(function(){
+		    	$('#exampleModal').on('shown.bs.modal', function(){
+		    		grid1.refreshLayout();
+		    	})
+		    });
+	
+	
+	$('#searchQuery').on('click',function(){
+		
+		
+		let result1 = {
+		customerName : $('#customer').val(),
+		itemName : $('#material').val(),
+		mrReturnDate1 :$('#mrReturnDate1').val(),
+		mrReturnDate2 : $('#mrReturnDate2').val()
+		}
+		
+		
+	$.ajax({
+		url:"/mrReturnSearch",
+		method:"POST",
+		contentType:"application/json",
+		data:JSON.stringify(result1),
+		beforeSend: function(xhr){
+			xhr.setRequestHeader(header, token);
+		},
+		success: function(result){
+			
+			grid.resetData(result);
+			
+		},
+		error : function(reject){
+			
+			
+		}
+		
+	})	
+		
+	})
+	
+	
+			
+		});
+	
+
+</script>
+
+
+</th:block>
+
+
+</body>
+
+</html>	

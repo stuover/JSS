@@ -28,15 +28,15 @@
               <div class="card">
                 <div class="card-body">
 	
-	<h3 style="text-align:center; font-weight:bold; margin-top:50px;">자재 출고 내역</h3>
+	<h3 style="text-align:center; font-weight:semi-bold; margin-top:50px;">자재 출고 내역</h3>
 	
-	<div style="width:1050px; heigh:30px; margin-top:50px;">
+	<div style="width:1300px; heigh:30px; margin-top:50px;">
 		<form action="#" >
   <label for="lang" ></label>
-  <select name="languages" id="lang" style="margin-left:100px;">
-  <option value="javascript">--출고사유--</option>
-    <option value="php">생산</option>
-    <option value="java">조정</option>
+  <select name="release" id="release" style="margin-left:300px;">
+  <option value="">--출고구분--</option>
+    <option value="생산">생산</option>
+    <option value="조정">조정</option>
    
   </select>
   
@@ -44,18 +44,21 @@
 
 	
   <label for="lang"></label>
-  <select name="languages" id="lang" style="margin-left:20px;margin-right:10px;">
-   <option value="javascript">--구분--</option>
-    <option value="javascript">자재</option>
-    <option value="php">반제품</option>
+  <select name="material" id="material" style="margin-left:20px;margin-right:10px;">
+   <option value="">--자재구분--</option>
+    <option value="MAT">자재</option>
+    <option value="SAM">반제품</option>
    
   </select>
-  <label for="storeDate" style="margin-left:10px;">출고일</label>
-  <input type="date" style="margin-right:10px;" id="storeDate">~
-  <input type="date" style="margin-left:10px; margin-right:10px;">
+  <label for="ReleaseDate" style="margin-left:10px;">출고일</label>
+  <input type="date" style="margin-right:10px;" id="mrRealDate1" name="mrRealDate1">~
+  <input type="date" style="margin-left:10px; margin-right:10px;" id="mrRealDate2" name="mrRealDate2">
   <label for="mrSearch">자재명</label>
   <input type="text" id="mrSearch">
-  <button type="button" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
+  
+
+
+    <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
 </form>
 	
 	</div>
@@ -155,9 +158,10 @@
 	
 	
 	var grid = new tui.Grid({
+		bodyHeight: 500,
 		el : document.getElementById('grid'),
 		scollX : false,
-		scollY : false,	
+		
 		
 		columns : [ {
 			header : '자재 출고 코드',
@@ -189,15 +193,58 @@
 		{
 			header : '출고 사유 코드',
 			name : 'mrRealReasonCode'
+		},
+		{
+			header : '출고일',
+			name : 'mrRealDate'
 		}
 					
 		],
 		pageOptions: { 
         	useClient: true,
-           	perPage: 5 
+           	perPage: 20 
         }
 		
 	})
+		
+		
+		$('#searchQuery').on('click',function(){
+			
+			
+			let result1 = {
+					mrRealReasonType : $('#release').val(),
+					itemType: $('#material').val(),
+					mrRealDate1 : $('#mrRealDate1').val(),
+					mrRealDate2 : $('#mrRealDate2').val(),
+					mrSearch : $('#mrSearch').val()
+					
+					
+			}
+			
+				console.log(result1);
+			
+			$.ajax({
+				url:"/mrReleaseSearch",
+				method:"POST",
+				contentType:"application/json",
+				data:JSON.stringify(result1),
+				beforeSend: function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success: function(result){
+					grid.resetData(result);
+						
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+				
+					
+					
+				
+			})
+		})	
+		
 	
 	});
 	

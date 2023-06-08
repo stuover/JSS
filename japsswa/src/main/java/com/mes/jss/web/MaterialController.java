@@ -33,7 +33,7 @@ import com.mes.jss.quality.domain.QualityVO;
 
 /*
  * 구용억
- * 자재관리   마지막 수정일 (23.06.02)
+ * 자재관리   마지막 수정일 (23.06.08)
  */
 
 
@@ -336,6 +336,21 @@ public class MaterialController {
 		return list;
 	}
 	
+ // 자재 출고 내역 검색
+	
+	@ResponseBody
+	@RequestMapping("/mrReleaseSearch")
+	public List<MrReleaseVO> mrReleaseSearch(@RequestBody MrReleaseVO vo){
+		
+		System.err.println(vo);
+		
+		List<MrReleaseVO> list = materialService.mrRelSearch(vo);
+		
+		return list;
+		
+	}
+	
+	
 	
 	// 출고 사유별 리스트(생산)
 	
@@ -593,12 +608,45 @@ public class MaterialController {
 		
 	}
 	
+	//자재 조정 리스트 화면
+	@GetMapping("/mrAdmDisplay")
+	public String mrAdmListDisplay() {
+		
+		return "material/materialAdjustmentList";
+	}
+	
+	// 자재 조정 내역 리스트
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmFullList")
+	public List<MrAdjustmentVO> mrAdmFullList(){
+		
+		List<MrAdjustmentVO> list = materialService.mrAdmFullList();
+		
+		return list;
+		
+	}
+	
+	// 자재 조정 검색
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmSearch")
+	public List<MrAdjustmentVO> mrAdmQuery(@RequestBody MrAdjustmentVO vo){
+		
+		List<MrAdjustmentVO> list = materialService.mrAdmSearch(vo);
+		
+		return list;
+		
+	}
+	
+	
+	
 // 자재 반품 화면
 	
 	@GetMapping("/mrReturn")
 	public String mrReturn() {
 		
-		return "/material/materialReturn";
+		return "material/materialReturn";
 	}
 	
 // 자재 반품 품질 조회
@@ -643,6 +691,32 @@ public class MaterialController {
 		return null;
 	}
 	
+// 자재 반품 내역 화면
+	
+	@GetMapping("/mrReturnList")
+	public String mrReturnListDisplay() {
+		
+		
+		
+		return "material/materialReturnList";
+	}
+	
+ // 반품 검색
+	
+	@ResponseBody
+	@RequestMapping("/mrReturnSearch")
+	public List<MrReturnVO> mrReturnSearch(@RequestBody MrReturnVO vo) {
+		
+		System.err.println(vo);	
+		
+		List<MrReturnVO> list = materialService.mrReturnSearch(vo);
+		
+		return list;
+		
+	}
+	
+	
+	
 	
 	
  //  자재 불량 화면
@@ -650,7 +724,7 @@ public class MaterialController {
 	@GetMapping("/mrError")
 	public String mrError() {
 		
-		return "/material/materialError";
+		return "material/materialError";
 	}
 	
 	
@@ -666,7 +740,7 @@ public class MaterialController {
 	}
 	
   
-	//
+	// 
 	
 	
 	

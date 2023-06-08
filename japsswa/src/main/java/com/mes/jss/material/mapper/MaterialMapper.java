@@ -160,6 +160,18 @@ public interface MaterialMapper {
 	// 자재 발주 조회용
 	public List<MrOrderDetailVO> MrOrmGetList();
 	
+	// 자재 출고내역 검색 쿼리
+	public List<MrReleaseVO> MrRelQuery(MrReleaseVO vo);
+	
+	// 자재 반품내역 검색 쿼리
+	public List<MrReturnVO> MrRetQuery(MrReturnVO vo);
+	
+	// 자재 조정 내역 리스트
+	public List<MrAdjustmentVO> mrAdmFull();
+	
+	// 자재 조정 내역 검색
+	public List<MrAdjustmentVO> mrAdmSearchQuery(MrAdjustmentVO vo);
+	
 	
 
 	

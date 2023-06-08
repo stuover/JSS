@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.mes.jss.basic.domain.CustomerVO;
 import com.mes.jss.material.domain.AdjustmentListVO;
@@ -423,6 +424,36 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MrOrderDetailVO> orderList() {
 		
 		return materialMapper.MrOrmGetList();
+	}
+	
+	//자재 출고 검색
+	@Override
+	public List<MrReleaseVO> mrRelSearch(MrReleaseVO vo) {
+		
+		return materialMapper.MrRelQuery(vo);
+	}
+	
+	//자재 반품 검색
+	@Override
+	public List<MrReturnVO> mrReturnSearch(MrReturnVO vo) {
+		
+		return materialMapper.MrRetQuery(vo);
+	}
+	
+	
+	// 자재 조정 내역 리스트
+	@Override
+	public List<MrAdjustmentVO> mrAdmFullList() {
+		
+		return materialMapper.mrAdmFull();
+	}
+	
+	// 자재 조정 내역 검색
+	@Override
+	public List<MrAdjustmentVO> mrAdmSearch(@RequestBody MrAdjustmentVO vo) {
+		
+		System.err.println(vo);
+		return materialMapper.mrAdmSearchQuery(vo);
 	}
 
 	
