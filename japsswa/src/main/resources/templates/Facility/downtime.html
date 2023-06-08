@@ -35,7 +35,7 @@
 
 <body>
     <th:block layout:fragment="content">
-        <div class="container-fluid page-body-wrapper">
+        <div>
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <h2>비가동 설비 관리</h2>
@@ -62,7 +62,7 @@
                                         <div id="modalgrid"></div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
+                                        <button type="button" class="btn btn-danger"
                                             data-dismiss="modal">닫기</button>
                                         <button type="button" id="insertBtn" class="btn btn-primary">저장</button>
                                     </div>
@@ -95,9 +95,9 @@
                                         <!-- 모달 그리드 끝 -->
                                     </div>
                                     <div class="modal-footer">
-                                        <button id="modifyBtn" type="button" class="btn btn-primary">수정</button>
-                                        <button id="deleteBtn" type="button" class="btn btn-primary">삭제</button>
-                                        <button id="closeBtn" type="button" class="btn btn-secondary"
+                                        <button id="modifyBtn" type="button" class="btn btn-success">수정</button>
+                                        <button id="deleteBtn" type="button" class="btn btn-danger">삭제</button>
+                                        <button id="closeBtn" type="button" class="btn btn-danger"
                                             data-dismiss="downModal">닫기</button>
                                     </div>
                                 </div>
@@ -295,7 +295,7 @@
                                         {
                                             header: '비가동 사유',
                                             formatter: 'listItemText',
-                                            name: 'downReason',
+                                            name: 'text',
                                             editor: {
                                                 type: 'select',
                                                 options: {
@@ -372,32 +372,35 @@
                                     console.log(stopData);
                                     //console.log(status);
 
-                                    if (status == 'Y') {
-                                        $.ajax({
-                                            url: "/downListAjax",
-                                            method: "GET",
-                                            data: stopData,
-                                            success: function (result) {
-                                                console.log(stopData);
-                                                checkfacStatus();
-                                                facDownList();
-                                               
-                                                
-                                                alert("비가동 처리되었습니다");
-                                                $('#insertModal').modal('hide');
-                                            },
-                                            error: function (reject) {
-                                                alert("실패");
-                                                console.log(reject);
-                                            }
-                                        })
-
-                                    } else {
-                                      
-                                       
-                                        alert("비가동중인 설비입니다 다시 선택해주세요");
-                                        $('#insertModal').modal('hide'); 
+                                    if(status == 'N'){
+                                        $('#insertModal').modal('hide');
+                                    	alert("비가동중인 설비입니다 다시 선택해주세요");
+                                    }else if(status == 'Y'){
+                                    	
+                                    	if(stopData.text == null){
+                                    		alert("비가동 사유를 입력해주세요");
+                                    	}else{
+                                    		$.ajax({
+                                                url: "/downListAjax",
+                                                method: "GET",
+                                                data: stopData,
+                                                success: function (result) {
+                                                    console.log(stopData);
+                                                    checkfacStatus();
+                                                    facDownList();
+                                                                                                       
+                                                    alert("비가동 처리되었습니다");
+                                                    $('#insertModal').modal('hide');
+                                                },
+                                                error: function (reject) {
+                                                    alert("실패");
+                                                    console.log(reject);
+                                                }
+                                            })
+                                    	}
                                     }
+                                    
+                                   
                                 });
 
                                 // 가동상태 변경
@@ -483,9 +486,11 @@
                                 downgrid.on('dblclick', function (e) {
                                     if (e.columnName != "_checked") {
                                         downCode = downgrid.getRow(e.rowKey).downCode;
-                                        downModalData = downgrid.getRow(e.rowKey);
+                                        downModalData = downgrid.getRow(e.rowKey);                                        
                                         //console.log(downCode)
                                         console.log(downModalData)
+                                        console.log(downModalData.downReanson)
+                                        console.log(downModalData.text)
 
 
                                         downgrid.setSelectionRange({
@@ -520,7 +525,7 @@
                                         {
                                             header: '비가동 사유',
                                             formatter: 'listItemText',
-                                            name: 'downReason',
+                                            name: 'text',
                                             editor: {
                                                 type: 'select',
                                                 options: {

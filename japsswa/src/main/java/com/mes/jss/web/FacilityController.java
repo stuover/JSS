@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.DTO.SearchDTO;
+import com.mes.jss.basic.service.EmployeesService;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.service.FacilityService;
 
@@ -20,15 +23,32 @@ public class FacilityController {
 
 	@Autowired
 	FacilityService service;
+	@Autowired
+	EmployeesService empService;
 
 	// 설비
 
 	@RequestMapping("/facility")
-	public String facility() {
+	public String facility(Model model) {
 
+		model.addAttribute("facFunction", service.getDetailList("fac"));
+		//SearchDTO dto = new SearchDTO();
+		//dto.setSearchSel("설비");
+		
+		//model.addAttribute("empName", empService.getEmpList(dto));
+		//System.err.println( empService.getEmpList(dto));
+		
+		//String Key = "empName"
+		//model.addAttribute(key, empNAme);
+		
+		//model.addAttribute("operType", basicService.commGroupList(key));
+		
 		return "Facility/failcity";
 	}
 
+	
+	
+	
 	@RequestMapping("/AllfacilityAjax")
 	@ResponseBody
 	public List<FacilityVO> AllFacility() { // 설비 리스트 조회
@@ -54,6 +74,7 @@ public class FacilityController {
 	@ResponseBody
 	public FacilityVO insertAjax(@RequestBody FacilityVO vo) {
 
+		
 		service.saveFacility(vo);
 		System.out.println(vo);
 		

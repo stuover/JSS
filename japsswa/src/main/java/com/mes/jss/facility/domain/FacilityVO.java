@@ -38,6 +38,8 @@ public class FacilityVO {
 	// 공정 불러오기
 	String proCode;
 	String proName;
+	String empName;
+	String text;
 //	facName
 //	facCode
 //	facManager

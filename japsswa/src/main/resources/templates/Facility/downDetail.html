@@ -28,7 +28,7 @@
 
 <body>
     <th:block layout:fragment="content">
-    <div class="container-fluid page-body-wrapper">
+    <div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
         <h2>비가동 내역 조회</h2><br>
@@ -63,7 +63,7 @@
                                         <!-- fac 모달그리드 끝 -->
                                     </div>
                                     <div class="modal-footer">
-                                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                                        <button id="facCloseBtn" type="button" class="btn btn-danger"
                                             data-dismiss="modal">닫기</button>
                                     </div>
                                 </div>
@@ -99,6 +99,7 @@
                 scrollX: false,
                 scrollY: false,
                 rowHeaders: ['rowNum'],
+                bodyHeight: 600,
                 pageOptions: {
                     useClient: true,
                     perPage: 15
@@ -183,20 +184,15 @@
             })
             
             facGrid.on('click', function (e) {
-
             	
-            	if(e.rowKEy != null){
+            	if(e.rowKey != null){
             		console.log("facGrid클릭");
-
-                    fac = facGrid.getRow(e.rowKey).facName;                
-    				console.log(fac)
+                    facName = facGrid.getRow(e.rowKey).facName;                
+    				console.log(facName)
                     $('#facModal').modal('hide');
-                    $('#searchInput').val(fac);                
+                    $('#searchInput').val(facName);
                     //insertUpGrid.resetData([fac]); 인풋에 데이터넣기
-            	}
-                
-
-
+            	}          
             })
 
             $('#searchBtn').on('click', function () {
@@ -233,7 +229,7 @@
             
             $('#startDate, #stopDate').on('change', function(){
             	var startDate = new Date($('#startDate').val());
-                var stopDate = new Date($('#stopDate').val());
+                var stopDate = new Date($('#stopDate').val());                
                 
             	if (stopDate < startDate) {
       		      alert("종료일이 시작일보다 빠릅니다!");
