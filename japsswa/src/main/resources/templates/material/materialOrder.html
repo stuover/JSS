@@ -74,11 +74,11 @@
 	<!-- 거래처 및 자재 찾기 버튼 -->
 	   
 	    <button type="button" id="checkBtn" class="btn btn-primary"
-				data-toggle="modal" data-target=".bd-example-modal-lg"
+				 data-bs-toggle="modal"
 				data-bs-target="#searchModal"
 				style="height: 80px; width: 120px; padding: 3px; margin-top:3px; margin-bottom: 10px; background-color:green; margin-left:120px;"> 거래처 및 자재 <br> 찾기</button>
 	   	
-	    <button type="button" id="lackBtn" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" style="float:right; width:150px; height: 80px; padding:3px; margin-bottom:10px; margin-right:10px; margin-left:5px; color:white; ">안전 재고 미달</button>
+	    <button type="button" id="lackBtn" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="float:right; width:150px; height: 80px; padding:3px; margin-bottom:10px; margin-right:10px; margin-left:5px; color:white; ">안전 재고 미달</button>
 	</div>
 
  
@@ -171,7 +171,7 @@
 		
 	<!-- 발주 취소 버튼 -->
 		
-		<button type="button" id="listDeleteBtn" class="btn btn-info"  data-toggle="modal" data-target=".bd-example3-modal-lg" style="float:right; margin-left:5px; width: 200px; height: 30px; padding: 3px;  margin-top:5px; color:white;">발주 조회 및 취소</button>
+		<button type="button" id="listDeleteBtn" class="btn btn-info"  data-bs-toggle="modal" data-bs-target="#exampleModal3" style="float:right; margin-left:5px; width: 200px; height: 30px; padding: 3px;  margin-top:5px; color:white;">발주 조회 및 취소</button>
 		</div>
 		
 
@@ -180,10 +180,8 @@
 
 <!-- Large modal -->
 
-
-		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		
 			<div class="modal-dialog modal-sm-6">
 
 				<div class="modal-content">
@@ -232,11 +230,11 @@
 		</div>
 		
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">안전재고 미달</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -283,7 +281,7 @@
 		<!-- Large modal -->
 
 
-<div class="modal fade bd-example3-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example3-modal-lg" id="exampleModal3"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
     
