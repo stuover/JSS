@@ -92,16 +92,19 @@
 					{
 						header : '공통코드',
 						name : 'commCode',
+						width:100,
 						sortingType : 'desc',
 						sortable : true
 					}, {
 						header : '공통코드명',
 						name : 'commName',
+						width:'auto',
 						sortingType : 'desc',
 						sortable : true
 					}, {
 						header : '비고',
 						name : 'commNote',
+						width:120,
 						sortingType : 'desc',
 						sortable : true,
 					}, {
@@ -227,13 +230,16 @@
 					{
 						header : '공통코드',
 						name : 'commCode',
+						width:'auto',
 					}, {
 						header : '공통코드명',
 						name : 'commName',
+						width:'auto',
 						editor: 'text'
 					}, {
 						header : '비고',
 						name : 'commNote',
+						width:'auto',
 						editor: 'text',
 					}, {
 						header : '등록일',
@@ -318,7 +324,7 @@
 
 	 		var commCode = null;
 	 	
-			grid.on('click',function(e){
+			grid.on('dblclick',function(e){
 				
 				if(e.rowKey != null){
 					commCode = grid.getRow(e.rowKey).commCode;

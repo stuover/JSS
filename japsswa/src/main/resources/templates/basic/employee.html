@@ -144,6 +144,7 @@ input:focus{
 				sortable : true
 			} ]
 		});
+		grid.setBodyHeight(568);
 
 		// 사원 전체 리스트
 		function empList(input, select) {
@@ -194,10 +195,9 @@ input:focus{
 			self.location = '/employee/ragister';
 		})
 
-		// 사원 정보 수정(부서, 직급변경)
+		// 사원 정보 수정(부서, 직급변경) 모달에 뿌리기
 		$('#modifyBtn').on('click', function() {
 			let empNo = null;
-			console.log(grid.getCheckedRows()[0])
 			if(grid.getCheckedRows()[0] != null){
 				empNo = grid.getCheckedRows()[0].empNo
 			}
@@ -228,10 +228,9 @@ input:focus{
 			}
 		});
 
-		$('#selPosi').on('change', function(e) {
-			console.log($('#selPosi').val())
-		})
-
+		
+		
+		//사원 부서, 직책 변경 하기 
 		$('#finBtn').on(
 				'click',
 				function(e) {
@@ -240,12 +239,14 @@ input:focus{
 						url : "/modifyEmpAjax",
 						method : "get",
 						data : {
-							empNo : $('.modal-title #selNo').text(),
+							empNo : $('#selNo').text(),
 							position : $('#selPosi').val(),
 							deptName : $('#selDept').val()
 						},
 						dateType : "json",
 						success : function(result) {
+							alert($('#selNo').text()+' '+ $('#selName').text() + '의 정보가 변경되었습니다.')
+
 							$(
 									'td[data-row-key='
 											+ grid.getCheckedRowKeys() + ']')

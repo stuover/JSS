@@ -224,8 +224,10 @@ testGrid.on('editingFinish', function(e){
 	}else{
 		
 	    testGrid.setValue(e.rowKey, "mrCount", qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity, false)
-	    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100+"%", false)
-	    if( row.defectiveRate == '100%' ){
+	    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100 + '%', false)
+	    let str = testGrid.getRow(e.rowKey).defectiveRate;
+	    console.log(str.replace('%',''))
+	    if( str.replace('%','') == 0 ){
 		    testGrid.setValue(e.rowKey, "testResult", '합격', false)
 	    }else{
 		    testGrid.setValue(e.rowKey, "testResult", '불합격', false)
@@ -251,6 +253,7 @@ testGrid.on('editingFinish', function(e){
 		},
  		success : function(result) {
  			qualityGrid.removeRow(qualityKey);
+ 			testGrid.resetData([{}]);
 			
  		}, error : function (reject) {
  			console.log(reject)

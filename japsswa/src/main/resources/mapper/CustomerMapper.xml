@@ -34,25 +34,25 @@
   	
   	<insert id="insertTrans" parameterType="TransactionItemVO">
   	
-  		insert into transaction_item
-  		values ( (SELECT NVL(MAX(trans_no),0)+1 FROM transaction_item), #{itemCode}, #{customerId})
+  		insert into CONTRACT
+  		values ('TRY' || to_char(sysdate, 'yyMMdd') || lpad( (SELECT NVL(MAX(substr(CONTRACT_ID, -4)),0)+1 FROM CONTRACT), 4, '0' ),  #{itemCode}, to_date(sysdate, 'yyyy/MM/dd'), #{customerId})
 
   	</insert>
   	
   	<select id="getCusItemList" resultType="TransactionItemVO">
   		select a.item_code, b.item_name, b.item_type
-  		from  transaction_item a join itemList b
+  		from  CONTRACT a join itemList b
   			  on(a.item_code = b.item_code)
   		where customer_id = #{cusId}
   	</select>
   	
   	<select id="result" resultType="int">
-  		select count(*) from transaction_item where item_code = #{itemCode} and customer_id = #{customerId}
+  		select count(*) from CONTRACT where item_code = #{itemCode} and customer_id = #{customerId}
   	</select>
   	
   	<delete id="deleteitemDeta">
   		delete
-  		from TRANSACTION_ITEM 
+  		from CONTRACT 
   		where item_code = #{itemCode}
   		and customer_id = #{customerId}
   	</delete>
