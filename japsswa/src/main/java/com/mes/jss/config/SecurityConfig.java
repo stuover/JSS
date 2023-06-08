@@ -32,10 +32,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		
 		http.authorizeHttpRequests((requests) -> 
-
-			requests.antMatchers("/top", "/login", "/logout", "/performanceManage","/**").permitAll() // 공통 
-						.antMatchers("/**").hasAuthority("ROLE_ADMIN")
-						//.antMatchers("/**").hasAnyAuthority("ROLE_ADMIN")
+			requests.antMatchers("/top", "/login", "/logout").permitAll() // 공통 
+						//.antMatchers("/bomManager").hasAuthority("ROLE_ADMIN")
 						.anyRequest().authenticated())
 			     .formLogin(login-> login.loginPage("/login")
 			    		 							.usernameParameter("empNo")

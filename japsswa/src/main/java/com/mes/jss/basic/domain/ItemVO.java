@@ -13,4 +13,6 @@ public class ItemVO {
 	public double standard;
 	public String unit;
 	public long saveMaterial;
+	
+	public String text;
 }

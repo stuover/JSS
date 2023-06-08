@@ -84,7 +84,7 @@ public class QualityController {
 	@ResponseBody
 	@RequestMapping("/completeTest")
 	public String completeTest(@RequestBody TestHistoryListVO data, Principal principal) {
-		System.err.println(data);
+	
 		qualityService.completeTest(data, Long.parseLong(principal.getName()));
 		return null;
 	}

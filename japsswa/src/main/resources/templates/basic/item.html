@@ -15,7 +15,7 @@ input:focus{
 
 
 <th:block layout:fragment="content">
-	<div class="container-fluid page-body-wrapper">
+	<div>
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
@@ -26,12 +26,10 @@ input:focus{
 						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
 						</option>
 					</select> <input id="searchInput" name="searchInput" type="text">
-					<button id="searchButton" name="searchButton" type="button" class="btn btn-primary">검색</button>
+					<button id="searchButton" name="searchButton" type="button" class="btn btn-dark">검색</button>
 					<div id="grid"></div>
-					<button id="addModalBtn" type="button" class="btn btn-primary" >등록</button>
-					<button id="modModalBtn" type="button" class="btn btn-primary">수정</button>
-
-
+					<button id="addModalBtn" type="button" class="btn btn-primary" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">등록</button>
+					<button id="modModalBtn" type="button" class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">수정</button>
 				</div>
 			</div>
 		</div>
@@ -75,8 +73,8 @@ input:focus{
 				</div>
 
 				<div class="modal-footer">
-					<button id="modBtn" type="button" class="btn btn-primary">수정</button>
-					<button id="delBtn" type="button" class="btn btn-primary">삭제</button>
+					<button id="modBtn" type="button" class="btn btn-success" >수정</button>
+					<button id="delBtn" type="button" class="btn btn-danger" >삭제</button>
 
 				</div>
 			</div>
@@ -94,15 +92,15 @@ input:focus{
 
 				<div id="modal-body">
 					<div id="body" style="z-index: 9999">
-						<button id="qualityInsBtn" type="button" class="btn btn-primary"
+						<button id="qualityInsBtn" type="button" class="btn btn-secondary"
 							style="margin-left: 10px">추가</button>
 					</div>
 					<div id="qualityGrid"></div>
 				</div>
 
 				<div class="modal-footer">
-					<button id="saveQualityBtn" type="button" class="btn btn-primary">저장</button>
-					<button id="deleteQualityBtn" type="button" class="btn btn-primary">삭제</button>
+					<button id="saveQualityBtn" type="button" class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">저장</button>
+					<button id="deleteQualityBtn" type="button" class="btn btn-danger" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">삭제</button>
 
 				</div>
 			</div>
@@ -308,7 +306,7 @@ input:focus{
 					editor: "text"
 				}, {
 					header: '구분',
-					name: 'itemType',
+					name: 'text',
 					formatter :'listItemText',
 					editor: {
 						type: 'select',

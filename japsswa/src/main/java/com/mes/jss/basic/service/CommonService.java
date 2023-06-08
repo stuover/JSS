@@ -2,12 +2,13 @@ package com.mes.jss.basic.service;
 
 import java.util.List;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.CommListVO;
 import com.mes.jss.basic.domain.CommVO;
 
 public interface CommonService {
 
-	public List<CommVO> getCommListe();
+	public List<CommVO> getCommListe(SearchDTO dto);
 
 	public List<CommVO> getDetaList(String commCode);
 

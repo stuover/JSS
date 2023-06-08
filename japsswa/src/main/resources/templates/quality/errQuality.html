@@ -36,7 +36,7 @@ input:focus{
 </head>
 
     <th:block layout:fragment="content">
-    	<div class="container-fluid page-body-wrapper">
+    	<div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -47,7 +47,7 @@ input:focus{
 						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
 						</option>
 					</select> 
-        <input type ="text" id="searchInp"> <button id="searchButoon">검색</button><br><br>
+        <input type ="text" id="searchInp"> <button id="searchButoon"  class="btn btn-dark">검색</button><br><br>
         </div>
         <div id="qualityGrid"></div>
 
@@ -62,9 +62,8 @@ input:focus{
 	        </div>
 	        <div id="testGrid"></div>
 	        <div>
-	            <button id="modBtn" type="button">수정</button>
-	           	<button id="delBtn" type="button">검사취소</button>
-	            
+	            <button id="modBtn" type="button"  class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">수정</button>
+	           	<button id="delBtn" type="button"  class="btn btn-danger" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">검사취소</button>     
 	        </div>
 		</div>
 </div></div></div></div>
@@ -147,10 +146,6 @@ var testGrid = new tui.Grid({
         useClient: true,
         perPage: 7
     },
-    rowHeaders: [{
-        type: 'checkbox',
-        header: " "
-    }],
     columns: [
     	{
         header: '검사항목코드',

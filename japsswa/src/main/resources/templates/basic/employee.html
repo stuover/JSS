@@ -36,8 +36,8 @@ input:focus{
 					
 					<form id="controller">
 					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-							<button type="button" id="modifyBtn" class="btn btn-success">수정</button>
-							<button id="addEmpBtn" class="btn btn-primary">등록</button>
+							<button type="button" id="modifyBtn" class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'EMP_ADMIN')">수정</button>
+							<button id="addEmpBtn" class="btn btn-primary" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'EMP_ADMIN')">등록</button>
 					</div>
 						<div id="grid"></div>
 				
@@ -83,8 +83,8 @@ input:focus{
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="finBtn" class="btn btn-success">수정</button>
-					<button type="button" id="delBtn" class="btn btn-danger">삭제</button>
+					<button type="button" id="finBtn" class="btn btn-success" sec:authorize="hasAnyRole('ROLE_ADMIN')">수정</button>
+					<button type="button" id="delBtn" class="btn btn-danger" sec:authorize="hasAnyRole('ROLE_ADMIN')">삭제</button>
 				</div>
 			</div>
 		</div>

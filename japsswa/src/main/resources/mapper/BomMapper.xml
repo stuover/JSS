@@ -9,29 +9,30 @@
   <!-- 완제품 BOM -->
   	<select id="getBomList" resultType="BomVO">
   		SELECT 
-    LEVEL,
-    LPAD(' ', 2*LEVEL-1) || SYS_CONNECT_BY_PATH(b.item_name, '/') PATH,
-    bom_code,
-    b.item_name,
-    a.item_code,
-    a.ing_code,
-    a.item_type,
-    level_type,
-    bom_level,
-    a.pro_code,
-    c.pro_name,
-    a.item_type,
-    a.unit,
-    a.item_con,
-    a.pro_order
-FROM bom a left outer join itemlist b
-on a.ing_code = b.item_code
-left outer join process c
-on a.pro_code = c.pro_code 
-START WITH a.ing_code = #{itemCode}
-CONNECT BY  PRIOR a.bom_level = a.level_type
-ORDER SIBLINGS BY a.level_type
+			    LEVEL,
+			    LPAD(' ', 2*LEVEL-1) || SYS_CONNECT_BY_PATH(b.item_name, '/') PATH,
+			    bom_code,
+			    b.item_name,
+			    a.item_code,
+			    a.ing_code,
+			    a.item_type,
+			    level_type,
+			    bom_level,
+			    a.pro_code,
+			    c.pro_name,
+			    a.item_type,
+			    a.unit,
+			    a.item_con,
+			    a.pro_order
+			FROM bom a left outer join itemlist b
+			on a.ing_code = b.item_code
+			left outer join process c
+			on a.pro_code = c.pro_code 
+			START WITH a.item_code = #{itemCode}
+			CONNECT BY  PRIOR a.bom_level = a.level_type
+			ORDER SIBLINGS BY a.level_type
   	</select>
+  	
   	<insert id="insertBom" parameterType="BomVO">
   		insert into bom (bom_code, bom_level, ing_code, item_con, unit, pro_order, pro_code, level_type, item_code, item_type)
   				values( (select NVL(MAX(bom_code),0)+1 from bom)+1, #{bomLevel}, #{ingCode}, #{itemCon}, #{unit}, #{proOrder}, #{proCode}, #{levelType}, #{itemCode}, #{itemType})

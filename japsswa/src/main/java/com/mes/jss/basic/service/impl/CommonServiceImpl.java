@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.CommListVO;
 import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.basic.mapper.CommonMapper;
@@ -16,9 +17,9 @@ public class CommonServiceImpl implements CommonService{
 	@Autowired CommonMapper commMapper;
 
 	@Override
-	public List<CommVO> getCommListe() {
+	public List<CommVO> getCommListe(SearchDTO dto) {
 		// TODO Auto-generated method stub
-		return commMapper.getListComm();
+		return commMapper.getListComm(dto);
 	}
 
 

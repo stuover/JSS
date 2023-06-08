@@ -8,10 +8,10 @@
 
 
 <style> 
-input:focus{
-	border-color:#0982f0;
-	ouline:none;
-}
+	input:focus{
+		border-color:#0982f0;
+		ouline:none;
+	}
 </style>
 </head>
 
@@ -30,7 +30,7 @@ input:focus{
                   <div class="m-3 d-grid gap-2 d-md-flex justify-content-md-end">
                     <input type = "text" id="itemCode">
                   	<input type="text" id="itemName">
-                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
+                  	<button type="button" id="searchBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#searchModal">조회</button>
                   </div>
                   
                
@@ -43,7 +43,7 @@ input:focus{
 				      
 				        <h5 class="page-title">BOM</h5>
 				        <button id="saveBtn" class="btn btn-success">저장</button>
-				        <button id="inBomBtn" class="btn btn-primary" style="display:none;">추가</button>
+				        <button id="inBomBtn" class="btn btn-secondary" style="display:none;">추가</button>
 				        <button id="delBomBtn" class="btn btn-danger" style="display:none">삭제</button>
 				        
 				        <div id="bomGrid"></div>
@@ -144,7 +144,7 @@ input:focus{
 	
 	    
 <script>
-
+	var bomLevel=null;
 	var ingCode=null;
 	var itemName=null;
 	var itemType=null;
@@ -313,7 +313,7 @@ $('#selectBtn').on('click', function() {
 
 
 // 선택 품목으로 bom 정보 가져오기
-modalGrid.on('click',function(e){
+modalGrid.on('dblclick',function(e){
 	itemCode = modalGrid.getRow(e.rowKey).itemCode;
 	itemName = modalGrid.getRow(e.rowKey).itemName;
 	
@@ -343,24 +343,7 @@ modalGrid.on('click',function(e){
 
 // 추가 버튼 눌렀을때 비오엠 LEVEL 가져오기
 $('#inBomBtn').on('click', function(){
-	if(count == 0){
-	 	 $.ajax({
-	 		 url : "/getNumber",
-	 		 method : "get",
-	 		 success : function (result){
-	 			 console.log(result)
-	 			 count = result;
-	 			 bomGrid.appendRow( {bomLevel : count});
-	 			count++;
-	 		 },error : function (reject) {
-	 			 console.log(reject)
-	 		 }
-	 	 })
-	}else {
-		 bomGrid.appendRow( {bomLevel : count});
-		count = Number(count) + 1;
-	}
-	console.log(count)
+	bomGrid.appendRow( {levelType : $('#itemCode').val()});
 	 ingCode=null;
 	 itemName=null;
 	 itemType=null;
@@ -532,20 +515,21 @@ $('#serachItem').on('click', function() {
 })
 
 itemGrid.on('dblclick', function(e){
+	
+	bomLevel = itemGrid.getRow(e.rowKey).itemCode;
 	ingCode = itemGrid.getRow(e.rowKey).itemCode;
 	itemName = itemGrid.getRow(e.rowKey).itemName;
 	itemType = itemGrid.getRow(e.rowKey).itemType;
 	unit = itemGrid.getRow(e.rowKey).unit;
 	
 	let bomCode = bomGrid.getRow(bomKey).bomCode;
-	let bomLevel = bomGrid.getRow(bomKey).bomLevel;
 	let itemCon = bomGrid.getRow(bomKey).itemCon;
 	let proOrder = bomGrid.getRow(bomKey).proOrder;
 	let proCode = bomGrid.getRow(bomKey).proCode;
 	let proName = bomGrid.getRow(bomKey).proName;
 	let levelType = bomGrid.getRow(bomKey).levelType;
 
-	bomGrid.setRow(bomKey, {proCode, proName, ingCode, itemName, itemType, bomCode, bomLevel, itemCon, proOrder, unit, levelType} )
+	bomGrid.setRow(bomKey, {bomLevel, proCode, proName, ingCode, itemName, itemType, bomCode, bomLevel, itemCon, proOrder, unit, levelType} )
 	 $('#itemPix').modal('hide')
 })
 

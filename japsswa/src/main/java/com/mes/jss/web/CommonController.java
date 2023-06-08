@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.CommListVO;
 import com.mes.jss.basic.domain.CommVO;
 import com.mes.jss.basic.service.CommonService;
@@ -32,9 +33,9 @@ public class CommonController {
 	
 	@ResponseBody
 	@GetMapping("/commAjax")
-	public List<CommVO> commAjax(){
+	public List<CommVO> commAjax(SearchDTO dto){
 		
-		List<CommVO> list = commService.getCommListe();
+		List<CommVO> list = commService.getCommListe(dto);
 		
 		
 		return list;
