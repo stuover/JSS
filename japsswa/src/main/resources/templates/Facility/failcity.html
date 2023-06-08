@@ -21,16 +21,17 @@
 </head>
 
     <th:block layout:fragment="content">
-    <div class="container-fluid page-body-wrapper">
+    <div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
+                <input id="name" type="hidden" th:value="${#authentication.principal.empName}">
         <h2>설비 관리</h2>
         <div id="serarchDiv">
             <input type="text" id="searchInput" name="fac_code" placeholder="설비이름을 입력하세요">
             <button id="searchBtn" type="button" class="btn btn-dark">검색</button>
             <button id="resetBtn" type="button" class="btn btn-dark">초기화</button>
-            <button id="insertBtn" type="button" class="btn btn-dark">설비 등록</button>            
+            <button id="insertBtn" type="button" class="btn btn-primary">설비 등록</button>            
         </div>
 
         <!-- 그리드 -->
@@ -55,7 +56,7 @@
                         <!-- 모달 그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button id="closeBtn" type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button id="closeBtn" type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
                         <button id="saveBtn" type="button" class="btn btn-primary">등록</button>
                     </div>
                 </div>
@@ -82,9 +83,9 @@
                         <!-- 모달 그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button id="detailModBtn" type="button" class="btn btn-primary">수정</button>
-                        <button id="detailDelBtn" type="button" class="btn btn-primary">삭제</button>
-                        <button id="closeBtn2" type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                        <button id="detailModBtn" type="button" class="btn btn-success">수정</button>
+                        <button id="detailDelBtn" type="button" class="btn btn-danger">삭제</button>
+                        <button id="closeBtn2" type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -97,8 +98,7 @@
 
                         <div class="modal fade" id="processModal" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document"
-                                style="width:1500px">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" style="width:400px" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="downModalTitle">공정 목록</h5>
@@ -112,7 +112,7 @@
                                         <!-- fac 모달그리드 끝 -->
                                     </div>
                                     <div class="modal-footer">
-                                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                                        <button id="facCloseBtn" type="button" class="btn btn-danger"
                                             data-dismiss="modal">닫기</button>
                                     </div>
                                 </div>
@@ -121,7 +121,11 @@
 
        <!-- process 모달 끝 -->
 
-        <script>
+        <script th:inline="javascript">
+           
+            var functionList = [[${facFunction}]];
+            //var manager = [[${empName}]];
+            
             // 변수
             var dbGridData = null;
             var facCode = null;
@@ -198,12 +202,7 @@
                     {
                         header: '설비기능',
                         name: 'facFunction'
-                    },
-                    {
-                        header: '설비사진',
-                        name: 'facPicture'
-                    }
-                ]
+                    }]
             });
 
 
@@ -258,7 +257,8 @@
                     {
                         header: '설비명',
                         name: 'facName',
-                        editor: 'text'
+                        editor: 'text',
+                        validation: { required: true }
                     },
                     {
                         header: '설치날짜 ',
@@ -267,16 +267,24 @@
                     },
                     {
                         header: '공정코드 ',
-                        name: 'proCode'
+                        name: 'proCode',
+                        validation: { required: true }
                     },
                     {
                         header: '투입 공정 ',
-                        name: 'proName'
+                        name: 'proName',
+                        validation: { required: true }
                     },
                     {
                         header: '설비기능',
-                        name: 'facFunction',
-                        editor: 'text'
+                        name: 'text',
+                        formatter: 'listItemText',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: functionList
+                            }
+                        }
                     }
                 ]
 
@@ -301,23 +309,25 @@
                     },
                     {
                         header: '마지막 점검일',
-                        name: 'lastInspection',
-                        editor: 'datePicker'
+                        name: 'lastInspection'
                     },
                     {
                         header: '관리자',
                         name: 'facManager',
                         editor: 'text'
+                       // ,
+                        //formatter: 'listItemText',
+                        //editor: {
+                           // type: 'select',
+                            //options: {
+                               // listItems: manager
+                           // }
+                        //}
                     },
                     {
                         header: '설비가동상태 ',
                         name: 'facStatus'
-                    },
-                    {
-                        header: '설비사진',
-                        name: 'facPicture'
-                    }
-                ]
+                    }]
             });
             
          
@@ -387,10 +397,12 @@
             function delFac() {
 
                 let firstFac = detailGrid.getData()[0];
+                let secondFac = detailDownGrid.getData()[0];
                 console.log(firstFac);
-
+                console.log(secondFac);
+                console.log(secondFac.facStatus);
                 
-
+                if(secondFac.facStatus == 'N'){
                 $.ajax({
 
                     url: "/RemoveFacility",
@@ -411,6 +423,9 @@
                         console.log(reject);
                     }
                 });
+                }else if(secondFac.facStatus == 'Y'){
+                	alert("가동중인 설비는 삭제할 수 없습니다");
+                }
             }
 
             $('#detailDelBtn').on('click', function () {
@@ -432,7 +447,8 @@
                     {
                         header: '설비명',
                         name: 'facName',
-                        editor: 'text'
+                        editor: 'text',
+                        validation: { required: true }
                     },
                     {
                         header: '설치날짜 ',
@@ -441,11 +457,13 @@
                     },
                     {
                         header: '공정코드 ',
-                        name: 'proCode'
+                        name: 'proCode',
+                        validation: { required: true }
                     },
                     {
                         header: '투입 공정',
-                        name: 'proName'
+                        name: 'proName',
+                        validation: { required: true }
                     },
                     {
                         header: '설비가동상태 ',
@@ -474,25 +492,34 @@
                     },
                     {
                         header: '마지막 점검일',
-                        name: 'lastInspection',
-                        editor: 'datePicker'
+                        name: 'lastInspection'
                     },
                     {
                         header: '관리자',
                         name: 'facManager',
                         editor: 'text'
+                       // ,
+                        //formatter: 'listItemText',
+                        //editor: {
+                          //  type: 'select',
+                           // options: {
+                               // listItems : manager
+                            //}
+                        //}
                     },
                     {
                         header: '설비기능',
-                        name: 'facFunction',
-                        editor: 'text'
-                    },
-                    {
-                        header: '설비사진',
-                        name: 'facPicture'
+                        name: 'text',
+                        formatter: 'listItemText',
+                       editor: {
+                            type: 'select',
+                            options: {
+                               listItems: functionList
+                            }                       
                     }
-                ]
+                    }]
             });
+                  
 
          // process 리스트 조회 함수
             function selectProcess() {
@@ -513,7 +540,7 @@
          // process 그리드
             var processGrid = new tui.Grid({
                 el: document.getElementById('processGrid'),
-                width: 700,
+                width: 380,
                 pageOptions: {
                     useClient: true,
                     perPage: 5
@@ -527,6 +554,7 @@
                     name: 'proCode'
                 }]
             });
+         
             var insertRowKey =null;
             var fecCode = null;
             
@@ -613,6 +641,8 @@
                 $('#insertModal').modal('show');
                 modalGrid.appendRow();
                 modalDownGrid.appendRow();
+                console.log(modalDownGrid.facManager)
+                //modalDownGrid.setValue(0, 'facManager', $('#name').val(), false)
             })
 
 
@@ -638,12 +668,16 @@
                 let upFac = modalGrid.getData()[0];
                 let downFac = modalDownGrid.getData()[0];
                 //insertList = {upFac, downFac} 
-                //?/console.log(upFac);
-                //console.log(downFac);
+                console.log(upFac);
+                console.log(downFac);
                 let obj = mergeFac(upFac, downFac);
                 console.log(obj)
 
-
+                if(upFac.facName == null){
+                	alert("설비명을 입력하세요")
+                }else if(upFac.proCode == null){
+                	alert("공정코드와 투입공정을 선택해주세요")
+                }else{                	
                 $.ajax({
                     url: "/insertAjax",
                     method: "POST",
@@ -663,6 +697,7 @@
                         console.log(reject);
                     }
                 });
+                }    
             }
 
 

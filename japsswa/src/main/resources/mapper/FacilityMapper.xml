@@ -21,8 +21,9 @@
         select  f.fac_name,
         		  f.fac_code,
         		  d.down_code,
-        		  to_char(d.stop_date, 'YYYY/MM/DD HH24:MI:SS') as stop_date,        		  
-        		  get_codeName(d.down_reason) down_reason,
+        		  to_char(d.stop_date, 'YYYY/MM/DD HH24:MI:SS') as stop_date,
+        		  down_reason text,
+        		  GET_CODENAME(d.down_reason) downReason,
         		  d.down_manager,
         		  d.remark
 		  from  facility f join downtime d 
@@ -40,8 +41,8 @@
 			           remark, 
 			           fac_code)
 			values  (('DOW' || to_char(sysdate, 'yyMMdd') || lpad(downtime_seq.nextval, 4, '0')),
-			           to_date(current_date, 'YYYY-MM-DD HH24:MI:SS'),
-			           (select deta_name from details_comm where deta_code =#{downReason}), 
+			           current_date,
+			           #{text},
 			           #{downManager} , 
 			           #{remark} , 
 			           #{facCode})
@@ -78,7 +79,7 @@
   	<update id="updateDownTime" parameterType="DowntimeVO">
   		update downtime 
   			set
-  		          down_reason = (select deta_name from details_comm where deta_code =#{downReason}) , 
+  		          down_reason = #{text} , 
   		          down_manager = #{downManager} , 
   		          remark = #{remark} 
   		 where down_code = #{downCode}
@@ -121,8 +122,9 @@
   	
   	<select id="getAllList" resultType="FacilityVO">
   		select f.fac_code, fac_name, to_char(f.fac_date, 'YYYY-MM-DD') as fac_date ,f.pro_code, p.pro_name, f.fac_status, f.wash_cycle, f.ins_cycle, 
-		to_char(f.last_inspection, 'YYYY-MM-DD') as last_inspection, f.fac_manager, f.fac_function, f.fac_picture
+		to_char(f.last_inspection, 'YYYY-MM-DD') as last_inspection, f.fac_manager, GET_CODENAME(f.fac_function) facFunction, f.fac_picture
 		from facility f left outer join process p on(f.pro_code = p.pro_code)
+		order by fac_code desc
   		
   		
   		<!--  
@@ -142,24 +144,30 @@
   		-->
   	</select>
   	
+  	<select id="getfunctionList">
+  		select deta_code value , deta_name text 
+  		 from details_comm 
+  		where comm_code = UPPER(#{commCode})
+  	</select>
+  	
   	<insert id="insertFacility" parameterType="FacilityVO">
   		insert into facility (fac_code , fac_name , fac_date, pro_code ,
   		wash_cycle, ins_cycle, last_inspection, fac_manager, fac_function)
         values(('FAC' || to_char(sysdate, 'yyMMdd') || lpad(facility_seq.nextval, 4,'0')) , #{facName} , TO_DATE(#{facDate}, 'yyyy-MM-dd') , #{proCode}, 
-        #{washCycle},#{insCycle}, #{lastInspection}, #{facManager}, #{facFunction})
+        #{washCycle},#{insCycle}, #{lastInspection}, #{facManager}, #{text})
   	</insert>
   	
   	<update id="modifyFac" parameterType="FacilityvO">
   		update facility   		
   					set
 					  		fac_name = #{facName}, 
-					  		fac_date = #{facDate} , 
+					  		fac_date = TO_DATE(#{facDate}, 'yyyy-MM-dd'), 
 					  		pro_code = #{proCode},
 					  		wash_cycle = #{washCycle} ,
 					  		ins_cycle = #{insCycle},
 					  		last_inspection = #{lastInspection}, 
 					  		fac_manager = #{facManager},
-					  		fac_function = #{facFunction},
+					  		fac_function = #{text},
 							fac_picture = #{facPicture}		
   				  where  fac_code = #{facCode}
   	</update>
@@ -171,13 +179,13 @@
   	<!-- 점검 관리 페이지 -->
   	
   	<select id="getbeInsList" resultType="InspectionVO">
-  		select f.fac_name, f.fac_code , d.down_code, d.down_reason, d.stop_date
+  		select f.fac_name, f.fac_code , d.down_code, GET_CODENAME(d.down_reason) downReason, d.stop_date
 		from facility f full outer join downtime d on(f.fac_code = d.fac_code) full outer join inspection i on(d.down_code = i.down_code)
-		where down_reason = '점검' and ins_code is null order by down_code desc
+		where down_reason = 'DIN' and ins_code is null order by down_code desc
   	</select>
   	
   	<select id="getInsList" resultType="InspectionVO">
-  		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date,
+  		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD') as ins_date,
                 i.ins_reason, i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null
@@ -192,7 +200,7 @@
   	
   	<insert id="insertModalIns" parameterType="InspectionVO">
   		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
-		values(('INS' || to_char(sysdate, 'yyMMdd') || lpad(inspection_seq.nextval, 4,'0')) , to_date(sysdate, 'yyyy-MM-dd'), #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
+		values(('INS' || to_char(sysdate, 'yyMMdd') || lpad(inspection_seq.nextval, 4,'0')) , current_date, #{insReason}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, #{partDate}, #{insManager}, #{facCode}, #{downCode})
   	</insert>
   	
   	<update id="modifyFacDate" parameterType="InspectionVO">

@@ -45,7 +45,7 @@
 
 <body>
     <th:block layout:fragment="content">
-    <div class="container-fluid page-body-wrapper">
+    <div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
         <h2>점검 관리</h2>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="modal-footer">
                         <button id="saveBtn" type="button" class="btn btn-primary">등록</button>
-                        <button id="closeBtn" type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                        <button id="closeBtn" type="button" class="btn btn-danger" data-dismiss="downInsertModal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
 
         <div class="modal fade" id="facModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:1500px">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:500px">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>                        
@@ -114,7 +114,7 @@
                         <!-- fac 모달그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button id="facCloseBtn" type="button" class="btn btn-secondary"
+                        <button id="facCloseBtn" type="button" class="btn btn-danger"
                             data-dismiss="modal">닫기</button>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="modal-footer">
                         <button id="downSaveBtn" type="button" class="btn btn-primary">등록</button>
-                        <button id="closeBtn2" type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                        <button id="closeBtn2" type="button" class="btn btn-danger" data-dismiss="downInsertModal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -171,9 +171,9 @@
                         <!-- 모달 그리드 끝 -->
                     </div>
                     <div class="modal-footer">
-                        <button id="modBtn" type="button" class="btn btn-primary">수정</button>
-                        <button id="delBtn" type="button" class="btn btn-primary">삭제</button>
-                        <button id="closeBtn3" type="button" class="btn btn-secondary" data-dismiss="downInsertModal">닫기</button>
+                        <button id="modBtn" type="button" class="btn btn-success">수정</button>
+                        <button id="delBtn" type="button" class="btn btn-danger">삭제</button>
+                        <button id="closeBtn3" type="button" class="btn btn-danger" data-dismiss="downInsertModal">닫기</button>
                     </div>
                 </div>
             </div>
@@ -188,26 +188,26 @@
             const grid = new tui.Grid({
                 el: document.getElementById('grid'),
                 scrollX: true,
-                width: 550,
+                width: 750,
                 bodyHeight: 170,
                 columns: [{
                         header: '설비코드 ',
                         name: 'facCode',
-                        width: 100
+                        width: 110
                     },
                     {
                         header: '설비명',
                         name: 'facName',
-                        width: 100
+                        width: 180
                     },
                     {
                         header: '비가동 코드',
                         name: 'downCode',
-                        width: 100
+                        width: 150
                     }, {
                         header: '비가동 사유',
                         name: 'downReason',
-                        width: 100
+                        width: 110
                     }, {
                         header: '설비 비가동일시',
                         name: 'stopDate'
@@ -241,6 +241,7 @@
                 scrollX: false,
                 scrollY: false,
                 rowHeaders: ['rowNum'],
+                bodyHeight: 600,
                 pageOptions: {
                     useClient: true,
                     perPage: 15
@@ -393,8 +394,7 @@
                     },
                     {
                         header: '관리자',
-                        name: 'insManager',
-                        editor: 'text'
+                        name: 'insManager'
                     },
                     {
                         header: '부품교체내역',
@@ -521,6 +521,7 @@
                 $('#downInsertModal').modal('show');
                 inUpGrid.resetData([gridData]);
                 inDownGrid.appendRow();
+                insertDownGrid.setValue(0, 'insManager', $('#name').val(), false)
 
             });
 
@@ -768,6 +769,7 @@
                                 
                 insertUpGrid.appendRow();
                 insertDownGrid.appendRow();
+                //insertDownGrid.setValue(0, 'insManager', $('#name').val(), false)
                
             })
 
@@ -789,6 +791,7 @@
             // facCode 그리드
             var facGrid = new tui.Grid({
                 el: document.getElementById('facGrid'),
+                width : 480,
                 pageOptions: {
                     useClient: true,
                     perPage: 5

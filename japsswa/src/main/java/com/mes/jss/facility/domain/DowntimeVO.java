@@ -17,6 +17,7 @@ public class DowntimeVO {
 	
 	// 조인
 	String facName;
+	String text;
 	
 
 //	facName
