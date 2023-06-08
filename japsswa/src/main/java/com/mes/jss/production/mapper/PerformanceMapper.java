@@ -42,4 +42,8 @@ public interface PerformanceMapper {
 	public PerformanceVO searchPerformanceStart(PerformanceVO vo);
 	
 	
+	// 설비별 생산실적 모니터링
+	public List<PerformanceVO> performanceMonitoring();
+	
+	
 }

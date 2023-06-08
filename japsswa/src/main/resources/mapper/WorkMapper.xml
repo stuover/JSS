@@ -131,11 +131,11 @@
 						   JOIN process c
 									  ON a.pro_code = c.pro_code 
 				  WHERE
-					   <if test="itemType.equals('반제품')">
+					   <if test="itemType.equals('SAM')">
 						NOT
 					   </if>  
 					   a.item_type = '반제품' 
-				  START WITH a.ing_code = (SELECT item_code FROM work_detail WHERE wdetail_id =#{wdetailId})
+				  START WITH a.item_code = (SELECT item_code FROM work_detail WHERE wdetail_id =#{wdetailId})
 				  CONNECT BY PRIOR a.bom_level = a.level_type
 				  ORDER BY level, pro_order
 		     ),

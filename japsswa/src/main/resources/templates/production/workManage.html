@@ -37,7 +37,7 @@
 				      <div class="h-auto d-md-flex justify-content-between">
 					      <div><h5 class="page-title">작업지시</h5></div>
 		                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-		                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
+		                  	<button type="button" id="searchBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
 		                  	<button id="saveBtn" class="btn btn-primary">저장</button>
 		                  	<button id="deleteBtn" class="btn btn-danger">삭제</button>
 		                  </div>
@@ -68,7 +68,7 @@
 					  <div class="h-auto d-md-flex justify-content-between">
 					 	<div><h5 class="page-title">BOM 및 공정 정보</h5></div>
 						<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-							<button type="button" id="selectHoldBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">자재 홀드</button>
+							<button type="button" id="selectHoldBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#holdModal">자재 홀드 등록</button>
 						 </div>
 					  </div>
 							<!-- card-body start -->
@@ -96,14 +96,14 @@
 	        <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	            <h5 class="modal-title" id="searchModalLabel">생산계획 조회</h5>
+	            <h5 class="modal-title fw-bold fs-5" >생산계획 조회</h5>
 	            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 		            <div class="modal-body">
 		            
 					<div class="m-2 d-md-flex justify-content-md-center">
 						<input type="date" class="m-2" id="startDateOption"></input> <span>&nbsp;&#126;&nbsp;</span><input type="date" class="m-2" id="endDateOption"></input>
-						<button id="dateSearch" class="btn btn-success btn-sm">검색</button>
+						<button id="dateSearch" class="btn btn-dark btn-sm">검색</button>
 
 					</div>
 		            
@@ -123,12 +123,12 @@
 	        <div class="modal-dialog modal-dialog-centered">
 	        <div class="modal-content">
 	            <div class="modal-header">
-	            	<h5 class="modal-title" id="">제품 선택</h5>
+	            	<h5 class="modal-title fw-bold fs-5">제품 선택</h5>
 	            	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	            </div>
 	            <div class="modal-body">
 	            	<input type="text" id="searchItemResult"></input>
-	            	<button id="item-search-btn" class="m-2 btn btn-success btn-sm">검색</button>
+	            	<button id="item-search-btn" class="m-2 btn btn-dark btn-sm">검색</button>
 	            <div id="itemSearchGrid"></div>
 	            </div>
 	            	<div class="modal-footer">
@@ -143,7 +143,7 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="">Hold 자재 선택</h5>
+					<h5 class="modal-title fw-bold fs-5">Hold 자재 등록</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -175,13 +175,13 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="">작업지시 조회</h5>
+					<h5 class="modal-title fw-bold fs-5">작업지시 조회</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<div class="m-2 d-md-flex justify-content-md-center">
 						<input type="date" class="m-2" id="startDateOption"></input> <span>&nbsp;&#126;&nbsp;</span><input type="date" class="m-2" id="endDateOption"></input>
-						<button id="dateSearch" class="btn btn-success btn-sm">검색</button>
+						<button id="dateSearch" class="btn btn-dark btn-sm">검색</button>
 
 					</div>
 					
@@ -531,8 +531,9 @@
 				  name: 'itemCode'
 				 },
 				 {
-				  header: '제품코드',
-				  name: 'itemType'
+				  header: '제품구분',
+				  name: 'itemType',
+				  hidden: true
 				 },
 				 {
 				  header: '제품명',
