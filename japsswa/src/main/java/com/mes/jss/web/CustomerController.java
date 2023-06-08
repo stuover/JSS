@@ -39,7 +39,6 @@ public class CustomerController {
 	@ResponseBody
 	@RequestMapping("/saveCusDeta")
 	public String saveCusDeta(@RequestBody TransListVO vo) {
-		System.err.println(vo);
 		
 		cusService.saveCusDeta(vo);
 		return "success";

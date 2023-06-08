@@ -294,6 +294,7 @@ $('input[name="itemType"]').on('change', function() {
 
 
 // 품목 모달 검색 버튼 이벤트
+
 $('#selectBtn').on('click', function() {
 	count=0;
 	console.log($('#search').val());
@@ -313,14 +314,9 @@ $('#selectBtn').on('click', function() {
 
 
 // 선택 품목으로 bom 정보 가져오기
-modalGrid.on('dblclick',function(e){
-	itemCode = modalGrid.getRow(e.rowKey).itemCode;
-	itemName = modalGrid.getRow(e.rowKey).itemName;
-	
-	$('#itemName').val(itemName);
-	$('#itemCode').val(itemCode);
-	
-	console.log(itemName)
+var itemCode = null;
+var iteName = null;
+function bom(itemCode){
 	$.ajax({
 		url : "/getBomManageList",
 		method : "get",
@@ -335,6 +331,15 @@ modalGrid.on('dblclick',function(e){
 			console.log(reject);
 		}
 	})
+}
+modalGrid.on('dblclick',function(e){
+	itemCode = modalGrid.getRow(e.rowKey).itemCode;
+	itemName = modalGrid.getRow(e.rowKey).itemName;
+	
+	$('#itemName').val(itemName);
+	$('#itemCode').val(itemCode);
+
+	bom(itemCode)
 	$('#searchModal').modal('hide');	
 });
 
@@ -575,19 +580,30 @@ $('#delBomBtn').on('click',function(){
 $('#saveBtn').on('click', function(){
 	bomGrid.finishEditing();
 	console.log( $('#itemCode').val())
-	let data = JSON.stringify(bomGrid.getData());
+	itemCode = $('#itemCode').val();
+	let data = bomGrid.getData();
+	
+	data.forEach(function(data, i){
+		if(bomGrid.getRow(i).bomLevel == null || bomGrid.getRow(i).proCode == null 
+				|| bomGrid.getRow(i).proOrder == null || bomGrid.getRow(i).itemCon == null
+				|| bomGrid.getRow(i).bomLevel == '' || bomGrid.getRow(i).proCode == '' 
+				|| bomGrid.getRow(i).proOrder == '' || bomGrid.getRow(i).itemCon == ''){
+			bomGrid.removeRow(i);
+		}
+	})
+	
 	$.ajax({
 		url : "/saveBom",
 		method : "post",
 		contentType: "application/json",
-		dataType : "json",
 		data: JSON.stringify( { itemCode: $('#itemCode').val(), list : bomGrid.getData() } ),
 		beforeSend: function(xhr){
 			xhr.setRequestHeader(header, token);    
-		},success : function(result){
-			
+		},success : function(result) {
+			bom(itemCode);
 			
 		},error : function (reject){
+
 			console.log(reject)
 		}
 	})

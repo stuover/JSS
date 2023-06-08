@@ -7,7 +7,7 @@
 	<sql id="criteria">
 
 		<if test="searchSel != null and searchSel != ''.toString()">
-			and item_type = (select deta_name from details_comm where deta_code =  #{searchSel})
+			and item_type =  #{searchSel}
 		</if>
 		<if test="searchInp != null and searchInp != ''.toString()">
 			and ( test_code like '%'||#{searchInp}||'%'
@@ -20,7 +20,7 @@
 	<select id="getList" resultType="QualityVO">
 
 		select q.test_code,
-		e.emp_name,q.item_code,q.mr_order_det_code,i.item_type,i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity,((q.err_quantity/(q.test_quantity))*100)
+		e.emp_name,q.item_code,q.mr_order_det_code,GET_CODENAME(i.item_type) item_type, i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity,((q.err_quantity/(q.test_quantity))*100)
 		error,q.test_note
 		from itemlist i join quality_test q on(i.item_code = q.item_code) join emp
 		e on(q.emp_no=e.emp_no)
@@ -35,7 +35,7 @@
 
 	<select id="qualityList" parameterType = "SearchDTO" resultType="QualityVO">
 		select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,
-		situation, test_Quantity, test_Note, item_type
+		situation, test_Quantity, test_Note, GET_CODENAME(item_type) item_type
 		from quality_test a join itemlist b
 		on a.item_code = b.item_code
 		where situation = '검사대기'
@@ -89,7 +89,7 @@
 
 	<select id="getPassQualityList" parameterType = "SearchDTO"  resultType="QualityVO">
 		select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation,
-		test_Quantity, test_Note, item_type,
+		test_Quantity, test_Note, GET_CODENAME(item_type) item_type,
 		PASS_QUANTITY,err_QUANTITY,DEFECTIVE_RATE, c.emp_name
 		from quality_test a full outer join itemlist b
 		on (a.item_code = b.item_code) join emp c
@@ -104,7 +104,7 @@
 
 	<select id="getErrQualityList" parameterType = "SearchDTO"  resultType="QualityVO">
 		select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation,
-		test_Quantity, test_Note, item_type,
+		test_Quantity, test_Note, GET_CODENAME(item_type),
 		PASS_QUANTITY,err_QUANTITY,DEFECTIVE_RATE, c.emp_name
 		from quality_test a full outer join itemlist b
 		on (a.item_code = b.item_code) join emp c
