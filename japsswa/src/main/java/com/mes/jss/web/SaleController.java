@@ -158,6 +158,36 @@ public class SaleController {
 		
 	}
 	
+	//주문서 조회 화면
+	@RequestMapping("/orderList")
+	public String orderList() {
+		return "sale/orderShow";
+	}
+	
+	//주문서 전체 조회
+	@RequestMapping("/entOrderList")
+	@ResponseBody
+	public List<OrderVO> entOrderListAjax(){
+		List<OrderVO> entList = saleService.entOrderList();
+		return entList;
+	}
+	
+	//주문서 조회
+	@RequestMapping("/orderCheck")
+	@ResponseBody
+	public List<OrderVO> orderCheckAjax(OrderVO cvo){
+		List<OrderVO> checkList = saleService.orderCheck(cvo);
+		return checkList;
+	}
+	
+	//주문 상세 조회
+	@RequestMapping("/detCheck")
+	@ResponseBody
+	public List<OrderVO> detCheckAjax(@RequestParam String ordId){
+		List<OrderVO> dcList = saleService.detCheck(ordId);
+		return dcList;
+	}
+	
 	
 	
 	
