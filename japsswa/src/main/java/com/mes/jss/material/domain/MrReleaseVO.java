@@ -1,5 +1,7 @@
 package com.mes.jss.material.domain;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -14,4 +16,9 @@ public class MrReleaseVO {   // 자재 출고
 	 String mrRealReasonCode;
 	 String itemType;
 	 String itemName;
+	 Date mrRealDate;
+	 Date mrRealDate1;
+	 Date mrRealDate2;
+	 String mrSearch;
+	 
 }

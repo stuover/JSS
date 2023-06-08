@@ -29,7 +29,7 @@
                 <div class="card-body">
 
 
-	<h3 style="text-align:center; font-weight:bold;margin-top:10px;"> 자재 반품 </h3>
+	<h3 style="text-align:center; font-weight:semi-bold;margin-top:10px;"> 자재 반품 </h3>
 
 <!-- 제목 -->
 	
@@ -161,7 +161,7 @@
 					name : 'empName'
 				},{
 					header : '주문 상세 코드',
-					name : 'mrOrderDetail'
+					name : 'mrOrderDetCode'
 				},{
 					header : '구분',
 					name : 'itemType'
@@ -190,12 +190,8 @@
 				{
 					header : '불량률',
 					name : 'error'
-				},
-				{
-					header : '비고',
-					name : 'testNote',
-					editor: 'text'
 				}
+				
 				
 				],
 				pageOptions: { 
@@ -215,8 +211,8 @@
 				
 
 				success : function(result) {
-					grid3.resetData(result);
-					grid3.refreshLayout();
+					grid1.resetData(result);
+					grid1.refreshLayout();
 				},
 				error: function(reject){
 					console.log(reject);
@@ -361,7 +357,21 @@
 			})
 			
 						
-		
+		$.ajax({
+				
+				url : "/mrReturnAjax",
+
+				method : "GET",
+				
+
+				success : function(result) {
+					grid1.resetData(result);
+					grid1.refreshLayout();
+				},
+				error: function(reject){
+					console.log(reject);
+				}
+			});
 		
 		
 		

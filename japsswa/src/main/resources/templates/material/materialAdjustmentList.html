@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+
+
+<script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+
+<style>
+</style>
+
+</head>
+<body>
+
+	<th:block layout:fragment="content">
+	
+	<div class="container-fluid page-body-wrapper">
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                
+          <h3 style="text-align:center; font-weight:semi-bold; margin-top:50px; margin-bottom:80px;">자재 조정 내역</h3>
+          
+          <div style="width:1300px; height:30px; margin-top:50px; margin-bottom:50px;">
+		<form action="#" >
+  <label for="lang" ></label>
+  <select name="process" id="process" style="margin-left:300px;">
+  <option value="">--조정구분--</option>
+    <option value="등록">등록</option>
+    <option value="입고">입고</option>
+    <option value="출고">출고</option>
+    
+   
+  </select>
+  
+
+
+	
+  <label for="lang"></label>
+  <select name="itemType" id="itemType" style="margin-left:20px;margin-right:10px;">
+   <option value="">--자재구분--</option>
+    <option value="MAT">자재</option>
+    <option value="SAM">반제품</option>
+   
+  </select>
+  <label for="adjustmentDate" style="margin-left:10px;">조정일</label>
+  <input type="date" style="margin-right:10px;" id="mrAdDate1" name="mrAdDate1">~
+  <input type="date" style="margin-left:10px; margin-right:10px;" id="mrAdDate2" name="mrAdDate2">
+  <label for="mrSearch">자재명</label>
+  <input type="text" id="mrSearch">
+  
+
+
+    <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
+</form>
+	
+	</div>
+          
+          
+          
+          
+          
+          <div id="grid5"></div>	
+          
+          
+          </div>
+          </div>
+          </div>
+          </div>
+          
+          
+          
+          
+          
+          <script>
+          
+          $(document).ready(function(){
+        	  
+        	  
+         
+          
+          
+          
+          $.ajax({
+			   url:"/mrAdmFullList",
+			   method:"GET",
+			   success: function(result){
+				   grid5.resetData(result);
+				   
+			   },
+			   error : function(reject){
+				   console.log(reject);
+			   }
+			   
+			   
+			   
+		   })
+          
+          
+          
+          
+          
+          
+          var grid5 = new tui.Grid({
+				el : document.getElementById('grid5'),
+				bodyHeight:500,
+				scollX : false,
+				
+				
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '조정코드',
+					name : 'adjustmentCode'
+					
+				}, {
+					header : '자재 lot 번호',
+					name : 'mrLotNumber'
+					
+				},{
+					header : '품목 코드',
+					name : 'itemCode'
+					
+				},{
+					header : '구분',
+					name : 'itemType',
+					width:50
+					
+				},
+				{
+					header : '품목명',
+					name : 'itemName'
+					
+					
+				}, 
+				
+				{
+					header : '등록일자',
+					name : 'registerDate'
+					
+				}, {
+					header : '처리',
+					name : 'process'
+					
+				}, {
+					header : '결과',
+					name : 'change'
+					
+				},
+				{
+					header : '조정일자',
+					name : 'adjustmentDate'
+					
+				},
+				{
+					header : '사원 번호',
+					name : 'empNo'
+					
+				}
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 20 
+	            }
+			})
+          
+          
+     $('#searchQuery').on('click',function(){
+    	  
+    	 let result1={
+    			 process : $('#process').val(),
+    			 itemType : $('#itemType').val(),
+    			 mrAdDate1 : $('#mrAdDate1').val(),
+    			 mrAdDate2 : $('#mrAdDate2').val(),
+    			 mrSearch : $('#mrSearch').val()
+    			 
+    	 }
+    	 
+    	 console.log(result1);
+    	 
+    	 
+      	$.ajax({
+       		url:"/mrAdmSearch",
+     		method:"POST",
+      		data:JSON.stringify(result1),
+    		contentType:"application/json",
+    		beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+      		
+    		success : function(result){
+    			grid5.resetData(result);
+    			},
+    			error : function(reject){
+    				console.log(reject);	
+    			}	
+    			
+    			})
+      	
+    		})
+    			
+    		 
+      		
+    
+          
+          
+          
+          
+          
+		})
+          </script>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+                </th:block>
+
+
+</body>
+
+</html>

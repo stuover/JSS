@@ -11,9 +11,14 @@ public class MrReturnVO {    // 자재 반품
 	String mrReturnCode;
 	String testCode;
 	String itemCode;
+	String itemName;
 	long mrReturnCount;
 	String mrReturnReason;
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date mrReturnDate;
+	Date mrReturnDate1;
+	Date mrReturnDate2;
 	long empNo;
+	String mrOrderDetCode;
+	String CustomerName;
 }

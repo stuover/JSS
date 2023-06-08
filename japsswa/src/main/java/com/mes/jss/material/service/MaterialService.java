@@ -187,6 +187,20 @@ public interface MaterialService {
 	// 자재 발주 조회용
 	public List<MrOrderDetailVO> orderList();
 	
+	// 자재 출고 내역 검색
+	public List<MrReleaseVO> mrRelSearch(MrReleaseVO vo);
+	
+	// 자재 반품 검색
+	public List<MrReturnVO> mrReturnSearch(MrReturnVO vo);
+	
+	// 자재 조정 내역 리스트
+	public List<MrAdjustmentVO> mrAdmFullList();
+	
+	// 자재 조정 내역 검색
+	public List<MrAdjustmentVO> mrAdmSearch(MrAdjustmentVO vo);
+	
+	
+	
 	
 	
 	

@@ -24,5 +24,7 @@ public class MrAdjustmentVO {	// 자재 조정
 	long saveMaterial;
 	String itemType;
 	String admNote;
-	
+	Date mrAdDate1;
+	Date mrAdDate2;
+	String mrSearch;
 }

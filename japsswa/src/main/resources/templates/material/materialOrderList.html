@@ -28,8 +28,36 @@
                 <div class="card-body">
 	
 	<div style="width:1000px;">
-	<p style="font-weight:bold; margin-left:600px; text-align:center; margin-top:30px; font-size:30px;">자재 발주 조회</p>
+	<p style="font-weight:semi-bold; margin-left:600px; text-align:center; margin-top:30px; font-size:30px;">자재 발주 조회</p>
 	</div>
+	
+	<div style="width:1500px; height:30px; margin-top:100px; margin-bottom:100px;">
+		<form action="#" >
+		
+  <label for="customer" style="margin-left:270px;" >거래처</label>
+ 	<input type="text" id="customer" name="customer"  >
+ 
+  <label for="material">자재명</label>
+	<input type="text" id="material" name="material" >
+
+  
+  <label for="mrOrderDate" style="margin-left:10px;">발주일</label>
+  <input type="date" style="margin-right:10px;" id="mrOrderDate1" name="mrOrderDate1">~
+  <input type="date" style="margin-left:10px; margin-right:10px;" id="mrOrderDate2" name="mrOrderDate2">
+  
+  <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
+  <button type="button" id="customerBtn" class="btn btn-dark"  data-toggle="modal" data-target=".bd-example-modal-lg1"
+				data-bs-target="#searchModal" style="margin-left:20px; padding:4px;">거래처 검색</button>
+	
+	</form>
+	</div>
+	
+	
+	
+
+
+
+
 
 
 <!-- Large modal -->
@@ -45,7 +73,56 @@
   </div>
 </div>
 	
-        
+	
+  <div class="modal fade bd-example-modal-lg1" id="exampleModal1" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+			<div class="modal-dialog modal-sm-6">
+
+				<div class="modal-content">
+					<div class="modal-header">
+					
+				<!-- 모달 제목 -->
+					
+						<h4 class="modal-title" id="exampleModalLabel"
+							style="font-weight: bold; margin-left:120px;">거래처 및 자재 찾기</h4>
+
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+
+					</div>
+					<div>
+					
+					<!-- 모달 검색 창 -->	
+					
+						<h6 style="font-weight: bold; text-align: center;">
+												
+							거래처명 :<input type=text id="searchcode" class="input"
+								style="margin-left: 15px; padding: 1px; width:130Px; ">
+						
+					<!-- 모달 검색 버튼 -->	
+							
+							<button type="button" class="btn btn-dark" id="searchBtn"
+								style="padding: 8px; margin-left:10px; padding:5px;">검색</button>
+						</h6>
+					</div>
+					
+				<!-- 검색 그리드 -->
+					
+					<div id="grid3"></div>
+					
+				<!-- 선택 버튼 -->	
+				
+					<div>
+						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
+							style="width: 50px; height: 35px; margin-left:230px; padding: 5px;">선택</button>
+					</div>
+				</div>
+
+			</div>
+		</div>                  
    
 	
 	
@@ -86,10 +163,12 @@
 
 			var grid1 = new tui.Grid({
 				el : document.getElementById('grid1'),
-				scollX : false,
-				scollY : false,
 				
-				rowHeaders: ['checkbox'],
+				bodyHeight:500,
+				scollX : false,
+				
+				
+				
 				
 				columns : [ 
 					{
@@ -244,6 +323,146 @@
 				],
 				
 			})	
+			
+			
+			$.ajax({
+				 url : "/mrCustomerAjax",
+				method : "GET",
+				dataType : "json",
+				success : function(result) {
+			grid3.resetData(result);
+					},
+				error : function(reject){
+						console.log(reject);
+						}
+		
+							});
+			
+			
+			var grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				
+				columns : [ {
+					header : '코드(거)',
+					name : 'customerId',
+					hidden:true
+				}, {
+					header : '거래처',
+					name : 'customerName'
+				}, {
+					header : '코드(품)',
+					name : 'itemCode',
+					hidden:true
+				},  
+					{
+					header : '자재',
+					name : 'itemName'
+				}
+					
+				
+				],
+				pageOptions: { 
+	            	useClient: true,
+	               	perPage: 5 
+	            }
+				
+			});
+	
+	
+	
+	
+	// 거래처 및 자재 찾기 버튼
+	
+			$('#checkBtn').on('click',function(){
+			
+				
+				 $('#customer').val('');
+				 $('#material').val('');
+	
+				 
+	//	거래처 검색 아작스
+	
+			$.ajax({
+				url:"/mrCustomerAjax",
+				method:"GET",
+				dataType : "json",
+				
+				success: function(result){
+					grid3.resetData(result);
+					
+				}
+				
+				
+			});
+		
+			});
+			
+			
+	
+	// 거래처 및 자재 모달창 검색 버튼
+	
+			$('#searchBtn').on('click',function(){
+				  
+				  const result= $("#searchcode").val();
+				  $('#searchcode').val('');
+					
+				  $.ajax({
+						url:"/searchCustomerAjax",
+						method:"GET",
+						data:{'result':result},
+						dataType:"json",
+					
+					success : function(result) {
+						grid1.resetData(result);
+						grid1.refreshLayout();
+						console.log(result);
+					}
+					
+						
+			     });
+				  
+				 
+	 
+				 }) 		
+		
+				 
+	// 거래처 및 자재 모달창 선택 버튼
+	
+				 $('#chooseBtn').on('click',function(){
+					 
+					 $('#customer').val(grid3.getCheckedRows()[0].customerName);
+						
+					 $('#material').val(grid3.getCheckedRows()[0].itemName);		
+					 
+					 
+					 
+	// 거래처 아작스
+		
+					
+					})
+					
+		$('#customerBtn').on('click',function(){
+			
+			$('#customer').val('');
+			
+			 $('#material').val('');		
+	
+		})	
+					
+					
+					
+					
+					
+			$(function(){
+		    	$('#exampleModal1').on('shown.bs.modal', function(){
+		    		grid3.refreshLayout();
+		    	})
+		    });
+			
 			
 			
 // 새로고침			
