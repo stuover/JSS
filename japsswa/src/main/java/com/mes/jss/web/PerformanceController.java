@@ -117,4 +117,16 @@ public class PerformanceController {
 	}
 	
 	
+	// // 설비별 생산실적 모니터링
+	@RequestMapping("/performanceMonitoringAjax")
+	@ResponseBody
+	public List<PerformanceVO> performanceMonitoringAjax(){
+		List<PerformanceVO> result = performanceService.performanceMonitoring();
+		
+		return result;
+	}
+	
+	
+	
+	
 }

@@ -6,6 +6,8 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
+ 
+  
 
 <style>
 	.tui-grid-cell-content {
@@ -16,7 +18,8 @@
 </head>
 
 <th:block layout:fragment="content">
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+  <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 	
  		<div >
  			<div class="col-12 grid-margin stretch-card">
@@ -36,7 +39,7 @@
 				      <div class="h-auto d-md-flex justify-content-between">
 					      <div><h5 class="page-title">작업지시</h5></div>
 		                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-		                  	<button type="button" id="searchBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
+		                  	<button type="button" id="searchBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
 		                  </div>
 				      </div>
 				      <!-- card-body start -->
@@ -59,7 +62,7 @@
 					  <div class="h-auto d-md-flex justify-content-between">
 					 	<div><h5 class="page-title">공정 현황</h5></div>
 						 <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-							<button type="button" id="selectHoldBtn" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#holdModal">공정 이동표</button>
+							<button type="button" id="proPDFModalBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#proPDFModal">공정 이동표 조회</button>
 						</div>
 					  </div>
 							<!-- card-body start -->
@@ -78,6 +81,8 @@
             </div>
   		</div>
   		
+  		
+
 		
 		
 		<!-- Modal List Start -->
@@ -88,7 +93,7 @@
 			<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="">생산 실적 등록한 작업지시 조회</h5>
+					<h5 class="modal-title fw-bold text-center fs-4" id="">생산 실적 등록한 작업지시 조회</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -106,6 +111,134 @@
 			</div>
 			</div>
 		</div>
+		
+		<!-- 작업지시 조회 모달창 -->
+		<div class="modal fade" id="proPDFModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-xl modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title fw-bold text-center fs-5">공정이동표 PDF 출력</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+			  		<div id="pdfDiv">
+					    <!-- pdf 생성 영역 Start -->
+						   
+					       <div id="pdf-container">
+					            <h1>공정이동표</h1>
+					            <br>
+					            날짜: <input type="text" id="pdf-date">
+					
+					            <table class="pdf-table"> 
+					                <thead> 
+					                <tr class="pdf-color-gray">
+					                    <th>제품명</th>
+					                    <th colspan="2" id="pdf-item-name"></th>
+					                    <th>작업지시량</th> 
+					                    <th colspan="2" id="pdf-work-amount"></th>
+					                </tr> 
+					                <tr class="pdf-color-gray">
+						                <th>공정명</th>
+						                <th>합격량</th>
+						                <th>불량량</th>
+						                <th>생산량</th>
+						                <th>작업자</th>
+					                </tr>
+					                 
+					
+					                </thead>
+					
+					                <tbody> 
+					
+					                <tr class="pdf-row-0"> 
+						                
+						                <td></td>
+						                <td></td>
+						                <td></td>
+						                <td></td>
+						                <td></td>
+					                </tr>
+					
+					                <tr class="pdf-row-1"> 
+					                
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					
+					                <tr class="pdf-row-2"> 
+					                    <td></td>
+					                    
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					                <tr class="pdf-row-3"> 
+					                    <td></td>
+					                    <td></td>
+					                   
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					                <tr class="pdf-row-4"> 
+					                    <td></td>
+					                    <td></td>
+					                 
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					                <tr class="pdf-row-5"> 
+					                    <td></td>
+					                  
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					                <tr class="pdf-row-6"> 
+					                    <td></td> 
+					                    <td></td>
+					                   
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					                <tr class="pdf-row-7"> 
+					                    <td></td>
+					                    <td></td>
+					                   
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					                <tr class="pdf-row-8"> 
+					                    <td></td>
+					                    <td></td>
+					                   
+					                    <td></td>
+					                    <td></td>
+					                    <td></td>
+					                </tr>
+					                </tbody>
+					            </table>
+					
+					        </div>
+								
+					    <!-- pdf 생성 영역 End -->
+					</div>		
+					
+				</div>
+				<div class="modal-footer">
+					<button id="processPDFBtn" type="button" class="btn btn-primary">PDF 출력</button>
+				</div>
+			</div>
+			</div>
+		</div>	
 
 	    <!-- Modal List End -->
   		
@@ -136,6 +269,7 @@
   		  	}); 
   		  	
   		  	
+  		  	/* $('#pdfDiv').hide(); */
   		};  		
 
 		
@@ -155,7 +289,8 @@
 		        },
 		        {
 		          header: '계획명',
-		          name: 'planName'
+		          name: 'planName',
+		          hidden: true
 		        },
 		        {
 			      header: '계획날짜',
@@ -337,7 +472,7 @@
 				workInfo = [{
 							 workId : workSearchGrid.getCheckedRows()[0].workId,
 							 workName : workSearchGrid.getCheckedRows()[0].workName, 
-							 workDate : workSearchGrid.getCheckedRows()[0].workDate, 
+							 workDate : workSearchGrid.getCheckedRows()[0].workEnd, 
 							 empName : workSearchGrid.getCheckedRows()[0].empName
 							}];
 				 console.log('workId = ' + workCode);
@@ -374,6 +509,9 @@
 			var iCode = '';		// 더블클릭한 제품의 제품코드
 			var itemKeyNum = '';		// 더블클릭한 제품의 rowKey
 			var wCode = '';
+			var iName = '';
+			var wDate = '';
+			var wName = '';
 			detailGrid.on('dblclick', function(e) {
 
 				// 더블클릭 시 row 색 변화
@@ -385,7 +523,10 @@
 				itemKeyNum = e.rowKey;
 				
 				iCode = detailGrid.getRow(e.rowKey).itemCode;
-				wCode = detailGrid.getRow(e.rowKey).wdetailId;						
+				iName = detailGrid.getRow(e.rowKey).itemName;
+				wDate = detailGrid.getRow(e.rowKey).workEnd;
+				wCode = detailGrid.getRow(e.rowKey).wdetailId;	
+				wAmount = detailGrid.getRow(e.rowKey).workAmount;
 					
 				// 더블클릭한 제품의 BOM 및 공정정보 조회 ajax
 				$.ajax({
@@ -465,13 +606,71 @@
 			  ]
 			});
 			
-
-
-			
-
+			// PDF 모달
+			// 공정이동표 양식에 값 넣어주기
+			$('#proPDFModalBtn').click(function(){
 				
+				
+				$('#pdf-work-amount').text(wAmount);
+				$('#pdf-item-name').text(iName);
+				$('#pdf-date').val(wDate);
+			 	
+				processInfoGrid.getData().forEach((row, idx)=>{
+					console.log(idx)
+					console.log(row)
+					console.log($('.pdf-row-'+idx+' td'))
+					let tds = $('.pdf-row-'+idx+' td');
+					tds.eq(0).text(row.proName)
+					tds.eq(1).text(row.passItem)
+					tds.eq(2).text(row.failItem)
+					tds.eq(3).text(row.output)
+					tds.eq(4).text(row.worker)
+				
+				})
+			})
 
+			// PDF 출력
+			$('#processPDFBtn').click(savePDF);
 			
+			 function savePDF(){
+			      //저장 영역 div id
+			      html2canvas($('#pdfDiv')[0] ,{	
+			        //logging : true,		// 디버그 목적 로그
+			        //proxy: "html2canvasproxy.php",
+			        allowTaint : true,	// cross-origin allow 
+			        useCORS: true,		// CORS 사용한 서버로부터 이미지 로드할 것인지 여부
+			        scale : 2			// 기본 96dpi에서 해상도를 두 배로 증가
+			        
+			      }).then(function(canvas) {	
+			        // 캔버스를 이미지로 변환
+			        var imgData = canvas.toDataURL('image/png');
+			  
+			        var imgWidth = 190; // 이미지 가로 길이(mm) / A4 기준 210mm
+			        var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+			        var imgHeight = canvas.height * imgWidth / canvas.width;
+			        var heightLeft = imgHeight;
+			        var margin = 10; // 출력 페이지 여백설정
+			        var doc = new jsPDF('p', 'mm');
+			        var position = 0;
+			  
+			        // 첫 페이지 출력
+			        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+			        heightLeft -= pageHeight;
+			  
+			        // 한 페이지 이상일 경우 루프 돌면서 출력
+			        while (heightLeft >= 20) {			// 35
+			        position = heightLeft - imgHeight;
+			        position = position - 20 ;		// -25
+			  
+			        doc.addPage();
+			        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+			        heightLeft -= pageHeight;
+			        }
+			  
+			        // 파일 저장
+			        doc.save('filename.pdf');
+			      });
+			    }
 
 			
 			

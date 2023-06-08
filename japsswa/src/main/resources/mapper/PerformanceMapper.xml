@@ -67,14 +67,26 @@
 	
 	<!-- 설비 조회 모달창 : 투입공정이 현재 공정인 설비 중 비가동인 설비 리스트 -->
 	<select id="performanceFacList" parameterType="PerformanceVO" resultType="PerformanceVO">
+		WITH down AS(
+		             SELECT fac_code, MAX(stop_date)
+		             FROM downtime
+		             WHERE down_reason = 'STO'
+		             GROUP BY fac_code
+		            ),
+		     faclist AS(
+		                SELECT fac_code, fac_name
+		                FROM facility
+		                WHERE pro_code = V
+		                )
+		SELECT a.fac_code, a.fac_name
+		FROM faclist a JOIN down b ON (a.fac_code = b.fac_code)
+		
+		UNION
+		
 		SELECT fac_code, fac_name
 		FROM facility
-		WHERE fac_code IN (
-		                   SELECT fac_code 
-		                   FROM downtime
-		                   WHERE down_reason = '작업대기'
-		                  )
-		    AND pro_code = #{proCode}
+		WHERE fac_status = 'N'
+		  AND pro_code = #{proCode}
 	</select>
 
 
@@ -131,6 +143,34 @@
 						WHERE wdetail_id = #{wdetailId} 
 						  AND pro_code= #{proCode}
 					   )		
+	</select>
+	
+	
+	<!-- 생산실적 모니터링 조회 -->
+	<select id="performanceMonitoring" parameterType="PerformanceVO" resultType="PerformanceVO">
+		WITH perm AS(
+					 SELECT fac_code, SUM(pass_item) pass_item, fail_item
+					 FROM performance
+					 WHERE SUBSTR(end_time,1, 10) = '2023-06-06'--TO_CHAR((sysdate-1), 'yyyy-MM-dd')
+					 GROUP BY fac_code, pass_item, fail_item
+					 ),
+		     reason AS (
+		                SELECT a.down_reason, a.fac_code
+		                FROM downtime a JOIN (select MAX(stop_date) stop_date , fac_code
+		                                      FROM downtime              
+		                                      GROUP BY fac_code
+		                                      )b
+		                                ON(a.fac_code = b.fac_code AND a.stop_date=b.stop_date )    
+		                )
+		SELECT a.*, 
+		       b.pass_item,
+		       NVL(b.fail_item, 0) fail_item,
+		       c.down_reason,
+			   d.pro_name
+		FROM facility a LEFT OUTER JOIN perm b ON (a.fac_code = b.fac_code)
+		                LEFT OUTER JOIN reason c ON (a.fac_code = c.fac_code)
+						LEFT OUTER JOIN process d ON (a.pro_code = d.pro_code)
+		ORDER BY a.fac_code		
 	</select>
 
   	

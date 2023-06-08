@@ -92,6 +92,15 @@ public class PerformanceServiceImpl implements PerformanceService{
 		return result;
 	}
 
+	
+	// 설비별 생산실적 모니터링
+	@Override
+	public List<PerformanceVO> performanceMonitoring() {
+		List<PerformanceVO> result = performanceMapper.performanceMonitoring();
+				
+		return result;
+	}
+
 
 	
 	

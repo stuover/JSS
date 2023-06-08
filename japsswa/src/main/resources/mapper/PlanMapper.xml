@@ -90,7 +90,8 @@
 			itemlist i LEFT OUTER JOIN orddetail o 
 								  ON(i.item_code = o.item_code)
 		WHERE 
-			 item_type = '완제품'
+			 item_type = 'SAM'
+			 OR item_type = 'FIN'
 		GROUP BY i.item_code, item_name, i.item_type
 		ORDER BY 3 DESC
 	</select>
@@ -106,7 +107,8 @@
 			 itemlist i LEFT OUTER JOIN orddetail o 
 			 					   ON(i.item_code = o.item_code)
 		WHERE 
-			 item_type = '완제품' 
+			 item_type = 'FIN'
+			 OR item_type = 'SAM'
 		     AND item_name LIKE '%' || #{itemName} || '%'
 		GROUP BY i.item_code, item_name, i.item_type
 		ORDER BY 3 DESC
@@ -123,8 +125,8 @@
 			itemlist i LEFT OUTER JOIN orddetail o 
 								  ON(i.item_code = o.item_code)
 		WHERE 
-			 item_type = '완제품' 
-			 OR item_type = '반제품'
+			 item_type = 'FIN'
+			 OR item_type = 'SAM'
 		GROUP BY i.item_code, item_name, i.item_type
 		ORDER BY 1 DESC
 	</select>	
@@ -141,8 +143,8 @@
 		      	   itemlist i LEFT OUTER JOIN orddetail o 
 		      	   						 ON(i.item_code = o.item_code)
 		      WHERE 
-		      	   item_type = '완제품' 
-		      	   OR item_type = '반제품'
+		      	   item_type = 'FIN'
+		      	   OR item_type = 'SAM'
 		      GROUP BY i.item_code, item_name,  i.item_type
 		      )
 		WHERE 
