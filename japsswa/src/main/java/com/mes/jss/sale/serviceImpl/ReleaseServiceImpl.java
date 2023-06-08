@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mes.jss.sale.domain.OrderVO;
+import com.mes.jss.sale.domain.ReleaseListVO;
 import com.mes.jss.sale.domain.ReleaseVO;
 import com.mes.jss.sale.mapper.ReleaseMapper;
 import com.mes.jss.sale.service.ReleaseService;
@@ -28,12 +28,18 @@ public class ReleaseServiceImpl implements ReleaseService {
 	}
 
 	@Override
-	public void itemOut(ReleaseVO volist, List<ReleaseVO> rlist) {
-		releaseMapper.commOut(volist);
+	public void itemOut(ReleaseListVO rlist) {
 		
-		for(ReleaseVO rVo : rlist) {
-			releaseMapper.itemOut(rVo);
-		}
+		
+		
+		releaseMapper.commOut(rlist.getReleaseList().get(0));
+		System.err.println(rlist.getReleaseList().get(0));
+		
+		
+		  for(int i=0; i<rlist.getReleaseList2().size(); i++) {
+		  releaseMapper.itemOut(rlist.getReleaseList2().get(i));
+		  System.err.println(rlist.getReleaseList2().get(i)); }
+		 
 	}
 
 

@@ -2,7 +2,7 @@ package com.mes.jss.sale.service;
 
 import java.util.List;
 
-
+import com.mes.jss.sale.domain.ReleaseListVO;
 import com.mes.jss.sale.domain.ReleaseVO;
 
 public interface ReleaseService {
@@ -11,7 +11,7 @@ public interface ReleaseService {
 
 	List<ReleaseVO> showBottomList(String iName);
 
-	public void itemOut(ReleaseVO volist, List<ReleaseVO> rlist);
+	public void itemOut(ReleaseListVO rlist);
 
 
 

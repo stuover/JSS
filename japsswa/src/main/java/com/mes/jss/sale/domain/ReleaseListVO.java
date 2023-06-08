@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class ReleaseListVO {
-	private List<ReleaseVO> releaseList;
-	private ReleaseVO volist;
+	 List<ReleaseVO> releaseList;
+	 List<ReleaseVO> releaseList2;
+	 ReleaseVO volist;
 }

@@ -49,12 +49,13 @@ public class ReleaseController {
 	@ResponseBody
 	public ReleaseVO itemOutAjax(@RequestBody ReleaseListVO releaseList) {
 		
-		ReleaseVO volist = releaseList.getVolist();
 		
-		List<ReleaseVO> rlist = releaseList.getReleaseList();
-		releaseService.itemOut(volist, rlist);
+		System.err.println(releaseList);
 		
-		return volist;
+	
+		releaseService.itemOut(releaseList);
+		
+		return null;
 	}
 	
 }

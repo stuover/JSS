@@ -70,7 +70,7 @@
 	</select>
 		
 	<select id="custOrdModal" resultType="OrderVO">
-		 select c.customer_id, 
+		 select distinct c.customer_id, 
 		       c.customer_name, 
 		       o.ord_id, 
 		       o.ord_name

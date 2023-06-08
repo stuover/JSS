@@ -42,13 +42,14 @@
 			where item_name = #{iName}
 	</select>
 	
-	<select id="commItemOut" statementType="CALLABLE">
+	<select id="commOut" statementType="CALLABLE">
 		{
 			CALL comm_rel(
 				#{ordDetailId},
 				#{empName},
 				#{remain},
-				#{ordCount}
+				#{ordCount},
+				#{relEachCount}
 			)
 		}
 	</select>
@@ -57,7 +58,8 @@
 		{
 			CALL rel_det(
 				#{fnLotNo},
-				#{relEachCount}
+				#{relEachCount},
+				#{fnCount}
 			)
 		}
 	</select>

@@ -25,7 +25,7 @@
 					<div class="row"></div>
 					
 					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-					<button id="inBtn" type="button" class="btn btn-dark">입고처리</button>
+					<button id="inBtn" type="button" class="btn btn-primary">입고처리</button>
 					</div>
 					
 					<div id="topGrid"></div>
@@ -135,6 +135,25 @@
 					
 				}
 			})
+			
+			//화면 하단 그리드에 입고완료된 완제품 리스트
+			$.ajax({
+					  url : "/storeInItem",
+					  method : "get",
+					  success : function(result){
+						  console.log(result);
+						  botGrid.resetData(result);
+						  botGrid.refreshLayout();
+						  for(let i=0; i<topGrid.getRowCount(); i++){
+								topGrid.setValue(i, "empName", $('#name').val(), false);
+							};
+						  
+					  },
+					  error : function(reject){
+						  console.log(reject);
+					  }
+					  
+				  })
 			
 			
 		}
@@ -268,12 +287,12 @@
 	        			xhr.setRequestHeader(header, token);
 	        		},
 	        		success : function(result){
-	        			
+	        			alert("입고취소 되었습니다")
 	        			$.ajax({
 	  					  url : "/storeInItem",
 	  					  method : "get",
 	  					  success : function(result){
-	  						  alert("입고취소 되었습니다")
+	  						  
 	  						  console.log(result);
 	  						  botGrid.resetData(result);
 	  						  botGrid.refreshLayout();
