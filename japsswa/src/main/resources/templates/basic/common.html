@@ -20,21 +20,21 @@
 
 
 <th:block layout:fragment="content">
-	<div class="container-fluid page-body-wrapper">
+	<div>
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
 					<h1 class="card-title">공통 코드 관리</h1>
+					
 					<div>
-					<input id="searchInp" type="text"><button class="m-2"id="searchButton">검색</button><br><br>
+						<input id="searchInp" type="text"><button id="searchButton"  class="m-2 btn btn-dark">검색</button><br><br>
 					</div>
-					<input id="commCode" name="commCode" type="text" placeholder="공통코드"
-						maxlength='5'> <input id="commName" name="commName"
-						type="text" placeholder="공통코드명"> <input id="commNote"
-						name="commNote" type="text" placeholder="비고">
-					<button id="insertBtn" type="button" class="btn btn-primary">등록</button>
-					<button id="deleteBtn" type="button" class="btn btn-primary">삭제</button>
-
+					
+					<input id="commCode" name="commCode" type="text" placeholder="공통코드" maxlength='5'>
+					<input id="commName" name="commName" type="text" placeholder="공통코드명">
+					<input id="commNote" name="commNote" type="text" placeholder="비고">
+					<button id="insertBtn" type="button" class="btn btn-primary" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">등록</button>
+					<button id="deleteBtn" type="button" class="btn btn-danger" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">삭제</button>
 
 					<div id="grid"></div>
 
@@ -51,23 +51,21 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" style="padding-right: 25px;">세부코드 조회</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
 				<div id="top">
 					<div id="detaGrid" style="height: 82px"></div>
 				</div>
 				<div id="body" style="z-index: 9999">
-					<button id="modalInsBtn" type="button" class="btn btn-primary"
-						style="margin-left: 10px">추가</button>
+					<button id="modalInsBtn" type="button" class="btn btn-secondary" style="margin-left: 10px" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">추가</button>
 				</div>
 				<div id="battom">
 					<div id="modalGrid"></div>
 				</div>
 				<div class="modal-footer">
-					<button id="modalModBtn" type="button" class="btn btn-primary">저장</button>
-					<button id="modalDelBtn" type="button" class="btn btn-primary">삭제</button>
+					<button id="modalModBtn" type="button" class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">저장</button>
+					<button id="modalDelBtn" type="button" class="btn btn-danger" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">삭제</button>
 				</div>
 			</div>
 		</div>
@@ -137,12 +135,15 @@
 	                $('#commNote').val(grid.getCheckedRows()[0].commNote);
 	             });
 				
+				
+				var searchInp = null;
 				// 공통코드 LIST
-				function commList(){
+				function commList(searchInp){
 					$.ajax({
 						url : "/commAjax",
 						method : "GET",
 						dataType : "JSON",
+						data : {searchInp : searchInp},
 						success : function(result) {
 							grid.resetData(result);
 						},
@@ -151,7 +152,13 @@
 						}
 					});
 				}
-				commList();
+				commList(searchInp);
+				
+				
+				$('#searchButton').on('click', function() {
+					searchInp = $('#searchInp').val();
+					commList(searchInp);
+				})
 				
 			$('#insertBtn').on('click',function() {
 				let commCode = $('#commCode').val();
@@ -312,10 +319,12 @@
 	 		var commCode = null;
 	 	
 			grid.on('click',function(e){
+				
 				if(e.columnName != "_checked"){
+					commCode = grid.getRow(e.rowKey).commCode;
+
 					if(commCode != null){
 						
-						commCode = grid.getRow(e.rowKey).commCode;
 						grid.setSelectionRange({
 					            start: [e.rowKey, 0],
 					            end: [e.rowKey, grid.getColumns().length - 1]
@@ -441,7 +450,6 @@
 				});
 			});
 		}
-			  
 	</script>
 
 </th:block>

@@ -35,7 +35,7 @@
 
     <th:block layout:fragment="content">
     
-    	<div class="container-fluid page-body-wrapper">
+    	<div>
  			<div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -46,7 +46,7 @@
 						<option th:each="list : ${typeCode}" th:text="${list.text}" th:value="${list.value}">fdd
 						</option>
 					</select> 
-        <input type ="text" id="searchInp"> <button id="searchButoon">검색</button><br><br>
+        <input type ="text" id="searchInp"> <button id="searchButoon" class="btn btn-dark">검색</button><br><br>
         </div>
         <div id="qualityGrid"></div>
 		
@@ -61,7 +61,7 @@
 	        </div>
 	        <div id="testGrid"></div>
 	        <div>
-	            <button id="finshBtn" type="button">검사완료</button>
+	            <button id="finshBtn" type="button" class="btn btn-primary" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">검사완료</button>
 	        </div>
 		</div>
 </div></div></div></div>
@@ -141,10 +141,7 @@ var testGrid = new tui.Grid({
         useClient: true,
         perPage: 7
     },
-    rowHeaders: [{
-        type: 'checkbox',
-        header: " "
-    }],
+
     columns: [
     	 {
         header: '검사명',

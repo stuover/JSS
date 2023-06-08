@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="head">
 
 	<nav class="sidebar sidebar-offcanvas" id="sidebar">
@@ -20,12 +21,14 @@
 				</a>
 				<div class="collapse" id="ui-basic">
 					<ul class="nav flex-column sub-menu">
-						<li class="nav-item"><a class="nav-link" href="employee">사원 정보 조회/관리</a></li>
-						<li class="nav-item"><a class="nav-link" href="common">공통 코드 조회/관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="employee">사원정보 관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="common">공통코드 관리</a></li>
 						<li class="nav-item"><a class="nav-link" href="bom">BOM 조회</a></li>
-						<li class="nav-item"><a class="nav-link" href="bomManage">BOM 관리</a></li>
-						<li class="nav-item"><a class="nav-link" href="item">품목 조회/관리</a></li>
-						<li class="nav-item"><a class="nav-link" href="process">공정 정보 조회/관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="bomManage" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">BOM 관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="item">품목정보 관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="process">공정정보 관리</a></li>
+						<li class="nav-item"><a class="nav-link" href="customer">거래처 관리</a></li>
+						
 					</ul>
 				</div>
 			</li>
@@ -89,8 +92,7 @@
 						<li class="nav-item">
 							<a class="nav-link" href="mrAdjustmentList">자재 조정 내역</a>
 						</li>
-						
-						
+
 					</ul>
 				</div>
 			</li>
@@ -104,13 +106,13 @@
 				<div class="collapse" id="icons">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="quality">품질검사 예정 자재</a>
+							<a class="nav-link" href="quality">품질검사 예정 목록</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="passQuality">품질검사 완료 자재</a>
+							<a class="nav-link" href="passQuality">품질검사 합격 목록</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="errQuality">불합격 자재</a>
+							<a class="nav-link" href="errQuality">품질검사 불합격 목록</a>
 						</li>
 					</ul>
 				</div>

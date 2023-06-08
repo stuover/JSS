@@ -10,7 +10,7 @@
 <title>회원 등록 페이지</title>
 </head>
 <th:block layout:fragment="content">
-	<div class="container-fluid page-body-wrapper">
+	<div>
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
@@ -43,8 +43,8 @@
 		                </div>
 		                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 		                <div class="mt-3">
-		                  <button id="addEmpBtn">등록</button>
-		                  <button id="backBtn">취소</button>		                  
+		                  <button id="addEmpBtn"  class="btn btn-primary">등록</button>
+		                  <button id="backBtn"  class="btn btn-danger">취소</button>		                  
 		                </div>     
 		             </form>
 		             </div>

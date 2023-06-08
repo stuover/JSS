@@ -15,14 +15,16 @@ import com.mes.jss.basic.domain.CustomerVO;
 import com.mes.jss.basic.domain.TransListVO;
 import com.mes.jss.basic.domain.TransactionItemVO;
 import com.mes.jss.basic.service.CustomerService;
+import com.mes.jss.facility.service.FacilityService;
 
 @Controller
 public class CustomerController {
 	@Autowired CustomerService cusService;
-	
+	@Autowired FacilityService facService;
 	
 	@GetMapping("/customer")
 	public String  downtime(Model model) {
+		model.addAttribute("detaCode",facService.getDetailList("vnd"));
 		
 		return "basic/customer";
 	}	
@@ -38,6 +40,7 @@ public class CustomerController {
 	@RequestMapping("/saveCusDeta")
 	public String saveCusDeta(@RequestBody TransListVO vo) {
 		System.err.println(vo);
+		
 		cusService.saveCusDeta(vo);
 		return "success";
 	}

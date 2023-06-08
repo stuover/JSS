@@ -57,9 +57,10 @@
   		and customer_id = #{customerId}
   	</delete>
   	
-  	<insert id="insertCustomer" parameterType="customervo">
+  	<insert id="insertCustomer" parameterType="CustomerVO">
+  	
   		<selectKey keyProperty="customerId" resultType="String" order="BEFORE">
-  			select deta_code from DETAILS_COMM where deta_name = #{custPart}
+  			select deta_code from DETAILS_COMM where deta_name =  GET_CODENAME(#{custPart})
   		</selectKey>
   		
   		insert into customer 
@@ -71,7 +72,7 @@
 		 CUST_PART,
 		 CONTRACT_STATUS,
 		 CUST_ETC)	
-  		values(#{customerId} || to_date(sysdate, 'yyMMdd') ||  lpad( (select nvl(max(to_number(substr(CUSTOMER_ID, -4))),0)+1 from CUSTOMER), 4, '0') ,
+  		values(#{customerId} || to_char(sysdate, 'yyMMdd') ||  lpad( (select nvl(max(to_number(substr(CUSTOMER_ID, -4))),0)+1 from CUSTOMER), 4, '0') ,
   			   #{customerName},
   			   #{custAddr},
   			   #{custMail},
@@ -81,8 +82,8 @@
   			   #{custEtc})
   	</insert>
   	
-  	<select id="getCustomer" resultType="customervo">
-  		select * from customer where substr(customer_id, 3) = (select Max(substr(customer_id, 3)) from  CUSTOMER)
+  	<select id="getCustomer" resultType="CustomerVO">
+  		select * from customer where substr(customer_id, 4) = (select Max(substr(customer_id, 4)) from  CUSTOMER)
   	</select>
 
   </mapper>

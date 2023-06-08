@@ -8,6 +8,12 @@
   	<select id="getListComm" resultType="CommVO">
   		select  comm_code, comm_name, comm_note, insert_date, modify_date
   		from  common
+  		<if test="searchInp != null and searchInp !=''.toString()"> 
+  			where 
+  					comm_code like upper('%'||#{searchInp}||'%')
+  				or	comm_name like upper('%'||#{searchInp}||'%')
+  				or	comm_note like upper('%'||#{searchInp}||'%')
+  		</if>
   	    order by comm_code
 
   	</select>

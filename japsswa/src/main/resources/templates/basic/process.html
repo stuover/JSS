@@ -25,10 +25,10 @@ input:focus{
 					
 
 					<input id="searchInp" name="search" type="text" >
-					<button id="searchButton" type="button" class="btn btn-primary">검색</button>
+					<button id="searchButton" type="button" class="btn btn-dark">검색</button>
 						<div id="grid"></div>
-					<button id="addModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">등록</button>
-					<button id="modModalBtn" type="button" class="btn btn-primary"  >수정</button>
+					<button id="addModalBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">등록</button>
+					<button id="modModalBtn" type="button" class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">수정</button>
 					
 					
 				</div>
@@ -70,8 +70,8 @@ input:focus{
 				</div>
 
 	            <div class="modal-footer">
-	            	<button id="modBtn" type="button" class="btn btn-primary">수정</button>
-	            	<button id="delBtn" type="button" class="btn btn-primary">삭제</button>
+	            	<button id="modBtn" type="button" class="btn btn-success">수정</button>
+	            	<button id="delBtn" type="button" class="btn btn-danger">삭제</button>
 	            	
 	            </div>
 	        </div>

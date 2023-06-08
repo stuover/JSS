@@ -12,7 +12,7 @@
 	<th:block layout:fragment="content">
 		<h1>꾸며줘!!!!!</h1>
 
-		<div sec:authorize="hasRole('ROLE_ADMIN')"></div>
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN')"></div>
 		<div sec:authorize="hasRole('ROLE_USER')"></div>
 
 
