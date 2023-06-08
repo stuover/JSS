@@ -3,6 +3,7 @@ package com.mes.jss.facility.service;
 import java.util.List;
 
 import com.mes.jss.basic.domain.CommVO;
+import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.domain.InspectionVO;
@@ -52,6 +53,7 @@ public interface FacilityService {
 	public void RemoveInspection(InspectionVO vo);	// 점검 내역 삭제
 	public List<InspectionVO> searchInsList(InspectionVO vo);	// 점검 내역 검색
 	public List<CommVO> getDetailList(String commCode);
+	public List<EmpVO> getEmp(String empNo);
 	
 
 	

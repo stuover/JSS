@@ -3,6 +3,7 @@ package com.mes.jss.facility.mapper;
 import java.util.List;
 
 import com.mes.jss.basic.domain.CommVO;
+import com.mes.jss.basic.domain.EmpVO;
 import com.mes.jss.facility.domain.DowntimeVO;
 import com.mes.jss.facility.domain.FacilityVO;
 import com.mes.jss.facility.domain.InspectionVO;
@@ -46,7 +47,8 @@ public interface FacilityMapper {
 	public void modifyIns(InspectionVO vo);		// 점검 내역 수정
 	public void deleteIns(InspectionVO vo);	// 점검 내역 삭제
 	public List<InspectionVO> searchInsList(InspectionVO vo);	// 점검 내역 검색
-	public List<CommVO> getDetailList(String commCode);
+	public List<CommVO> getDetailList(String commCode);	// 공통 -> 세부코드 가져오기
 	public int modifyFacDate(InspectionVO vo);
+	public List<EmpVO> getEmpList(String empNo);		// 사원정보 가져오기
 	
 }

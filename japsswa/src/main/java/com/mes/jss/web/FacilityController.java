@@ -32,6 +32,7 @@ public class FacilityController {
 	public String facility(Model model) {
 
 		model.addAttribute("facFunction", service.getDetailList("fac"));
+		model.addAttribute("employee", service.getEmp("설비"));
 		//SearchDTO dto = new SearchDTO();
 		//dto.setSearchSel("설비");
 		
