@@ -27,7 +27,7 @@
                   <h4 class="page-title">작업 지시 관리</h4>
                   
                   <input id="saveOption" type="hidden" name="selectResult" value="insert">
-                  <input id="empName" type="hidden" th:value="${#authentication.principal.empName}">
+                  <input id="managerName" type="hidden" th:value="${#authentication.principal.empName}">
          
 				<div class="p-2 row">
 				  <div class="col-sm-12">
@@ -37,6 +37,12 @@
 				      <div class="h-auto d-md-flex justify-content-between">
 					      <div><h5 class="page-title">작업지시</h5></div>
 		                  <div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+			              	<button type="button" id="resetBtn" class="btn btn-dark btn-sm">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+							  		<path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+							  		<path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+								</svg>             
+			              	</button>		                  
 		                  	<button type="button" id="searchBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#workSearchModal">작업지시 조회</button>
 		                  	<button id="saveBtn" class="btn btn-primary">저장</button>
 		                  	<button id="deleteBtn" class="btn btn-danger">삭제</button>
@@ -207,10 +213,10 @@
   			// 저장 버튼 클릭시 등록, 수정 구분하는 값 input에 넣어준 뒤 숨김.
   			$('#afterSearch').hide();
   			// 담당자(로그인 사원이름) 정보 input에 넣어준 뒤 숨김.
-  			$('#empName').hide();
-  			let empName = $('#empName').val();
+  			$('#managerName').hide();
+  			var managerName = $('#managerName').val();
   			// 그리드 담당자 셀에 담당자 이름 넣어주기.
-  			commonGrid.setValue(0, 'empName', empName, false);
+  			commonGrid.setValue(0, 'empName', managerName, false);
   				  
   		  		   
   		  	// 모달창 열릴 때 레이아웃 깨지지 않게 refreshLayout()
@@ -1292,7 +1298,24 @@
 			});
 			
 			
+			// 리셋버튼 클릭 -> 처음 화면으로 초기화
+			$('#resetBtn').click(function(){
+				// 그리드 초기화
+				commonGrid.resetData([{}]);
+				detailGrid.resetData([]);
+				bomInfoGrid([]);
+				
+				// 담당자 이름 현재 로그인된 사원 이름 입력.
+				commonGrid.setValue(0, 'empName', $('#managerName').val(), false);
+				
+				// hidden input value : insert
+				$('#saveOption').attr('value', 'insert');
 
+				// Column: 공통 및 상세 그리드에선 계획수량 보이게, 상세 그리드에서 수정여부 안보이게
+				detailGrid.showColumn('planAmount');
+				detailGrid.hideColumn('modifyOption');
+				commonGrid.showColumn('planName');
+			})
 			
 			
 						
