@@ -53,7 +53,7 @@
 		
 <!-- 입고 버튼 -->
 			
-			<button type="button" id="storeBtn" class="btn btn-success"
+			<button type="button" id="storeBtn" class="btn btn-primary"
 				data-bs-toggle="modal" data-bs-target="#searchModal"
 				style="float: right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:25px;">입고</button>
 				<input type="hidden" value="" id="sotre" name="testCode">
@@ -61,7 +61,7 @@
 				
 <!-- 입고 확인 및 삭제 -->
 				
-			<button type="button" id="checkBtn" class="btn btn-primary"
+			<button type="button" id="checkBtn" class="btn btn-dark"
 				data-bs-toggle="modal" data-bs-target="#store"
 				
 				style="float: right; height: 30px; width: 150px; padding: 3px; margin-bottom: 10px; margin-right: 8px; margin-top:25px;">입고확인 및 삭제</button>
@@ -121,7 +121,7 @@
   <input type="text" id="mrSearch">
   
   <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
-  <button type="button" class="btn btn-dark" id="deleteBtn"
+  <button type="button" class="btn btn-danger" id="deleteBtn"
 								style="padding: 3px; margin-left: 10px;">취소</button>
 </form>
 </div>
@@ -171,7 +171,7 @@
 		
 <!--  반제품 입고 버튼-->
 		
-		<button type="button" id="halfBtn" class="btn btn-warning" style="float: right; height: 30px; width: 50px; padding: 3px; margin-top:30px; margin-right: 20px; margin-bottom: 10px; color:white;">입고</button>
+		<button type="button" id="halfBtn" class="btn btn-primary " style="float: right; height: 30px; width: 50px; padding: 3px; margin-top:30px; margin-right: 20px; margin-bottom: 10px; color:white;">입고</button>
 		
 		</div>
 
@@ -299,6 +299,7 @@
 				}
 				
 				
+				
 				],
 	            pageOptions: { 
 	            	useClient: true,
@@ -346,7 +347,7 @@
 			},{
 				header : '품목명',
 				name : 'itemName',
-				width : 80
+				width : 130
 			},
 			{
 				header : '담당자',
@@ -356,7 +357,7 @@
 			{
 				header : '입고 날짜',
 				name : 'storeDate',
-				width : 80
+				width : 75
 			}, {
 				header : '입고 수량',
 				name : 'storeCount',
@@ -366,12 +367,12 @@
 			{
 				header : '유통기한',
 				name : 'expireDate',
-				width : 80
+				width : 75
 			},
 			{
 				header : '입고 사유 구분',
 				name : 'storeReasonType',
-				width : 80
+				width : 105
 			}
 			
 						

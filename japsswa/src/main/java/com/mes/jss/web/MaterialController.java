@@ -657,6 +657,8 @@ public class MaterialController {
 	@RequestMapping("/mrAdmSearch")
 	public List<MrAdjustmentVO> mrAdmQuery(@RequestBody MrAdjustmentVO vo){
 		
+		System.out.println(vo);
+		
 		List<MrAdjustmentVO> list = materialService.mrAdmSearch(vo);
 		
 		return list;

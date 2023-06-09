@@ -1,8 +1,8 @@
 package com.mes.jss.material.domain;
 
-import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+
+
 
 import lombok.Data;
 
@@ -18,10 +18,10 @@ public class MrOrderDetailVO {	// 자재 발주 상세
 	 long mrCount;
 	 long mrPrice;
 	 long priceTotal;
-	 @DateTimeFormat(pattern="YYYY-MM-dd")
-	 Date deliveryDate;
-	 @DateTimeFormat(pattern="YYYY-MM-dd")
-	 Date mrOrderDate;
+	
+	 String deliveryDate;
+	 
+	 String mrOrderDate;
 	 String empName;
 	 
 	 
