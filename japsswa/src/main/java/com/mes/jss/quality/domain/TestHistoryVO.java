@@ -1,5 +1,7 @@
 package com.mes.jss.quality.domain;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
@@ -7,7 +9,7 @@ public class TestHistoryVO {
 	public String testHistoryCode;
 	public String checklistCode;
 	public String testResult;
-	public double mrCount;
+	public BigDecimal mrCount;
 	public String testCode;
 	
 	
