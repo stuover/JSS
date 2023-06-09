@@ -24,6 +24,8 @@ public class PerformanceVO {
 	String facName;
 	String downReason;
 	long workAmount;
+	String facStatus;
+	String detaName;
 	
 	//등록시 작업시작 or 작업완료 여부
 	String condition;
