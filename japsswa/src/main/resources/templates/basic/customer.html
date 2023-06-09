@@ -242,8 +242,8 @@ var insertGrid = new tui.Grid({
             options: {
                 listItems: [ 	
                     {
-                        text: '거래중',
-                        value: '거래중'
+                        text: '거래 중',
+                        value: '거래 중'
                     } ,
                     {
                         text: '거래 중지',
@@ -333,12 +333,12 @@ var detaGrid = new tui.Grid({
 	            options: {
 	                listItems: [ 	
 	                    {
-	                        text: '거래중',
-	                        value: '거래중'
+	                        text: '거래 중',
+	                        value: '거래 중'
 	                    } ,
 	                    {
-	                        text: '거래 중지',
-	                        value: '거래 중지'
+	                        text : '거래 중지',
+	                        value : '거래 중지'
 	                    }
 	                ]
 	            }
@@ -491,7 +491,8 @@ modalItemGrid.on('click',function(e){
 $('#saveBtn').on('click', function(){
 	let itemgrid = itemGrid.getData();
 	let cusGrid = detaGrid.getRow(rowKey);
-	
+	detaGrid.finishEditing();
+
 
 	$.ajax({
 		url : "/saveCusDeta",
