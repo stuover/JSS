@@ -188,6 +188,14 @@ public class SaleController {
 		return dcList;
 	}
 	
+	//거래처 검색
+	@RequestMapping("/searCust")
+	@ResponseBody
+	public List<OrderVO> searCustAjax(@RequestParam String cresult){
+		List<OrderVO> scust = saleService.searCust(cresult);
+
+		return scust;
+	} 
 
 	
 	

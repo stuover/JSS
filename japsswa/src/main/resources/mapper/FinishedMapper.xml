@@ -60,6 +60,10 @@
 		}
 
 	</select>
+	
+	<select id="entStoreIn" parameterType="FinishedVO" resultType="FinishedVO">
+		
+	</select>
 
 
 </mapper>

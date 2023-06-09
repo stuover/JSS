@@ -24,7 +24,8 @@
 					<form id="finishedForm">
 					<div class="row"></div>
 					
-					<label>품목명</label><input name="itemName" id="iName" type="text"><button id="iSearch" type="button" class="btn btn-dark">찾기</button>
+					<input name="itemName" id="iName" type="text">
+					<button id="iSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#iModal">품목 찾기</button>
 					<label>입고날짜</label><input name="inDate1" id="inDateStart" type="date">-<input name="inDate2" id="inDateEnd" type="date">
 					<button id="sBtn" type="button" class="btn btn-dark">조회</button>
 					
@@ -70,7 +71,7 @@
 	const Grid = tui.Grid;
 	
 	//완제품 입고 조회 그리드
-	let finGridData = [{}];
+	let finGridData = [];
 		const finGrid = new Grid({
 		  bodyHeight : 400,
 	      el: document.getElementById('finGrid'),
@@ -86,7 +87,7 @@
 	    	      header : '생산실적코드',
 	    	      name : 'performanceId',
 	    	      hidden : true
-	    	     }
+	    	     },
 	    	     {
 				  header: '완제품 lot 번호',
 				  name: 'fnLotNo'
@@ -125,77 +126,12 @@
 	      console.log('change focused cell!', ev);
 	    });
 		
-		
-		
-		
-		window.onload = function(){
-			
-			//주문서 전체 조회
-			$.ajax({
-				url : "/entOrderList",
-				method : "get",
-				success : function(result){
-					ordGrid.resetData(result);
-					ordGrid.refreshLayout();
-				}
-			})
-			
-		}
-		
-		
-		$('#searchBtn').on('click', function(){
-			
-			//주문서 조회
-			$.ajax({
-				url : "/orderCheck",
-				method : "get",
-				data : $('#orderForm').serialize(),
-				success : function(result){
-					ordGrid.resetData(result);
-					ordGrid.refreshLayout();
-				}
-			})
-			
-		})
-		
-		ordGrid.on('click', (e)=>{
-			
-			if(e.columnName == 'ordId'){
-				
-				
-				$('#detModalGrid').modal('show');
-				
-				var result = ordGrid.getRow(ev.rowKey);
-				
-				
-					$.ajax({
-						url : "/detCheck",
-						method : "get",
-						data : {'result' : result.ordId},
-						success : function(result){
-							detModalGrid.resetData(result);
-							detModalGrid.refreshLsyout();
-						}
-					})
-				
-				
-				$('#detModalGrid').on('shown.bs.modal', function (e) {
-					console.log('open');
-					
-
-					
-					setTimeout(()=> detModalGrid.refreshLayout(), 1);
-	  			}); 
-				
-			}
-			
-		})
-		
+	
 		
 		//제품 찾기 모달
 		
-		const itemModalGrid = new Grid({
-            el: document.getElementById('itemModalGrid'),
+		const iModalGrid = new Grid({
+            el: document.getElementById('iModalGrid'),
             scrollX: false,
             scrollY: false,
            pageOptions: { 
@@ -215,140 +151,33 @@
             ]
           });
 
-		  itemModalGrid.on('check', ev => {
+		  iModalGrid.on('check', ev => {
             console.log('check!', ev);
           });
 
-		  itemModalGrid.on('uncheck', ev => {
+		  iModalGrid.on('uncheck', ev => {
             console.log('uncheck!', ev);
           });
 
-		  itemModalGrid.on('focusChange', ev => {
+		  iModalGrid.on('focusChange', ev => {
             console.log('change focused cell!', ev);
           });
 		  
 		  
-		  //거래처 찾기 모달
-		  
-		  const custModalGrid = new Grid({
-            el: document.getElementById('custModalGrid'),
-            scrollX: false,
-            scrollY: false,
-           pageOptions: { 
-             useClient: true,
-             perPage: 5 
-             },
-            columns: [
-         	  {
-	            header: '거래처코드',
-	            name: 'orddetailId'
-	          },
-              {
-                header: '거래처명',
-                name: 'itemCode'
-              },
-              {
-                header: '거래여부',
-                name: 'itemName'
-              }
-            ]
-          });
-
-		  custModalGrid.on('check', ev => {
-            console.log('check!', ev);
-          });
-
-		  custModalGrid.on('uncheck', ev => {
-            console.log('uncheck!', ev);
-          });
-
-		  custModalGrid.on('focusChange', ev => {
-            console.log('change focused cell!', ev);
-          });
-		  
-		  
-		  //품목명 찾기
-		  $('#itemSearch').on('click', function(){
+		  window.onload = function(){
 			  
-			  const code = $('#itemInput').val();
-			  
-	       	   $('#itemInput').val('');
-	       	   
-	       	   //품목검색
-	       	   $.ajax({
-	       		   url : "/itemSearch",
-	       		   method : "GET",
-	       		   data : { code : code},
-	       		   success : function(result){
-	       			itemModalGrid.resetData(result);
-	       			itemModalGrid.refreshLayout();
-	       			  
-	       		   }
-	       		   
-	       	   });
-		  })
-		  
-		  //품목 검색 결과
-		  itemModalGrid.on('click', (e)=>{
-			
-			if(e.columnName == 'itemCode'){
-				
-				
-				var iresult = itemModalGrid.getRow(ev.rowKey);
-				
-				$('#itemModalGrid').modal('hide');
+			  $('#iModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					
 
-				$('#item').val(iresult);
-				
-				
-	  			}); 
-				
-			}
-			
-		})
-		  
-		  
-		  //거래처명 찾기
-		  $('#custSearch').on('click', function(){
+					
+					setTimeout(()=> iModalGrid.refreshLayout(), 200);
+	  			});
 			  
-			  const result = $('#custInput').val();
-			  
-	       	   $('#custInput').val('');
-	       	   
-	       	   //거래처 검색
-	       	   $.ajax({
-	       		   url : "/custList",
-	       		   method : "GET",
-	       		   data : {'result' : result},
-	       		   success : function(result){
-	       			custModalGrid.resetData(result);
-	       			custModalGrid.refreshLayout();
-	       			  
-	       		   }
-	       		   
-	       	   })
-		  })
+		  }
 		  
 		  
-		  //거래처명 검색 결과
-		  custModalGrid.on('click', (e)=>{
-			
-			if(e.columnName == 'customerId'){
-				
-				
-				var cresult = custModalGrid.getRow(ev.rowKey);
-				
-				$('#custModalGrid').modal('hide');
-
-				$('#cust').val(cresult);
-				
-				
-	  			}); 
-				
-			}
-			
-		})
-		  
+		 
 
 		
 		

@@ -123,7 +123,8 @@ public class SaleServiceImpl implements SaleService {
 
 	@Override
 	public List<OrderVO> orderCheck(OrderVO cvo) {
-		List<OrderVO> chList = orderMapper.orderCheck();
+		List<OrderVO> chList = orderMapper.orderCheck(cvo);
+		System.err.println(cvo);
 		return chList;
 	}
 
@@ -131,6 +132,12 @@ public class SaleServiceImpl implements SaleService {
 	public List<OrderVO> detCheck(String ordId) {
 		List<OrderVO> dList = orderMapper.detCheck(ordId); 
 		return dList;
+	}
+
+	@Override
+	public List<OrderVO> searCust(String cresult) {
+		List<OrderVO> cslist = orderMapper.searCust(cresult);
+		return cslist;
 	}
 
 

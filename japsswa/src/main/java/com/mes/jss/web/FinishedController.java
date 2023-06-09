@@ -74,5 +74,12 @@ public class FinishedController {
 		return "sale/finishedShow";
 	}
 	
+	//주문서 전체 조회
+	@RequestMapping("/entStoreIn")
+	@ResponseBody
+	public List<FinishedVO> entStoreInAjax(){
+		List<FinishedVO> elist = finishedService.entStoreIn();
+		return elist;
+	}
 	
 }

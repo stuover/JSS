@@ -39,9 +39,11 @@ public interface OrderMapper {
 
 	List<OrderVO> entOrderList();
 
-	List<OrderVO> orderCheck();
+	List<OrderVO> orderCheck(OrderVO cvo);
 
 	List<OrderVO> detCheck(String ordId);
+
+	List<OrderVO> searCust(String cresult);
 
 
 	

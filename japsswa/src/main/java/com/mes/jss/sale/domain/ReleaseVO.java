@@ -2,12 +2,18 @@ package com.mes.jss.sale.domain;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
 public class ReleaseVO {
 	String fnReleaseId;
 	long fnRelCount;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
 	Date fnRelDate;
 	String relDetailId;
 	long relEachCount;
@@ -16,11 +22,15 @@ public class ReleaseVO {
 	//주문상세
 	String ordDetailId;
 	long ordCount;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
 	Date outDate;
 	String orddetStatus;
 	
 	//주문
 	String ordId;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
 	Date ordDate;
 	String ordName;
 	

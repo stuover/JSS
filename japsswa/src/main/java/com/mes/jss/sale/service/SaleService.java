@@ -24,6 +24,7 @@ public interface SaleService {
 	List<OrderVO> entOrderList();
 	List<OrderVO> orderCheck(OrderVO cvo);
 	List<OrderVO> detCheck(String ordId);
+	List<OrderVO> searCust(String cresult);
 
 	
 }
