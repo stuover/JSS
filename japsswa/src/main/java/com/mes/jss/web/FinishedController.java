@@ -68,4 +68,11 @@ public class FinishedController {
 		return null;
 	}
 	
+	//완제품 입고 조회 화면
+	@RequestMapping("/storeInShow")
+	public String storeInShow() {
+		return "sale/finishedShow";
+	}
+	
+	
 }

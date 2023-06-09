@@ -16,7 +16,7 @@
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="page-title">완제품 조회</h4>
+					<h4 class="page-title">완제품 입고 조회</h4>
 					
 
 					<!-- <input id="name" type="hidden" th:value="${#authentication.principal.empName}">   -->
@@ -43,19 +43,19 @@
 	</div>
 
 	
-	<div class="modal fade" id="itemModal" tabindex="-1"
+	<div class="modal fade" id="iModal" tabindex="-1"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="itemModalLabel">품목 찾기</h5>
+					<h5 class="modal-title" id="iModalLabel">품목 찾기</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<input type="text" id="itemInput" name="item">
-					<button id="itemSear" type="button" class="btn btn-dark">찾기</button>
-					<div id="itemModalGrid"></div>
+					<input type="text" id="iInput" name="item">
+					<button id="iSear" type="button" class="btn btn-dark">찾기</button>
+					<div id="iModalGrid"></div>
 				</div>
 				<div class="modal-footer">
 
@@ -69,7 +69,7 @@
 
 	const Grid = tui.Grid;
 	
-	//완제품 조회 그리드
+	//완제품 입고 조회 그리드
 	let finGridData = [{}];
 		const finGrid = new Grid({
 		  bodyHeight : 400,
@@ -83,36 +83,30 @@
 	      scrollY: false,
 	      columns: [
 	    	     {
-				  header: '주문코드',
-				  name: 'ordId',
-				  hidden: true
+	    	      header : '생산실적코드',
+	    	      name : 'performanceId',
+	    	      hidden : true
+	    	     }
+	    	     {
+				  header: '완제품 lot 번호',
+				  name: 'fnLotNo'
 				 },
 			     {
-				  header: '주문명',
-				  name: 'ordName'
+				  header: '품목명',
+				  name: 'itemName'
 				 },
 				 {
-				  header: '주문날짜',
-				  name: 'ordDate'
+				  header: '입고량',
+				  name: 'passItem'
 			     },
 			     {
-				  header: '거래처코드',
-				  name: 'customerId',
-				  hidden : true
+				  header: '입고날짜',
+				  name: 'fnStoreIn'
 				 }, 
 			     {
-			      header: '거래처명',
-			      name: 'customerName'
-			     },
-			     {
-				  header: '총금액',
-				  name: 'totalPrice'
-				 },
-			     {
-				  header: '담당자',
-				  name: 'empName'
-				 }
-					 
+			      header: '담당자',
+			      name: 'empName'
+			     } 
 				 
 		      ],
 		      
