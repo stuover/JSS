@@ -135,7 +135,7 @@
   	
   	<select id="searchFac" parameterType="FacilityVO" resultType="FacilityVO">
   		select f.fac_code, fac_name, to_char(f.fac_date, 'YYYY-MM-DD') as fac_date , p.pro_name, f.fac_status, f.wash_cycle, f.ins_cycle, 
-		to_char(f.last_inspection, 'YYYY-MM-DD') as last_inspection, f.fac_manager, f.fac_function, f.fac_picture 
+		to_char(f.last_inspection, 'YYYY-MM-DD') as last_inspection, f.fac_manager, GET_CODENAME(f.fac_function) facFunction, f.fac_picture 
 		from facility f join process p on(f.pro_code = p.pro_code)
 		where fac_name like '%' || #{facName} || '%'
   		
@@ -154,7 +154,7 @@
   		insert into facility (fac_code , fac_name , fac_date, pro_code ,
   		wash_cycle, ins_cycle, last_inspection, fac_manager, fac_function)
         values(('FAC' || to_char(sysdate, 'yyMMdd') || lpad(facility_seq.nextval, 4,'0')) , #{facName} , TO_DATE(#{facDate}, 'yyyy-MM-dd') , #{proCode}, 
-        #{washCycle},#{insCycle}, #{lastInspection}, #{facManager}, #{text})
+        #{washCycle},#{insCycle}, #{lastInspection}, #{text}, #{text})
   	</insert>
   	
   	<update id="modifyFac" parameterType="FacilityvO">
@@ -166,7 +166,7 @@
 					  		wash_cycle = #{washCycle} ,
 					  		ins_cycle = #{insCycle},
 					  		last_inspection = #{lastInspection}, 
-					  		fac_manager = #{facManager},
+					  		fac_manager = #{text},
 					  		fac_function = #{text},
 							fac_picture = #{facPicture}		
   				  where  fac_code = #{facCode}

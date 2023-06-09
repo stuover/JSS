@@ -45,7 +45,7 @@
 
                         <!-- Button trigger modal -->
                         <button id="stopBtn" type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target="#insertModal">비가동</button>
+                            >비가동</button>
 
                         <!-- Modal -->
                         <div class="modal fade" id="insertModal" tabindex="-1" role="dialog"
@@ -75,7 +75,7 @@
                         <div id="downgrid"></div>
                         <div>
 
-                            <button id="startBtn" type="button" class="btn btn-primary">비가동</button>
+                            <button id="startBtn" type="button" class="btn btn-primary">가동</button>
                         </div>
 
                         <!-- Modal -->
@@ -629,7 +629,11 @@
 				              	$('#downModal').modal('hide');
 				            })
 
-
+							$('#stopBtn').on('click', function(){
+								$('#insertModal').modal('show');
+							})
+				            
+				            
                             }
                         </script>
                     </div>
