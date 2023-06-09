@@ -48,7 +48,7 @@ public class SaleController {
 		return item;
 	}
 	
-	//거래처 검색
+	//거래처 검색 (조회 시 거래처 검색에도 사용)
 	@RequestMapping("/custList")
 	@ResponseBody
 	public List<OrderVO> custListAjax(@RequestParam String result){
@@ -57,7 +57,7 @@ public class SaleController {
 		return cust;
 	}
 	
-	//품목 검색
+	//품목 검색 (조회 시 품목 검색에도 사용)
 	@RequestMapping("/itemSearch")
 	@ResponseBody
 	public List<OrderVO> itemSearchAjax(@RequestParam String code){
@@ -188,6 +188,7 @@ public class SaleController {
 		return dcList;
 	}
 	
+
 	
 	
 	
