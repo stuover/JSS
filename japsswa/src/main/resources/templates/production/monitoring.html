@@ -40,15 +40,14 @@
 
 	    <!-- Modal List End -->
   		
-
-  		<script>
+ 		<script>
 
   		const Grid = tui.Grid;
   		
   		// 초기화면 데이터 및 설정.
   		window.onload = function(){
   		
-  			 $.ajax({
+  			$.ajax({
   				url : "/performanceMonitoringAjax",
   				method :"GET",
   				success : function(result){
@@ -59,6 +58,22 @@
   					console.log(reject);
   				}
   			});	
+  			
+  			
+  		    // 5초 간격으로 업데이트	  
+  			setInterval(function(){
+  				 $.ajax({
+  					url : "/performanceMonitoringAjax",
+  					method :"GET",
+  					success : function(result){
+  						console.log(result);
+  						monitoringGrid.resetData(result);
+  					},
+  					error : function(reject){
+  						console.log(reject);
+  					}
+  				});	
+  			}, 5000);
   		
   		  	
   		};  		
@@ -88,7 +103,7 @@
 		      },
 			  {
 			    header: '비가동 사유',
-			    name: 'downReason'
+			    name: 'detaName'
 			  },
 		      {
 		        header: '공정코드',
