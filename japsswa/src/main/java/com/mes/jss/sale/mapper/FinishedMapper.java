@@ -14,6 +14,8 @@ public interface FinishedMapper {
 
 	public void delFinished(FinishedVO vo);
 
+	List<FinishedVO> entStoreIn();
+
 
 
 

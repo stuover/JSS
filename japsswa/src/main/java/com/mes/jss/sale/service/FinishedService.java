@@ -14,6 +14,8 @@ public interface FinishedService {
 
 	public void delFinished(List<FinishedVO> list);
 
+	List<FinishedVO> entStoreIn();
+
 	
 
 }

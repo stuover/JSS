@@ -46,6 +46,12 @@ public class FinishedServiceImpl implements FinishedService{
 		
 	}
 
+	@Override
+	public List<FinishedVO> entStoreIn() {
+		List<FinishedVO> enlist = finishedMapper.entStoreIn();
+		return enlist;
+	}
+
 	
 
 }

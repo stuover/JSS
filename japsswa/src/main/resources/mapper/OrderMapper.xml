@@ -25,16 +25,14 @@
 		select customer_id, customer_name, cust_tel, cust_addr,
 		cust_mail
 		from customer
-		where customer_name like '%'|| #{custname} ||
-		'%'
+		where customer_name like '%'|| #{custname} || '%' and cust_part = 'SEL'
 	</select>
 
 	<select id="itemSearch" parameterType="OrderVO"
 		resultType="OrderVO">
 		select item_code, item_name
 		from itemlist
-		where item_name =
-		#{code}
+		where item_name like '%' || #{code} || '%'and item_type = 'FIN'
 	</select>
 
 	<select id="custInfo" parameterType="OrderVO"
@@ -76,7 +74,7 @@
 		on c.customer_id = o.customer_id
 		where
 		customer_name like '%' || #{oCode} || '%'
-		and cust_part = '판매처'
+		and cust_part = 'SEL'
 	</select>
 
 	<select id="custOrdModal" resultType="OrderVO">
@@ -159,38 +157,40 @@
 	</select>
 
 	<select id="orderCheck" parameterType="OrderVO" resultType="OrderVO">
-		select * from(
-		select ord_id, 
-			   ord_name, 
-			   ord_date, 
-			   c.customer_id, 
-			   customer_name, 
-			   total_price, 
-			   e.emp_name
-		from orders o join customer c on(o.customer_id = c.customer_id)
-              		  join emp e on(o.emp_no = e.emp_no)
-              		  join orddetail d on(o.ord_id = d.ord_id)
-              		  join itemlist i on(d.item_code = i.item_code)
-         
-        <where>
-        	<if test="itemName != null and itemName != ''">
-        		and i.item_name = #{itemName}
-        	</if>
-        	<if test="customerName != null and customerName != ''">
-        		and c.customerName = #{customerName}
-        	</if>
-        	<if test="sOrdDate != null and sOrdDate != ''">
-        		<![CDATA[
-        			and ordDate >= #{sOrdDate}
-        		]]>
-        	</if>
-        	<if test="eOrdDate != null and eOrdDate != ''">
-        		<![CDATA[
-        			and ordDate <= #{eOrdDate}
-        		]]>
-        	</if>
-        </where>
-        )
+		select * 
+		from(
+			select o.ord_id, 
+			  	 	o.ord_name, 
+			   		o.ord_date, 
+			   		c.customer_id, 
+			   		c.customer_name, 
+			   		o.total_price, 
+			   		e.emp_name
+				from orders o join customer c on(o.customer_id = c.customer_id)
+              		 			join emp e on(o.emp_no = e.emp_no)
+              		 			 join orddetail d on(o.ord_id = d.ord_id)
+              		  			join itemlist i on(d.item_code = i.item_code)
+		        <where>
+		        	<if test='itemName != null and itemName != ""'>
+		        		and i.item_name = #{itemName}
+		        	</if>
+		        	<if test='customerName != null and customerName != ""'>
+		        		and c.customer_name = #{customerName}
+		        	</if>
+		        	<if test='sOrdDate != null and sOrdDate != ""'>
+		        		
+		        			and o.ord_date >= #{sOrdDate}
+		        		
+		        	</if>
+		        	<if test='eOrdDate != null and eOrdDate != ""'>
+		        		
+		         <![CDATA[
+		        			and o.ord_date <= #{eOrdDate}
+		        ]]>
+		        		
+		        	</if>
+		        </where>
+        		)
 	</select>
 	
 	<select id="detCheck" parameterType="OrderVO" resultType="OrderVO">
@@ -204,7 +204,14 @@
 			   d.orddet_status
 			from orddetail d join itemlist i on(d.item_code = i.item_code)
 			                 join orders o on (d.ord_id = o.ord_id)
-			where ord_id = #{ordId}
+			where o.ord_id = #{ordId}
+	</select>
+	
+	<select id="searCust" parameterType="OrderVO"
+		resultType="OrderVO">
+		select customer_id, customer_name
+		from customer
+		where customer_name like '%'|| #{cresult} || '%' and cust_part = 'SEL'
 	</select>
 
 
