@@ -263,6 +263,7 @@ var insertGrid = new tui.Grid({
 	}
 	]
 });
+
 insertGrid.appendRow();
 insertGrid.setBodyHeight(100);
 
@@ -288,7 +289,6 @@ customerList();
 // 거래처 상세
 var detaGrid = new tui.Grid({
 	el : document.getElementById('detaGrid'),
-	Width : 700,
 	columns : [ 
 		{
 			header : '거래처코드',
@@ -363,7 +363,6 @@ var itemGrid = new tui.Grid({
 		perPage : 5
 	},
 	bodyHeight : 217,
-
 	columns : [
 	{
 		header : '품목코드',
@@ -406,12 +405,13 @@ cusGrid.on('dblclick',function(e){
 
 })
 detaGrid.on('click',function(){
-		detaGrid.finishEditing();
+	detaGrid.finishEditing();
 
 })
 // 전체 품목 리스트
 var modalItemGrid = new tui.Grid({
 	el : document.getElementById('modalItemGrid'),
+	bodyHeight : 217,
 	pageOptions : {
 		useClient : true,
 		perPage : 5
@@ -476,6 +476,8 @@ $('input[name="itemType"]').on('change', function() {
 $('#modalInsBtn').on('click',function() {
 	setTimeout(()=> modalItemGrid.refreshLayout(), 300);
 	itemList();
+	$('#option1').prop("checked", true)
+
 	$('#itemSearch').modal('show');
 	
 })
