@@ -234,6 +234,17 @@
 		    })
 			
 			
+		    $('#mrSearch').on('keyup',function(e){
+		    	if(e.keyCode==13){
+		    		$('#searchQuery').click();
+		    	}
+		    })
+		    
+		    
+		    
+		    
+		    
+		    
 // 품질 리스트	아작스
 
 			$.ajax({
@@ -398,8 +409,12 @@
 		
 		$('#searchBtn').on('click',function(){
 			  
+			 
+			
 			  const result= $("#searchcode").val();
 			  $('#searchcode').val('');
+			  
+			  
 
 // 입고 검색			  
 			  $.ajax({
@@ -471,12 +486,17 @@
 			 
 		
 // 새로고침
-
 		$(function(){
 	    	$('#store').on('shown.bs.modal', function(){
+	    		$('#mrSearch').focus();
+	    		
 	    		modalgrid.refreshLayout();
 	    	})
 	    })
+		
+
+
+
 	   
 
 // 생산 실적 리스트
@@ -609,6 +629,7 @@
 		})
 		
 		});
+		
 		
 		
 		
