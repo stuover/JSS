@@ -132,9 +132,8 @@
             var modalGrid = null;
             var modalDownGrid = null;
             var modifyList = null;
-            var detailDownGrid = null;
-
-
+            var detailDownGrid = null;			                        
+            
             // 전체 설비 리스트 함수
             function getFacList() {
 
@@ -313,7 +312,7 @@
                     },
                     {
                         header: '관리자',
-                        name: 'facManager',
+                        name: 'text',
                        formatter: 'listItemText',
                         editor: {
                             type: 'select',
@@ -667,12 +666,15 @@
                 console.log(upFac);
                 console.log(downFac);
                 let obj = mergeFac(upFac, downFac);
+                let objdate = obj.insCycle
                 console.log(obj)
 
                 if(upFac.facName == null){
                 	alert("설비명을 입력하세요")
                 }else if(upFac.proCode == null){
                 	alert("공정코드와 투입공정을 선택해주세요")
+                }else if(objdate.substr(-1) != '일'){                	
+					alert("점검주기를 (일)로 입력해주세요")            			             			
                 }else{                	
                 $.ajax({
                     url: "/insertAjax",
