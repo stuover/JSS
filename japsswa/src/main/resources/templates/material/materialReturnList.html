@@ -8,7 +8,9 @@
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 <style>
-	
+.tui-grid-cell-content {
+            text-align: center;
+        }	
 </style>
 
 </head>
@@ -22,17 +24,17 @@
               <div class="card">
                 <div class="card-body">
 	
-	<h3 style="text-align:center; font-weight:semi-bold; margin-bottom:100px;">자재 반품 내역</h3>
+	<h3 style="text-align:center; font-weight:semi-bold; margin-bottom:50px; margin-top:30px;">자재 반품 내역</h3>
 	
 		
-		<div style="width:1500px; height:30px; margin-top:30px; margin-bottom:100px;">
+		<div style="">
 		<form action="#" >
 		
-  <label for="customer" style="margin-left:270px;" >거래처</label>
- 	<input type="text" id="customer" name="customer"  >
+  <label for="customer" style="margin-left:270px; margin-bottom:50px;" >거래처</label>
+ 	<input type="text" id="customer" name="customer" style="margin-bottom:50px;"  >
  
-  <label for="material">자재명</label>
-	<input type="text" id="material" name="material" >
+  <label for="material" style="margin-bottom:50px;">자재명</label>
+	<input type="text" id="material" name="material" style="margin-bottom:50px;" >
 
   
   <label for="mrReturnDate" style="margin-left:10px;">반품일</label>
