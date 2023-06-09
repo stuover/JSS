@@ -311,11 +311,11 @@
             columns: [
          	  {
 	            header: '품목코드',
-	            name: 'orddetailId'
+	            name: 'itemCode'
 	          },
               {
                 header: '품목명',
-                name: 'itemCode'
+                name: 'itemName'
               }
               
             ]
@@ -372,50 +372,81 @@
             console.log('change focused cell!', ev);
           });
 		  
+		  //품목찾기 모달 띄우기
+		  $('#itemSearch').on('click', function(){
+			
+			  $('#itemModalGrid').modal('show');
+			  
+			  $('#itemModalGrid').on('shown.bs.modal', function () {
+					
+		
+					itemModalGrid.refreshLayout();
+	  			});
+			  
+		  })
+		  
+		  
 		  
 		  //품목명 찾기
-		  $('#itemSearch').on('click', function(){
+		  $('#itemSear').on('click', function(){
+
+				  
+				  const code = $('#itemInput').val();
+				  
+		       	   $('#itemInput').val('');
+		       	   
+		       	   //품목검색
+		       	   $.ajax({
+		       		   url : "/itemSearch",
+		       		   method : "GET",
+		       		   data : { code : code},
+		       		   success : function(result){
+		       			itemModalGrid.resetData(result);
+		       			itemModalGrid.refreshLayout();
+		       			  
+		       		   }
+		       		   
+		       	   });
 			  
-			  const code = $('#itemInput').val();
 			  
-	       	   $('#itemInput').val('');
-	       	   
-	       	   //품목검색
-	       	   $.ajax({
-	       		   url : "/itemSearch",
-	       		   method : "GET",
-	       		   data : { code : code},
-	       		   success : function(result){
-	       			itemModalGrid.resetData(result);
-	       			itemModalGrid.refreshLayout();
-	       			  
-	       		   }
-	       		   
-	       	   });
 		  })
 		  
 		  //품목 검색 결과
 		  itemModalGrid.on('click', (e)=>{
-			
+			  
 			if(e.columnName == 'itemCode'){
 				
 				
-				var iresult = itemModalGrid.getRow(ev.rowKey);
+				var iresult = itemModalGrid.getRow(e.rowKey);
 				
 				$('#itemModalGrid').modal('hide');
 
 				$('#item').val(iresult);
 				
 				
-	  			}); 
+	  			}; 
 				
-			}
-			
-		})
+			}	
 		  
+			
+		)
+		  
+		
+		 //거래처 찾기 모달 띄우기
+		 $('#custSearch').on('click', function(){
+			 
+			 $('#custModalGrid').modal('show');
+			
+			  $('#custModalGrid').on('shown.bs.modal', function (e) {
+					console.log('open');
+		
+					setTimeout(()=> custModalGrid.refreshLayout(), 1);
+	  			});
+			  
+		  })
 		  
 		  //거래처명 찾기
-		  $('#custSearch').on('click', function(){
+		  $('#custSear').on('click', function(){
 			  
 			  const result = $('#custInput').val();
 			  
@@ -442,18 +473,18 @@
 			if(e.columnName == 'customerId'){
 				
 				
-				var cresult = custModalGrid.getRow(ev.rowKey);
+				var cresult = custModalGrid.getRow(e.rowKey);
 				
 				$('#custModalGrid').modal('hide');
 
 				$('#cust').val(cresult);
 				
 				
-	  			}); 
+	  			}; 
 				
 			}
 			
-		})
+		)
 		  
 
 		
