@@ -113,26 +113,34 @@
   	
   	<!-- 자재 멀티 검색 -->
   	
-  	<select id="MrCountMulti" resultType="MrVO">
+  	<select id="MrCountMulti" parameterType="MrVO"  resultType="MrVO">
   	
   		select i.item_code, 
   		       i.item_name, 
-  		       i.item_type, 
+  		       GET_CODENAME(i.item_type) item_type, 
   		       i.save_material, 
   		       sum(store_count) as total 
   		  from itemlist i join material m on(i.item_code = m.item_code)
   		<where>
-  			<if test="itemType !=null and itemType !=''.toString() ">
-  				and i.item_type =#{itemType}
-  				
+  			<if test="div ==''">
+  				(i.item_type ='MAT' or i.item_type ='SAM') and i.item_name like '%'||#{itemName}||'%'
   			
   			</if>
-  			<if test="itemName !=null and itemName !=''.toString()">
-  				and i.item_name like '%'||#{itemName}||'%'
+  			
+  			
+  			
+  			
+  			<if test="div =='MAT'">
+  				i.item_type ='MAT' and i.item_name like '%'||#{itemName}||'%'
+  			
+  			</if>
+  			
+  			<if test="div =='SAM'">
+  				and i.item_type='SAM' and i.item_name like '%'||#{itemName}||'%'
   			
   			</if>
   		</where>
-  		 group by i.item_code, i.item_name, i.item_type, i.save_material
+  		 group by i.item_code, i.item_name,item_type, i.save_material
   	
   	</select>
   		
@@ -155,12 +163,12 @@
   	
   	   select item_code, 
   		       item_name, 
-  		       GET_CODENAME(i.item_type) item_type, 
+  		       GET_CODENAME(item_type) item_type, 
   		       save_material, 
   		       sum(store_count) as total 
   		  from itemlist 
   		  join material using(item_code)
-  		  where item_type ='반제품' 
+  		  where item_type ='SAM' 
   		 group by item_code, item_name, item_type, save_material
   		 
   	</select>
@@ -172,12 +180,12 @@
   		
   		select item_code, 
   		       item_name, 
-  		       item_type, 
+  		       GET_CODENAME(item_type) item_type, 
   		       save_material, 
   		       sum(store_count) as total 
   		  from itemlist 
   		  join material using(item_code)
-  		  where item_type ='자재' 
+  		  where item_type ='MAT' 
   		 group by item_code, item_name, item_type, save_material
   	
   	
@@ -218,9 +226,9 @@
   		 
   		 <!-- 자재 lot 재고 -->
   		 <select id="MrLotList" resultType="MrVO">
-  		 	select *
+  		 	select m.mr_lot_number,i.item_name,GET_CODENAME(i.item_type) item_type,m.store_count,m.expire_date
   		 	from material m join itemlist i on(m.item_code=i.item_code)
-  		 	where item_name = #{itemName}
+  		 	where i.item_name = #{itemName}
   		 
   		 
   		 
@@ -303,9 +311,9 @@
 	<!-- 자재 입고 내역 -->
 		<select id="storeGetList" resultType="MrVO">
 		
-			select i.item_type,
+			select 
   		       m.mr_lot_number,
-  		       GET_CODENAME(i.item_type) as item_type,
+  		       GET_CODENAME(i.item_type) item_type,
   		       m.item_code,
   		       i.item_name,
   		       e.emp_name,
@@ -325,7 +333,7 @@
 	
 	<!-- 자재 품질 입고 내역 -->
 		<select id="MrQuality" resultType="MrVO">
-			select i.item_type,
+			select 
   		       m.mr_lot_number,
   		       GET_CODENAME(i.item_type) item_type,
   		       m.item_code,
@@ -346,7 +354,7 @@
 	
 	<!-- 자재 생산 입고 내역 -->
 		<select id="MrPro" resultType="MrVO">
-			select i.item_type,
+			select 
   		       m.mr_lot_number,
   		       GET_CODENAME(i.item_type) item_type,
   		       m.item_code,
@@ -367,7 +375,7 @@
 		
 	<!-- 자재 조정 입고 내역 -->
 		<select id="MrAdm" resultType="MrVO">
-			select i.item_type,
+			select 
   		       m.mr_lot_number,
   		       GET_CODENAME(i.item_type) item_type,
   		       m.item_code,

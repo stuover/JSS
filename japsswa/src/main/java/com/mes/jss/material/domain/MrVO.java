@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -12,12 +14,14 @@ public class MrVO {              // 자재 vo
 	String mrLotNumber;
 	String itemCode;
 	long empNo; 
-	
-	String storeDate;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date storeDate;
 	long storeCount;
 	long holdCount;
-	
-	String expireDate;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date expireDate;
 	String storeReasonType;
 	String storeReasonCode;
 	String testCode;
@@ -38,8 +42,14 @@ public class MrVO {              // 자재 vo
 	String mrRealReasonType;
 	String store;
 	String material;
-	String storeDate1;
-	String storeDate2;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date storeDate1;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date storeDate2;
 	String mrSearch;
+	
+	String div;
 	 
 }

@@ -140,8 +140,8 @@
 				
 				{
 					header : '등록일자',
-					name : 'registerDate',
-					width:75
+					name : 'registerDate'
+					
 					
 				}, {
 					header : '처리',
@@ -156,8 +156,8 @@
 				},
 				{
 					header : '조정일자',
-					name : 'adjustmentDate',
-					width:75
+					name : 'adjustmentDate'
+					
 					
 				},
 				{
@@ -198,6 +198,7 @@
       		
     		success : function(result){
     			grid5.resetData(result);
+    			setTimeout(()=> grid5.refreshLayout(),100);
     			},
     			error : function(reject){
     				console.log(reject);	

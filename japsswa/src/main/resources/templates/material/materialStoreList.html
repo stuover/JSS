@@ -92,6 +92,7 @@
 		method:"GET",
 		success : function(result){
 			grid.resetData(result);
+			setTimeout(()=> grid.refreshLayout(),10);
 		},
 		error : function(reject){
 			console.log(reject);
@@ -105,6 +106,7 @@
 			method:"GET",
 			success : function(result){
 				grid.resetData(result);
+				setTimeout(()=> grid.refreshLayout(),100);
 			},
 			error : function(reject){
 				console.log(reject);
@@ -125,6 +127,7 @@
 		method:"GET",
 		success: function(result){{
 			grid.resetData(result);
+			setTimeout(()=> grid.refreshLayout(),100);
 		}},
 		error : function(reject){
 			console.log(reject);
@@ -144,6 +147,7 @@
 		method:"GET",
 		success: function(result){
 			grid.resetData(result);
+			setTimeout(()=> grid.refreshLayout(),100);
 		},
 		error : function(reject){
 			console.log(reject);
@@ -157,6 +161,7 @@
 			method:"GET",
 			success: function(result){
 				grid.resetData(result);
+				setTimeout(()=> grid.refreshLayout(),100);
 			},
 			error : function(reject){
 				console.log(reject);
@@ -193,7 +198,8 @@
 		},  
 		{
 			header : '입고 날짜',
-			name : 'storeDate'
+			name : 'storeDate',
+			width:75
 		}, {
 			header : '입고 수량',
 			name : 'storeCount'
@@ -204,7 +210,8 @@
 		},
 		{
 			header : '유통기한',
-			name : 'expireDate'
+			name : 'expireDate',
+			width:75
 		},
 		{
 			header : '입고 사유 구분',
@@ -245,6 +252,7 @@
 			},
 			success: function(result){
 				grid.resetData(result);
+				setTimeout(()=> grid.refreshLayout(),100);
 					
 			},
 			error : function(reject){

@@ -98,6 +98,7 @@
 		method:"GET",
 		success: function(result){
 			grid.resetData(result);
+			setTimeout(()=> grid.refreshLayout(),100);
 			
 		},
 		error: function(reject){
@@ -113,6 +114,7 @@
 			method:"GET",
 			success: function(result){
 				grid.resetData(result);
+				setTimeout(()=> grid.refreshLayout(),100);
 				
 			},
 			error: function(reject){
@@ -130,6 +132,7 @@
 			method:"GET",
 			success: function(result){
 				grid.resetData(result);
+				setTimeout(()=> grid.refreshLayout(),100);
 			},
 			error : function(reject){
 				console.log(reject);
@@ -144,6 +147,7 @@
 			method:"GET",
 			success: function(result){
 				grid.resetData(result);
+				setTimeout(()=> grid.refreshLayout(),100);
 			},
 			error : function(reject){
 				console.log(reject);
@@ -232,6 +236,7 @@
 				},
 				success: function(result){
 					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),100);
 						
 				},
 				error : function(reject){
