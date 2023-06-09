@@ -11,7 +11,7 @@ public class MrReleaseVO {   // 자재 출고
 	 String performanceId;
 	 String itemCode;
 	 String adjustmentCode;
-	 int mrRealCount;
+	 long mrRealCount;
 	 String mrRealReasonType;
 	 String mrRealReasonCode;
 	 String itemType;

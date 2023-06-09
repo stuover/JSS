@@ -4,6 +4,8 @@ package com.mes.jss.material.domain;
 
 
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
@@ -12,12 +14,12 @@ public class MrOrderDetailVO {	// 자재 발주 상세
 	 String mrOrderCode;
 	 String itemCode;
 	 String itemName;
-	 long itemPrice;
+	 BigDecimal itemPrice;
 	 String customerId;
 	 String customerName;
-	 long mrCount;
-	 long mrPrice;
-	 long priceTotal;
+	 BigDecimal mrCount;
+	 BigDecimal mrPrice;
+	 BigDecimal priceTotal;
 	
 	 String deliveryDate;
 	 
