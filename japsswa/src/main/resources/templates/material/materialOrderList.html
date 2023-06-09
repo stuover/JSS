@@ -11,6 +11,10 @@
 
 <style>
 	
+.tui-grid-cell-content {
+            text-align: center;
+        }	
+	
 </style>
 
 </head>
@@ -26,21 +30,21 @@
               <div class="card">
                 <div class="card-body">
 	
-	<div style="width:1000px;">
-	<p style="font-weight:semi-bold; margin-left:600px; text-align:center; margin-top:30px; font-size:30px;">자재 발주 조회</p>
+	<div style="">
+	<h3 style="font-weight:semi-bold;  text-align:center; margin-top:30px; font-size:30px; margin-bottom:70px;">자재 발주 내역</h3>
 	</div>
 	
-	<div style="width:1500px; height:30px; margin-top:100px; margin-bottom:100px;">
+	<div style="">
 		<form action="#" >
 		
   <label for="customer" style="margin-left:270px;" >거래처</label>
- 	<input type="text" id="customer" name="customer"  >
+ 	<input type="text" id="customer" name="customer" style="margin-left:15px;" >
  
-  <label for="material">자재명</label>
-	<input type="text" id="material" name="material" >
+  <label for="material" style="margin-left:15px;">자재명</label>
+	<input type="text" id="material" name="material" style="margin-left:15px;" >
 
   
-  <label for="mrOrderDate" style="margin-left:10px;">발주일</label>
+  <label for="mrOrderDate" style="margin-left:15px; margin-right:15px;">발주일</label>
   <input type="date" style="margin-right:10px;" id="mrOrderDate1" name="mrOrderDate1">~
   <input type="date" style="margin-left:10px; margin-right:10px;" id="mrOrderDate2" name="mrOrderDate2">
   
@@ -129,7 +133,7 @@
 	
  <!-- 발주 메인 -->	
 	
-	<div id="grid1" style="margin-top:100px;"></div>
+	<div id="grid1" style="margin-top:50px;"></div>
 	
 	</div>
 	</div>

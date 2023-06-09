@@ -8,6 +8,9 @@
 <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 <style>
+.tui-grid-cell-content {
+            text-align: center;
+        }
 </style>
 
 </head>
@@ -22,7 +25,7 @@
                 
           <h3 style="text-align:center; font-weight:semi-bold; margin-top:50px; margin-bottom:80px;">자재 조정 내역</h3>
           
-          <div style="width:1300px; height:30px; margin-top:50px; margin-bottom:50px;">
+          <div style="">
 		<form action="#" >
   <label for="lang" ></label>
   <select name="process" id="process" style="margin-left:300px;">
@@ -61,7 +64,7 @@
           
           
           
-          <div id="grid5"></div>	
+          <div id="grid5" style="margin-top:50px;"></div>	
           
           
           </div>
@@ -125,7 +128,7 @@
 				},{
 					header : '구분',
 					name : 'itemType',
-					width:50
+					width:100
 					
 				},
 				{
@@ -137,20 +140,24 @@
 				
 				{
 					header : '등록일자',
-					name : 'registerDate'
+					name : 'registerDate',
+					width:75
 					
 				}, {
 					header : '처리',
-					name : 'process'
+					name : 'process',
+					width:75
 					
 				}, {
 					header : '결과',
-					name : 'change'
+					name : 'change',
+					width:75
 					
 				},
 				{
 					header : '조정일자',
-					name : 'adjustmentDate'
+					name : 'adjustmentDate',
+					width:75
 					
 				},
 				{

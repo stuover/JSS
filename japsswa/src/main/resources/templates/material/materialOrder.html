@@ -23,6 +23,11 @@
   font-weight:bold;
 }
 
+.tui-grid-cell-content {
+            text-align: center;
+        }
+
+
 
 </style>
 </head>
@@ -808,7 +813,12 @@
 			});
 			
 	    
-	    
+		$(function(){
+				
+				$('#exampleModal1').on('shown.bs.modal',function(){
+					grid5.refreshLayout();
+				})
+			});
 	    
 	    
 	    
