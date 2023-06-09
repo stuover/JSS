@@ -45,5 +45,8 @@ public interface PerformanceMapper {
 	// 설비별 생산실적 모니터링
 	public List<PerformanceVO> performanceMonitoring();
 	
+	// 생산 실적  차트
+	public List<PerformanceVO> todayChart();
+	
 	
 }

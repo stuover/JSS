@@ -1205,35 +1205,14 @@
 					alert('필요수량과 선택한 홀드자재 수량이 맞지 않습니다!');
 				} else {
 				
-				let holdInsertOption = holdSelectGrid.isModified();
-				console.log(holdInsertOption);
-				// 홀드 자재 등록	
-				if(holdInsertOption = true){
-					// 홀드 자재 재등록 및 자재 홀드수량 업데이트
+					let holdInsertOption = holdSelectGrid.isModified();
+					console.log(holdInsertOption);
+					// 홀드 자재 등록	
+					
 					// 1. 기존 홀드 자재 삭제
 					// 2. 자재 홀드수량 빼주기
 					// 3. 입력된 자재 등록 처리
-					$.ajax({
-						url: "/holdMaterialsReInsertAjax",
-						method: "POST",
-						async: false,
-						data: JSON.stringify({detailList : holdSelectGrid.getModifiedRows().updatedRows}),
-						contentType: "application/json",
-						beforeSend: function(xhr) {
-							xhr.setRequestHeader(header, token);
-						},
-						success: function(result) {
-							console.log(result);
-							alert('홀드자재 등록 성공!');
-						},
-						error: function(reject) {
-							console(reject);
-							alert('홀드자재 등록 실패!');
-						}
-					})	
-					
-				} else{
-				   // 홀드 자재 등록 및 자재 홀드수량 업데이트
+						
 					$.ajax({
 						url: "/holdMaterialsInsertAjax",
 						method: "POST",
@@ -1252,7 +1231,7 @@
 							alert('홀드자재 등록 실패!');
 						}
 					})	
-				};
+				
 					
 					// 그리드 초기화
 					holdSelectGridData = [];
@@ -1303,7 +1282,7 @@
 				// 그리드 초기화
 				commonGrid.resetData([{}]);
 				detailGrid.resetData([]);
-				bomInfoGrid([]);
+				bomInfoGrid.resetData([]);
 				
 				// 담당자 이름 현재 로그인된 사원 이름 입력.
 				commonGrid.setValue(0, 'empName', $('#managerName').val(), false);
