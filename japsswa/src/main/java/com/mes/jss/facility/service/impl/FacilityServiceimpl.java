@@ -193,6 +193,11 @@ public class FacilityServiceimpl implements FacilityService{
 		return facilityMapper.getEmpList(empNo);
 	}
 
+	/*
+	 * @Override public Object getEmpNo(String string) { // TODO Auto-generated
+	 * method stub return facilityMapper.getEmpList(string); }
+	 */
+
 	
 
 

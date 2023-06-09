@@ -124,7 +124,7 @@
         <script th:inline="javascript">
            
             var functionList = [[${facFunction}]];
-            var emp = [[${employee}]];
+            var manager = [[${employee}]];
             
             // 변수
             var dbGridData = null;
@@ -313,15 +313,14 @@
                     },
                     {
                         header: '관리자',
-                        formatter: 'listItemText',
-                        name: 'name',
+                        name: 'facManager',
+                       formatter: 'listItemText',
                         editor: {
                             type: 'select',
                             options: {
-                                listItems: emp
+                               listItems: manager
                             }
                         }
-                       
                     },
                     {
                         header: '설비가동상태 ',
@@ -495,14 +494,14 @@
                     },
                     {
                         header: '관리자',
+                        name: 'facManager',
                         formatter: 'listItemText',
-                        name: 'name',
                         editor: {
                             type: 'select',
                             options: {
-                                listItems: emp
+                                listItems : manager
                             }
-                        }                       
+                        }
                     },
                     {
                         header: '설비기능',
@@ -553,7 +552,7 @@
             });
          
             var insertRowKey =null;
-            var facCode = null;
+            var fecCode = null;
             
             // 투입공정 더블클릭시 리스트 조회
             modalGrid.on('dblclick', function (e) {

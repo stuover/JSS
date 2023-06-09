@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,15 +28,15 @@ public class FacilityController {
 	EmployeesService empService;
 
 	// 설비
-
-	@RequestMapping("/facility")
+	@GetMapping("/facility")
 	public String facility(Model model) {
 
 		model.addAttribute("facFunction", service.getDetailList("fac"));
 		model.addAttribute("employee", service.getEmp("설비"));
+		
+		System.err.println(service.getEmp("설비"));
 		//SearchDTO dto = new SearchDTO();
 		//dto.setSearchSel("설비");
-		
 		//model.addAttribute("empName", empService.getEmpList(dto));
 		//System.err.println( empService.getEmpList(dto));
 		
