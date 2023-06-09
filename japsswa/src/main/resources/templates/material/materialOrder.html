@@ -206,7 +206,7 @@
 						<h4 class="modal-title" id="exampleModalLabel"
 							style="font-weight: bold; margin-left:120px;">거래처 및 자재 찾기</h4>
 
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -262,7 +262,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">안전재고 미달</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -271,7 +271,7 @@
       </div>
       <div class="modal-footer">
        <button type="button" id="choose2Btn" class="btn btn-secondary" data-dismiss="modal">선택</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal" style="margin-right:170px;">Close</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="margin-right:170px;">Close</button>
        
       </div>
     </div>
@@ -314,15 +314,23 @@
     
     <!-- 발주 조회 및 취소 모달 제목 -->
     
-      	<h4 style="margin-bottom:50px; margin-top:50px; font-weight:bold; text-align:center;">발주 조회 및 취소</h4>
-    
+      	<h4 style="margin-bottom:50px; margin-top:50px; font-weight:bold; text-align:center;">발주 조회 및 취소 <button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close" style="float:right; margin-right:20px;">
+							<span aria-hidden="true">&times;</span>
+						</button></h4>
+    	
+    	<div>
+    	<button type="button" id="orderDeleteBtn" class="btn btn-danger" style="float:right; margin-bottom:20px; margin-right:10px;">취소</button>
+		</div>				
     <!-- 발주 조회 모달 -->
       
       <div id="grid3" ></div>
       
     <!-- 삭제 버튼 -->
       
-      <button type="button" id="orderDeleteBtn" class="btn btn-danger" style="margin-top:50px;">취소</button>
+      
+      
+      
     </div>
     
   </div>
@@ -370,6 +378,7 @@
 				
 				success: function(result){
 					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),100);
 					
 				}
 				
@@ -395,7 +404,7 @@
 					
 					success : function(result) {
 						grid.resetData(result);
-						grid.refreshLayout();
+						setTimeout(()=> grid.refreshLayout(),100);
 						console.log(result);
 					}
 					
@@ -425,7 +434,7 @@
 							dataType : "json",
 							success : function(result) {
 								grid.resetData(result);
-								grid.refreshLayout();
+								setTimeout(()=> grid.refreshLayout(),100);
 							}
 
 						});
@@ -556,7 +565,8 @@
 					name : 'mrCount'
 				}, {
 					header : '납품일',
-					name : 'deliveryDate'
+					name : 'deliveryDate',
+					width:75
 					
 				} ],
 				pageOptions: { 
@@ -585,14 +595,14 @@
 	// 발주 조회 아작스 
 	
 	    $.ajax({
-				url : "/OrderList",
+				url :"/OrderList",
 
 				method : "GET",
 				dataType : "json",
 
 				success : function(result) {
 					grid3.resetData(result);
-					grid3.refreshLayout();
+					setTimeout(()=> grid3.refreshLayout(),100);
 					
 				},
 				error:function(reject){
@@ -617,7 +627,8 @@
 				columns : [ 
 					{
 						header : '발주일자',
-						name : 'mrOrderDate'
+						name : 'mrOrderDate',
+						width:75
 					},
 					{
 					header : '발주코드',
@@ -699,6 +710,7 @@
 				success : function(result) {
 					
 					grid5.resetData(result);
+					setTimeout(()=> grid5.refreshLayout(),100);
 				},
 				error: function(reject){
 					console.log(reject);	
@@ -788,6 +800,7 @@
 				
 				success: function(result){
 					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),100);
 				},
 					
 				error: function(reject){

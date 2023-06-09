@@ -130,6 +130,7 @@
 
 				success : function(result) {
 					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),100);
 					
 				}
 
@@ -209,7 +210,7 @@
 
 				success : function(result) {
 					grid1.resetData(result);
-					grid1.refreshLayout();
+					setTimeout(()=> grid1.refreshLayout(),100);
 				},
 				error: function(reject){
 					console.log(reject);
@@ -344,7 +345,7 @@
 				xhr.setRequestHeader(header, token);
 			},
 				success : function(result){
-					console.log(result);
+					
 					
 				},
 				error : function(reject){
@@ -363,7 +364,7 @@
 
 				success : function(result) {
 					grid1.resetData(result);
-					grid1.refreshLayout();
+					setTimeout(()=> grid1.refreshLayout(),100);
 				},
 				error: function(reject){
 					console.log(reject);
@@ -407,7 +408,8 @@
 							},
 					success: function(result){
 						grid3.resetData(result);
-						grid3.removeCheckedRows(false);  
+						grid3.removeCheckedRows(false);
+						setTimeout(()=> grid3.refreshLayout(),100);
 					},
 					error: function(reject){
 						console.log(reject);

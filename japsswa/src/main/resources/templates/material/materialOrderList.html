@@ -156,6 +156,7 @@
 
 				success : function(result) {
 					grid1.resetData(result);
+					setTimeout(()=> grid1.refreshLayout(),100);
 					
 				},
 				error:function(reject){
@@ -247,6 +248,7 @@
 				
 				success : function(result) {
 					grid2.resetData(result);
+					setTimeout(()=> grid2.refreshLayout(),100);
 					
 					
 				},
@@ -270,8 +272,8 @@
 				
 				columns : [{
 					header : '발주 일자',
-					name : 'mrOrderDate',
-					width:80
+					name : 'mrOrderDate'
+					
 				} , {
 					header : '발주 코드',
 					name : 'mrOrderCode'
@@ -334,6 +336,7 @@
 				dataType : "json",
 				success : function(result) {
 			grid3.resetData(result);
+			setTimeout(()=> grid3.refreshLayout(),100);
 					},
 				error : function(reject){
 						console.log(reject);
@@ -396,6 +399,7 @@
 				
 				success: function(result){
 					grid3.resetData(result);
+					setTimeout(()=> grid3.refreshLayout(),100);
 					
 				}
 				
@@ -421,7 +425,7 @@
 					
 					success : function(result) {
 						grid1.resetData(result);
-						grid1.refreshLayout();
+						setTimeout(()=> grid1.refreshLayout(),100);
 						console.log(result);
 					}
 					

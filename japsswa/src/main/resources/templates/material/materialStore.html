@@ -90,7 +90,7 @@
 							style="font-weight: semi-bold; margin-left: 280px; margin-bottom:20px;">입고 처리 확인 및 취소</h4>
 <!-- 닫기 버튼 -->
 
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -228,6 +228,7 @@
 					}
 		    	})
 				grid.removeCheckedRows(false);
+		    	setTimeout(()=> grid.refreshLayout(),100);
 
 		    	
 		    })
@@ -243,6 +244,7 @@
 
 				success : function(result) {
 					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),100);
 					
 				}
 
@@ -327,7 +329,7 @@
 			dataType : "json",
 			success : function(result) {
 				modalgrid.resetData(result);
-				modalgrid.refreshLayout();
+				setTimeout(()=> modalgrid.refreshLayout(),100);
 			}
 
 		});
@@ -359,8 +361,8 @@
 			},  
 			{
 				header : '입고 날짜',
-				name : 'storeDate',
-				width : 75
+				name : 'storeDate'
+				
 			}, {
 				header : '입고 수량',
 				name : 'storeCount',
@@ -369,8 +371,8 @@
 			
 			{
 				header : '유통기한',
-				name : 'expireDate',
-				width : 75
+				name : 'expireDate'
+				
 			},
 			{
 				header : '입고 사유 구분',
@@ -408,7 +410,7 @@
 				
 				success : function(result) {
 					modalgrid.resetData(result);
-					modalgrid.refreshLayout();
+					setTimeout(()=> modalgrid.refreshLayout(),100);
 					console.log(result);
 				}
 				
@@ -424,6 +426,7 @@
 						dataType : "json",
 						success : function(result) {
 							modalgrid.resetData(result);
+							setTimeout(()=> modalgrid.refreshLayout(),100);
 						}
 
 					});
@@ -456,6 +459,7 @@
 					},
 				success : function(result){
 					modalgrid.resetData(result);
+					setTimeout(()=> modalgrid.refreshLayout(),100);
 				},
 				error: function(reject){
 					console.log(reject);
@@ -482,6 +486,7 @@
 	    	method:"GET",
 	    	success: function(result){
 	    		grid2.resetData(result);
+	    		setTimeout(()=> grid2.refreshLayout(),100);
 	    	},
 	    	error: function(reject){
 	    		console.log(reject);

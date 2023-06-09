@@ -59,28 +59,23 @@
 		<form id="search">
 		
   
-  
-  
  <div class="form-check form-check-inline" style="margin-left:500px;">
-     <input class="form-check-input" type="radio" name="itemType" id="alladj" value="">
+     <input class="form-check-input" type="radio" name="div" id="aaa" value="">
      <label class="form-check-label" for="alladj" style="margin-left:0px;">전체</label>
    </div>
    <div class="form-check form-check-inline">   
-     <input class="form-check-input" type="radio" name="itemType" id="dli" value="자재">
+     <input class="form-check-input" type="radio" name="div" id="bbb" value="MAT">
      <label class="form-check-label" for="dli" style="margin-left:0px;">자재</label>
    </div> 
    <div class="form-check form-check-inline">
-     <input class="form-check-input" type="radio" name="itemType" id="inv" value="반제품">
+     <input class="form-check-input" type="radio" name="div" id="ccc" value="SAM">
      <label class="form-check-label" for="inv" style="margin-left:0px;">반제품</label>
    </div>
-  <input type="text" name="itemName" />
+  <input type="text" name="itemName" id="itemNo" />
 
-   
-   
-   
-  <!-- </select> -->
-	
-	<button type="button" class="btn btn-dark" id="multi" style="margin-left:20px; padding:3px;">검색</button>		
+			
+		<button type="button" class="btn btn-dark" id="multi" style="margin-left:20px; padding:3px;">검색</button>
+		
 		</form>														
 																
 				
@@ -149,8 +144,9 @@
 				
 	// 재고 아작스
 	
-	
+	// 재고 그리드
 		
+			
 	
 		
 		
@@ -163,9 +159,128 @@
 	
 	$(document).ready(function(){
 		
+		
+		
 		$('#searchGrid').css('display', 'none');
 		$('#hide2').css('display','none')
 		$('#grid44').css('display','none');
+		
+		
+		var grid = new tui.Grid({
+			el : document.getElementById('grid'),
+			bodyHeight:250,
+			scollY : false,
+			
+			
+			columns : [ {
+				header : '구분',
+				name : 'itemType'
+			},
+				{
+				header : '품목코드',
+				name : 'itemCode'
+			}, {
+				header : '자재명',
+				name : 'itemName'
+			},
+			{
+				header : '재고량',
+				name : 'total'
+			},
+			{
+				header : '안전재고',
+				name : 'saveMaterial'
+			}
+			
+			
+			],
+			pageOptions: { 
+            	useClient: true,
+               	perPage: 20
+            }
+		})
+	
+		
+		$('#multi').on('click',function(){
+			
+			
+			$.ajax({
+				url:"/multi",
+				method:"GET",
+				data:$('#search').serialize(),
+				success: function(result){
+					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),10);
+					
+	grid.getData().forEach((ele, index)=>{
+						
+				
+						
+						if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
+							grid.addCellClassName(index,'itemType','redcolor');
+							grid.addCellClassName(index,'itemName','redcolor');
+							grid.addCellClassName(index,'itemCode','redcolor');
+							grid.addCellClassName(index,'total','redcolor');
+							grid.addCellClassName(index,'saveMaterial','redcolor');
+						} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
+							grid.addCellClassName(index,'itemType','yellowcolor');
+							grid.addCellClassName(index,'itemName','yellowcolor');
+							grid.addCellClassName(index,'itemCode','yellowcolor');
+							grid.addCellClassName(index,'total','yellowcolor');
+							grid.addCellClassName(index,'saveMaterial','yellowcolor');
+							
+							
+						}
+							
+			
+				
+					})
+					
+					
+					
+				},
+				error: function(reject){
+					console.log(reject);
+				}
+				
+			});
+		})
+		
+		
+		
+		var grid4 = new tui.Grid({
+			el : document.getElementById('grid4'),
+			scollX : false,
+			scollY : false,
+			
+			
+			columns : [ {
+				header : '자재lot번호',
+				name : 'mrLotNumber',
+				
+			}, {
+				header : '자재명',
+				name : 'itemName'
+			}, {
+				header : '구분',
+				name : 'itemType'
+			},{
+				header : '수량',
+				name : 'storeCount'
+			},{
+				header : '유통기한',
+				name : 'expireDate'
+			}
+			
+			
+			
+			],
+			pageOptions: { 
+            	useClient: true,
+               	perPage: 5 
+            }
+		})
+		
 		
 		
 		
@@ -173,11 +288,12 @@
 			$.ajax({
 				url : "/mrInventory",
 				method : "GET",
-				
 				success : function(result) {
 					
-					grid.resetData(result);
 					
+					
+					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),10);
 					
 					grid.getData().forEach((ele, index)=>{
 						
@@ -200,18 +316,21 @@
 						}
 							
 			
-
-			
-			
-					
 				
-					} ) 
+					})
+					
+				},
+				error: function(reject){
+					console.log(reject);
+				}
+			})
+			 
 
 					
-					grid.on('dblclick',(ev) =>{
+		grid.on('dblclick',(ev) =>{
 		
 		let result5= grid.getRow(ev.rowKey);
-		console.log(result5.itemName);
+		
 		
 		
 					
@@ -223,6 +342,8 @@
 					
 					grid4.resetData(result);
 					$('#grid44').css('display','block');
+					
+					setTimeout(()=> grid4.refreshLayout(),10);
 				},
 				
 				
@@ -246,18 +367,16 @@
 				
 			})
 					
-		})		
-				},
+		})
+		
 
-				error: function(reject){
-					console.log(reject);
-				}
+				
 				
 				
 				
 
 			
-		});
+		
 			
 			
 
@@ -278,7 +397,7 @@
 			success : function(result) {
 				
 				grid.resetData(result);
-				
+				setTimeout(()=> grid.refreshLayout(),10);
 				
 				grid.getData().forEach((ele, index)=>{
 					
@@ -342,7 +461,7 @@
 				
 				
 				grid.resetData(result);
-			
+				setTimeout(()=> grid.refreshLayout(),10);
 										
 				
 				
@@ -391,7 +510,7 @@
 				
 				
 				grid.resetData(result);
-			
+				setTimeout(()=> grid.refreshLayout(),10);
 										
 				
 				
@@ -434,41 +553,7 @@
 	
 	
 	
-	// 재고 그리드
-		
-			var grid = new tui.Grid({
-				el : document.getElementById('grid'),
-				bodyHeight:250,
-				scollY : false,
-				
-				
-				columns : [ {
-					header : '구분',
-					name : 'itemType'
-				},
-					{
-					header : '품목코드',
-					name : 'itemCode'
-				}, {
-					header : '자재명',
-					name : 'itemName'
-				},
-				{
-					header : '재고량',
-					name : 'total'
-				},
-				{
-					header : '안전재고',
-					name : 'saveMaterial'
-				}
-				
-				
-				],
-				pageOptions: { 
-	            	useClient: true,
-	               	perPage: 20
-	            }
-			})
+	
 	
 	grid.on('dblclick',(ev) =>{
 		
@@ -484,6 +569,7 @@
 				success: function(result){
 					
 					grid4.resetData(result);
+					setTimeout(()=> grid4.refreshLayout(),10);
 					$('#grid44').css('display','block');
 				},
 				
@@ -498,7 +584,7 @@
 				
 				
 			})
-		s
+		
 	// 검색 결과 그리드	
 		
 		
@@ -538,9 +624,13 @@
 		$('#searchBtn').on('click',function(){
 			  
 			
+			
 				
-			  const result1= $("#mrName").val();
-			  $('#mrName').val('');
+			  let result1= $("#mrName").val();
+			  
+			  console.log(result1);
+			  
+			$('#mrName').val('');
 				
 			  $.ajax({
 					url:"/mrCountAjax",
@@ -549,7 +639,7 @@
 					dataType:"json",
 				success : function(result) {
 					grid.resetData(result);
-					grid.refreshLayout();
+					setTimeout(()=> grid.refreshLayout(),10);
 					
 					
 	grid.getData().forEach((ele, index)=>{
@@ -592,85 +682,10 @@
 	
 	
 		
-		var grid4 = new tui.Grid({
-			el : document.getElementById('grid4'),
-			scollX : false,
-			scollY : false,
-			
-			
-			columns : [ {
-				header : '자재lot번호',
-				name : 'mrLotNumber',
-				
-			}, {
-				header : '자재명',
-				name : 'itemName'
-			}, {
-				header : '구분',
-				name : 'itemType'
-			},{
-				header : '수량',
-				name : 'storeCount'
-			},{
-				header : '유통기한',
-				name : 'expireDate'
-			}
-			
-			
-			
-			],
-			pageOptions: { 
-            	useClient: true,
-               	perPage: 5 
-            }
-		})
+		
 	
 	
-		
-	$('#multi').on('click',function(){
-		
-		
-		
-		$.ajax({
-			url:"/multi",
-			method:"Get",
-			data:$('#search').serialize(),
-			success: function(result){
-				grid.resetData(result);
-				
-				grid.getData().forEach((ele, index)=>{
-					
-					
-					
-					if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
-						grid.addCellClassName(index,'itemType','redcolor');
-						grid.addCellClassName(index,'itemName','redcolor');
-						grid.addCellClassName(index,'itemCode','redcolor');
-						grid.addCellClassName(index,'total','redcolor');
-						grid.addCellClassName(index,'saveMaterial','redcolor');
-					} else if( Number(ele.total)< Number(ele.saveMaterial)*0.5  ){
-						grid.addCellClassName(index,'itemType','yellowcolor');
-						grid.addCellClassName(index,'itemName','yellowcolor');
-						grid.addCellClassName(index,'itemCode','yellowcolor');
-						grid.addCellClassName(index,'total','yellowcolor');
-						grid.addCellClassName(index,'saveMaterial','yellowcolor');
-						
-						
-					}
-						
-		
-			
-				} ) 
-				
-				
-				
-			},
-			error: function(reject){
-				console.log(reject);
-			}
-			
-		})
-	})
+
 	
 	
 	
@@ -688,6 +703,7 @@
 			method:"GET",
 			success: function(result){
 				grid.resetData(result);
+				setTimeout(()=> grid.refreshLayout(),10);
 			},
 			error: function(reject){
 				console.log(reject)

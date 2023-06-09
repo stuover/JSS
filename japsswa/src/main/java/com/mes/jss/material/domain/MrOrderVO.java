@@ -1,6 +1,11 @@
 package com.mes.jss.material.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -13,6 +18,7 @@ public class MrOrderVO {	// 자재 발주
 	 String empName;
 	 BigDecimal allCount;
 	 BigDecimal productCount;
-	
-	 String mrOrderDate;
+	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 Date mrOrderDate;
 }

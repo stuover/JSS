@@ -35,13 +35,15 @@
     
   		    <h4 style="text-align:center; font-weight:bold; margin-top:10px;"> 자재 조정 조회</h4>
   		    <div>
-  		    <button type="button" id="adDelBtn" class="btn btn-danger" style="float:right; padding:3px; margin-right:10px;">취소</button> 
+  		    
+  		    <button type="button" id="adDelBtn" class="btn btn-danger" style="float:right; margin-right:10px;">취소</button>
+  		    
   		    </div>
   		    
   		    <hr>
   		    
   		   	<div id="grid3"></div>
-  		   	
+  		   	<button type="button" class="btn btn-danger" data-bs-dismiss="modal">닫기</button>
   		   	 
     </div>
   </div>
@@ -147,7 +149,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel" style="margin-left:200px; font-weight:bold;">lot별 조회</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -155,8 +157,9 @@
        <div id="grid5"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-secondary" id="chooseBtn">등록</button>
+      	<button type="button" class="btn btn-secondary" id="chooseBtn">등록</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">닫기</button>
+        
       </div>
     </div>
   </div>
@@ -194,6 +197,7 @@
 			
 			success : function(result){
 				grid1.resetData(result);
+				setTimeout(()=> grid1.refreshLayout(),100);
 				
 				
 			},
@@ -251,7 +255,7 @@
 				method : "GET",
 				success : function(result) {
 					grid2.resetData(result);
-					grid2.refreshLayout();
+					setTimeout(()=> grid2.refreshLayout(),10);
 					
 				console.log(grid2.getData());	
 					
@@ -322,6 +326,7 @@
 					header : '등록일자',
 					name : 'registerDate',
 					editor:'datePicker'
+					
 				}, {
 					header : '처리',
 					name : 'process',
@@ -345,6 +350,7 @@
 					header : '조정일자',
 					name : 'adjustmentDate',
 					editor:'datePicker'
+					
 				},
 				{
 					header : '사원 번호',
@@ -400,6 +406,7 @@
 							
 							success : function(result){
 								grid1.resetData(result);
+								setTimeout(()=> grid1.refreshLayout(),10);
 								
 								
 							},
@@ -420,7 +427,7 @@
 
 								success : function(result) {
 									grid2.resetData(result);
-									
+									setTimeout(()=> grid2.refreshLayout(),10);
 									
 									grid2.getData().forEach((ele, index)=>{
 										
@@ -482,7 +489,7 @@
 			
 				success: function(result){
 					
-					console.log(result);
+					
 					
 				},
 				
@@ -611,6 +618,7 @@
 					header : '등록일자',
 					name : 'registerDate',
 					editor:'datePicker'
+					
 				}, {
 					header : '처리',
 					name : 'process',
@@ -624,6 +632,7 @@
 					header : '조정일자',
 					name : 'adjustmentDate',
 					editor:'datePicker'
+					
 				},
 				{
 					header : '사원 번호',
@@ -652,7 +661,9 @@
 					},
 					succss : function(result){
 						grid3.resetData(result);
+						setTimeout(()=> grid3.refreshLayout(),10);
 						grid5.resetData(result);
+						setTimeout(()=> grid5.refreshLayout(),10);
 					},
 					error: function(reject){
 						console.log(reject);
@@ -703,6 +714,7 @@
 				   method:"GET",
 				   success: function(result){
 					   grid5.resetData(result);
+					   setTimeout(()=> grid5.refreshLayout(),10);
 					   
 				   },
 				   error : function(reject){

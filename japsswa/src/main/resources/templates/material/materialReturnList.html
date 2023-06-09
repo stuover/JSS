@@ -126,6 +126,7 @@
 					method:"GET",
 					success: function(result){
 						grid.resetData(result);
+						setTimeout(()=> grid.refreshLayout(),100);
 					},
 					error : function(reject){
 						
@@ -140,6 +141,7 @@
 					dataType : "json",
 					success : function(result) {
 				grid1.resetData(result);
+				setTimeout(()=> grid1.refreshLayout(),100);
 						},
 					error : function(reject){
 							console.log(reject);
@@ -258,6 +260,7 @@
 				
 				success: function(result){
 					grid1.resetData(result);
+					setTimeout(()=> grid1.refreshLayout(),100);
 					
 				}
 				
@@ -283,7 +286,7 @@
 					
 					success : function(result) {
 						grid1.resetData(result);
-						grid1.refreshLayout();
+						setTimeout(()=> grid1.refreshLayout(),100);
 						console.log(result);
 					}
 					
@@ -340,6 +343,7 @@
 		success: function(result){
 			
 			grid.resetData(result);
+			setTimeout(()=> grid.refreshLayout(),100);
 			
 		},
 		error : function(reject){
