@@ -67,10 +67,8 @@ input:focus {
 
 
 
-	<div class="modal fade" id="searchModal" data-bs-backdrop="static"
-		tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
-		<div class="modal-dialog modal-lg modal-dialog-centered"
-			style="width: 670px">
+	<div class="modal fade" id="searchModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" style="padding-right: 25px;">거래품목 조회</h5>
@@ -149,6 +147,7 @@ var cusGrid = new tui.Grid({
 	{
 		header : '거래처코드',
 		name : 'customerId',
+		width : 'auto',
 		sortingType : 'desc',
 		sortable : true
 	}, 
@@ -160,6 +159,7 @@ var cusGrid = new tui.Grid({
 	}, {
 		header : '주소',
 		name : 'custAddr',
+		width : 'auto',
 		sortingType : 'desc',
 		sortable : true
 	}, {
@@ -180,6 +180,7 @@ var cusGrid = new tui.Grid({
 	}, {
 		header : '현거래유무',
 		name : 'contractStatus',
+		width : 'auto',
 		sortingType : 'desc',
 		sortable : true
 	}, {
@@ -287,6 +288,7 @@ customerList();
 // 거래처 상세
 var detaGrid = new tui.Grid({
 	el : document.getElementById('detaGrid'),
+	Width : 700,
 	columns : [ 
 		{
 			header : '거래처코드',
@@ -360,6 +362,8 @@ var itemGrid = new tui.Grid({
 		useClient : true,
 		perPage : 5
 	},
+	bodyHeight : 217,
+
 	columns : [
 	{
 		header : '품목코드',
