@@ -134,7 +134,7 @@
 					   <if test="itemType.equals('SAM')">
 						NOT
 					   </if>  
-					   a.item_type = '반제품' 
+					   a.item_type = 'SAM' 
 				  START WITH a.item_code = (SELECT item_code FROM work_detail WHERE wdetail_id =#{wdetailId})
 				  CONNECT BY PRIOR a.bom_level = a.level_type
 				  ORDER BY level, pro_order
