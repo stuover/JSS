@@ -1,8 +1,8 @@
 package com.mes.jss.material.domain;
 
-import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+
+
 
 import lombok.Data;
 
@@ -10,12 +10,12 @@ import lombok.Data;
 public class MrAdjustmentVO {	// 자재 조정
 	String adjustmentCode;
 	String mrLotNumber;
-	@DateTimeFormat(pattern="YYYY-MM-dd")
-	Date registerDate;
+	
+	String registerDate;
 	String process;
 	long change;
-	@DateTimeFormat(pattern="YYYY-MM-dd")
-	Date adjustmentDate;
+	
+	String adjustmentDate;
 	long empNo;
 	String itemCode;
 	String itemName;
@@ -24,7 +24,7 @@ public class MrAdjustmentVO {	// 자재 조정
 	long saveMaterial;
 	String itemType;
 	String admNote;
-	Date mrAdDate1;
-	Date mrAdDate2;
+	String mrAdDate1;
+	String mrAdDate2;
 	String mrSearch;
 }

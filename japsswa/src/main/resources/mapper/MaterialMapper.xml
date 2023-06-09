@@ -18,7 +18,7 @@
                      
                   </if>
                   
-                  <if test="storeDate1 != null and storeDate2 != null">
+                  <if test="storeDate1 != null and storeDate2 != null and storeDate1 != '' and storeDate2 != ''">
                   	 and store_date between #{storeDate1} and #{storeDate2}
                   	 
                   </if>
@@ -47,7 +47,7 @@
                      
                   </if>
                   
-                  <if test="mrRealDate1 != null and mrRealDate2 != null">
+                  <if test="mrRealDate1 != null and mrRealDate2 != null and mrRealDate1 != '' and mrRealDate2 != ''">
                   	 and MR_REAL_DATE between #{mrRealDate1} and #{mrRealDate2}
                   	 
                   </if>
@@ -69,7 +69,7 @@
    
     <select id="MrStoreList" resultType="MrVO" parameterType="MrVO">
     	select *
-    	from material m join itemlist i on (m.item_code = i.item_code)
+    	from material m join itemlist i on (m.item_code = i.item_code) join emp e on(m.emp_no = e.emp_no)
     	
     	<include refid="search"></include>
    		
@@ -243,14 +243,43 @@
   		</select>
   		
   		
+  		
+  		<sql id="searchInsert">
+    		
+              	 <if test=" itemType != null and itemType != ''.toString()">
+                  and	item_type like '%'||#{itemType}||'%'
+                  </if>
+                  
+                  <if test="storeReasonType != null and storeReasonType != ''.toString()">
+                   	 and store_reason_type like '%'||#{storeReasonType}||'%'
+                     
+                  </if>
+                                   
+                  
+                   <if test="mrSearch != null and mrSearch != ''.toString()">
+                   	 and item_name like '%'||#{mrSearch}||'%'
+                     
+                  </if>
+      
+   	
+   		</sql>
+  		
+  		
+  		
+  		
+  		
   	
   	<!-- 입고 확인 검색 -->	
-  		<select id="codeList" resultType="MrVO">
+  		<select id="mrStoreQuery" resultType="MrVO">
   		
-  		select * 
-  		from material m join itemlist i on(m.item_code = i.item_code) 
-  		where i.item_name = #{keyword} and to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+  		select m.mr_lot_number,i.item_code,i.item_name,e.emp_name,substr(to_char(m.store_date,'yy-MM-dd'),3,10),m.store_count,m.expire_date,m.store_reason_type
+  		from material m join itemlist i on(m.item_code = i.item_code)
+  		join emp e on(m.emp_no = e.emp_no) 
+  		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   		
+  		<include refid="searchInsert"></include> 
+  			
+  			
   		</select>
 	
 	
@@ -276,11 +305,11 @@
 		
 			select i.item_type,
   		       m.mr_lot_number,
-  		       GET_CODENAME(i.item_type) item_type,
+  		       GET_CODENAME(i.item_type) as item_type,
   		       m.item_code,
   		       i.item_name,
   		       e.emp_name,
-  		       m.expire_date,
+  		   m.expire_date, 
   		       m.store_date,
   		       m.store_count,
   		       m.store_reason_type,
@@ -364,6 +393,7 @@
 		<select id="StoreIn" statementType="CALLABLE">
 			{call MR_INSERT(
 				#{testCode, mode=IN, jdbcType=VARCHAR}
+				
 			
 			)
 		}
@@ -404,7 +434,14 @@
   	
   		<select id="RelGetList" resultType="MrReleaseVO">
   			
-  			select r.mr_real_code,i.item_code,GET_CODENAME(i.item_type) item_type,i.item_name,r.mr_lot_number,r.mr_real_count,r.mr_real_reason_type,r.mr_real_reason_code 
+  			select r.mr_real_code,
+  			i.item_code,
+  			GET_CODENAME(i.item_type) item_type,
+  			i.item_name,r.mr_lot_number,
+  			r.mr_real_count,
+  			r.mr_real_reason_type,
+  			r.mr_real_reason_code,
+  			r.mr_real_date
   			from material_release r join itemlist i on(r.item_code=i.item_code) 
   			
   		</select>
@@ -413,8 +450,17 @@
   		
   		<select id="MrRelPro" resultType="MrReleaseVO">
   			
-  			select * from material_release
-  			where mr_real_reason_type='생산'
+  			select r.mr_real_code,
+  			i.item_code,
+  			GET_CODENAME(i.item_type) item_type,
+  			i.item_name,
+  			r.mr_lot_number,
+  			r.mr_real_count,
+  			r.mr_real_reason_type,
+  			r.mr_real_reason_code,
+  			r.mr_real_date 
+  			from material_release r join itemlist i on(r.item_code=i.item_code) 
+  			where r.mr_real_reason_type='생산'
   			
   		</select>	
   		
@@ -422,8 +468,17 @@
   	
   		<select id="MrRelAdm" resultType="MrReleaseVO">
   			
-  			select * from material_release
-  			where mr_real_reason_type='조정'
+  			select r.mr_real_code,
+  			i.item_code,
+  			GET_CODENAME(i.item_type) item_type,
+  			i.item_name,
+  			r.mr_lot_number,
+  			r.mr_real_count,
+  			r.mr_real_reason_type,
+  			r.mr_real_reason_code,
+  			r.mr_real_date 
+  			from material_release r join itemlist i on(r.item_code=i.item_code)
+  			where r.mr_real_reason_type='조정'
   			
   		</select>	
   			
@@ -505,6 +560,41 @@
   		
   		</select>
   		
+  		
+  <sql id="orderSearch">		
+  	<where>
+  			<if test="div == 'cu'">
+  				 customer_name like '%'||#{customerName}||'%'
+  				
+  			
+  			</if>
+  			<if test="div =='mr'">
+  				and item_name like '%'||#{itemName}||'%'
+  			
+  			</if>
+  		</where>
+  	
+  	</sql>	
+  	
+  	<select id="cusMrQuery" parameterType="CustomerVO" resultType="CustomerVO">
+  		
+  			select c.customer_id, 
+  			c.customer_name, 
+  			i.item_name,
+  			i.item_code,
+  			i.item_price 
+  			from customer c 
+  			join contract t on(c.customer_id = t.customer_id) 
+  			join itemlist i on(t.item_code=i.item_code)
+  		
+  			<include refid="orderSearch"></include>
+  	
+  	</select>
+  	
+  	
+  	
+  	
+  	
   	
   	<!-- 조정 될 리스트 -->	
   		<select id="mrAdGetList" resultType="MrAdjustmentVO">
@@ -648,7 +738,7 @@
                      
                   </if>
                   
-                  <if test="mrAdDate1 != null and mrAdDate2 != null">
+                  <if test="mrAdDate1 != null and mrAdDate2 != null and mrAdDate1 != '' and mrAdDate2 !=''">
                   	 and adjustment_date between #{mrAdDate1} and #{mrAdDate2}
                   	 
                   </if>

@@ -48,7 +48,7 @@ public class SaleController {
 		return item;
 	}
 	
-	//거래처 검색
+	//거래처 검색 (조회 시 거래처 검색에도 사용)
 	@RequestMapping("/custList")
 	@ResponseBody
 	public List<OrderVO> custListAjax(@RequestParam String result){
@@ -57,7 +57,7 @@ public class SaleController {
 		return cust;
 	}
 	
-	//품목 검색
+	//품목 검색 (조회 시 품목 검색에도 사용)
 	@RequestMapping("/itemSearch")
 	@ResponseBody
 	public List<OrderVO> itemSearchAjax(@RequestParam String code){
@@ -158,6 +158,37 @@ public class SaleController {
 		
 	}
 	
+	//주문서 조회 화면
+	@RequestMapping("/orderList")
+	public String orderList() {
+		return "sale/orderShow";
+	}
+	
+	//주문서 전체 조회
+	@RequestMapping("/entOrderList")
+	@ResponseBody
+	public List<OrderVO> entOrderListAjax(){
+		List<OrderVO> entList = saleService.entOrderList();
+		return entList;
+	}
+	
+	//주문서 조회
+	@RequestMapping("/orderCheck")
+	@ResponseBody
+	public List<OrderVO> orderCheckAjax(OrderVO cvo){
+		List<OrderVO> checkList = saleService.orderCheck(cvo);
+		return checkList;
+	}
+	
+	//주문 상세 조회
+	@RequestMapping("/detCheck")
+	@ResponseBody
+	public List<OrderVO> detCheckAjax(@RequestParam String ordId){
+		List<OrderVO> dcList = saleService.detCheck(ordId);
+		return dcList;
+	}
+	
+
 	
 	
 	

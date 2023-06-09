@@ -6,10 +6,12 @@
 <mapper namespace="com.mes.jss.sale.mapper.OrderMapper">
 
 	<select id="custModalList" resultType="OrderVO">
-		select customer_id, customer_name, cust_tel, cust_addr, cust_mail
+		select customer_id,
+		customer_name, cust_tel, cust_addr, cust_mail
 		from customer
-		where cust_part = '판매처'
-		
+		where
+		cust_part = 'SEL'
+
 	</select>
 
 	<select id="itemNamelist" resultType="OrderVO">
@@ -18,115 +20,191 @@
 		where item_type = 'FIN'
 	</select>
 
-	<select id="custList" parameterType="OrderVO" resultType="OrderVO">
-		select customer_id, customer_name, cust_tel, cust_addr, cust_mail
+	<select id="custList" parameterType="OrderVO"
+		resultType="OrderVO">
+		select customer_id, customer_name, cust_tel, cust_addr,
+		cust_mail
 		from customer
-		where customer_name like '%'|| #{custname} || '%'
+		where customer_name like '%'|| #{custname} ||
+		'%'
 	</select>
-	
-	<select id="itemSearch" parameterType="OrderVO" resultType="OrderVO">
+
+	<select id="itemSearch" parameterType="OrderVO"
+		resultType="OrderVO">
 		select item_code, item_name
 		from itemlist
-		where item_name = #{code}
+		where item_name =
+		#{code}
 	</select>
-	
-	<select id="custInfo" parameterType="OrderVO" resultType="OrderVO">
-		select customer_name, 
-		       cust_tel, 
-		       cust_addr, 
-		       cust_mail
-		  from customer
-		 where customer_id = #{customerId}
-	</select> 
-	
+
+	<select id="custInfo" parameterType="OrderVO"
+		resultType="OrderVO">
+		select customer_name,
+		cust_tel,
+		cust_addr,
+		cust_mail
+		from customer
+		where customer_id = #{customerId}
+	</select>
+
 	<select id="entRegister" statementType="CALLABLE">
 		{
-			CALL insert_order(
-				#{customerName, mode=IN, jdbcType=VARCHAR},
-				#{ordName, mode=IN, jdbcType=VARCHAR},
-				#{empNo, mode=IN, jdbcType=VARCHAR}
-				
-			)
+		CALL insert_order(
+		#{customerName, mode=IN, jdbcType=VARCHAR},
+		#{ordName, mode=IN, jdbcType=VARCHAR},
+		#{empNo, mode=IN, jdbcType=VARCHAR}
+
+		)
 	</select>
-	
+
 	<select id="detRegister" statementType="CALLABLE">
 		{
-			CALL insert_orddetail(
-				#{itemName},
-				#{unitPrice, mode=IN, jdbcType=VARCHAR},
-				#{outDate, mode=IN, jdbcType=VARCHAR},
-				#{ordCount, mode=IN, jdbcType=VARCHAR},
-				#{itemCode, mode=IN, jdbcType=VARCHAR}
-				)
-				}
+		CALL insert_orddetail(
+		#{itemName},
+		#{unitPrice, mode=IN, jdbcType=VARCHAR},
+		#{outDate, mode=IN, jdbcType=VARCHAR},
+		#{ordCount, mode=IN, jdbcType=VARCHAR},
+		#{itemCode, mode=IN, jdbcType=VARCHAR}
+		)
+		}
 	</select>
-	
-	<select id="custShowModal" parameterType="OrderVO" resultType="OrderVO">
+
+	<select id="custShowModal" parameterType="OrderVO"
+		resultType="OrderVO">
 		select c.customer_id, c.customer_name, o.ord_id, o.ord_name
 		from customer c join orders o
 		on c.customer_id = o.customer_id
-		where customer_name like '%' || #{oCode} || '%'
+		where
+		customer_name like '%' || #{oCode} || '%'
 		and cust_part = '판매처'
 	</select>
-		
+
 	<select id="custOrdModal" resultType="OrderVO">
-		 select distinct c.customer_id, 
-		       c.customer_name, 
-		       o.ord_id, 
-		       o.ord_name
-		  from customer c 
-		  join orders o on c.customer_id = o.customer_id
-		  join orddetail d on o.ord_id = d.ord_id
+		select distinct c.customer_id,
+		c.customer_name,
+		o.ord_id,
+		o.ord_name
+		from customer c
+		join orders o on c.customer_id = o.customer_id
+		join orddetail d on o.ord_id = d.ord_id
 	</select>
-	
-	<select id="orderShow" parameterType="OrderVO" resultType="OrderVO">
-		 select o.ord_id, 
-		        c.customer_name, 
-		        c.cust_addr, 
-		        c.cust_mail, 
-		        c.cust_tel, 
-		        o.ord_name, 
-		        e.emp_name
- 		 from customer c join orders o on( c.customer_id = o.customer_id)
-                         join emp e on( o.emp_no = e.emp_no)
-         where o.ord_id = #{ordId} and c.customer_id = #{customerId}                      
+
+	<select id="orderShow" parameterType="OrderVO"
+		resultType="OrderVO">
+		select o.ord_id,
+		c.customer_name,
+		c.cust_addr,
+		c.cust_mail,
+		c.cust_tel,
+		o.ord_name,
+		e.emp_name
+		from customer c join orders o on( c.customer_id = o.customer_id)
+		join emp e on( o.emp_no = e.emp_no)
+		where o.ord_id = #{ordId} and c.customer_id = #{customerId}
 	</select>
-	
-	<select id="ordDetShow" parameterType="OrderVO" resultType="OrderVO">
-		 select d.orddetail_id, 
-		        i.item_code, 
-		        i.item_name, 
-		        d.out_date, 
-		        d.unit_price, 
-		        d.ord_count, 
-		        d.each_price
- 		 from orddetail d join itemlist i on (d.item_code = i.item_code)
- 		 where ord_id = #{orderId} and orddet_status = '접수완료'
- 	</select>
-	
+
+	<select id="ordDetShow" parameterType="OrderVO"
+		resultType="OrderVO">
+		select d.orddetail_id,
+		i.item_code,
+		i.item_name,
+		d.out_date,
+		d.unit_price,
+		d.ord_count,
+		d.each_price
+		from orddetail d join itemlist i on (d.item_code = i.item_code)
+		where ord_id = #{orderId} and orddet_status = '접수완료'
+	</select>
+
 	<delete id="entDel" parameterType="OrderVO">
-		delete from orders where ord_id = #{delId}
+		delete from orders where
+		ord_id = #{delId}
 	</delete>
-	
+
 	<delete id="entDelDet" parameterType="OrderVO">
-		delete from orddetail where ord_id = #{delId}
+		delete from orddetail where
+		ord_id = #{delId}
 	</delete>
-	
+
 	<delete id="delDet" parameterType="OrderVO">
-		delete from orddetail where orddetail_id = #{ordDetailId}
+		delete from orddetail where
+		orddetail_id = #{ordDetailId}
 	</delete>
-	
+
 	<select id="ordUpdate" statementType="CALLABLE">
 		{
-			CALL update_order(
-				#{itemCode, mode=IN, jdbcType=VARCHAR},
-				#{outDate, mode=IN, jdbcType=VARCHAR},
-				#{unitPrice, mode=IN, jdbcType=VARCHAR},
-				#{ordCount, mode=IN, jdbcType=VARCHAR},
-				#{ordId, mode=IN, jdbcType=VARCHAR},
-				#{ordDetailId, mode=IN, jdbcType=VARCHAR}
-				)
-				}
+		CALL update_order(
+		#{itemCode, mode=IN, jdbcType=VARCHAR},
+		#{outDate, mode=IN, jdbcType=VARCHAR},
+		#{unitPrice, mode=IN, jdbcType=VARCHAR},
+		#{ordCount, mode=IN, jdbcType=VARCHAR},
+		#{ordId, mode=IN, jdbcType=VARCHAR},
+		#{ordDetailId, mode=IN, jdbcType=VARCHAR}
+		)
+		}
+	</select>
+	
+	<!-- 조회페이지 -->
+	
+	<select id="entOrderList" parameterType="OrderVO" resultType="OrderVO">
+		select ord_id, 
+			   ord_name, 
+			   ord_date, 
+			   c.customer_id, 
+			   customer_name, 
+			   total_price, 
+			   e.emp_name
+		from orders o join customer c on(o.customer_id = c.customer_id)
+              		  join emp e on(o.emp_no = e.emp_no)
+	</select>
+
+	<select id="orderCheck" parameterType="OrderVO" resultType="OrderVO">
+		select * from(
+		select ord_id, 
+			   ord_name, 
+			   ord_date, 
+			   c.customer_id, 
+			   customer_name, 
+			   total_price, 
+			   e.emp_name
+		from orders o join customer c on(o.customer_id = c.customer_id)
+              		  join emp e on(o.emp_no = e.emp_no)
+              		  join orddetail d on(o.ord_id = d.ord_id)
+              		  join itemlist i on(d.item_code = i.item_code)
+         
+        <where>
+        	<if test="itemName != null and itemName != ''">
+        		and i.item_name = #{itemName}
+        	</if>
+        	<if test="customerName != null and customerName != ''">
+        		and c.customerName = #{customerName}
+        	</if>
+        	<if test="sOrdDate != null and sOrdDate != ''">
+        		<![CDATA[
+        			and ordDate >= #{sOrdDate}
+        		]]>
+        	</if>
+        	<if test="eOrdDate != null and eOrdDate != ''">
+        		<![CDATA[
+        			and ordDate <= #{eOrdDate}
+        		]]>
+        	</if>
+        </where>
+        )
+	</select>
+	
+	<select id="detCheck" parameterType="OrderVO" resultType="OrderVO">
+		select d.orddetail_id, 
+			   d.item_code, 
+			   i.item_name, 
+			   d.ord_count, 
+			   d.unit_price, 
+			   d.each_price, 
+			   d.out_date, 
+			   d.orddet_status
+			from orddetail d join itemlist i on(d.item_code = i.item_code)
+			                 join orders o on (d.ord_id = o.ord_id)
+			where ord_id = #{ordId}
 	</select>
 
 

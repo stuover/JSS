@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+
+
+</head>
+<th:block layout:fragment="content">
+
+
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="page-title">주문서 조회</h4>
+					
+
+					<!-- <input id="name" type="hidden" th:value="${#authentication.principal.empName}">   -->
+				
+					<form id="orderForm">
+					<div class="row"></div>
+					
+					<label>품목명</label><input name="itemName" id="item" type="text"><button id="itemSearch" type="button" class="btn btn-dark">찾기</button>
+					<label>거래처명</label><input name="customerName" id="cust" type="text"><button id="custSearch" type="button" class="btn btn-dark">찾기</button>
+					<label>주문날짜</label><input name="sOrdDate" id="oDateStart" type="date">-<input name="eOrdDate" id="oDateEnd" type="date">
+					<button id="searchBtn" type="button" class="btn btn-dark">조회</button>
+					
+					<button id="ordReset" type="reset" class="btn btn-dark">초기화</button>
+					</form>
+					<div id="ordGrid"></div>
+					
+		
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	
+	<div class="modal fade" id="detModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="detModalLabel">주문 상세 조회</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<div id="detModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="itemModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="itemModalLabel">품목 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="itemInput" name="item">
+					<button id="itemSear" type="button" class="btn btn-dark">찾기</button>
+					<div id="itemModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="custModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="custModalLabel">거래처 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="custInput" name="cust">
+					<button id="custSear" type="button" class="btn btn-dark">찾기</button>
+					<div id="custModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<script>
+
+	const Grid = tui.Grid;
+	
+	//주문(공통)조회 그리드
+	let ordGridData = [{}];
+		const ordGrid = new Grid({
+		  bodyHeight : 400,
+	      el: document.getElementById('ordGrid'),
+	      data: ordGridData,
+	      rowHeaders: ['checkbox'],
+	      pageOptions: { 
+              useClient: true,
+              perPage:15  
+              },
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '주문코드',
+				  name: 'ordId',
+				  hidden: true
+				 },
+			     {
+				  header: '주문명',
+				  name: 'ordName'
+				 },
+				 {
+				  header: '주문날짜',
+				  name: 'ordDate'
+			     },
+			     {
+				  header: '거래처코드',
+				  name: 'customerId',
+				  hidden : true
+				 }, 
+			     {
+			      header: '거래처명',
+			      name: 'customerName'
+			     },
+			     {
+				  header: '총금액',
+				  name: 'totalPrice'
+				 },
+			     {
+				  header: '담당자',
+				  name: 'empName'
+				 }
+					 
+				 
+		      ],
+		      
+		        
+		    });
+
+		ordGrid.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+		ordGrid.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+		ordGrid.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+		
+		
+		//주문 상세 모달 그리드
+		const detModalGrid = new Grid({
+            el: document.getElementById('detModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '주문상세코드',
+	            name: 'orddetailId'
+	          },
+              {
+                header: '품목코드',
+                name: 'itemCode',
+                hidden : true
+              },
+              {
+                header: '품목명',
+                name: 'itemName'
+              },
+              {
+                header: '수량',
+                name: 'ordCount'
+              },              
+              {
+                header: '판매단가',
+                name: 'unitPrice'
+              },
+              {
+                header: '판매금액',
+                name: 'eachPrice'
+              },
+              {
+                header: '납품예정날짜',
+                name: 'outDate'
+              },              
+              {
+                header: '주문상태',
+                name: 'orddetStatus'
+              }
+            ]
+          });
+
+		  detModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  detModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  detModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		
+		
+		window.onload = function(){
+			
+			//주문서 전체 조회
+			$.ajax({
+				url : "/entOrderList",
+				method : "get",
+				success : function(result){
+					ordGrid.resetData(result);
+					ordGrid.refreshLayout();
+				}
+			})
+			
+		}
+		
+		
+		$('#searchBtn').on('click', function(){
+			
+			//주문서 조회
+			$.ajax({
+				url : "/orderCheck",
+				method : "get",
+				data : $('#orderForm').serialize(),
+				success : function(result){
+					ordGrid.resetData(result);
+					ordGrid.refreshLayout();
+				}
+			})
+			
+		})
+		
+		ordGrid.on('click', (e)=>{
+			
+			if(e.columnName == 'ordId'){
+				
+				
+				$('#detModalGrid').modal('show');
+				
+				var result = ordGrid.getRow(ev.rowKey);
+				
+				
+					$.ajax({
+						url : "/detCheck",
+						method : "get",
+						data : {'result' : result.ordId},
+						success : function(result){
+							detModalGrid.resetData(result);
+							detModalGrid.refreshLsyout();
+						}
+					})
+				
+				
+				$('#detModalGrid').on('shown.bs.modal', function (e) {
+					console.log('open');
+					
+
+					
+					setTimeout(()=> detModalGrid.refreshLayout(), 1);
+	  			}); 
+				
+			}
+			
+		})
+		
+		
+		//제품 찾기 모달
+		
+		const itemModalGrid = new Grid({
+            el: document.getElementById('itemModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '품목코드',
+	            name: 'orddetailId'
+	          },
+              {
+                header: '품목명',
+                name: 'itemCode'
+              }
+              
+            ]
+          });
+
+		  itemModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  itemModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  itemModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		  
+		  
+		  //거래처 찾기 모달
+		  
+		  const custModalGrid = new Grid({
+            el: document.getElementById('custModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '거래처코드',
+	            name: 'orddetailId'
+	          },
+              {
+                header: '거래처명',
+                name: 'itemCode'
+              },
+              {
+                header: '거래여부',
+                name: 'itemName'
+              }
+            ]
+          });
+
+		  custModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  custModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  custModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		  
+		  
+		  //품목명 찾기
+		  $('#itemSearch').on('click', function(){
+			  
+			  const code = $('#itemInput').val();
+			  
+	       	   $('#itemInput').val('');
+	       	   
+	       	   //품목검색
+	       	   $.ajax({
+	       		   url : "/itemSearch",
+	       		   method : "GET",
+	       		   data : { code : code},
+	       		   success : function(result){
+	       			itemModalGrid.resetData(result);
+	       			itemModalGrid.refreshLayout();
+	       			  
+	       		   }
+	       		   
+	       	   });
+		  })
+		  
+		  //품목 검색 결과
+		  itemModalGrid.on('click', (e)=>{
+			
+			if(e.columnName == 'itemCode'){
+				
+				
+				var iresult = itemModalGrid.getRow(ev.rowKey);
+				
+				$('#itemModalGrid').modal('hide');
+
+				$('#item').val(iresult);
+				
+				
+	  			}); 
+				
+			}
+			
+		})
+		  
+		  
+		  //거래처명 찾기
+		  $('#custSearch').on('click', function(){
+			  
+			  const result = $('#custInput').val();
+			  
+	       	   $('#custInput').val('');
+	       	   
+	       	   //거래처 검색
+	       	   $.ajax({
+	       		   url : "/custList",
+	       		   method : "GET",
+	       		   data : {'result' : result},
+	       		   success : function(result){
+	       			custModalGrid.resetData(result);
+	       			custModalGrid.refreshLayout();
+	       			  
+	       		   }
+	       		   
+	       	   })
+		  })
+		  
+		  
+		  //거래처명 검색 결과
+		  custModalGrid.on('click', (e)=>{
+			
+			if(e.columnName == 'customerId'){
+				
+				
+				var cresult = custModalGrid.getRow(ev.rowKey);
+				
+				$('#custModalGrid').modal('hide');
+
+				$('#cust').val(cresult);
+				
+				
+	  			}); 
+				
+			}
+			
+		})
+		  
+
+		
+		
+		
+		
+		
+	
+		
+		           
+		           
+		           
+
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+
+</th:block>
+
+</html>

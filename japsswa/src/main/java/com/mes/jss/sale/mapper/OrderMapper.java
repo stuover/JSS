@@ -37,7 +37,12 @@ public interface OrderMapper {
 
 	public void ordUpdate(OrderVO vo);
 
-	//void delDet(String ordDetailId);
+	List<OrderVO> entOrderList();
+
+	List<OrderVO> orderCheck();
+
+	List<OrderVO> detCheck(String ordId);
+
 
 	
 

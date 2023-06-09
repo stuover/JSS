@@ -250,9 +250,9 @@
   	</select>
   	
   	<select id="getEmpList" resultType = "EmpVO">
-  		select emp_no value, emp_name name
+  		select emp_no value, emp_name text 
   		from emp
-  		where dept_name = #{empCode}
+  		where dept_name = '설비'
   	</select>
   	
   </mapper>

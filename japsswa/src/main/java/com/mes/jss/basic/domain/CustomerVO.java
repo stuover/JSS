@@ -25,4 +25,6 @@ public class CustomerVO {
 	Date contDate;
 	long mrPrice;
 	
+	String div;
+	
 }

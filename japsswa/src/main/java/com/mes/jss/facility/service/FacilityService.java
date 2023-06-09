@@ -54,6 +54,7 @@ public interface FacilityService {
 	public List<InspectionVO> searchInsList(InspectionVO vo);	// 점검 내역 검색
 	public List<CommVO> getDetailList(String commCode);
 	public List<EmpVO> getEmp(String empNo);
+	//public Object getEmpNo(String string);
 	
 
 	

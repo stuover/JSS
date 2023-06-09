@@ -172,6 +172,12 @@ public interface MaterialMapper {
 	// 자재 조정 내역 검색
 	public List<MrAdjustmentVO> mrAdmSearchQuery(MrAdjustmentVO vo);
 	
+	// 자재 입고 확인 검색
+	public List<MrVO> mrStoreQuery(MrVO vo);
+	
+	// 거래처 자재 검색
+	public List<CustomerVO> cusMrQuery(CustomerVO vo);
+	
 	
 
 	

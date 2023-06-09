@@ -12,12 +12,12 @@ public class MrVO {              // 자재 vo
 	String mrLotNumber;
 	String itemCode;
 	long empNo; 
-	@DateTimeFormat(pattern="YYYY-MM-dd")
-	Date storeDate;
+	
+	String storeDate;
 	long storeCount;
 	long holdCount;
-	@DateTimeFormat(pattern="YYYY-MM-dd")
-	Date expireDate;
+	
+	String expireDate;
 	String storeReasonType;
 	String storeReasonCode;
 	String testCode;
@@ -35,10 +35,11 @@ public class MrVO {              // 자재 vo
 	String searchText;
 	String Name;
 	
+	String mrRealReasonType;
 	String store;
 	String material;
-	Date storeDate1;
-	Date storeDate2;
+	String storeDate1;
+	String storeDate2;
 	String mrSearch;
 	 
 }

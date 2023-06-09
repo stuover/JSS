@@ -12,7 +12,7 @@
   				cust_addr,
   				cust_mail,
   				cust_tel,
-  				cust_part,
+  				GET_CODENAME(cust_part) cust_part,
   				contract_status,
   				cust_etc
   		from customer
@@ -40,7 +40,7 @@
   	</insert>
   	
   	<select id="getCusItemList" resultType="TransactionItemVO">
-  		select a.item_code, b.item_name, b.item_type
+  		select a.item_code, b.item_name, GET_CODENAME(b.item_type) item_type
   		from  CONTRACT a join itemList b
   			  on(a.item_code = b.item_code)
   		where customer_id = #{cusId}
