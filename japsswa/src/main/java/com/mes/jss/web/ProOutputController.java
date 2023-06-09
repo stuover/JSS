@@ -7,14 +7,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mes.jss.production.domain.PerformanceVO;
 import com.mes.jss.production.domain.SearchVO;
 import com.mes.jss.production.domain.WorkVO;
+import com.mes.jss.production.service.PerformanceService;
 import com.mes.jss.production.service.WorkService;
 
 @Controller
 public class ProOutputController {
 	
 	@Autowired WorkService workService;
+	@Autowired PerformanceService performanceservice;
 
 	@RequestMapping("/proOutput")
 	public String proOutput(){
@@ -26,6 +29,10 @@ public class ProOutputController {
 		return "production/monitoring";
 	}
 	
+	@RequestMapping("/performanceChart")
+	public String performanceChart() {
+		return "production/performanceChart";
+	}
 	
 	
 	// 공정이동표 조회 페이지
@@ -55,5 +62,13 @@ public class ProOutputController {
 		return data;
 	}
 	
+	// 생산 실적 차트
+	@RequestMapping("/todayOutputChartAjax")
+	@ResponseBody
+	public List<PerformanceVO> todayOutputChart(){
+		List<PerformanceVO> data = performanceservice.todayChart();
+		
+		return data;
+	}
 	
 }

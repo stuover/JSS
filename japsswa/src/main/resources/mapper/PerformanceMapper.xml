@@ -42,18 +42,13 @@
 		                        d.work_end, 
 		                        e.emp_name
 		            FROM 
-		                      work_detail d JOIN work w ON  (w.work_id = d.work_id)
-		                                           LEFT OUTER JOIN performance p ON (d.wdetail_id = p.wdetail_id)
-		                                           JOIN work_bom b ON (d.wdetail_id = b.wdetail_id) ,
-		                    work a JOIN emp e ON (a.emp_no = e.emp_no)
+		                 work_detail d JOIN work w ON  (w.work_id = d.work_id)
+		                               LEFT OUTER JOIN performance p ON (d.wdetail_id = p.wdetail_id)
+		                               JOIN work_bom b ON (d.wdetail_id = b.wdetail_id) 
+                                       JOIN emp e ON (w.emp_no = e.emp_no)
 		            WHERE p.end_time IS NULL
-		                 AND b.pro_code = (
-		                                                SELECT pro_code
-		                                                FROM process
-		                                                WHERE pro_name = '완제품 포장'
-		                                             )
 		            )
-		WHERE TO_DATE(work_end, 'yyyy-MM-dd') = TO_DATE(SYSDATE, 'yyyy-MM-dd') 
+		WHERE TO_CHAR(work_end, 'yyyy-MM-dd') = TO_CHAR(SYSDATE, 'yyyy-MM-dd')
 	</select>
 	
 	<!-- 작업자 조회 모달창 : 작업자 리스트 -->
@@ -76,7 +71,7 @@
 		     faclist AS(
 		                SELECT fac_code, fac_name
 		                FROM facility
-		                WHERE pro_code = V
+		                WHERE pro_code = #{proCode}
 		                )
 		SELECT a.fac_code, a.fac_name
 		FROM faclist a JOIN down b ON (a.fac_code = b.fac_code)
@@ -151,7 +146,7 @@
 		WITH perm AS(
 					 SELECT fac_code, SUM(pass_item) pass_item, fail_item
 					 FROM performance
-					 WHERE SUBSTR(end_time,1, 10) = '2023-06-06'--TO_CHAR((sysdate-1), 'yyyy-MM-dd')
+					 WHERE SUBSTR(end_time,1, 10) = TO_CHAR(sysdate, 'yyyy-MM-dd')
 					 GROUP BY fac_code, pass_item, fail_item
 					 ),
 		     reason AS (
@@ -175,5 +170,10 @@
 		ORDER BY a.fac_code	
 	</select>
 
+	<select id="todayChart" resultType="PerformanceVO">
+		SELECT SUBSTR(end_time,1, 10) end_time, output, pass_item, fail_item
+		FROM performance
+		WHERE SUBSTR(end_time,1, 10) = TO_CHAR(sysdate, 'yyyy-MM-dd')
+	</select>
   	
   </mapper>

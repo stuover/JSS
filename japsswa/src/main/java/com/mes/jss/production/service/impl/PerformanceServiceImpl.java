@@ -101,6 +101,14 @@ public class PerformanceServiceImpl implements PerformanceService{
 		return result;
 	}
 
+	
+	// 생산 실적 차트
+	@Override
+	public List<PerformanceVO> todayChart() {
+		List<PerformanceVO> result = performanceMapper.todayChart();
+		return result;
+	}
+
 
 	
 	

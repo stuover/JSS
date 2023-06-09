@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/index}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+
+</head>
+
+<th:block layout:fragment="content">
+
+	
+ 		<div >
+ 			<div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                <!-- Body Start -->
+                
+                  <h4 class="m-2 page-title">생산 실적</h4>
+                  
+                  <div class="p-3"></div>
+                  
+                  <div id="todayOutputChart"></div>
+                  
+                  
+				<!-- Body End -->				            
+                </div>
+              </div>
+            </div>
+  		</div>
+  		
+		
+		
+		<!-- Modal List Start -->
+		
+
+
+	    <!-- Modal List End -->
+  		
+ 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
+  		
+  		function todayChart(){
+  			var data;
+  			//ajax로 필요한 데이터 조회
+	  		$.ajax({
+	  			url : "/todayOutputChartAjax",
+	  			method :"GET",
+	  			async: false,
+	  			success : function(result){
+	  				data = result;	
+	  			},
+	  			error : function(reject){
+	  				console.log(reject);
+	  			}
+	  		});
+  			return data;	
+  		}
+
+  		
+		    
+  		// 차트 커스텀
+  		var options = {
+	  		  width: 400,
+	  		  height: 240,
+	  		  vAxis: {minValue:0, maxValue:1000},
+	  		  animation: {
+	  			duration: 1000,
+	  			easing: 'out'
+	  		  }
+  		};
+	
+  		var chart = new google.visualization.ColumnChart(document.getElementById('todayOutputChart'));
+	  		
+	
+		var data = new google.visualization.DataTable();
+  		data.addColumn('string', 'x');
+  		data.addColumn('number', '생산량');
+  		data.addColumn('number', '합격량');
+  		data.addColumn('number', '불량량');
+
+  		function drawChart() {
+
+
+	  		let result = todayChart();
+	  		result.forEach(function(item, idx){
+	  			data.insertRows([item.endTime, item.output, item.passItem, item.failItem])
+	  		}) 			
+	  		
+
+  		  chart.draw(data, options);	// 차트에 넣을 데이터 입력.
+  		}
+
+	
+  		drawChart();
+		
+		
+  		setInterval(drawChart, 10000);
+		
+			
+						
+  		</script>
+    
+	</th:block>
+
+</html>
