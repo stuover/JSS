@@ -15,6 +15,6 @@ public class MrOrderVO {	// 자재 발주
 	 String empName;
 	 long allCount;
 	 long productCount;
-	 @DateTimeFormat(pattern="YYYY-MM-dd")
-	 Date mrOrderDate;
+	
+	 String mrOrderDate;
 }

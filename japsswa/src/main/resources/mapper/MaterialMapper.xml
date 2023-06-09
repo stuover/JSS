@@ -18,7 +18,7 @@
                      
                   </if>
                   
-                  <if test="storeDate1 != null and storeDate2 != null">
+                  <if test="storeDate1 != null and storeDate2 != null and storeDate1 != '' and storeDate2 != ''">
                   	 and store_date between #{storeDate1} and #{storeDate2}
                   	 
                   </if>
@@ -47,7 +47,7 @@
                      
                   </if>
                   
-                  <if test="mrRealDate1 != null and mrRealDate2 != null">
+                  <if test="mrRealDate1 != null and mrRealDate2 != null and mrRealDate1 != '' and mrRealDate2 != ''">
                   	 and MR_REAL_DATE between #{mrRealDate1} and #{mrRealDate2}
                   	 
                   </if>
@@ -272,8 +272,9 @@
   	<!-- 입고 확인 검색 -->	
   		<select id="mrStoreQuery" resultType="MrVO">
   		
-  		select * 
-  		from material m join itemlist i on(m.item_code = i.item_code) 
+  		select m.mr_lot_number,i.item_code,i.item_name,e.emp_name,substr(to_char(m.store_date,'yy-MM-dd'),3,10),m.store_count,m.expire_date,m.store_reason_type
+  		from material m join itemlist i on(m.item_code = i.item_code)
+  		join emp e on(m.emp_no = e.emp_no) 
   		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   		
   		<include refid="searchInsert"></include> 
@@ -737,7 +738,7 @@
                      
                   </if>
                   
-                  <if test="mrAdDate1 != null and mrAdDate2 != null">
+                  <if test="mrAdDate1 != null and mrAdDate2 != null and mrAdDate1 != '' and mrAdDate2 !=''">
                   	 and adjustment_date between #{mrAdDate1} and #{mrAdDate2}
                   	 
                   </if>

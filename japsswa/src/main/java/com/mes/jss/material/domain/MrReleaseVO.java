@@ -16,9 +16,9 @@ public class MrReleaseVO {   // 자재 출고
 	 String mrRealReasonCode;
 	 String itemType;
 	 String itemName;
-	 Date mrRealDate;
-	 Date mrRealDate1;
-	 Date mrRealDate2;
+	 String mrRealDate;
+	 String mrRealDate1;
+	 String mrRealDate2;
 	 String mrSearch;
 	 
 }
