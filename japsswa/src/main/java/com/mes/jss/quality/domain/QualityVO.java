@@ -1,5 +1,6 @@
 package com.mes.jss.quality.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import lombok.Data;
@@ -15,8 +16,8 @@ public class QualityVO {	// 품질 VO
 	Date endDate;
 	long empNo;
 	String empName;
-	double testQuantity;
-	double errQuantity;
+	BigDecimal testQuantity;
+	BigDecimal errQuantity;
 	
 	long passQuantity;
 	double defectiveRate;
