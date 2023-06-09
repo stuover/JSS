@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mes.jss.basic.domain.CustomerVO;
 import com.mes.jss.basic.domain.TransListVO;
@@ -23,6 +24,7 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
+	@Transactional
 	public void saveCusDeta(TransListVO vo) {
 		cusMapper.updateCus(vo.getDeta());
 		

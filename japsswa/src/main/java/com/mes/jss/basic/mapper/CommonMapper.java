@@ -33,4 +33,6 @@ public interface CommonMapper {
 
 	public List<CommVO> getTypeList();
 
+	public void deleteAllDeta(String commCode);
+
 }

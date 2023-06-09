@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mes.jss.DTO.SearchDTO;
 import com.mes.jss.basic.domain.CommListVO;
@@ -34,6 +35,7 @@ public class CommonServiceImpl implements CommonService{
 
 
 	@Override
+	@Transactional
 	public void modifyDetails(CommListVO listVo) {
 		List<CommVO> list = listVo.getList();
 		String commCode = listVo.getCode();
@@ -57,6 +59,7 @@ public class CommonServiceImpl implements CommonService{
 
 
 	@Override
+	@Transactional
 	public void removeDetails(CommListVO listVo) {
 		List<CommVO> list = listVo.getList();
 		
@@ -95,6 +98,7 @@ public class CommonServiceImpl implements CommonService{
 	public void removeCommCode(String commCode) {
 		// TODO Auto-generated method stub
 		commMapper.deleteCommCode(commCode);
+		commMapper.deleteAllDeta(commCode);
 	}
 
 

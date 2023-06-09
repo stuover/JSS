@@ -37,7 +37,7 @@
 	</select>
 	
 	<delete id="deleteCommCode" >
-		delete from common where comm_code = #{commCode} 
+		delete from common where comm_code = UPPER(#{commCode}) 
 	
 	</delete>
 	
@@ -54,10 +54,12 @@
 			deta_note = #{detaNote},
 			deta_modify_date = to_date(sysdate, 'yyyy/MM/dd')
 		where details_index = #{detailsIndex}
+		
+		
 	</update>
 	
 	<insert id="insertDetails" parameterType ="CommVO">
-		insert into details_comm values(upper(#{detaCode}), #{detaName}, #{detaNote}, to_date(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'), #{commCode},details_comm_seq.nextval)	
+		insert into details_comm values(upper(#{detaCode}), #{detaName}, #{detaNote}, to_date(sysdate, 'rrrr/MM/dd'), to_date(sysdate, 'rrrr/MM/dd'), #{commCode}, to_char(sysdate, 'yyMMdd') || details_comm_seq.nextval)	
 	</insert>
 	
 	<delete id="deleteDetails" >
@@ -73,7 +75,7 @@
 	</update>
 	
 	<insert id="insertCommCode" parameterType = "CommVO">
-		insert into common values( upper(#{commCode}), #{commName}, #{commNote}, to_date(sysdate, 'yyyy/MM/dd'), to_date(sysdate, 'yyyy/MM/dd'))	
+		insert into common values( upper(#{commCode}), #{commName}, #{commNote}, to_date(sysdate, 'rrrr/MM/dd'), to_date(sysdate, 'rrrr/MM/dd'))	
 	</insert>
 	
 	<select id="getItemDeta" resultType = "CommVO">
@@ -85,4 +87,8 @@
 		select deta_Code value , deta_Name text from details_comm where comm_code= 'ITE'
 	</select>
 	
+	
+	<delete id="deleteAllDeta">
+		delete from details_comm where comm_code = #{commCode}
+	</delete>
   </mapper>

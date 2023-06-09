@@ -79,6 +79,14 @@
 			window.onload = function() {
 
 
+				const swalWithBootstrapButtons = Swal.mixin({
+					  customClass: {
+					    confirmButton: 'm-2 btn btn-success ',
+					    cancelButton: 'm-2 btn btn-danger'
+					  },
+					  buttonsStyling: false
+				})
+				
 				var grid = new tui.Grid({
 					el : document.getElementById('grid'),
 					scrollX : true,
@@ -167,7 +175,29 @@
 				let commCode = $('#commCode').val();
 				let commName = $('#commName').val();
 				let commNote = $('#commNote').val();
-				 
+				
+				if(commCode == null ||  commCode == ''){
+					Swal.fire({
+						  position: '',
+						  icon: 'question',
+						  title: '코드를 적어주세요.',
+						  showConfirmButton: false,
+						  timer: 1500
+					})
+					return;
+				}
+				
+				if(commName == null || commName == ''){
+					Swal.fire({
+						  position: '',
+						  icon: 'question',
+						  title: '코드명을 적어주세요.',
+						  showConfirmButton: false,
+						  timer: 1500
+					})
+					return;
+				}
+
 				$.ajax({
 					url : "/addCommCode",
 					method : "get",
@@ -175,7 +205,14 @@
 					success : function(result){
 						console.log(result)
 						if(result == 'success'){
-							alert("등록 성공!")
+							Swal.fire({
+							  position: '',
+							  icon: 'success',
+							  title: commName + '가(이) 등록되었습니다.',
+							  showConfirmButton: false,
+							  timer: 1500
+							})
+							
 							commList();
 						}else if (result == "fail") {
 							alert("이미 있는 코드입니다.")
@@ -190,27 +227,75 @@
 			
 			$('#deleteBtn').on('click', function() {
 				let commCode = $('#commCode').val();
-				$.ajax({
-					url : "/removeCommCode",
-					method : "get",
-					data : {commCode : commCode},
-					success : function(result){
-						if(result == 'success'){
-							alert("삭제 성공")
-							$('#commCode').val('');
-			                $('#commName').val('');
-			                $('#commNote').val('');
-							
-							commList();
-						}else if (result == "fail") {
-							alert(commCode + '가(이) 삭제되었습니다.')
-						}
-					},
-					error : function(reject){
-						console.log(reject);
-
+				let data = grid.getData();
+				let count = 0;
+				
+				data.forEach(function(a, b){
+					if(grid.getRow(b).commCode == commCode.toUpperCase()){
+						count++;
+						return;
 					}
 				})
+				
+				if(count == 1){
+					swalWithBootstrapButtons.fire({
+						  title: '정말 삭제 하시겠습니까?',
+						  icon: 'warning',
+						  showCancelButton: true,
+						  confirmButtonText: 'Delete',
+						  cancelButtonText: 'Cancel',
+						  reverseButtons: false
+						}).then((result) => {
+							
+						  if (result.isConfirmed) {
+						    swalWithBootstrapButtons.fire(
+						     commCode+'가(이) 삭제되었습니다!',
+						     'Your file has been deleted.',
+						     'success',
+						      
+						      $.ajax({
+								url : "/removeCommCode",
+								method : "get",
+								data : {commCode : commCode},
+								success : function(result){
+									if(result == 'success'){
+										$('#commCode').val('');
+						                $('#commName').val('');
+						                $('#commNote').val('');
+										commList();
+									}else if (result == "fail") {
+										alert('실패 하였습니다.')
+									}
+								},
+								error : function(reject){
+									console.log(reject);
+			
+								}
+							})
+						    )
+						  } else if (
+						    /* Read more about handling dismissals below */
+						    result.dismiss === Swal.DismissReason.cancel
+						  ) {
+						    swalWithBootstrapButtons.fire(
+						      '취소 되었습니다.',
+						      'Your imaginary file is safe :)',
+						      'error'
+						    )
+						  }
+						})
+					
+					
+				}else {
+					Swal.fire({
+						  icon: 'error',
+						  text: '없는 코드 입니다!',
+						  timer: 1500
+						})
+				}
+					
+				
+				
 			})
 			
 
@@ -397,12 +482,13 @@
 				console.log(data);
 				
 				data.forEach(function(i, index){
-					if(modalGrid.getData()[index].detaCode == null || modalGrid.getData()[index].detaName ==null || modalGrid.getData()[index].detaCode == '' || modalGrid.getData()[index].detaName == '' ){
+					if(modalGrid.getRow(index).detaCode == null || modalGrid.getRow(index).detaName ==null || modalGrid.getRow(index).detaCode == '' || modalGrid.getRow(index).detaName == '' ){
 						modalGrid.removeRow(index)
 					}
 				})
 				
 				data =  modalGrid.getData();
+				
 				$.ajax({
 					url : "/modifyDetailsAjax",
 					contentType : "application/json",
@@ -413,7 +499,13 @@
 						xhr.setRequestHeader(header, token);    
 					},
 					success : function(result){
-						alert(commCode + '가(이) 저장 되었습니다.');
+						Swal.fire({
+							  position: '',
+							  icon: 'success',
+							  title: commCode + '가(이) 저장되었습니다.',
+							  showConfirmButton: false,
+							  timer: 1500
+						})
 						
 						getComm(commCode);
 						getModal(commCode);
@@ -433,28 +525,58 @@
 				console.log(commCode);
 				let arr = JSON.stringify( modalGrid.getCheckedRows() );
 				arr = arr.substr(1,arr.length-2)
+				let data =  modalGrid.getCheckedRows();
 				
-				var data =  modalGrid.getCheckedRows();
-				
-				$.ajax({
-					url : "/removeDetailsAjax",
-					contentType : "application/json",
-					data :  JSON.stringify( {code: commCode, list : data }),
-					method :"post",
-					dataType : "json",
-					beforeSend: function(xhr){
-						xhr.setRequestHeader(header, token);    
-					},
-					success : function(result){
-						alert('삭제완료!');
-						modalGrid.removeCheckedRows();
-					},
-					error : function(reject){
-						console.log(reject);
+				swalWithBootstrapButtons.fire({
+					  title: '정말 삭제 하시겠습니까?',
+					  icon: 'warning',
+					  showCancelButton: true,
+					  confirmButtonText: 'Delete',
+					  cancelButtonText: 'Cancel',
+					  reverseButtons: false
+					}).then((result) => {
+						
+					  if (result.isConfirmed) {
+					    swalWithBootstrapButtons.fire(
+					     '성고적으로 삭제되었습니다!',
+					     'Your file has been deleted.',
+					     'success',
+					      
+					 	$.ajax({
+							url : "/removeDetailsAjax",
+							contentType : "application/json",
+							data :  JSON.stringify( {code: commCode, list : data }),
+							method :"post",
+							dataType : "json",
+							beforeSend: function(xhr){
+								xhr.setRequestHeader(header, token);    
+							},
+							success : function(result){
+								modalGrid.removeCheckedRows();
+							},
+							error : function(reject){
+								console.log(reject);
 
-					}
-					
-				});
+							}
+							
+						})
+					    )
+					    
+					  } else if (
+					    /* Read more about handling dismissals below */
+					    result.dismiss === Swal.DismissReason.cancel
+					  ) {
+					    swalWithBootstrapButtons.fire(
+					      '취소 되었습니다.',
+					      'Your imaginary file is safe :)',
+					      'error'
+					    )
+					  }
+					})
+				
+				
+				
+			
 			});
 		}
 	</script>

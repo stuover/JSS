@@ -204,6 +204,7 @@
 	const header = $("meta[name='_csrf_header']").attr("content");
 
 	$('#openMyInfo').on('click', function(){
+
 		$('#myInfo').modal('show');
 	})
 	
@@ -212,9 +213,8 @@
 	})
 	
 	$('#myInfoModBtn').on('click', function(e){
-		e.preventDefault();
 		let pwd = $('#password').val();
-		console.log(pwd);
+	
 
 		if(pwd != null && pwd!=""){
 			let newPwd = $('#newPwd').val();
@@ -240,6 +240,8 @@
 							$('#myFom newPwd').val('');
 							$('#myFom newPwd2').val('');
 							$('#myFom password').val('');
+							
+							   
 							
 							$('#myInfo').modal('hide');
 
@@ -268,6 +270,10 @@
 	$('form #newPwd, #newPwd2').on('change', function(){
 		$('#newPwdMessage').css("display","none");
 	})
+	
+
+
+	
 	</script>
 	
 	<!-- <div class="container-fluid page-body-wrapper">
