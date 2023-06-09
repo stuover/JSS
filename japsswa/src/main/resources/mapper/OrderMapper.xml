@@ -10,7 +10,7 @@
 		customer_name, cust_tel, cust_addr, cust_mail
 		from customer
 		where
-		cust_part = '판매처'
+		cust_part = 'SEL'
 
 	</select>
 

@@ -24,7 +24,7 @@
 					<form id="orderForm">
 					<div class="row"></div>
 					
-					<label>제품명</label><input name="itemName" id="item" type="text"><button id="itemSearch" type="button" class="btn btn-dark">찾기</button>
+					<label>품목명</label><input name="itemName" id="item" type="text"><button id="itemSearch" type="button" class="btn btn-dark">찾기</button>
 					<label>거래처명</label><input name="customerName" id="cust" type="text"><button id="custSearch" type="button" class="btn btn-dark">찾기</button>
 					<label>주문날짜</label><input name="sOrdDate" id="oDateStart" type="date">-<input name="eOrdDate" id="oDateEnd" type="date">
 					<button id="searchBtn" type="button" class="btn btn-dark">조회</button>
@@ -55,6 +55,48 @@
 				<div class="modal-body">
 
 					<div id="detModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="itemModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="itemModalLabel">품목 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="itemInput" name="item">
+					<button id="itemSear" type="button" class="btn btn-dark">찾기</button>
+					<div id="itemModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="custModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="custModalLabel">거래처 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="custInput" name="cust">
+					<button id="custSear" type="button" class="btn btn-dark">찾기</button>
+					<div id="custModalGrid"></div>
 				</div>
 				<div class="modal-footer">
 
@@ -226,14 +268,16 @@
 			
 			if(e.columnName == 'ordId'){
 				
-				var ordId = ordGrid.getFocusedCell();
 				
 				$('#detModalGrid').modal('show');
+				
+				var result = ordGrid.getRow(ev.rowKey);
+				
 				
 					$.ajax({
 						url : "/detCheck",
 						method : "get",
-						data : {ordId : ordId},
+						data : {'result' : result.ordId},
 						success : function(result){
 							detModalGrid.resetData(result);
 							detModalGrid.refreshLsyout();
@@ -253,6 +297,164 @@
 			
 		})
 		
+		
+		//제품 찾기 모달
+		
+		const itemModalGrid = new Grid({
+            el: document.getElementById('itemModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '품목코드',
+	            name: 'orddetailId'
+	          },
+              {
+                header: '품목명',
+                name: 'itemCode'
+              }
+              
+            ]
+          });
+
+		  itemModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  itemModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  itemModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		  
+		  
+		  //거래처 찾기 모달
+		  
+		  const custModalGrid = new Grid({
+            el: document.getElementById('custModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '거래처코드',
+	            name: 'orddetailId'
+	          },
+              {
+                header: '거래처명',
+                name: 'itemCode'
+              },
+              {
+                header: '거래여부',
+                name: 'itemName'
+              }
+            ]
+          });
+
+		  custModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  custModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  custModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		  
+		  
+		  //품목명 찾기
+		  $('#itemSearch').on('click', function(){
+			  
+			  const code = $('#itemInput').val();
+			  
+	       	   $('#itemInput').val('');
+	       	   
+	       	   //품목검색
+	       	   $.ajax({
+	       		   url : "/itemSearch",
+	       		   method : "GET",
+	       		   data : { code : code},
+	       		   success : function(result){
+	       			itemModalGrid.resetData(result);
+	       			itemModalGrid.refreshLayout();
+	       			  
+	       		   }
+	       		   
+	       	   });
+		  })
+		  
+		  //품목 검색 결과
+		  itemModalGrid.on('click', (e)=>{
+			
+			if(e.columnName == 'itemCode'){
+				
+				
+				var iresult = itemModalGrid.getRow(ev.rowKey);
+				
+				$('#itemModalGrid').modal('hide');
+
+				$('#item').val(iresult);
+				
+				
+	  			}); 
+				
+			}
+			
+		})
+		  
+		  
+		  //거래처명 찾기
+		  $('#custSearch').on('click', function(){
+			  
+			  const result = $('#custInput').val();
+			  
+	       	   $('#custInput').val('');
+	       	   
+	       	   //거래처 검색
+	       	   $.ajax({
+	       		   url : "/custList",
+	       		   method : "GET",
+	       		   data : {'result' : result},
+	       		   success : function(result){
+	       			custModalGrid.resetData(result);
+	       			custModalGrid.refreshLayout();
+	       			  
+	       		   }
+	       		   
+	       	   })
+		  })
+		  
+		  
+		  //거래처명 검색 결과
+		  custModalGrid.on('click', (e)=>{
+			
+			if(e.columnName == 'customerId'){
+				
+				
+				var cresult = custModalGrid.getRow(ev.rowKey);
+				
+				$('#custModalGrid').modal('hide');
+
+				$('#cust').val(cresult);
+				
+				
+	  			}); 
+				
+			}
+			
+		})
+		  
 
 		
 		
