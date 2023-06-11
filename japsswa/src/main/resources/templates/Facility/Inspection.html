@@ -106,7 +106,7 @@
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="width:500px">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="downModalTitle">점검 등록 페이지</h5>                        
+                        <h5 class="modal-title" id="downModalTitle">보유 설비 리스트</h5>                        
                     </div>
                     <div class="modal-body">
                         <!-- fac 모달그리드 시작 -->
@@ -270,6 +270,10 @@
                         name: 'insDate'
                     },
                     {
+                        header: '차기점검일 ',
+                        name: 'nextInspection'
+                    },
+                    {
                         header: '점검사유 ',
                         name: 'insReason'
                     },
@@ -312,7 +316,10 @@
 
 
                 insGridData = insGrid.getRow(e.rowKey);
-                //console.log(insGridData);
+                
+                console.log(insGridData);
+                console.log(insGridData.insReason);
+                console.log(insGridData.text);
 
                 let firstIns = {
                     facName: insGridData.facName,
@@ -320,7 +327,8 @@
                     downCode: insGridData.downCode,
                     insCode: insGridData.insCode,
                     insDate: insGridData.insDate,
-                    insReason: insGridData.insReason
+                    insReason: insGridData.insReason,
+                    text: insGridData.text
                 }
 
                 let secondIns = {
@@ -399,12 +407,17 @@
                     {
                         header: '적합판정 ',
                         name: 'judgment',
-                        editor: 'text'
-                    },
-                    {
-                        header: '관리자',
-                        name: 'insManager'
-                    },
+                        	formatter: 'listItemText',
+                            editor: {
+                              type: 'select',
+                              options: {
+                                listItems: [
+                                  { text: '적합', value: '적합' },
+                                  { text: '부적합', value: '부적합' }                                  
+                                ]
+                              }
+                            }                        
+                    },                    
                     {
                         header: '부품교체내역',
                         name: 'partHistory',
@@ -419,6 +432,10 @@
                         header: '부품교체일',
                         name: 'partDate',
                         editor: 'datePicker'
+                    },
+                    {
+                        header: '관리자',
+                        name: 'insManager'
                     }
                 ]
             });
@@ -452,7 +469,6 @@
 
 				
 				
-				if(firstIns.insDate < secondIns.partDate){
 					$.ajax({
 	                    url: "/modifyInspection",
 	                    method: "POST",
@@ -472,9 +488,6 @@
 	                        console.log(reject);
 	                    }
 	                });
-				}else{
-					alert("부품교체일이 점검날짜보다 빠릅니다")
-				}
                 
                 
             }
@@ -594,7 +607,16 @@
                     {
                         header: '적합판정',
                         name: 'judgment',
-                        editor: 'text'
+                    	formatter: 'listItemText',
+                        editor: {
+                          type: 'select',
+                          options: {
+                            listItems: [
+                              { text: '적합', value: '적합' },
+                              { text: '부적합', value: '부적합' }                                  
+                            ]
+                          }
+                        }                        
                     },
                     {
                         header: '부품 교체내역 ',
@@ -635,7 +657,7 @@
                 console.log(obj);
 
                 saveInspection(obj);
-                updateFacDate(obj);
+                //updateFacDate(obj);
 
             })
 
@@ -663,38 +685,37 @@
 
             function saveInspection(obj) {
 
-            	console.log("1")
-            	console.log(obj)
-            	console.log("2")
-            	
-            	if(obj.insDate < obj.partDate){
-            		console.log("큼")
-            	}else{
-            		console.log("작음")
-            	}
-            	
-            	if(obj.insDate < obj.partDate){
-            		$.ajax({
+            	var currentDate = new Date();
+            	currentDate.setHours(0, 0, 0, 0); // 현재 날짜의 시간을 00:00:00으로 설정
 
-                        url: "/insertInsAjax",
-                        method: "POST",
-                        data: JSON.stringify(obj),
-                        contentType: "application/json",
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader(header, token);
-                        },
-                        success: function (result) {
-                            alert("등록되었습니다");
-                            $('#downInsertModal').modal('hide');
-                            facDownList();
-                            insList();
-                        },
-                        error: function (reject) {
-                            console.log(reject);
-                        }
-                    });
-            	}else{
-            		alert("부품 교체일이 점검일보다 빠릅니다")
+            	var selectedDate = obj.partDate ? new Date(obj.partDate) : null; // 선택한 날짜가 있을 경우에만 Date 객체로 변환
+
+            	var currentDateString = currentDate.toISOString().slice(2, 10); // 현재 날짜를 YYMMDD 형식으로 변환
+            	var selectedDateString = selectedDate ? selectedDate.toISOString().slice(2, 10) : null; // 선택한 날짜가 있을 경우에만 YYMMDD 형식으로 변환
+
+            	if (selectedDateString && selectedDateString < currentDateString) {
+            	    alert("점검일보다 부품교체일이 빠릅니다");
+            	} else {
+            	    $.ajax({
+            	        url: "/insertInsAjax",
+            	        method: "POST",
+            	        data: JSON.stringify(obj),
+            	        contentType: "application/json",
+            	        beforeSend: function (xhr) {
+            	            xhr.setRequestHeader(header, token);
+            	        },
+            	        success: function (result) {
+            	            alert("등록되었습니다");
+            	            $('#downInsertModal').modal('hide');
+            	            $('#insertModal').modal('hide');
+
+            	            facDownList();
+            	            insList();
+            	        },
+            	        error: function (reject) {
+            	            console.log(reject);
+            	        }
+            	    });
             	}
                 
             }
@@ -742,8 +763,7 @@
                     },
                     {
                         header: '점검일',
-                        name: 'insDate',
-                        editor: 'datePicker'
+                        name: 'insDate'
                     },
                     {
                         header: '점검 사유',
@@ -773,7 +793,16 @@
                     {
                         header: '적합판정',
                         name: 'judgment',
-                        editor: 'text'
+                    	formatter: 'listItemText',
+                        editor: {
+                          type: 'select',
+                          options: {
+                            listItems: [
+                              { text: '적합', value: '적합' },
+                              { text: '부적합', value: '부적합' }                                  
+                            ]
+                          }
+                        }                        
                     },
                     {
                         header: '부품 교체내역 ',
@@ -835,9 +864,10 @@
             var facGrid = new tui.Grid({
                 el: document.getElementById('facGrid'),
                 width : 480,
+                bodyHeight: 177,
                 pageOptions: {
                     useClient: true,
-                    perPage: 5
+                    perPage: 4
                 },
                 columns: [{
                         header: '설비명 ',
