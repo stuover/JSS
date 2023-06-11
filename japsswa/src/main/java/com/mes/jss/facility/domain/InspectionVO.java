@@ -9,6 +9,7 @@ public class InspectionVO {
 
 	String insCode;
 	String insDate;
+	String nextInspection;
 	String insReason;
 	String insHistory;
 	String judgment;

@@ -102,9 +102,6 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="downModalTitle">공정 목록</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
                                     </div>
                                     <div class="modal-body">
                                         <!-- fac 모달그리드 시작 -->
@@ -211,15 +208,15 @@
                 if (e.columnName != "_checked") {
 
                     gridData = grid.getRow(e.rowKey);
-                    //console.log(gridData);
-
+                    console.log(gridData);
+					
                     let firstFac = {
                         facCode: gridData.facCode,
                         facName: gridData.facName,
                         facDate: gridData.facDate,
                         proCode: gridData.proCode,
                         proName: gridData.proName,
-                        facFunction: gridData.facFunction
+                        facStatus: gridData.facStatus                        
                     }
 
                     let secondFac = {
@@ -227,7 +224,10 @@
                         insCycle: gridData.insCycle,
                         lastInspection: gridData.lastInspection,
                         facManager: gridData.facManager,
-                        facStatus: gridData.facStatus
+                        nameText : gridData.nameText,
+                        facFunction: gridData.facFunction,
+                        text: gridData.text,
+                        
                     };
 
                     console.log("firstFac, secondFac 값");
@@ -256,8 +256,7 @@
                     {
                         header: '설비명',
                         name: 'facName',
-                        editor: 'text',
-                        validation: { required: true }
+                        editor: 'text'
                     },
                     {
                         header: '설치날짜 ',
@@ -266,25 +265,17 @@
                     },
                     {
                         header: '공정코드 ',
-                        name: 'proCode',
-                        validation: { required: true }
+                        name: 'proCode'
                     },
                     {
                         header: '투입 공정 ',
-                        name: 'proName',
-                        validation: { required: true }
+                        name: 'proName'
                     },
                     {
-                        header: '설비기능',
-                        name: 'text',
-                        formatter: 'listItemText',
-                        editor: {
-                            type: 'select',
-                            options: {
-                                listItems: functionList
-                            }
-                        }
+                        header: '설비가동상태 ',
+                        name: 'facStatus'
                     }
+                    
                 ]
 
             });
@@ -312,7 +303,7 @@
                     },
                     {
                         header: '관리자',
-                        name: 'text',
+                        name: 'nameText',
                        formatter: 'listItemText',
                         editor: {
                             type: 'select',
@@ -322,12 +313,20 @@
                         }
                     },
                     {
-                        header: '설비가동상태 ',
-                        name: 'facStatus'
-                    }]
+                        header: '설비기능',
+                        name: 'text',
+                        formatter: 'listItemText',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems: functionList
+                            }
+                        }
+                    }
+                    ]
             });
             
-         
+            
             
             
 
@@ -356,30 +355,36 @@
                 let firstFac = detailGrid.getData()[0];
                 let secondFac = detailDownGrid.getData()[0];
 
-                let modobj = mergeModFac(firstFac, secondFac);
-                console.log(modobj);
+                let obj = mergeModFac(firstFac, secondFac);
+                console.log(obj);                
+                let objdate = obj.insCycle
+                
+                	
+                if(objdate && objdate.substr(-1) != '일'){                	
+    					alert("점검주기를 (일)로 입력해주세요")            			             			
+                    }else{
+                    	$.ajax({
+                            url: "/modifyFacility",
+                            method: "POST",
+                            data: JSON.stringify(obj),
+                            contentType: "application/json",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(header, token);
+                            },
+                            success: function (result) {
+                                alert("수정 완료되었습니다");
+                                $('#detailModal').modal('hide');
+                                getFacList();
+
+                            },
+                            error: function (reject) {
+                                console.log("reject");
+                                console.log(reject);
+                            }
+                        });
+                    }
 
                 
-
-                $.ajax({
-                    url: "/modifyFacility",
-                    method: "POST",
-                    data: JSON.stringify(modobj),
-                    contentType: "application/json",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader(header, token);
-                    },
-                    success: function (result) {
-                        alert("수정 완료되었습니다");
-                        $('#detailModal').modal('hide');
-                        getFacList();
-
-                    },
-                    error: function (reject) {
-                        console.log("reject");
-                        console.log(reject);
-                    }
-                });
             }
 
             $('#detailModBtn').on('click', function () {
@@ -399,7 +404,7 @@
                 console.log(secondFac);
                 console.log(secondFac.facStatus);
                 
-                if(secondFac.facStatus == 'N'){
+                if(firstFac.facStatus == 'N'){
                 $.ajax({
 
                     url: "/RemoveFacility",
@@ -420,8 +425,9 @@
                         console.log(reject);
                     }
                 });
-                }else if(secondFac.facStatus == 'Y'){
+                }else if(firstFac.facStatus == 'Y'){
                 	alert("가동중인 설비는 삭제할 수 없습니다");
+                	$('#detailModal').modal('hide');
                 }
             }
 
@@ -444,8 +450,7 @@
                     {
                         header: '설비명',
                         name: 'facName',
-                        editor: 'text',
-                        validation: { required: true }
+                        editor: 'text'
                     },
                     {
                         header: '설치날짜 ',
@@ -454,13 +459,11 @@
                     },
                     {
                         header: '공정코드 ',
-                        name: 'proCode',
-                        validation: { required: true }
+                        name: 'proCode'
                     },
                     {
                         header: '투입 공정',
-                        name: 'proName',
-                        validation: { required: true }
+                        name: 'proName'
                     },
                     {
                         header: '설비가동상태 ',
@@ -493,7 +496,7 @@
                     },
                     {
                         header: '관리자',
-                        name: 'facManager',
+                        name: 'nameText',
                         formatter: 'listItemText',
                         editor: {
                             type: 'select',
@@ -551,7 +554,7 @@
             });
          
             var insertRowKey =null;
-            var fecCode = null;
+            var facCode = null;
             
             // 투입공정 더블클릭시 리스트 조회
             modalGrid.on('dblclick', function (e) {
@@ -636,12 +639,11 @@
                 $('#insertModal').modal('show');
                 modalGrid.appendRow();
                 modalDownGrid.appendRow();
-                console.log(modalDownGrid.facManager)
                 //modalDownGrid.setValue(0, 'facManager', $('#name').val(), false)
             })
 
 
-            // 객체 합치기(등록용)
+            // 객체 합치기
             function mergeFac(upFac, downFac) {
 
                 const newFac = {};
@@ -654,7 +656,6 @@
                     newFac[att] = downFac[att];
                 }
                 return newFac;
-                console.log(newFac);
             }
 
             // 등록 ajax 함수
@@ -663,19 +664,27 @@
                 let upFac = modalGrid.getData()[0];
                 let downFac = modalDownGrid.getData()[0];
                 //insertList = {upFac, downFac} 
-                console.log(upFac);
-                console.log(downFac);
+                //console.log(upFac);
+                //console.log(downFac);
                 let obj = mergeFac(upFac, downFac);
                 let objdate = obj.insCycle
                 console.log(obj)
+                console.log(obj.nameText)
+                console.log(obj.text)
+                
+                
 
-                if(upFac.facName == null){
+                if(obj.facName == null || obj.facName == ''){
                 	alert("설비명을 입력하세요")
-                }else if(upFac.proCode == null){
+                }else if(obj.proCode == null){
                 	alert("공정코드와 투입공정을 선택해주세요")
-                }else if(objdate.substr(-1) != '일'){                	
+                }else if(obj.nameText == null){
+                	alert("관리자를 선택해주세요")
+                }else if(obj.text == null){
+                	alert("설비기능을 선택해주세요")
+                }else if(objdate && objdate.substr(-1) != '일'){                	
 					alert("점검주기를 (일)로 입력해주세요")            			             			
-                }else{                	
+                }else{
                 $.ajax({
                     url: "/insertAjax",
                     method: "POST",
@@ -748,6 +757,11 @@
             $('#closeBtn2').on('click', function(){
             	            	
               	$('#detailModal').modal('hide');
+            })
+            
+            $('#facCloseBtn').on('click', function(){
+            	            	
+              	$('#processModal').modal('hide');
             })
             
             

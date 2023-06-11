@@ -40,6 +40,8 @@ public class FacilityVO {
 	String proName;
 	String empNo;
 	String text;
+	String nameText;
+	String name;
 //	facName
 //	facCode
 //	facManager

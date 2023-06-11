@@ -153,6 +153,7 @@ public class FacilityServiceimpl implements FacilityService{
 		if(i == 1) {
 			i+=facilityMapper.modifyFacDate(vo);	
 		}
+		
 		return  i>0;
 		
 	}
