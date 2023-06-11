@@ -215,38 +215,37 @@
 	$('#myInfoModBtn').on('click', function(e){
 		let pwd = $('#password').val();
 	
-
+		// 현재 비밀번호 체크 
 		if(pwd != null && pwd!=""){
-			let newPwd = $('#newPwd').val();
-			let newPwd2 = $('#newPwd2').val();
-			console.log(newPwd)
-						console.log(newPwd2)
-
+			let newPwd = $('#newPwd').val(); // 새 비밀번호
+			let newPwd2 = $('#newPwd2').val(); // 새비빌번호 확인
+			// 새 비밀번호, 비밀번화 확인체크 
 			if(newPwd == newPwd2){
 				$.ajax({
 					url : "/modifyPwd",
 					method:"post",
 					contentType : "application/json",
+					//변경할 데이트 전송
 					data : JSON.stringify({password : pwd,
-							phoneNum : $("#phoneNum").val(),
-							email : $("#email").val(),
-							newPwd : $("#newPwd").val()}),
+							phoneNum : $("#phoneNum").val(), // 전화번호
+							email : $("#email").val(),  // 메일
+							newPwd : $("#newPwd").val()}), // 새 비밀번호
 					beforeSend: function(xhr){
 						xhr.setRequestHeader(header, token);    
 					},
 					success : function(result){
 						if(result == "success"){
-							alert("내정보가 수정 되었습니다.")
+							alert("내정보가 수정 되었습니다.") // 완료 경고창 
+							// 초기화
 							$('#myFom newPwd').val('');
 							$('#myFom newPwd2').val('');
 							$('#myFom password').val('');
 							
-							   
-							
 							$('#myInfo').modal('hide');
 
 						}else if(result == "fail"){
-							alert("비밀번호가 틀렸습니다.")
+							alert("비밀번호가 틀렸습니다.") // 실패 경고창
+							// 초기화
 							$('#myFom newPwd').val('');
 							$('#myFom newPwd2').val('');
 							$('#myFom password').val('');
@@ -256,6 +255,7 @@
 					}
 				})
 			}else {
+				// 새 비밀번호 틀렷을시 초기화
 				$('#newPwd').val('');
 				$('#newPwd2').val('');
 				$('#password').val('');	
@@ -263,6 +263,7 @@
 			}
 			
 		}else {
+			// 현제 비밀번호 미입력시시 경고창
 			alert('현재 비밀번호를 입력하세요!')
 		}
 	})
