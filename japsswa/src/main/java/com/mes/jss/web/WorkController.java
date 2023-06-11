@@ -101,10 +101,12 @@ public class WorkController {
 	// 공통 및 세부사항 삭제
 	@RequestMapping("/workDeleteAjax")
 	@ResponseBody
-	public boolean workDeleteAjax(String workId) {
-		boolean result = workService.workDelete(workId);
+	public void workDeleteAjax(@RequestBody WorkDatasVO data) {
+		WorkVO head = data.getHead();
+		String id = head.getWorkId();
+		System.out.println("id= " + id);
+		workService.workDelete(id);
 
-		return result;
 	}
 	
 	
@@ -154,6 +156,17 @@ public class WorkController {
 		List<WorkVO> detailList = data.getDetailList();
 		workService.holdReInsert(detailList);
 	}
+	
+	
+	// 생산실적 등록 페이지 : 선택한 작업지시의 세부 내용
+	@RequestMapping("/perforWorkDetailResultAjax")
+	@ResponseBody
+	public List<WorkVO> perforWorkDetailResultAjax(String workId){
+		List<WorkVO> inputData = workService.perforWorkDetailReuslt(workId);
+		
+		return inputData; 
+	}
+	
 	
 
 	

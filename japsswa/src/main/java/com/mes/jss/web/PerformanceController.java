@@ -100,7 +100,7 @@ public class PerformanceController {
 	// 생산실적 등록 : 등록 모달창 오픈 -> 작업시작 or 작업완료 여부
 	@RequestMapping("/perforInsertConditionAjax")
 	@ResponseBody
-	public PerformanceVO perforInsertConditionAjax(@RequestBody PerformanceVO vo) {
+	public PerformanceVO perforInsertConditionAjax(PerformanceVO vo) {
 		PerformanceVO result = performanceService.performanceInsertCondition(vo);
 		
 		return result;

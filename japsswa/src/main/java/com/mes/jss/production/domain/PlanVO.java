@@ -2,6 +2,9 @@ package com.mes.jss.production.domain;
 
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -14,10 +17,13 @@ public class PlanVO {
 	String itemCode; 
 	long planAmount; 
 	int planPriority; 
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
 	@DateTimeFormat(pattern="YYYY-MM-dd") // JSON 무관, 외부에서 값이 입력될 때 정해진 포맷으로 입력받음
 	Date planStart;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date planEnd;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
 	@DateTimeFormat(pattern="YYYY-MM-dd")
 	Date planDate;
 	int itemOrders;

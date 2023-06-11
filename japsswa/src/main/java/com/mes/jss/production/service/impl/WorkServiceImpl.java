@@ -77,9 +77,10 @@ public class WorkServiceImpl implements WorkService {
 
 	// 작업지시 공통 및 세부사항 삭제
 	@Override
-	public boolean workDelete(String workId) {
-		boolean result = workMapper.workDelete(workId)>0;
-		return result;  
+	public void workDelete(String id) {
+		
+		workMapper.workDelete(id);
+		  
 	}
 
 	// 작업지시 공통 및 세부사항 수정
@@ -182,6 +183,14 @@ public class WorkServiceImpl implements WorkService {
 	public List<WorkVO> processCurrInfo(WorkVO vo) {
 		List<WorkVO> list = workMapper.processCurrInfo(vo);
 		
+		return list;
+	}
+
+
+	// 생산실적 등록 페이지 : 선택한 작업지시의 세부 내용
+	@Override
+	public List<WorkVO> perforWorkDetailReuslt(String workId) {
+		List<WorkVO> list = workMapper.perforWorkDetailReuslt(workId);
 		return list;
 	}
 

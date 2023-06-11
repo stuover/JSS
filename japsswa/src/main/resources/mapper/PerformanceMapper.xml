@@ -44,7 +44,7 @@
 		            FROM 
 		                 work_detail d JOIN work w ON  (w.work_id = d.work_id)
 		                               LEFT OUTER JOIN performance p ON (d.wdetail_id = p.wdetail_id)
-		                               JOIN work_bom b ON (d.wdetail_id = b.wdetail_id) 
+		                               LEFT OUTER JOIN work_bom b ON (d.wdetail_id = b.wdetail_id) 
                                        JOIN emp e ON (w.emp_no = e.emp_no)
 		            WHERE p.end_time IS NULL
 		            )

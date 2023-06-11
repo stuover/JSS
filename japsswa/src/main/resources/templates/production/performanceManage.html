@@ -18,6 +18,11 @@
 <!-- endinject -->
 <!-- plugin css for this page -->
 <!-- End plugin css for this page -->
+
+<!-- SweetAlert2 -->
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.11/dist/sweetalert2.all.min.js"></script>
+ <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.11/dist/sweetalert2.min.css" rel="stylesheet">
+
 <!-- inject:css -->
 <link rel="stylesheet" href="/css/vertical-layout-light/style.css">
 <link rel="stylesheet" href="/css/vertical-layout-light/numberpad.css">
@@ -699,7 +704,7 @@
 				 workGrid.resetData(workInfo);
 				 
 				 $.ajax({
-						url : "/workSelectDetailAjax",
+						url : "/perforWorkDetailResultAjax",
 						data : {workId : workCode},
 						method :"GET",
 						success : function(result){
@@ -769,17 +774,13 @@
 			// 작업시작 O : 작업완료 등록
 			$.ajax({
 				url: "/perforInsertConditionAjax",
-				method: "POST",
+				method: "GET",
 				async: false,
-				data: JSON.stringify({
-									  proCode: processGrid.getData()[0].proCode, 
-									  itemCode : workDetailGrid.getCheckedRows()[0].itemCode, 
-									  wdetailId : workDetailGrid.getCheckedRows()[0].wdetailId
-									 }),
-				contentType: "application/json",
-				beforeSend: function(xhr) {
-					xhr.setRequestHeader(header, token);
-				},
+				data: {
+					   proCode: processGrid.getData()[0].proCode, 
+					   itemCode : workDetailGrid.getCheckedRows()[0].itemCode, 
+					   wdetailId : workDetailGrid.getCheckedRows()[0].wdetailId
+					   },
 				success: function(result) {
 					console.log(result);
 					console.log('result = ' + result.condition);
@@ -985,30 +986,52 @@
 						xhr.setRequestHeader(header, token);
 					},
 					success: function(result){
-						console.log(result);
-						alert('등록 성공!');					
+						console.log(result);						
+						Swal.fire({
+							  icon: 'success',
+							  title: '등록완료!',
+							  text: '생산실적이 정상적으로 등록되었습니다.'
+						});
+						
+						// 생산실적 모달창 초기화	
+						$('#performanceModal').modal('hide');
+						$('#workName').val('');
+						$('#wdetailId').val('');
+						$('#itemName').val('');
+						$('#itemCode').val('');
+						$('#proName').val('');
+						$('#proCode').val('');	
+						$('#workAmount').val('');
+						$('#facName').val('');
+						$('#facCode').val('');
+						$('#worker').val('');
+						$('#empNo').val('');
+						$('#facName').val('');
+						$('#workStart').val('');
+						$('#workEnd').val('');
+						$('#failItem').val(0);
+						
+						// 메인화면 초기화
+						processGrid.resetData([{}]);
+						workGrid.resetData([{}]);
+						workDetailGrid.resetData([{}]);
+						
 						
 					},
 					error: function(reject) {
-						console.log(reject);
-						alert('등록 실패!');
+						console.log(reject);				
+						Swal.fire({
+							  icon: 'error',
+							  title: '등록실패!',
+							  text: '생산실적 등록에 실패했습니다.'
+							});
 					}
 				});
 				
-				// 생산실적 모달창 초기화	
-				$('#performanceModal').modal('hide');
-				$('#workName').val('');
-				$('#wdetailId').val('');
-				$('#itemName').val('');
-				$('#itemCode').val('');
-				$('#proName').val('');
-				$('#proCode').val('');	
-				$('#workAmount').val('');
+
+
 				
-				// 메인화면 초기화
-				processGrid.resetData([{}]);
-				workGrid.resetData([{}]);
-				workDetailGrid.resetData([{}]);
+
 				
 			}else {
 				// 작업시작시간에 값이 있으면 -> 작업 완료 :생산실적 수정
@@ -1023,30 +1046,48 @@
 						},
 						success: function(result){
 							console.log(result);
-							alert('등록 성공!');
+							Swal.fire({
+								  icon: 'success',
+								  title: '등록완료!',
+								  text: '생산실적이 정상적으로 등록되었습니다.'
+							});
+							
+							// 생산실적 모달창 초기화	
+							$('#performanceModal').modal('hide');
+							$('#workName').val('');
+							$('#wdetailId').val('');
+							$('#itemName').val('');
+							$('#itemCode').val('');
+							$('#proName').val('');
+							$('#proCode').val('');	
+							$('#workAmount').val('');
+							$('#facName').val('');
+							$('#facCode').val('');
+							$('#worker').val('');
+							$('#empNo').val('');
+							$('#facName').val('');
+							$('#workStart').val('');
+							$('#workEnd').val('');
+							$('#failItem').val(0);
+							
+							// 메인화면 초기화
+							processGrid.resetData([{}]);
+							workGrid.resetData([{}]);
+							workDetailGrid.resetData([{}]);
+							$('.number_pad').attr('number_pad', 'number_pad--hidden');
 							
 						},
 						error: function(reject) {
 							console.log(reject);
-							alert('등록 실패!');
+							Swal.fire({
+								  icon: 'error',
+								  title: '등록실패!',
+								  text: '생산실적 등록에 실패했습니다.'
+								});
 						}
 					});
 						
-				// 생산실적 모달창 초기화		
-				$('#performanceModal').modal('hide');
-				$('#workName').val('');
-				$('#wdetailId').val('');
-				$('#itemName').val('');
-				$('#itemCode').val('');
-				$('#proName').val('');
-				$('#proCode').val('');	
-				$('#workAmount').val('');
-				
-				// 메인화면 초기화
-				processGrid.resetData([{}]);
-				workGrid.resetData([{}]);
-				workDetailGrid.resetData([{}]);
-				$('.number_pad').attr('number_pad', 'number_pad--hidden');
+
 						
 			};	
 			
