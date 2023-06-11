@@ -127,7 +127,9 @@
 					       <div id="pdf-container">
 					            <h1>공정이동표</h1>
 					            <br>
+					            <div class="m-1 d-grid gap-2 d-md-flex justify-content-md-end">
 					            날짜: <input type="text" id="pdf-date">
+					            </div>
 					
 					            <table class="pdf-table"> 
 					                <thead> 
@@ -253,11 +255,12 @@
   			$('#afterSearch').hide();
   			// 담당자(로그인 사원이름) 정보 input에 넣어준 뒤 숨김.
   			$('#empName').hide();
-  			let empName = $('#empName').val();
-  			// 그리드 담당자 셀에 담당자 이름 넣어주기.
-  			commonGrid.setValue(0, 'empName', empName, false);
-  				  
-  		  		   
+  			let empName = $('#empName').val();  			
+  			
+  			// 공정 이동표 모달창 : 날짜 input 테두리 안보이게
+  			$('#pdf-date').css({'background' : 'transparent', 'border' : 'none'});
+  			$('#pdf-date').width( '140px' );
+  		   
   		  	// 모달창 열릴 때 레이아웃 깨지지 않게 refreshLayout()
   			// 생산계획 조회 모달창 그리드 refresh
 

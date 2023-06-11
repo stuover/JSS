@@ -38,7 +38,7 @@ public interface WorkMapper {
 	public List<WorkVO> itemBomInfo(String wdetailId, String itemType);
 	
 	// 작업지시 공통 및 세부사항 삭제
-	public int workDelete(String workId);
+	public void workDelete(String id);
 	
 	
 	// 홀드 자재 선택 모달창 : 자재 리스트
@@ -67,5 +67,10 @@ public interface WorkMapper {
 	
 	// 작업지시 상세 더블클릭 -> 해당 작업지시상세에 해당하는 공정현황 조회 
 	public List<WorkVO> processCurrInfo(WorkVO vo);
+	
+	
+	// 생산실적 등록 페이지 : 선택한 작업지시의 세부 내용
+	public List<WorkVO> perforWorkDetailReuslt(String workId);
+	
 	
 }

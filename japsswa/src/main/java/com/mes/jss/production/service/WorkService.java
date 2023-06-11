@@ -34,7 +34,7 @@ public interface WorkService {
 	
 	
 	// 작업지시 공통 및 세부사항 삭제
-	public boolean workDelete(String workId);
+	public void workDelete(String id);
 	
 	
 	// 작업지시 공통 및 세부사항 수정
@@ -69,6 +69,10 @@ public interface WorkService {
 	
 	// 작업지시 상세 더블클릭 -> 해당 작업지시상세에 해당하는 공정현황 조회 
 	public List<WorkVO> processCurrInfo(WorkVO vo);
+	
+	
+	// 생산실적 등록 페이지 : 선택한 작업지시의 세부 내용
+	public List<WorkVO> perforWorkDetailReuslt(String workId);
 	
 
 }

@@ -94,7 +94,7 @@
 	
 	<!-- 작업지시 관리 페이지 : 모달창에서 선택한 작업지시 세부내용 검색 결과 -->
 	<select id="workSelectDetail" parameterType="WorkVO" resultType="WorkVO">
-		SELECT 
+		SELECT DISTINCT
 		       w.wdetail_id, 
 		       w.work_id, 
 		       w.item_code,
@@ -253,7 +253,7 @@
 		<![CDATA[
 			SELECT work_id, work_name, work_date, emp_name
 			FROM (
-			        SELECT w.work_id , work_name, work_date, emp_name
+			        SELECT DISTINCT w.work_id , work_name, work_date, emp_name
 			        FROM work_detail d JOIN work w ON (d.work_id = w.work_id)
 			                           JOIN performance P ON (d.wdetail_id = p.wdetail_id)
 			                           JOIN emp e ON(w.emp_no = e.emp_no)
@@ -269,7 +269,7 @@
 		<![CDATA[
 			SELECT work_id, work_name, work_date, emp_name
 			FROM (
-			        SELECT w.work_id , work_name, work_date, emp_name
+			        SELECT DISTINCT w.work_id , work_name, work_date, emp_name
 			        FROM work_detail d JOIN work w ON (d.work_id = w.work_id)
 			                           JOIN performance P ON (d.wdetail_id = p.wdetail_id)
 			                           JOIN emp e ON(w.emp_no = e.emp_no)
@@ -280,6 +280,7 @@
 		]]>
 	</select>
 	
+	<!-- 작업지시 상세 더블클릭 -> 해당 작업지시상세에 해당하는 공정현황 조회  -->
 	<select id="processCurrInfo" parameterType="PerformanceVO" resultType="PerformanceVO">
 		SELECT 
 			  f.wdetail_id, 
@@ -299,6 +300,25 @@
 		WHERE f.wdetail_id = #{wdetailId}
 		  AND f.end_time IS NOT NULL
 	</select>
+	
+	<!-- 생산실적 등록 페이지 : 선택한 작업지시의 세부 내용 -->
+	<select id="perforWorkDetailReuslt" parameterType="WorkVO" resultType="WorkVO">
+		SELECT  
+		              w.wdetail_id, 
+		              w.work_id, 
+		              w.item_code,
+		              i.item_name,
+		              i.item_type,
+		              w.work_amount, 
+		              w.work_start, 
+		              w.work_end, 
+		              pdetail_id
+		FROM 
+		           work_detail w JOIN itemlist i ON (w.item_code = i.item_code)
+		WHERE 
+		            work_id = #{workId}	
+	</select>
+	
 	
   	
   </mapper>

@@ -216,34 +216,12 @@
 				},
 				{
 					header: '계획시작날짜',
-					name: 'planStart',
-					formatter: function (e) {
-						 
-						let result = e.value;
-						if(result == null) {
-							result = e.value
-							return;
-						}else {
-							result = e.value.substr(0,10)
-							return result;
-						}
-					},      		  
+					name: 'planStart',     		  
 					editor: 'datePicker'
 				 },
 				 {
 					header: '계획완료날짜',
-					name: 'planEnd',
-					formatter: function (e) {
-						 
-						let result = e.value;
-						if(result == null) {
-							result = e.value
-							return;
-						}else {
-							result = e.value.substr(0,10)
-							return result;
-						}
-					},  
+					name: 'planEnd',  
 					editor:  'datePicker'
 				},    		        
 				{
@@ -537,102 +515,118 @@
   			
 			// 저장 버튼을 클릭 -> 새로운 계획: 등록, 기존 존재하는 계획: 수정.
   			$('#saveBtn').click(function (){
-  											grid2.finishEditing();
-  											grid2.getData();
-  											
-  											grid.finishEditing();
-  											grid.getCheckedRows();
-  											
-  											console.log(grid2.getData());
-  											console.log(grid.getData());
-  											
-  											if(grid2.getData() == null || grid.getCheckedRows() == null) {
-  												alert('값을 입력해주세요!');
-  											} else {
-  												
-  											}
-  											
-  											
-  											if( $('#afterSearch').val() == 'insert' ) {
-  												console.log('등록처리 해야 함.');
-	  											$.ajax({
-	  												url : "/savePlanAjax",
-	  												contentType : "application/json", 
-	  												data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
-	  												method :"POST",
-	  												beforeSend: function(xhr){
-	  													xhr.setRequestHeader(header, token);
-	  												},
-	  												success : function(result){
-	  													console.log(result);
-	  													if (result != null) {
-	  														alert('생산계획 등록완료!');
-	  														
-	  														// 화면 초기화
-	  														gridData2 = [{}];
-	  														gridData = [{}];
-
-	  														grid2.resetData(gridData2);
-	  														grid.resetData(gridData);
-
-	  														empName = $('#empName').val();
-	  														grid2.setValue(0, 'empName', empName, false);
-	  														
-	  													} else {
-	  														alert('값을 입력해주세요!');
-	  													}
-	  													
-	  												},
-	  							  					error : function(reject){
-	  							  						console.log(reject);
-	  							  						alert('생산계획 등록실패!');
-	  							  					}
-	  											});
-	  											
-  											} else {
-  												console.log('수정처리 해야 함.');
-  												$.ajax({
-	  												url : "/modifyPlanAjax",
-	  												contentType : "application/json", 
-	  												data :  JSON.stringify({head : grid2.getData()[0], detailList : grid.getCheckedRows()}) ,
-	  												method :"POST",
-	  												dataType : "JSON",
-	  												beforeSend: function(xhr){
-	  													xhr.setRequestHeader(header, token);
-	  												},
-	  												success : function(result){
-	  													console.log(result);
-	  													if (result != null) {
-	  														alert('생산계획 수정완료!');
-	  														
-	  														// 화면 초기화
-	  														gridData2 = [{}];
-	  														gridData = [{}];
-
-	  														grid2.resetData(gridData2);
-	  														grid.resetData(gridData);
-	  														$('#afterSearch').attr('value', 'insert');
-	  														
-	  										  				empName = $('#empName').val();
-	  										  				grid2.setValue(0, 'empName', empName, false)
-	  														
-	  											  			$('#addRow').show();
-	  											  		    $('#deleteRow').show();
-	  														
-	  													} else {
-	  														alert('값을 입력해주세요!');
-	  													}
-	  													
-	  												},
-	  							  					error : function(reject){
-	  							  						console.log(reject);
-	  							  						alert('생산계획 수정실패!');
-	  							  					}
-	  											});
-  											}
-		
-
-  			})
+					grid2.finishEditing();
+					grid2.getData();
+					
+					grid.finishEditing();
+					grid.getCheckedRows();
+					
+					console.log(grid2.getData());
+					console.log(grid.getData());
+					
+					if(grid2.getData() == null || grid.getCheckedRows() == null) {
+						alert('값을 입력해주세요!');
+					} else {
+						
+					}
+					
+					
+					if( $('#afterSearch').val() == 'insert' ) {
+						console.log('등록처리 해야 함.');
+						$.ajax({
+							url : "/savePlanAjax",
+							contentType : "application/json", 
+							data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
+							method :"POST",
+							beforeSend: function(xhr){
+								xhr.setRequestHeader(header, token);
+							},
+							success : function(result){
+								console.log(result);
+								if (result != null) {
+							Swal.fire({
+							  icon: 'success',
+							  title: '등록완료!',
+							  text: '생산계획이 정상적으로 등록되었습니다.'
+							}); 														
+									
+									// 화면 초기화
+									gridData2 = [{}];
+									gridData = [{}];
+	
+									grid2.resetData(gridData2);
+									grid.resetData(gridData);
+	
+									empName = $('#empName').val();
+									grid2.setValue(0, 'empName', empName, false);
+									
+								} else {
+									alert('값을 입력해주세요!');
+								}
+								
+							},
+		  					error : function(reject){
+		  						console.log(reject);
+						Swal.fire({
+							  icon: 'error',
+							  title: '등록실패!',
+							  text: '생산계획 등록에 실패했습니다.'
+							}); 
+		  						
+		  					}
+						});
+						
+					} else {
+						console.log('수정처리 해야 함.');
+						$.ajax({
+							url : "/modifyPlanAjax",
+							contentType : "application/json", 
+							data :  JSON.stringify({head : grid2.getData()[0], detailList : grid.getCheckedRows()}) ,
+							method :"POST",
+							dataType : "JSON",
+							beforeSend: function(xhr){
+								xhr.setRequestHeader(header, token);
+							},
+							success : function(result){
+								console.log(result);
+								if (result != null) {
+							Swal.fire({
+								  icon: 'success',
+								  title: '수정완료!',
+								  text: '생산계획이 정상적으로 수정되었습니다.'
+								}); 														
+										
+									
+									// 화면 초기화
+									gridData2 = [{}];
+									gridData = [{}];
+	
+									grid2.resetData(gridData2);
+									grid.resetData(gridData);
+									$('#afterSearch').attr('value', 'insert');
+									
+					  				empName = $('#empName').val();
+					  				grid2.setValue(0, 'empName', empName, false)
+									
+						  			$('#addRow').show();
+						  		    $('#deleteRow').show();
+									
+								} else {
+									alert('값을 입력해주세요!');
+								}
+								
+							},
+		  					error : function(reject){
+		  						console.log(reject);
+						Swal.fire({
+							  icon: 'error',
+							  title: '수정실패!',
+							  text: '생산계획 수정에 실패했습니다.'
+							}); 
+		  					}
+						});
+					}
+  			});
   			
   			// 생산계획 삭제.
   			$('#deleteBtn').click(function () {
@@ -643,32 +637,56 @@
 					grid.finishEditing();
 					grid.getCheckedRows();
 					
-					$.ajax({
-							url : "/deletePlanAjax",
-							contentType : "application/json", 
-							data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
-							method :"POST",
-							dataType : "JSON",
-							beforeSend: function(xhr){
-								xhr.setRequestHeader(header, token);
-							},
-							success : function(result){
-								console.log(result);
-								alert('생산계획 삭제완료!');
-								
-								// 화면 초기화
-						  		gridData2 = [{}];
-								gridData = [{}];
-
-								grid2.resetData(gridData2);
-								grid.resetData(gridData);
-								
-							},
-		  					error : function(reject){
-		  						console.log(reject);
-		  						alert('생산계획 삭제실패!');
-		  					}
-						});
+					Swal.fire({
+						  title: '삭제하시겠습니까?',
+						  showDenyButton: true,
+						  confirmButtonText: '삭제',
+						  denyButtonText: `삭제 취소`,
+						}).then((result) => {
+						  /* Read more about isConfirmed, isDenied below */
+						  if (result.isConfirmed) {
+							$.ajax({
+									url : "/deletePlanAjax",
+									contentType : "application/json", 
+									data :  JSON.stringify(  {head : grid2.getData()[0], detailList : grid.getCheckedRows()}  ) ,
+									method :"POST",
+									dataType : "JSON",
+									beforeSend: function(xhr){
+										xhr.setRequestHeader(header, token);
+									},
+									success : function(result){
+										console.log(result);
+										Swal.fire({
+											  icon: 'success',
+											  title: '삭제완료!',
+											  text: '생산계획이 정상적으로 삭제되었습니다.'
+										}); 				
+										// 화면 초기화
+										grid2.resetData([{}]);
+										grid.resetData([]);
+						  				empName = $('#empName').val();
+						  				grid2.setValue(0, 'empName', empName, false)
+						  				
+						  				$('#addRow').show();
+						  				$('#deleteRow').show();  	
+						  				
+						  				$('#afterSearch').attr('value', 'insert');
+										
+									},
+									error : function(reject){
+										console.log(reject);
+										Swal.fire({
+										  icon: 'error',
+										  title: '삭제실패!',
+										  text: '생산계획 삭제에 실패했습니다.'
+										});
+									}
+								});  
+						    
+						  } else if (result.isDenied) {
+						    Swal.fire('생산계획 삭제가 취소되었습니다', '', 'info')
+						  }
+					})
   			})
   			
   			//reset 버튼 -> 처음 화면으로 되돌리기
