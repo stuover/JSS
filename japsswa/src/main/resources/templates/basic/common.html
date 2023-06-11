@@ -474,20 +474,19 @@
 			
 			$('#modalModBtn').on('click',function(){
 				modalGrid.finishEditing();
+
+				let commData = detaGrid.getRow(0); // 공통코드 상세정보
+				let data =  modalGrid.getData();m // 공통코드 안 세부코드 정보
 				
-				
-				let commData = detaGrid.getRow(0);
-				let data =  modalGrid.getData();
-				
-				console.log(data);
-				
+				// 아무것도 입력하지 않은, row 제거
 				data.forEach(function(i, index){
-					if(modalGrid.getRow(index).detaCode == null || modalGrid.getRow(index).detaName ==null || modalGrid.getRow(index).detaCode == '' || modalGrid.getRow(index).detaName == '' ){
-						modalGrid.removeRow(index)
+					if(modalGrid.getRow(index).detaCode == null || modalGrid.getRow(index).detaName ==null 
+					|| modalGrid.getRow(index).detaCode == '' || odalGrid.getRow(index).detaName == '' ){
+						modalGrid.removeRow(index) 
 					}
 				})
 				
-				data =  modalGrid.getData();
+				data =  modalGrid.getData(); // 상세코드 다시 받아오기
 				
 				$.ajax({
 					url : "/modifyDetailsAjax",

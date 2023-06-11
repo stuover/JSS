@@ -30,17 +30,16 @@ public class BomServiceImpl implements BomService{
 
 
 
-
+	// BOM저장
 	@Override
 	public void saveBom(BomListVO save) {
 		System.err.println(save);
 		
 		for(BomVO vo : save.getList()) {
 			vo.setItemCode(save.getItemCode());
-			System.err.println(vo);
-			if(vo.getBomCode() == null) {
+			if(vo.getBomCode() == null) { // 새로차가된 정보 
 				bomMapper.insertBom(vo);
-			}else {
+			}else { 					 // 수정된 정보
 				bomMapper.updateBom(vo);
 			}
 		}
