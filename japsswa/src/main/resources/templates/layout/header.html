@@ -188,6 +188,14 @@
 	<script>
 	const token = $("meta[name='_csrf']").attr("content")
 	const header = $("meta[name='_csrf_header']").attr("content");
+	
+	const swalWithBootstrapButtons = Swal.mixin({
+		  customClass: {
+		    confirmButton: 'm-2 btn btn-success ',
+		    cancelButton: 'm-2 btn btn-danger'
+		  },
+		  buttonsStyling: false
+	})
 
 	$('#openMyInfo').on('click', function(){
 

@@ -93,6 +93,14 @@ input:focus{
 
 	<script>
 		// 사원정보 그리드
+		
+			const swalWithBootstrapButtons = Swal.mixin({
+					  customClass: {
+					    confirmButton: 'm-2 btn btn-success ',
+					    cancelButton: 'm-2 btn btn-danger'
+					  },
+					  buttonsStyling: false
+				})
 		var grid = new tui.Grid({
 			el : document.getElementById('grid'),
 			scrollX : true,
@@ -265,18 +273,46 @@ input:focus{
 
 		$('#delBtn').on('click', function(e) {
 			e.preventDefault();
-			$.ajax({
-				url : "/removeEmpAjax",
-				method : "get",
-				data : {
-					empNo : $('.modal-title #selNo').text()
-				},
-				dateType : "JSON",
-				success : function(result) {
-					grid.removeCheckedRows();
-					$('#modifyModal').modal('hide');
-				}
-			});
+			swalWithBootstrapButtons.fire({
+				  title: '정말 삭제 하시겠습니까?',
+				  icon: 'warning',
+				  showCancelButton: true,
+				  confirmButtonText: 'Delete',
+				  cancelButtonText: 'Cancel',
+				  reverseButtons: false
+				}).then((result) => {
+					
+				  if (result.isConfirmed) {
+				    swalWithBootstrapButtons.fire(
+				     '성고적으로 삭제되었습니다!',
+				     'Your file has been deleted.',
+				     'success',
+				     $.ajax({
+							url : "/removeEmpAjax",
+							method : "get",
+							data : {
+								empNo : $('#selNo').text()
+							},
+							dateType : "JSON",
+							success : function(result) {
+								grid.removeCheckedRows();
+								$('#modifyModal').modal('hide');
+							}
+						})
+				    )
+				    
+				  } else if (
+				    /* Read more about handling dismissals below */
+				    result.dismiss === Swal.DismissReason.cancel
+				  ) {
+				    swalWithBootstrapButtons.fire(
+				      '취소 되었습니다.',
+				      'Your imaginary file is safe :)',
+				      'error'
+				    )
+				  }
+				})
+			
 		})
 	</script>
 </th:block>
