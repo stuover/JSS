@@ -187,6 +187,11 @@ public interface MaterialMapper {
 	// 자재 조정 lot 검색
 	public List<MrAdjustmentVO> mrAdmLot(MrAdjustmentVO vo);
 	
+	// 자재 조정 입고 출고량 가져오기
+	public List<MrAdjustmentVO> mrAdmInRel(String mrLotNumber);
+
+	
+	
 	
 
 	
