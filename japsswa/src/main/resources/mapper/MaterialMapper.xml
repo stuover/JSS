@@ -466,7 +466,9 @@
   			p.fail_item,
   			p.start_time,
   			p.end_time,
-  			p.worker
+  			p.worker,
+  			GET_CODENAME(i.item_type) item_type,
+  			i.item_name
  			from material m 
  			right outer join performance p on(m.store_reason_code = p.performance_id) join itemlist i on(p.item_code=i.item_code)
  			where m.store_reason_code is null and i.item_type ='SAM'
@@ -1020,7 +1022,7 @@
   		
   		q.item_code,
   		q.mr_order_det_code,
-  		i.item_type,
+  		GET_CODENAME(i.item_type) item_type,
   		i.item_name,
         e.emp_name,
   		q.situation,

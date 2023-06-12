@@ -15,7 +15,7 @@
 
 	width:800px;
 	margin:auto;
-	role="document"
+	role:"document"
 }
 
 .tui-grid-cell-content {
@@ -546,6 +546,35 @@
 			success : function(result){
 				
 				console.log('삭제');
+				
+				$.ajax({
+					url : "/mrlistAjax",
+
+					method : "GET",
+					dataType : "json",
+
+					success : function(result) {
+						grid.resetData(result);
+						setTimeout(()=> grid.refreshLayout(),100);
+						
+					}
+
+				});
+				
+				
+				 $.ajax({
+				    	url:"/mrPerformance",
+				    	method:"GET",
+				    	success: function(result){
+				    		grid2.resetData(result);
+				    		setTimeout(()=> grid2.refreshLayout(),100);
+				    	},
+				    	error: function(reject){
+				    		console.log(reject);
+				    	}
+				    	
+				    })
+				
 			},
 			error: function(reject){
 				console.log(reject);
@@ -572,22 +601,19 @@
 					header : '생산실적코드',
 					name : 'performanceId'
 				},{
-					header : '지시상세코드',
-					name : 'wDetailId'
-				},{
 					header :'품목코드',
 					name : 'itemCode'
 				},{
-					header : '지시공정코드',
-					name : 'wBomId'
+					header :'구분',
+					name : 'itemType'
 				},{
-					header : '설비코드',
-					name : 'facCode'
+					header :'품목명',
+					name : 'itemName'
 				},
 			
 				{
 					header : '생산량',
-					name : 'outPut'
+					name : 'output'
 				},{
 					header : '합격량',
 					name : 'passItem'
@@ -596,10 +622,6 @@
 				{
 					header : '불량량',
 					name : 'failItem'
-				},
-				{
-					header : '작업시작시간',
-					name : 'startTime'
 				},
 				{
 					header : '작업완료시간',

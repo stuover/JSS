@@ -176,7 +176,9 @@
 	
 	<button type="button" class="btn btn-dark"  id="searchBtn" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:left; margin-top:30px; margin-bottom:10px; padding:3px; margin-left:20px;">찾기</button>
 	
-	<button type="button" class="btn btn-primary" id="realBtn" style="float:left; margin-top:30px; padding:3px; color:white; height:30px;  margin-bottom:10px; margin-left:10px;">직접 등록</button>	
+	<button type="button" class="btn btn-primary" id="realBtn" style="float:left; margin-top:30px; padding:3px; color:white; height:30px;  margin-bottom:10px; margin-left:10px;">직접 등록</button>
+	
+	<button type="button" class="btn btn-danger" id="gridDeleteBtn" style="float:left; margin-top:30px; padding:3px; color:white; height:30px;  margin-bottom:10px; margin-left:10px;">삭제</button>
 	
 	<button type="button" class="btn btn-success" id="changeBtn" style="float:left; margin-top:30px; padding:3px; margin-bottom:10px; margin-left:10px;">수량 변경</button>
 	
@@ -220,8 +222,8 @@
       </div>
       
       <div class="modal-footer">
-      	<button type="button" class="btn btn-secondary" id="chooseBtn">등록</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">닫기</button>
+      	<button type="button" class="btn btn-secondary" id="chooseBtn" style="margin-right:210px;">등록</button>
+ 
         
       </div>
     </div>
@@ -273,6 +275,7 @@
 					   grid5.resetData(result);
 					   setTimeout(()=> grid5.refreshLayout(),10);
 					   
+					   
 				   },
 				   error : function(reject){
 					   console.log(reject);
@@ -285,6 +288,12 @@
 			   
 		   })
 		   
+		   $('#gridDeleteBtn').on('click',function(){
+			   
+			   grid2.removeCheckedRows(false);
+			   
+			   
+		   })
 		   
 		   $('#mrLotSearch2').on('click',function(){
 			 	
@@ -724,7 +733,65 @@
 				},
 				
 			
+				
+				
+				
+				
+				
+				
+				
 				success: function(result){
+					
+					
+					   $.ajax({
+							url : "/mrAdjustmentAjax",
+
+							method : "GET",
+							success : function(result) {
+								grid2.resetData(result);
+								setTimeout(()=> grid2.refreshLayout(),10);
+								
+							console.log(grid2.getData());	
+								
+			 	grid2.getData().forEach((ele, index)=>{
+									
+							
+									
+										if(ele.admNote =='error') {
+											
+										
+										grid2.addCellClassName(index,'adjustmentCode','redcolor');
+										grid2.addCellClassName(index,'mrLotNumber','redcolor');
+										grid2.addCellClassName(index,'itemCode','redcolor');
+										grid2.addCellClassName(index,'itemType','redcolor');
+										grid2.addCellClassName(index,'itemName','redcolor');
+										grid2.addCellClassName(index,'registerDate','redcolor');
+										grid2.addCellClassName(index,'process','redcolor');
+										grid2.addCellClassName(index,'change','redcolor')
+										grid2.addCellClassName(index,'adjustmentDate','redcolor');
+										grid2.addCellClassName(index,'empNo','redcolor');
+										grid2.addCellClassName(index,'admNote','redcolor');
+										}
+										
+									})
+							},
+							error:function(reject){
+								console.log(reject);
+							
+							}
+
+						});
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					Toast.fire({
 		                icon: "success", //success, error, warning, info, question
 		                title: "성공적으로 등록되었습니다.",
@@ -734,6 +801,9 @@
 		              });
 					grid2.resetData(result);
 					setTimeout(()=> grid2.refreshLayout(),10);
+					
+					
+					
 					
 				},
 				
@@ -765,7 +835,44 @@
 				},
 				success: function(result){
 					
-					
+					   $.ajax({
+							url : "/mrAdjustmentAjax",
+
+							method : "GET",
+							success : function(result) {
+								grid2.resetData(result);
+								setTimeout(()=> grid2.refreshLayout(),10);
+								
+							console.log(grid2.getData());	
+								
+			 	grid2.getData().forEach((ele, index)=>{
+									
+							
+									
+										if(ele.admNote =='error') {
+											
+										
+										grid2.addCellClassName(index,'adjustmentCode','redcolor');
+										grid2.addCellClassName(index,'mrLotNumber','redcolor');
+										grid2.addCellClassName(index,'itemCode','redcolor');
+										grid2.addCellClassName(index,'itemType','redcolor');
+										grid2.addCellClassName(index,'itemName','redcolor');
+										grid2.addCellClassName(index,'registerDate','redcolor');
+										grid2.addCellClassName(index,'process','redcolor');
+										grid2.addCellClassName(index,'change','redcolor')
+										grid2.addCellClassName(index,'adjustmentDate','redcolor');
+										grid2.addCellClassName(index,'empNo','redcolor');
+										grid2.addCellClassName(index,'admNote','redcolor');
+										}
+										
+									})
+							},
+							error:function(reject){
+								console.log(reject);
+							
+							}
+
+						});
 				},
 				error:function(reject){
 					
@@ -792,7 +899,44 @@
 					xhr.setRequestHeader(header, token);
 				},
 				success: function(result){
-					
+					   $.ajax({
+							url : "/mrAdjustmentAjax",
+
+							method : "GET",
+							success : function(result) {
+								grid2.resetData(result);
+								setTimeout(()=> grid2.refreshLayout(),10);
+								
+							console.log(grid2.getData());	
+								
+			 	grid2.getData().forEach((ele, index)=>{
+									
+							
+									
+										if(ele.admNote =='error') {
+											
+										
+										grid2.addCellClassName(index,'adjustmentCode','redcolor');
+										grid2.addCellClassName(index,'mrLotNumber','redcolor');
+										grid2.addCellClassName(index,'itemCode','redcolor');
+										grid2.addCellClassName(index,'itemType','redcolor');
+										grid2.addCellClassName(index,'itemName','redcolor');
+										grid2.addCellClassName(index,'registerDate','redcolor');
+										grid2.addCellClassName(index,'process','redcolor');
+										grid2.addCellClassName(index,'change','redcolor')
+										grid2.addCellClassName(index,'adjustmentDate','redcolor');
+										grid2.addCellClassName(index,'empNo','redcolor');
+										grid2.addCellClassName(index,'admNote','redcolor');
+										}
+										
+									})
+							},
+							error:function(reject){
+								console.log(reject);
+							
+							}
+
+						});
 				},
 				error:function(reject){
 					console.log(reject);
@@ -880,6 +1024,70 @@
 					},
 					success : function(result){
 						
+						grid7.removeCheckedRows();
+						
+						   $.ajax({
+								url : "/mrAdjustmentAjax",
+
+								method : "GET",
+								success : function(result) {
+									grid2.resetData(result);
+									setTimeout(()=> grid2.refreshLayout(),10);
+									
+								console.log(grid2.getData());	
+									
+				 	grid2.getData().forEach((ele, index)=>{
+										
+								
+										
+											if(ele.admNote =='error') {
+												
+											
+											grid2.addCellClassName(index,'adjustmentCode','redcolor');
+											grid2.addCellClassName(index,'mrLotNumber','redcolor');
+											grid2.addCellClassName(index,'itemCode','redcolor');
+											grid2.addCellClassName(index,'itemType','redcolor');
+											grid2.addCellClassName(index,'itemName','redcolor');
+											grid2.addCellClassName(index,'registerDate','redcolor');
+											grid2.addCellClassName(index,'process','redcolor');
+											grid2.addCellClassName(index,'change','redcolor')
+											grid2.addCellClassName(index,'adjustmentDate','redcolor');
+											grid2.addCellClassName(index,'empNo','redcolor');
+											grid2.addCellClassName(index,'admNote','redcolor');
+											}
+											
+										})
+								},
+								error:function(reject){
+									console.log(reject);
+								
+								}
+
+							});
+						   
+						   
+						   
+						   
+						   $.ajax({
+								url:"/mrAdmAjax",
+								method:"GET",
+								
+								success : function(result){
+									grid1.resetData(result);
+									setTimeout(()=> grid1.refreshLayout(),10);
+									
+									
+									
+									
+								},
+								error : function(reject){
+									
+								}
+							})
+							
+						
+						
+						
 						Toast.fire({
 			                icon: "success", //success, error, warning, info, question
 			                title: "성공적으로 취소되었습니다.",
@@ -887,11 +1095,8 @@
 			                
 			                
 			              });
-						grid7.resetData(result);
-						setTimeout(()=> grid7.refreshLayout(),10);
-						grid3.resetData(result);
-						setTimeout(()=> grid3.refreshLayout(),10);
 						
+					
 						
 						
 					},
@@ -910,6 +1115,9 @@
 			console.log(checked);
 			checked.forEach(row => {
 				grid2.prependRow(row, {focus:true});
+				$('#exampleModal').modal('hide');
+				
+				
 			});
 			}
 		
@@ -930,6 +1138,47 @@
 					  
 				  success: function(result){
 					  
+					   $.ajax({
+							url : "/mrAdjustmentAjax",
+
+							method : "GET",
+							success : function(result) {
+								grid2.resetData(result);
+								setTimeout(()=> grid2.refreshLayout(),10);
+								
+							console.log(grid2.getData());	
+								
+			 	grid2.getData().forEach((ele, index)=>{
+									
+							
+									
+										if(ele.admNote =='error') {
+											
+										
+										grid2.addCellClassName(index,'adjustmentCode','redcolor');
+										grid2.addCellClassName(index,'mrLotNumber','redcolor');
+										grid2.addCellClassName(index,'itemCode','redcolor');
+										grid2.addCellClassName(index,'itemType','redcolor');
+										grid2.addCellClassName(index,'itemName','redcolor');
+										grid2.addCellClassName(index,'registerDate','redcolor');
+										grid2.addCellClassName(index,'process','redcolor');
+										grid2.addCellClassName(index,'change','redcolor')
+										grid2.addCellClassName(index,'adjustmentDate','redcolor');
+										grid2.addCellClassName(index,'empNo','redcolor');
+										grid2.addCellClassName(index,'admNote','redcolor');
+										}
+										
+									})
+							},
+							error:function(reject){
+								console.log(reject);
+							
+							}
+
+						});
+					  
+					  
+					  
 				  },
 				  error: function(reject){
 					  console.log(reject);
@@ -948,12 +1197,6 @@
 		
 		   
 	
-		  $(function(){
-		    	$('#exampleModalLong').on('shown.bs.modal', function(){
-		    		grid3.refreshLayout();
-		    		
-		    	})
-		    })
 		    
 		    $(function(){
 		    	$('#exampleModal').on('shown.bs.modal', function(){
@@ -970,70 +1213,7 @@
 		    
 		    
 		    
-		    var grid3 = new tui.Grid({
-				el : document.getElementById('grid3'),
-				bodyHeight:300,
-				scollX : false,
-				
-				
-				rowHeaders: ['checkbox'],
-				
-				columns : [ {
-					header : '조정코드',
-					name : 'adjustmentCode',
-					editor:'text'
-				}, {
-					header : '자재 lot 번호',
-					name : 'mrLotNumber',
-					editor:'text'
-				},{
-					header : '품목 코드',
-					name : 'itemCode',
-					editor:'text'
-				},{
-					header : '구분',
-					name : 'itemType',
-					width:50,
-					editor:'text'
-				},
-				{
-					header : '품목명',
-					name : 'itemName',
-					editor:'text'
-					
-				}, 
-				
-				{
-					header : '등록일자',
-					name : 'registerDate',
-					editor:'datePicker'
-					
-				}, {
-					header : '처리',
-					name : 'process',
-					editor:'text'
-				}, {
-					header : '결과',
-					name : 'change',
-					editor:'text'
-				},
-				{
-					header : '조정일자',
-					name : 'adjustmentDate',
-					editor:'datePicker'
-					
-				},
-				{
-					header : '사원 번호',
-					name : 'empNo',
-					editor:'text'
-				}
-				],
-				pageOptions: { 
-	            	useClient: true,
-	               	perPage: 10
-	            }
-			})
+		  
 		
 		  
 	})
