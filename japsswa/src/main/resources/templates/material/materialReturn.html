@@ -68,7 +68,7 @@
 
 <!-- 삭제 -->
 		
-		<button type="button" id="deleteBtn" class="btn btn-danger" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px;  width:60px; padding:3px;">삭제</button>
+		<button type="button" id="deleteBtn" class="btn btn-danger" style="float:right; margin-top:30px; margin-bottom:10px; margin-right:20px;  width:100px; padding:3px;">이동 취소</button>
 		
 		</div>
 
@@ -90,7 +90,7 @@
 <div class="modal fade bd-example-modal-lg" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <h4 style="font-weight:bold; text-align:center; margin-top:20px;">반품 조회    </h4>          
+      <h4 style="font-weight:semi-bold; text-align:center; margin-top:20px;">반품 조회 </h4>          
       <div><button type="button"  id="returnDelBtn"  class="btn btn-danger" style="margin-right:10px; float:right; padding:5px;">취소</button></div>   
       <hr>
       <div id="grid3"></div>
@@ -210,7 +210,9 @@
 
 				success : function(result) {
 					grid1.resetData(result);
+					grid3.resetData(result);
 					setTimeout(()=> grid1.refreshLayout(),100);
+					setTimeout(()=> grid3.refreshLayout(),100);
 				},
 				error: function(reject){
 					console.log(reject);
@@ -383,6 +385,22 @@
 
 		$('#deleteBtn').on('click',function(){
 				grid1.removeCheckedRows(false);
+				
+				
+				$.ajax({
+					url : "/mrReturnListAjax",
+
+					method : "GET",
+					dataType : "json",
+
+					success : function(result) {
+						grid.resetData(result);
+						setTimeout(()=> grid.refreshLayout(),100);
+						
+					}
+
+				});
+				
 			})
 		
 		
@@ -410,6 +428,8 @@
 						grid3.resetData(result);
 						grid3.removeCheckedRows(false);
 						setTimeout(()=> grid3.refreshLayout(),100);
+						
+						
 					},
 					error: function(reject){
 						console.log(reject);

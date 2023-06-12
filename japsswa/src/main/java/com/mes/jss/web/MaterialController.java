@@ -436,6 +436,17 @@ public class MaterialController {
 		
 	}
 	
+	
+ // 자재 발주 스케줄러
+	
+	
+	@GetMapping("/OrderCalendar")
+	public String OrderCalendar() {
+		
+		return "material/materialOrderCalendar";
+		
+	}
+	
  // 발주 거래처 자재 검색
 	
 	@ResponseBody
@@ -448,6 +459,32 @@ public class MaterialController {
 		
 	}
 	
+ // 발주 조회용 리스트 검색
+	
+	@ResponseBody
+	@RequestMapping("/orderBeforeSearch")
+	public List<MrOrderVO> orderBeforeSearch(@RequestBody MrOrderVO vo){
+		
+		System.err.println(vo);
+		
+		List<MrOrderVO> list = materialService.orderBeforeQuery(vo);
+		
+		return list;
+		
+	}
+	
+	//발주 내역 검색
+	
+	@ResponseBody
+	@RequestMapping("/ordersQuerySearch")
+	public List<MrOrderVO> ordersQuerySearch(@RequestBody MrOrderVO vo){
+		
+		System.err.println(vo);
+		List<MrOrderVO> list = materialService.ordersQuery(vo);
+		
+		return list;
+	}
+
 	
 	
 
@@ -580,6 +617,18 @@ public class MaterialController {
 		materialService.admRealIn(vo);
 		
 		return null;
+		
+	}
+	
+	// 자재 조정 lot 검색
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmLotSearch")
+	public List<MrAdjustmentVO> mrAdmLotSearch(@RequestBody MrAdjustmentVO vo) {
+		
+		List<MrAdjustmentVO> list = materialService.mrLotSearch(vo);
+		
+		return list;
 		
 	}
 	

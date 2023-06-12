@@ -74,14 +74,14 @@
 	
 		<div style="float:left;">
 			<label for="cusId" style=" margin-left:20px; font-weight:bold;">거래처 코드</label><br>
-			  <input type=text id="cusId" class="input" style="width:180px; margin-left:20px;">
+			  <input type=text id="cusId" class="input" readonly style="width:180px; margin-left:20px;">
 				</div> 
 		<div style="float:left;">
 		
 	<!-- 거래처 인풋 -->
 			
 		<label for="cusName" style=" margin-left:100px; font-weight:bold; margin-bottom:5px;">거래처 &ensp;</label><br>  
-	   <input type=text id="cusName" class="input" style="width:180px; margin-left:100px; margin-bottom:5px;">       
+	   <input type=text id="cusName" class="input" readonly style="width:180px; margin-left:100px; margin-bottom:5px;">       
 	   
 	   </div>
 	   
@@ -90,9 +90,9 @@
 	    <button type="button" id="checkBtn" class="btn btn-dark"
 				 data-bs-toggle="modal"
 				data-bs-target="#searchModal"
-				style="height: 80px; width: 120px; padding: 3px; margin-top:3px; margin-bottom: 10px; margin-left:120px;"> 거래처 및 자재 <br> 찾기</button>
+				style="height: 60px; width: 300px; padding: 3px; margin-top:3px; margin-bottom: 10px; margin-left:120px;">찾기<br>(거래처 및 자재)</button>
 	   	
-	    <button type="button" id="lackBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="float:right; width:150px; height: 80px; padding:3px; margin-bottom:10px; margin-right:10px; margin-left:5px; color:white; ">안전 재고 미달</button>
+	    
 	</div>
 
  
@@ -102,7 +102,7 @@
 	<!-- 품목 코드 인풋 -->
 	 
 		<div style="float:left;">
-		<label for="proId" style=" margin-left:20px; margin-top:20px;font-weight:bold;">품목 코드 &ensp;</label><br>
+		<label for="proId"  style=" margin-left:20px; margin-top:20px;font-weight:bold;">품목 코드 &ensp;</label><br>
 	    <input type=text id="proId" class="input" style="width:180px; margin-left:20px;">	
 		</div>
 		
@@ -111,8 +111,10 @@
 		
 		<div style="float:left;">
 		 <label for="proName" style=" margin-left:100px; margin-top:20px;font-weight:bold;">품목 &ensp;</label><br>	 
-		 <input type=text id="proName" class="input" style="width:180px; margin-left:100px;">
+		 <input type=text id="proName" readonly class="input" style="width:180px; margin-left:100px;">
 		 </div> 
+		 
+		 <button type="button" id="lackBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal1" style="height: 60px; width: 300px; padding: 3px; margin-top:30px; margin-bottom: 10px; margin-left:120px;">안전 재고 미달</button>
 	</div>
 		
 	<!-- 가격 인풋 -->
@@ -120,14 +122,14 @@
 		<div style="display:flex;">	
 			<div style="float:left;">
 		<label for="proPrice" style=" margin-left:20px; margin-top:20px;font-weight:bold;" >가격 &ensp;</label><br>
-			 <input type=text id="proPrice" class="input" style="width:180px; margin-left:20px;" >	
+			 <input type=text id="proPrice" readonly class="input" style="width:180px; margin-left:20px;" >	
 			</div>
 			
 	<!-- 수량 인풋 -->
 			
 			<div style="float:left;">
 			<label for="count" style=" margin-left:100px; margin-top:20px;font-weight:bold;" >수량 &ensp;</label><br>
-			 <input type=text id="count" class="input" style="width:180px; margin-left:100px;" >
+			 <input type=text id="count"  class="input" style="width:180px; margin-left:100px;" >
 			</div>
 	
 	
@@ -199,12 +201,13 @@
 			<div class="modal-dialog modal-sm-6">
 
 				<div class="modal-content">
+				
 					<div class="modal-header">
 					
 				<!-- 모달 제목 -->
 					
 						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: bold; margin-left:120px;">거래처 및 자재 찾기</h4>
+							style="font-weight:semi-bold; margin-left:120px;">거래처 및 자재 찾기</h4>
 
 						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
@@ -219,37 +222,39 @@
   
   
   
- 
-   <div class="form-check form-check-inline">   
+   	
+		 
+   <div class="form-check form-check-inline" style="margin-left:30px; margin-top:20px;">   
      <input class="form-check-input" type="radio" name="div" id="customerName" value="cu">
-     <label class="form-check-label" for="customerName" style="margin-left:0px;">거래처</label>
+     <label class="form-check-label" for="customerName" style="margin-left:5px; margin-bottom:1px;">거래처</label>
    </div> 
    <div class="form-check form-check-inline">
-     <input class="form-check-input" type="radio" name="div" id="itemName" value="mr">
-     <label class="form-check-label" for="itemName" style="margin-left:0px;">자재</label>
+     <input class="form-check-input" type="radio" name="div" id="itemName" value="mr" style="margin-bottom:5px;">
+     <label class="form-check-label" for="itemName" style="margin-left:5px; margin-bottom:1px;" >자재</label>
    </div>
-  <input type="text" name="itemName" />
+  <input type="text" id="itemName2" name="itemName" />
 
-   
+	   
    
    
   <!-- </select> -->
 	
-	<button type="button" class="btn btn-dark" id="multi" style="margin-left:20px; padding:3px;">검색</button>		
+	<button type="button" class="btn btn-dark" id="multi" style="margin-left:20px; padding:3px; margin-bottom:3px;">검색</button>		
 		</form>														
 					
 					
-					
+			<div class="modal-body">		
 					
 				<!-- 검색 그리드 -->
 					
-					<div id="grid"></div>
+					<div id="grid" style="margin-top:5px;"></div>
+				</div>	
 					
 				<!-- 선택 버튼 -->	
 				
-					<div>
-						<button type="button" id="chooseBtn" class="btn btn-dark" data-dismiss="modal"
-							style="width: 50px; height: 35px; margin-left:230px; padding: 5px;">선택</button>
+					<div class="modal-footer">
+						<button type="button" id="chooseBtn" class="btn btn-secondary" data-dismiss="modal"
+							style="width: 50px; height: 35px; margin-right:210px; padding: 5px;">선택</button>
 					</div>
 				</div>
 
@@ -261,17 +266,20 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">안전재고 미달</h5>
+        <h4 class="modal-title" id="exampleModalLabel" style="margin-left:160px; font-weight:semi-bold;">안전재고 미달</h4>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <div id="grid5"></div>
+      	<label for="mrSearch2" style="margin-left:80px; margin-top:3px;">자재명 : </label>
+      	<input type="text" id="mrSearch2" style="margin-top:3px;">
+      	<button type="button" class="btn btn-dark" id="lackSearch" style="margin-left:20px; padding:3px; margin-bottom:3px;">검색</button>
+        <div id="grid5" style="margin-top:20px;"></div>
       </div>
       <div class="modal-footer">
-       <button type="button" id="choose2Btn" class="btn btn-secondary" data-dismiss="modal">선택</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" style="margin-right:170px;">Close</button>
+       <button type="button" id="choose2Btn" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right:200px;">선택</button>
+        
        
       </div>
     </div>
@@ -313,18 +321,30 @@
     <div class="modal-content">
     
     <!-- 발주 조회 및 취소 모달 제목 -->
-    
-      	<h4 style="margin-bottom:50px; margin-top:50px; font-weight:bold; text-align:center;">발주 조회 및 취소 <button type="button" class="close" data-bs-dismiss="modal"
-							aria-label="Close" style="float:right; margin-right:20px;">
-							<span aria-hidden="true">&times;</span>
-						</button></h4>
     	
-    	<div>
-    	<button type="button" id="orderDeleteBtn" class="btn btn-danger" style="float:right; margin-bottom:20px; margin-right:10px;">취소</button>
+    	<div class="modal-header">
+      	<h4 style="margin-top:20px; font-weight:semi-bold; margin-left:300px;">발주 조회 및 취소 </h4>
+      	<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close" style="float:right; margin-top:10px; margin-bottom:10px; margin-right:5px;">
+							<span aria-hidden="true">&times;</span>
+						</button>
+    	</div>
+    	<div class="modal-body">
+    	
+    	<label for="custom" style="margin-right:10px;">거래처</label>
+    	<input type="text" id="custom" name="cus">
+    	<label for="ordDate" style="margin-left:20px; margin-right:10px;">발주일자</label>
+    	<input type="date" id="ordDate" name="ord1">  ~
+    	<input type="date" id="ordDate1" name="ord2">
+    	<button type="button" class="btn btn-dark" id="beforeBtn" style="margin-left:30px;">검색</button>    	
+    	<div id="grid3" style="margin-top:30px;">
+    	</div>
+    	<div class="modal-footer">
+    	<button type="button" id="orderDeleteBtn" class="btn btn-danger" style="margin-right:340px; margin-bottom:5px;">취소</button>
 		</div>				
     <!-- 발주 조회 모달 -->
       
-      <div id="grid3" ></div>
+      </div>
       
     <!-- 삭제 버튼 -->
       
@@ -353,7 +373,10 @@
 	// 거래처 및 자재 찾기 버튼
 	
 			$('#checkBtn').on('click',function(){
-			
+				
+				$('#itemName2').val('');
+				$("input[name='div']").prop('checked',false);
+				
 				$('#cusId').val('');
 				 $('#cusName').val('');
 				 $('#proId').val('');
@@ -394,7 +417,7 @@
 			$('#searchBtn').on('click',function(){
 				  
 				  const result= $("#searchcode").val();
-				  $('#searchcode').val('');
+				  
 					
 				  $.ajax({
 						url:"/searchCustomerAjax",
@@ -499,9 +522,10 @@
 	
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),
-
+				bodyHeight:500,
+				
 				scrollX : false,
-				scrollY : false,
+				
 				rowHeaders: ['checkbox'],
 				
 				columns : [ {
@@ -526,20 +550,42 @@
 				],
 				pageOptions: { 
 	            	useClient: true,
-	               	perPage: 5 
+	               	perPage: 15 
 	            }
 				
 			});
+	
+	
+	// 안전재고 검색
+	
+		$('#lackSearch').on('click',function(){
 			
+			let result1 = $('#mrSearch2').val();
+			
+			$.ajax({
+				
+				url:"/searchListAjax",
+				method:"GET",
+				data : {'result': result1},
+				success : function(result){
+					grid5.resetData(result);
+					setTimeout(()=> grid5.refreshLayout(),100);
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+			})
+			
+		})
 			
 	
 	// 빈 그리드
 			
 			const grid1 = new tui.Grid({
 				el : document.getElementById('grid1'),
-
+				bodyHeight:300,
 				scrollX : false,
-				scrollY : false,
+				
 				rowHeaders: ['checkbox'],
 				columns : [ {
 					header : '거래처 코드',
@@ -571,7 +617,7 @@
 				} ],
 				pageOptions: { 
 	            	useClient: true,
-	               	perPage: 5 
+	               	perPage: 10
 	            }
 			});
 			
@@ -586,6 +632,43 @@
 	    	})
 	    })
 		
+	// 발주 조회용 리스트 검색
+	
+ 	
+  $('#beforeBtn').on('click',function(){
+	  
+	  let result3 = {
+			  customerName : $('#custom').val(),
+			  mrOrderDate1 : $('#ordDate').val(),
+			  mrOrderDate2 : $('#ordDate1').val()
+	  }
+	  
+	  console.log(result3);
+	  
+	  
+	  $.ajax({
+			
+			url:"/orderBeforeSearch",
+			method:"POST",
+			contentType:"application/json",
+			data:JSON.stringify(result3),
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(result){
+				grid3.resetData(result);
+			},
+			error: function(reject){
+				console.log(reject);
+			}
+			
+		})
+  })
+	
+	
+	
+	
+	
 	
 	// 발주 조회 및 삭제 버튼
 	
@@ -619,8 +702,9 @@
 	
 			var grid3 = new tui.Grid({
 				el : document.getElementById('grid3'),
+				bodyHeight:500,
 				scollX : false,
-				scollY : false,
+				
 				
 				rowHeaders: ['checkbox'],
 				
@@ -628,7 +712,7 @@
 					{
 						header : '발주일자',
 						name : 'mrOrderDate',
-						width:75
+						width:100
 					},
 					{
 					header : '발주코드',
@@ -640,33 +724,31 @@
 				}, 
 				{
 					header : '거래처명',
-					name : 'customerName'
+					name : 'customerName',
+					width: 100
 				},
 				
-				{
-					header : '사원 코드',
-					name : 'empNo'
-				}, 
+				
 				{
 					header : '사원명',
 					name : 'empName',
-					width: 60
+					width: 100
 				},
 				{
 					header : '품목 수',
 					name : 'productCount',
-					width: 40
+					width: 100
 				},				
 				{
 					header : '총 가격',
 					name : 'allCount',
-					width: 80
+					width: 100
 				} 
 				
 				],
 				pageOptions: { 
 	            	useClient: true,
-	               	perPage: 5 
+	               	perPage: 15
 	            }
 			})
 	    
@@ -703,7 +785,9 @@
 	// 안전재고 미달
 	
 	  $('#lackBtn').on('click',function(){
-		
+			
+		  $('#mrSearch2').val('');
+		  
 		  $.ajax({
 				url :"/mrCount",
 				method : "GET",
@@ -723,8 +807,9 @@
 	    
 	    var grid5 = new tui.Grid({
 			el : document.getElementById('grid5'),
+			bodyHeight:500,
 			scollX : false,
-			scollY : false,
+			
 			rowHeaders: ['checkbox'],
 			
 			
@@ -766,7 +851,7 @@
 			],
 			pageOptions: { 
             	useClient: true,
-               	perPage: 4
+               	perPage: 15
             }
 		})
 

@@ -344,7 +344,22 @@
 			}
 
 		});
-
+			
+		
+			$.ajax({
+				url:"/StoreList",
+				method:"GET",
+				success : function(result){
+				   modalgrid.resetData(result);
+					setTimeout(()=> modalgrid.refreshLayout(),10);
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+					
+			})	
+			
+			
 // 자재입고 리스트 모달 그리드			
 
 		var modalgrid = new tui.Grid({
@@ -514,6 +529,36 @@
 	    	
 	    })
 	    
+	    // 입고 취소 클릭 이벤트
+
+		$('#deleteBtn').on('click',function(){
+
+// 입고 취소
+
+		$.ajax({
+			url:"/mrStoreCancle",
+			method:"POST",
+			contentType:"application/json",
+			data : JSON.stringify({list: modalgrid.getCheckedRows()}),
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success : function(result){
+				
+				console.log('삭제');
+			},
+			error: function(reject){
+				console.log(reject);
+			}
+			
+			
+		})
+		modalgrid.removeCheckedRows(false);
+		});
+		
+		
+		
+	    
 // 생산 실적 그리드
 
 	    var grid2 = new tui.Grid({
@@ -600,38 +645,12 @@
 	    	
 	    	
 	    })
+	    grid2.removeCheckedRows(false);
 	    
 	    });
 
 
-// 입고 취소 클릭 이벤트
 
-		$('#deleteBtn').on('click',function(){
-
-// 입고 취소
-
-		$.ajax({
-			url:"/mrStoreCancle",
-			method:"POST",
-			contentType:"application/json",
-			data : JSON.stringify({list: modalgrid.getCheckedRows()}),
-			beforeSend: function(xhr){
-				xhr.setRequestHeader(header, token);
-			},
-			success : function(result){
-				
-			},
-			error: function(reject){
-				console.log(reject);
-			}
-			
-			
-		})
-		
-		});
-		
-		
-		
 		
 		
 		});

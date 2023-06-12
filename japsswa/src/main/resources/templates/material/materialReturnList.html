@@ -256,12 +256,17 @@
 			$.ajax({
 				url:"/mrCustomerAjax",
 				method:"GET",
-				dataType : "json",
+				
 				
 				success: function(result){
 					grid1.resetData(result);
 					setTimeout(()=> grid1.refreshLayout(),100);
 					
+					
+					
+				},
+				error: function(reject){
+					console.log(reject);
 				}
 				
 				
@@ -315,7 +320,7 @@
 					
 					
 			$(function(){
-		    	$('#exampleModal').on('shown.bs.modal', function(){
+		    	$('#exampleModal1').on('shown.bs.modal', function(){
 		    		grid1.refreshLayout();
 		    	})
 		    });
