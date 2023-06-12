@@ -1,10 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
-</body>
+
+
+</head>
+<th:block layout:fragment="content">
+
+
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+				
+					<h4 class="page-title">완제품 재고 조회</h4>
+					
+
+					<!-- <input id="name" type="hidden" th:value="${#authentication.principal.empName}">   -->
+				
+					<form id="stockForm">
+					<div class="row"></div>
+					
+					<input name="stockName" id="sName" type="text">
+					<button id="stockSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#iModal">품목 찾기</button>
+					<label>입고날짜</label><input name="storeIn1" id="storeInS" type="date">-<input name="storeIn2" id="storeInE" type="date">
+					<label>생산날짜</label><input name="perDate1" id="perStart" type="date">-<input name="perDate2" id="perEnd" type="date">
+					<button id="submitBtn" type="button" class="btn btn-dark">조회</button>
+					
+					<button id="stockReset" type="reset" class="btn btn-dark">초기화</button>
+					</form>
+					<div id="stockGrid"></div>
+					
+		
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	
+	<div class="modal fade" id="stockModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="sModalLabel">품목 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="sInput" name="stock">
+					<button id="stockSear" type="button" class="btn btn-dark">찾기</button>
+					<div id="sModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+
+	const Grid = tui.Grid;
+	
+	//완제품 재고 조회 그리드
+	let stockGridData = [];
+		const stockGrid = new Grid({
+		  bodyHeight : 400,
+	      el: document.getElementById('stockGrid'),
+	      data: stockGridData,
+	      pageOptions: { 
+              useClient: true,
+              perPage:15  
+              },
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '완제품 lot 번호',
+				  name: 'fnLotNo'
+				 },
+			     {
+				  header: '품목명',
+				  name: 'itemName'
+				 },
+				 {
+				  header: '수량',
+				  name: 'passItem'
+			     },
+			     {
+				  header: '입고날짜',
+				  name: 'fnStoreIn'
+				 }, 
+			     {
+			      header : '유통기한',
+			      name : 'fnExpiration'
+			     },
+			     {
+			      header: '담당자',
+			      name: 'empName'
+			     }
+				 
+		      ],
+		      
+		        
+		    });
+
+		stockGrid.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+		stockGrid.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+		stockGrid.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+		
+	
+		
+		//제품 찾기 모달
+		
+		const sModalGrid = new Grid({
+            el: document.getElementById('sModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '품목코드',
+	            name: 'itemCode'
+	          },
+              {
+                header: '품목명',
+                name: 'itemName'
+              }
+              
+            ]
+          });
+
+		  sModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  sModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  sModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		  
+		  
+		
+		  
+		  
+		  
+		  
+		  
+		  
+		 
+
+		
+		
+		
+		
+		
+	
+		
+		           
+		           
+		           
+
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+
+</th:block>
+
 </html>

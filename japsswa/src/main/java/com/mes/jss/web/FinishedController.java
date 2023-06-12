@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mes.jss.sale.domain.FinishedListVO;
@@ -74,12 +75,43 @@ public class FinishedController {
 		return "sale/finishedShow";
 	}
 	
-	//주문서 전체 조회
+	//완제품 입고 전체 조회
 	@RequestMapping("/entStoreIn")
 	@ResponseBody
 	public List<FinishedVO> entStoreInAjax(){
 		List<FinishedVO> elist = finishedService.entStoreIn();
 		return elist;
 	}
+	
+	//완제품 입고 조회
+	@RequestMapping("/storeIn")
+	@ResponseBody
+	public List<FinishedVO> storeInAjax(FinishedVO fvo){
+		List<FinishedVO> stlist = finishedService.storeIn(fvo);
+		return stlist;
+	}
+	
+	//품목검색
+	@RequestMapping("/showSearItem")
+	@ResponseBody
+	public List<FinishedVO> showSearItemAjax(@RequestParam String itemName){
+		List<FinishedVO> ilist = finishedService.showSearItem(itemName);
+		return ilist;
+	}
+	
+	//완제품 재고 조회 화면
+	@RequestMapping("/finStockList")
+	public String finStockListAjax() {
+		return "sale/stockShow";
+	}
+	
+	//완제품 재고 전체 조회
+	@RequestMapping("/entStock")
+	@ResponseBody
+	public List<FinishedVO> entStockAjax(){
+		List<FinishedVO> eslist = finishedService.entStock();
+		return eslist;
+	}
+	
 	
 }

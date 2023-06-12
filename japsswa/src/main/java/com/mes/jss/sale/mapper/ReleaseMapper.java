@@ -15,6 +15,16 @@ public interface ReleaseMapper {
 
 	public void itemOut(ReleaseVO rVo);
 
+	List<ReleaseVO> entRelease();
+
+	List<ReleaseVO> releaseCheck(ReleaseVO rvo);
+
+	List<ReleaseVO> relItemSearch(String itemName);
+
+	List<ReleaseVO> relCustSearch(String customerName);
+
+	List<ReleaseVO> relDetCheck(String fnReleaseId);
+
 
 
 

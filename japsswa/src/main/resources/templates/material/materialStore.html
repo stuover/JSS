@@ -90,7 +90,7 @@
 							style="font-weight: semi-bold; margin-left: 280px; margin-bottom:20px;">입고 처리 확인 및 취소</h4>
 <!-- 닫기 버튼 -->
 
-						<button type="button" class="close" data-bs-dismiss="modal"
+						<button type="button" id="closeBtn2" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -99,7 +99,7 @@
 					
 <!-- 검색 인풋-->	
 <div style="margin-bottom:20px;">		
-		<form action="#" >
+		<form id="searchChecked" action="#" >
   <label for="lang" ></label>
   <select name="storeReasonType" id="storeReasonType" style="margin-left:100px;">
   <option value="">--입고구분--</option>
@@ -447,22 +447,34 @@
 					
 		     });
 
-// 닫기 버튼
 
-			 $('#closeBtn').on('click',function(){
+ 
+			 }) 	
+			 
+			 
+			 
+			 // 닫기 버튼
+
+			 $('#closeBtn2').on('click',function(){
+				
+				
+				 console.log('왜 안돼');
+				
+				 
+				 
 				 $.ajax({
 						url : "/mslistAjax",
 						method : "GET",
 						dataType : "json",
 						success : function(result) {
 							modalgrid.resetData(result);
+							
 							setTimeout(()=> modalgrid.refreshLayout(),100);
+							
 						}
 
 					});
 				})
- 
-			 }) 		
 		
 			
 		$('#searchQuery').on('click',function(){

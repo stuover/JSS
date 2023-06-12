@@ -61,9 +61,54 @@
 
 	</select>
 	
+	<!-- 조회페이지 -->
+	
 	<select id="entStoreIn" parameterType="FinishedVO" resultType="FinishedVO">
-		
+		select p.performance_id, 
+			   p.pass_item, 
+			   i.item_name, 
+			   f.fn_lot_no, 
+			   f.fn_store_in,
+			   p.worker
+		from performance p join itemlist i on(p.item_code = i.item_code)
+                   join finished f on(p.performance_id = f.performance_id)
+		where per_status = '입고완료'
 	</select>
+	
+	<select id="storeIn" parameterType="FinishedVO" resultType="FinishedVO">
+		select *
+		from(
+		select p.performance_id, 
+			   p.pass_item, 
+			   i.item_name, 
+			   f.fn_lot_no, 
+			   f.fn_store_in,
+			   p.worker
+		from performance p join itemlist i on(p.item_code = i.item_code)
+                   join finished f on(p.performance_id = f.performance_id)
+	
+		<where>
+			<if test='itemName != null and itemName != ""'>
+				and i.item_name = #{itemName}
+			</if>
+			<if test='inDate1 != null and inDate1 != ""'>
+				and f.fn_store_in >= #{inDate1}
+			</if>
+			<if test='inDate2 != null and inDate2 != ""'>
+			<![CDATA[
+				and f.fn_store_in <= #{inDate2}
+			]]>
+			</if>
+			and p.per_status = '입고완료'
+		</where>
+		)
+	</select> 
+	
+	<select id="showSearItem" parameterType="FinishedVO" resultType="FinishedVO">
+		select item_code, item_name
+		from itemlist
+		where item_name like '%' || #{itemName} || '%' and item_type = 'FIN'
+	</select> 
 
 
 </mapper>
