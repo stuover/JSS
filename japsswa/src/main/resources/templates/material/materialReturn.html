@@ -352,6 +352,11 @@
 
 		$('#insertBtn').on('click',function(){
 			
+			
+			
+			
+			
+			
 			grid1.finishEditing();
 			
 			let insertReturn = {
@@ -382,6 +387,7 @@
 						
 
 						success : function(result) {
+							
 							grid1.resetData(result);
 							grid3.resetData(result);
 							setTimeout(()=> grid1.refreshLayout(),100);
@@ -402,7 +408,7 @@
 			})
 			
 						
-		$.ajax({
+			$.ajax({
 				
 				url : "/mrReturnAjax",
 
@@ -410,16 +416,20 @@
 				
 
 				success : function(result) {
+					
 					grid1.resetData(result);
 					grid3.resetData(result);
 					setTimeout(()=> grid1.refreshLayout(),100);
+					setTimeout(()=> grid3.refreshLayout(),100);
 				},
 				error: function(reject){
 					console.log(reject);
 				}
 			});
 		
-		
+			swal.fire({
+				  icon: 'success',
+				  title: '반품 신청 완료'	})
 		
 			
 		})
@@ -501,14 +511,19 @@
 
 							success : function(result) {
 								grid1.resetData(result);
-								grid3.resetData(result);
 								setTimeout(()=> grid1.refreshLayout(),100);
+								grid3.resetData(result);
+								
 								setTimeout(()=> grid3.refreshLayout(),100);
 							},
 							error: function(reject){
 								console.log(reject);
 							}
 						});
+						
+						swal.fire({
+							  icon: 'error',
+							  title: '반품 취소 완료'	})
 						
 					},
 					error: function(reject){

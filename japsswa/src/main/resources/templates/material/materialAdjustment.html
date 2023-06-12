@@ -270,13 +270,7 @@
 		<script>
 	
 	 
-	const swalWithBootstrapButtons = Swal.mixin({
-		  customClass: {
-		    confirmButton: 'm-2 btn btn-success ',
-		    cancelButton: 'm-2 btn btn-danger'
-		  },
-		  buttonsStyling: false
-	})
+	
 	
 	
 	$(document).ready(function(){
@@ -672,9 +666,9 @@
 					success: function(result){
 						
 						Swal.fire({
-			                icon: "success", //success, error, warning, info, question
-			                title: "성공적으로 등록되었습니다.",
-			                width: 400,
+			                icon: "success", 
+			                title: "등록 완료"
+			               
 			                
 			                
 			              });
@@ -814,9 +808,21 @@
 								console.log(reject);
 							
 							}
-
+		
+							
+							
+				               
+				                
+				                
+				              });
+					   Swal.fire({
+			                icon: "success", 
+			                title: "등록 완료"
+							
+							
 						});
 					
+					   
 					
 					
 					
@@ -993,10 +999,9 @@
 								console.log(reject);
 								
 								Swal.fire({
-									  icon: 'error',
-									  title: 'Oops...',
-									  text: 'Something went wrong!',
-									  footer: '<a href="">Why do I have this issue?</a>'
+									  icon: 'success',
+									  title: '출고 완료'
+									  
 									})
 							
 							}
@@ -1152,7 +1157,12 @@
 							
 						
 						
-						
+							Swal.fire({
+								  icon: 'error',
+								  title: '조정 취소 성공'
+								 
+								 
+								})	
 					
 						
 					

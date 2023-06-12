@@ -471,12 +471,37 @@
 				$('#insertBtn').on('click',function(){
 					
 					
-					alert('등록성공');
 					
-					if($('#proPrice').val()==0){
-						alert('등록실패');
+					
+					if($('#proPrice').val()==0 && $('#count').val() !=0 && $('#delivery').val()!=''){
+						alert('가격을 입력해주세요!!!');
 					}
-					else if()
+					
+					else if($('#proPrice').val()==0 && $('#count').val()==0 && $('#delivery').val()!=''){
+						alert('가격과 수량을 입력해주세요!!!');
+					}
+				
+					else if($('#count').val()==0 && $('#delivery').val()!=''&& $('#proPrice').val()!=0 ) {
+						
+						alert('수량을 입력해주세요!!!');
+					} else if($('#count').val()==0 && $('#delivery').val()=='' && $('#proPrice').val()!=0){
+						
+						alert('수량과 납품일을 입력해주세요!!!');
+					}
+					
+					
+					else if($('#delivery').val()=='' && $('#count').val()!=0 && $('#proPrice').val()!=0){
+						alert('납품일을 입력해주세요!!!');
+					} else if($('#proPrice').val()==0 && $('#delivery').val()=='' && $('#count').val()!=0){
+						alert('가격과 납품일을 입력해주세요!!!');
+					} else if($('#proPrice').val()==0 && $('#delivery').val()=='' && $('#count').val()==0 ){
+						alert('가격과 수량 그리고 납품일을 입력해주세요!!!')
+					}
+					
+					
+					else {
+						
+					alert('등록성공');
 					
 					let order = {
 							customerId : $('#cusId').val(),
@@ -489,7 +514,7 @@
 					
 						grid1.appendRow(order);
 							
-				
+					}
 					
 				})
 	
@@ -510,6 +535,11 @@
 					console.log(grid1.getCheckedRows());
 					
 					
+					swal.fire({
+						  icon: 'success',
+						  title: '입고 성공'	})
+					
+					
 					
 	// 발주 신청				
 					$.ajax({
@@ -523,6 +553,8 @@
 						},
 						success : function(result){
 							
+								 
+								
 						}
 					})
 					grid1.removeCheckedRows(false);
@@ -766,6 +798,11 @@
 	// 발주 취소 버튼
 	
 	    $("#orderDeleteBtn").on('click',function(){
+	    	
+	    	swal.fire({
+				  icon: 'error',
+				  title: '발주 취소 완료'	})
+			
 	    	
 	// 발주 취소
 	
