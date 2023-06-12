@@ -1260,7 +1260,11 @@
 				};	
 				// 값 비교 : 선택한 홀드 자재수량의 총합 - 필요자재 수량 
 				if(sumHoldCount != bRequire){
-					alert('필요수량과 선택한 홀드자재 수량이 맞지 않습니다!');
+					Swal.fire({
+						  icon: 'warning',
+						  title: '수량 오입력',
+						  text: '필요수량과 선택한 홀드자재 수량이 맞지 않습니다!'
+					}); 
 				} else {
 					let holdInsertOption = holdSelectGrid.isModified();
 					// 홀드 자재 등록					
