@@ -10,7 +10,7 @@
   	<select id="getList" resultType="FacilityVO">
   		SELECT	fac_name, 
   		            fac_code, 
-  		            fac_manager, 
+  		            fac_manager nameText, GET_EMPNAME(fac_manager) facManager, 
   		            fac_status, 
   		            get_fac_start_date(fac_code) as start_date
 		  FROM  facility 
@@ -22,11 +22,10 @@
         		  f.fac_code,
         		  d.down_code,
         		  to_char(d.stop_date, 'YYYY/MM/DD HH24:MI:SS') as stop_date,
-        		  down_reason text,
-        		  GET_CODENAME(d.down_reason) downReason,
-        		  d.down_manager,
+        		  d.down_reason text, GET_CODENAME(d.down_reason) downReason,
+        		  d.down_manager nameText, GET_EMPNAME(d.down_manager) downManager,
         		  d.remark
-		  from  facility f join downtime d 
+		  from  facility f join downtime d
 		     on  (f.fac_code = d.fac_code)
 		where  d.start_date is null
      order by down_code desc
@@ -43,7 +42,7 @@
 			values  (('DOW' || to_char(sysdate, 'yyMMdd') || lpad(downtime_seq.nextval, 4, '0')),
 			           current_date,
 			           #{text},
-			           #{downManager} ,
+			           #{nameText} ,
 			           #{remark} , 
 			           #{facCode})
   	</insert>
@@ -80,7 +79,7 @@
   		update downtime 
   			set
   		          down_reason = #{text} , 
-  		          down_manager = #{downManager} , 
+  		          down_manager = #{nameText} , 
   		          remark = #{remark} 
   		 where down_code = #{downCode}
   	</update>
@@ -90,11 +89,11 @@
   	<select id="getDownDetailList" resultType="DowntimeVO">
   		select  f.fac_name, 
   				  f.fac_code , 
-  				  d.down_code, 
-  				  d.start_date, 
-  				  d.stop_date, 
-  				  GET_CODENAME(d.down_reason) downReason, 
-  				  d.down_manager, 
+  				  d.down_code,   				  
+  				  to_char(d.start_date, 'YYYY/MM/DD HH24:MI:SS') as start_date, 
+  				  to_char(d.stop_date, 'YYYY/MM/DD HH24:MI:SS') as stop_date,
+  				  d.down_reason text, GET_CODENAME(d.down_reason) downReason,
+        		  d.down_manager nameText, GET_EMPNAME(d.down_manager) downManager,   				     				  
   				  d.remark
 		from   facility f join downtime d 
 		on      (f.fac_code = d.fac_code) 
@@ -105,10 +104,10 @@
   		select d.down_code, 
   				  f.fac_code,
   				  f.fac_name, 
-  				  d.start_date, 
-  				  d.stop_date, 
-  				  GET_CODENAME(d.down_reason) downReason,
-  				  d.down_manager, 
+  				  to_char(d.start_date, 'YYYY/MM/DD HH24:MI:SS') as start_date, 
+  				  to_char(d.stop_date, 'YYYY/MM/DD HH24:MI:SS') as stop_date,
+  				  d.down_reason text, GET_CODENAME(d.down_reason) downReason,
+        		  d.down_manager nameText, GET_EMPNAME(d.down_manager) downManager,
   				  d.remark
 		from   downtime d join facility f 
 		   on   (f.fac_code = d.fac_code)
@@ -196,8 +195,9 @@
   	<select id="getInsList" resultType="InspectionVO">
   		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD') as ins_date,
   				  to_char(i.ins_date + REGEXP_REPLACE(f.ins_cycle, '[^0-9]'),'YYYY-MM-DD') as next_inspection,
-                ins_reason text,
-                GET_CODENAME(i.ins_reason) insReason, i.ins_history, i.judgment, i.part_history, i.part_reason, to_char(i.part_date, 'yyyy-MM-dd') as part_date, i.ins_manager
+                 i.ins_reason text, GET_CODENAME(i.ins_reason) insReason,                
+                 i.ins_history, i.judgment, i.part_history, i.part_reason, to_char(i.part_date, 'yyyy-MM-dd') as part_date,
+				 i.ins_manager nameText, GET_EMPNAME(i.ins_manager) insManager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null
 		order by ins_code desc
@@ -210,7 +210,7 @@
   	
   	<insert id="insertModalIns" parameterType="InspectionVO">
   		insert into inspection(ins_code, ins_date, ins_reason, ins_history, judgment, part_history, part_reason, part_date, ins_manager, fac_code, down_code)
-		values(('INS' || to_char(sysdate, 'yyMMdd') || lpad(inspection_seq.nextval, 4,'0')) , current_date, #{text}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, to_date(#{partDate}, 'yyyy-MM-dd'), #{insManager}, #{facCode}, #{downCode})
+		values(('INS' || to_char(sysdate, 'yyMMdd') || lpad(inspection_seq.nextval, 4,'0')) , current_date, #{text}, #{insHistory}, #{judgment}, #{partHistory}, #{partReason}, to_date(#{partDate}, 'yyyy-MM-dd'), #{nameText}, #{facCode}, #{downCode})
   	</insert>
   	
   	<update id="modifyFacDate" parameterType="InspectionVO">
@@ -230,7 +230,7 @@
 					  		ins_reason = #{text} , 
 					  		ins_history = #{insHistory},
 					  		judgment = #{judgment} ,
-					  		ins_manager = #{insManager},
+					  		ins_manager = #{nameText},
 					  		part_history = #{partHistory}, 
 					  		part_reason = #{partReason},
 					  		part_date = 	to_date(#{partDate}, 'yyyy-MM-dd')
@@ -244,8 +244,9 @@
   	<select id="searchInsList" parameterType="InspectionVO" resultType="InspectionVO">
   		select f.fac_name, i.fac_code, i.down_code, i.ins_code, to_char(i.ins_date, 'YYYY-MM-DD')as ins_date,
   				to_char(i.ins_date + REGEXP_REPLACE(f.ins_cycle, '[^0-9]'),'YYYY-MM-DD') as next_inspection,
-                ins_reason text, GET_CODENAME(i.ins_reason) insReason,
-                i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date, i.ins_manager
+                i.ins_reason text, GET_CODENAME(i.ins_reason) insReason,
+                i.ins_history, i.judgment, i.part_history, i.part_reason, i.part_date,
+                i.ins_manager nameText, GET_EMPNAME(i.ins_manager) insManager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null and f.fac_name like '%' || #{facName} || '%'
          <if test="startDate != '' and stopDate != '' ">	    	    	    

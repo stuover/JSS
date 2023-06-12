@@ -356,6 +356,7 @@
 						{
 							header : 'No.',
 							name : 'detailsIndex',
+							width : 300,
 							sortingType : 'desc',
 							width: 20,
 							sortable : true
@@ -476,12 +477,12 @@
 				modalGrid.finishEditing();
 
 				let commData = detaGrid.getRow(0); // 공통코드 상세정보
-				let data =  modalGrid.getData();m // 공통코드 안 세부코드 정보
+				let data =  modalGrid.getData(); // 공통코드 안 세부코드 정보
 				
 				// 아무것도 입력하지 않은, row 제거
 				data.forEach(function(i, index){
 					if(modalGrid.getRow(index).detaCode == null || modalGrid.getRow(index).detaName ==null 
-					|| modalGrid.getRow(index).detaCode == '' || odalGrid.getRow(index).detaName == '' ){
+					|| modalGrid.getRow(index).detaCode == '' || modalGrid.getRow(index).detaName == '' ){
 						modalGrid.removeRow(index) 
 					}
 				})

@@ -22,6 +22,9 @@
   #searchForm {
     margin-right: 10px;
   }
+  input{
+  	text-align: center;
+  }
 
     </style>
 </head>
@@ -52,10 +55,7 @@
                             <div class="modal-dialog modal-lg modal-dialog-centered" role="document"
                                 style="width:1500px">
                                 <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                    <div class="modal-header">                                        
                                     </div>
                                     <div class="modal-body">
                                         <!-- fac 모달그리드 시작 -->
@@ -126,8 +126,7 @@
                     },
                     {
                         header: '설비 비가동사유',
-                        name: 'downReason',
-                        sortable: true
+                        name: 'downReason'
                     },
                     {
                         header: '관리자',
@@ -135,7 +134,8 @@
                     },
                     {
                         header: '비고',
-                        name: 'remark'
+                        name: 'remark',
+                        whiteSpace: 'pre-wrap'
                     }
                 ]
             });

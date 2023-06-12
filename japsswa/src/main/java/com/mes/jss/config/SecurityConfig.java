@@ -38,7 +38,7 @@ public class SecurityConfig {
 			     .formLogin(login-> login.loginPage("/login")
 			    		 							.usernameParameter("empNo")
 			    		 							.successHandler(successHandler()))			     									
-			     .logout(logout-> logout.logoutUrl("/logout").logoutSuccessUrl("/top"))
+			     .logout(logout-> logout.logoutUrl("/logout").logoutSuccessUrl("/login"))
 				 // .csrf().disable()
 				 ;
 			
