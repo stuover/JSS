@@ -59,7 +59,7 @@
 	</update>
 	
 	<insert id="insertDetails" parameterType ="CommVO">
-		insert into details_comm values(upper(#{detaCode}), #{detaName}, #{detaNote}, to_date(sysdate, 'rrrr/MM/dd'), to_date(sysdate, 'rrrr/MM/dd'), #{commCode}, to_char(sysdate, 'yyMMdd') || details_comm_seq.nextval)	
+		insert into details_comm values(upper(#{detaCode}), #{detaName}, #{detaNote}, to_date(sysdate, 'rrrr/MM/dd'), to_date(sysdate, 'rrrr/MM/dd'), #{commCode}, 'DET' ||to_char(sysdate, 'yyMMdd') || details_comm_seq.nextval)	
 	</insert>
 	
 	<delete id="deleteDetails" >
