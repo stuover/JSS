@@ -216,6 +216,10 @@ public interface MaterialService {
 	public List<MrAdjustmentVO> mrLotSearch(MrAdjustmentVO vo);
 	
 	
+	// 자재 조정 출고 입고량 가져오기
+	public List<MrAdjustmentVO> admInRel(MrAdjustmentVO vo);
+	
+	
 	
 	
 	

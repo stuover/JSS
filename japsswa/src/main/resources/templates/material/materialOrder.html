@@ -470,6 +470,14 @@
   
 				$('#insertBtn').on('click',function(){
 					
+					
+					alert('등록성공');
+					
+					if($('#proPrice').val()==0){
+						alert('등록실패');
+					}
+					else if()
+					
 					let order = {
 							customerId : $('#cusId').val(),
 							customerName : $('#cusName').val(),

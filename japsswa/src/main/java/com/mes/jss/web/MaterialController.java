@@ -580,6 +580,17 @@ public class MaterialController {
 		return list;
 		
 	}
+
+ // 자재 조정 하기위해 출고, 입고 버튼 클릭하기 위해 입고 수량, 출고 수량 가져오기
+	
+	@ResponseBody
+	@RequestMapping("/mrAdmInRel")
+	public List<MrAdjustmentVO> admInRel(@RequestBody MrAdjustmentVO vo){
+		
+		List<MrAdjustmentVO> list = materialService.admInRel(vo);
+		
+		return list;
+	}
 	
  // 자재 lot별 조정 조회
 	

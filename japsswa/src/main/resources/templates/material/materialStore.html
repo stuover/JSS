@@ -5,201 +5,205 @@
 	layout:decorate="~{layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 
 
 <style>
-
 .modal fade bd-example-modal-lg {
-
-	width:800px;
-	margin:auto;
-	role:"document"
+	width: 800px;
+	margin: auto;
+	role: "document"
 }
 
 .tui-grid-cell-content {
-            text-align: center;
-        }
-
+	text-align: center;
+}
 </style>
 
 </head>
 <body>
 
 	<th:block layout:fragment="content">
-	
-	<div class="container-fluid page-body-wrapper">
- 			<div class="col-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-	
-	
-	<h3 style="font-weight:semi-bold; margin-top:10px; text-align:center; margin-right:40px;">&emsp;자재 입고</h3>
-	
-	<input class="text1" type="hidden" id="empNo" name="empNo" th:value="${#authentication.principal.username}"  readonly>  
-	
-	
-<!-- 제목 -->
 
-	<div class="p-2 row">
-				  <div class="col-sm-12">
-				    <div class="card">
-				      <div class="card-body">
-
- <h5 class="page-title">품질 통과한 자재</h5>
-	
-		
-
-		<form action="/test" method="post">
-		<div>
-		
-<!-- 입고 버튼 -->
-			
-			<button type="button" id="storeBtn" class="btn btn-primary"
-				data-bs-toggle="modal" data-bs-target="#searchModal"
-				style="float: right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:25px;">입고</button>
-				<input type="hidden" value="" id="sotre" name="testCode">
-				
-				
-<!-- 입고 확인 및 삭제 -->
-				
-			<button type="button" id="checkBtn" class="btn btn-dark"
-				data-bs-toggle="modal" data-bs-target="#store"
-				
-				style="float: right; height: 30px; width: 150px; padding: 3px; margin-bottom: 10px; margin-right: 8px; margin-top:25px;">입고확인 및 삭제</button>
-
-		</div>
-		</form>
+		<div class="container-fluid page-body-wrapper">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
 
 
-		<!-- Large modal -->
+						<h3
+							style="font-weight: semi-bold; margin-top: 10px; text-align: center; margin-right: 40px;">&emsp;자재
+							입고</h3>
 
-<!-- 입고 조회 모달 -->
-
-		<div class="modal fade bd-example-modal-lg" id="store" tabindex="-1"
-			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  >
-			
-			
-
-			<div class="modal-dialog modal-lg"  >
-
-				<div class="modal-content" >
-					<div class="modal-header" >
-						<h4 class="modal-title" id="exampleModalLabel"
-							style="font-weight: semi-bold; margin-left: 280px; margin-bottom:20px;">입고 처리 확인 및 취소</h4>
-<!-- 닫기 버튼 -->
-
-						<button type="button" id="closeBtn2" class="close" data-bs-dismiss="modal"
-							aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-
-					</div>
-					
-<!-- 검색 인풋-->	
-<div style="margin-bottom:20px;">		
-		<form id="searchChecked" action="#" >
-  <label for="lang" ></label>
-  <select name="storeReasonType" id="storeReasonType" style="margin-left:100px;">
-  <option value="">--입고구분--</option>
-    <option value="발주">발주</option>
-    <option value="생산">생산</option>
-    <option value="조정">조정</option>
-   
-  </select>
-  
+						<input class="text1" type="hidden" id="empNo" name="empNo"
+							th:value="${#authentication.principal.username}" readonly>
 
 
-	
-  <label for="lang"></label>
-  <select name="material" id="material" style="margin-left:20px;margin-right:10px;">
-   <option value="">--자재구분--</option>
-    <option value="MAT">자재</option>
-    <option value="SAM">반제품</option>
-   
-  </select>
-  
-  <label for="mrSearch">자재명</label>
-  <input type="text" id="mrSearch">
-  
-  <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:20px; padding:4px;">검색</button>
-  <button type="button" class="btn btn-danger" id="deleteBtn"
-								style="padding: 3px; margin-left: 10px;">취소</button>
-</form>
-</div>
-	
-					<div>
-						
-<!--  삭제 버튼 -->
-								
-							
-									
-						
-					</div>
-					
-<!-- 입고 조회 리스트 -->	
-				
-					<div id="modalgrid"></div>
-					<div>
-						
+						<!-- 제목 -->
+
+						<div class="p-2 row">
+							<div class="col-sm-12">
+								<div class="card">
+									<div class="card-body">
+
+										<h5 class="page-title">품질 통과한 자재</h5>
+
+
+
+										<form action="/test" method="post">
+											<div>
+
+												<!-- 입고 버튼 -->
+
+												<button type="button" id="storeBtn" class="btn btn-primary"
+													data-bs-toggle="modal" data-bs-target="#searchModal"
+													style="float: right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top: 25px;">입고</button>
+												<input type="hidden" value="" id="sotre" name="testCode">
+
+
+												<!-- 입고 확인 및 삭제 -->
+
+												<button type="button" id="checkBtn" class="btn btn-dark"
+													data-bs-toggle="modal" data-bs-target="#store"
+													style="float: right; height: 30px; width: 150px; padding: 3px; margin-bottom: 10px; margin-right: 8px; margin-top: 25px;">입고확인
+													및 삭제</button>
+
+											</div>
+										</form>
+
+
+										<!-- Large modal -->
+
+										<!-- 입고 조회 모달 -->
+
+										<div class="modal fade bd-example-modal-lg" id="store"
+											tabindex="-1" role="dialog"
+											aria-labelledby="myLargeModalLabel" aria-hidden="true">
+
+
+
+											<div class="modal-dialog modal-lg">
+
+												<div class="modal-content">
+													<div class="modal-header">
+														<h4 class="modal-title" id="exampleModalLabel"
+															style="font-weight: semi-bold; margin-left: 280px; margin-bottom: 20px;">입고
+															처리 확인 및 취소</h4>
+														<!-- 닫기 버튼 -->
+
+														<button type="button" id="closeBtn2" class="close"
+															data-bs-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+
+													</div>
+
+													<!-- 검색 인풋-->
+													<div style="margin-bottom: 20px;">
+														<form id="searchChecked" action="#">
+															<label for="lang"></label> <select
+																name="storeReasonType" id="storeReasonType"
+																style="margin-left: 100px;">
+																<option value="">--입고구분--</option>
+																<option value="발주">발주</option>
+																<option value="생산">생산</option>
+																<option value="조정">조정</option>
+
+															</select> <label for="lang"></label> <select name="material"
+																id="material"
+																style="margin-left: 20px; margin-right: 10px;">
+																<option value="">--자재구분--</option>
+																<option value="MAT">자재</option>
+																<option value="SAM">반제품</option>
+
+															</select> <label for="mrSearch">자재명</label> <input type="text"
+																id="mrSearch">
+
+															<button type="button" id="searchQuery"
+																class="btn btn-dark"
+																style="margin-left: 20px; padding: 4px;">검색</button>
+															<button type="button" class="btn btn-danger"
+																id="deleteBtn" style="padding: 3px; margin-left: 10px;">취소</button>
+														</form>
+													</div>
+
+													<div>
+
+														<!--  삭제 버튼 -->
+
+
+
+
+													</div>
+
+													<!-- 입고 조회 리스트 -->
+
+													<div id="modalgrid"></div>
+													<div></div>
+												</div>
+
+											</div>
+										</div>
+
+										<!-- 품질 검사 완료 창-->
+
+										<div id="grid"></div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- 제목 -->
+
+						<div class="p-2 row">
+							<div class="col-sm-12">
+								<div class="card">
+									<div class="card-body">
+
+
+
+
+										<h5 class="page-title">반제품 입고</h5>
+										<div>
+
+											<!--  반제품 입고 버튼-->
+
+											<button type="button" id="halfBtn" class="btn btn-primary "
+												style="float: right; height: 30px; width: 50px; padding: 3px; margin-top: 30px; margin-right: 20px; margin-bottom: 10px; color: white;">입고</button>
+
+										</div>
+
+										<!-- 생산 실적 리스트 -->
+
+										<div id="grid2" style=""></div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
 					</div>
 				</div>
-
 			</div>
 		</div>
 
-<!-- 품질 검사 완료 창-->
 
-		<div id="grid"></div>
-		
-		</div>
-		</div>
-		</div>
-		</div>
-		
 
-<!-- 제목 -->
-		
-		<div class="p-2 row">
-					<div class="col-sm-12">
-					 <div class="card">
-					  <div class="card-body">
-		
-		
-		
-		
-		 <h5 class="page-title">반제품 입고</h5>
-		<div>
-		
-<!--  반제품 입고 버튼-->
-		
-		<button type="button" id="halfBtn" class="btn btn-primary " style="float: right; height: 30px; width: 50px; padding: 3px; margin-top:30px; margin-right: 20px; margin-bottom: 10px; color:white;">입고</button>
-		
-		</div>
-
-<!-- 생산 실적 리스트 -->
-		
-		<div id="grid2" style=""></div>
-		
-		</div>
-		</div>
-		</div>
-		</div>
-		
-		
-		
-		</div>
-		</div>
-		</div>
-		</div>
-
-	
-	
 
 		<script>
 		
-		
+		const swalWithBootstrapButtons = Swal.mixin({
+			  customClass: {
+			    confirmButton: 'm-2 btn btn-success ',
+			    cancelButton: 'm-2 btn btn-danger'
+			  },
+			  buttonsStyling: false
+		})
 		
 		$(document).ready(function() {
 			
@@ -222,6 +226,16 @@
 						xhr.setRequestHeader(header, token);
 					},
 					success : function(result) {
+						
+						
+						
+						
+						swal.fire({
+							  icon: 'success',
+							  title: '입고 성공'
+						
+							 
+							})		
 					},
 					error : function(reject){
 						console.log(reject);
@@ -566,6 +580,12 @@
 					dataType : "json",
 
 					success : function(result) {
+						
+						Swal.fire({
+							  icon: 'error',
+							  title: '삭제 성공'
+							  
+							})
 						grid.resetData(result);
 						setTimeout(()=> grid.refreshLayout(),100);
 						
@@ -672,6 +692,12 @@
 			},
 			success : function(result){
 				
+				swal.fire({
+					  icon: 'success',
+					  title: '입고 성공'
+				
+					 
+					})		
 			},
 			error : function(reject){
 				console.log(reject);

@@ -471,7 +471,7 @@
   			i.item_name
  			from material m 
  			right outer join performance p on(m.store_reason_code = p.performance_id) join itemlist i on(p.item_code=i.item_code)
- 			where m.store_reason_code is null and i.item_type ='SAM'
+ 			where m.store_reason_code is null and i.item_type ='SAM' and p.end_time is not null and p.output != p.fail_item
  
   			
   		
@@ -756,7 +756,6 @@
   			select a.adjustment_code,m.mr_lot_number,i.item_code,GET_CODENAME(i.item_type) item_type,i.item_name,a.register_date, a.process,a.change,a.adjustment_date,a.emp_no,
   			a.adm_note
   			from material_adjustment a join material m on(a.mr_lot_number = m.mr_lot_number) join itemlist i on (m.item_code = i.item_code) 
-  			where to_char(a.register_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
   			order by a.register_date desc
   		</select>
   		
@@ -838,6 +837,16 @@
   			)
   			}
   		</select>
+  	
+  	<!-- 입고, 출고량 가져오기 -->
+  		<select id="mrAdmInRel" resultType="MrAdjustmentVO">
+  			
+  			select m.store_count,r.real_count
+  			from material m join material_release r on (m.mr_lot_number = r.mr_lot_number)
+  		
+  		</select>
+  	
+  	
   	
   	<!-- 조정 직접 등록 -->
   		<select id="realIn" statementType="CALLABLE">

@@ -4,25 +4,17 @@
 	layout:decorate="~{layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta name="_csrf" th:content="${_csrf.token}"/>
-<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-<script src="/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <link rel="stylesheet" href="/plugins/sweetalert2/sweetalert2.min.css" />
-
-
-    
 
 
 <style>
-#grid2 .redcolor{
-	background-color:#ffe4e4;
+#grid2 .redcolor {
+	background-color: #ffe4e4;
 }
 
 .tui-grid-cell-content {
-            text-align: center;
-        }
-
+	text-align: center;
+}
 </style>
 
 </head>
@@ -30,236 +22,266 @@
 
 
 
-<th:block layout:fragment="content">
-	
-	<!-- Large modal -->
+	<th:block layout:fragment="content">
+
+		<!-- Large modal -->
 
 
-<div class="modal fade bd-example-modal-lg" id="modal3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-    <div class="modal-header">
-  		    <h4 style="margin-left:270px; font-weight:semi-bold; margin-top:10px;"> 자재 조정 조회 및 취소</h4>
-  		    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-  		    
-  		    
-  		    </div>
-  		    <div>
-  		    
-  		    
-  		    
-  		    </div>
-  		    
-  		   <div class="modal-body">
-  <div>		       
-	  <label for="lang" ></label>
-	  <select name="process" id="process" style="margin-left:260px; margin-bottom:20px;">
-	  <option value="">--조정구분--</option>
-	    <option value="등록">등록</option>
-	    <option value="입고">입고</option>
-	    <option value="출고">출고</option>
-   
-  </select>
-  
-	   
+		<div class="modal fade bd-example-modal-lg" id="modal3" tabindex="-1"
+			role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4
+							style="margin-left: 270px; font-weight: semi-bold; margin-top: 10px;">
+							자재 조정 조회 및 취소</h4>
+						<button type="button" class="close" data-bs-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 
 
-	
-	  <label for="lang"></label>
-	  <select name="itemType" id="itemType" style="margin-left:30px; margin-bottom:20px;">
-	   <option value="">--자재구분--</option>
-	    <option value="MAT">자재</option>
-	    <option value="SAM">반제품</option>
-	   
-	  </select>
-  </div>
-  
-  <div>
-	  <label for="adjustmentDate" style="margin-left:180px; margin-bottom:20px;">조정일 :</label>
-	  <input type="date" style="margin-left:20px; margin-bottom:20px;" id="mrAdDate1" name="mrAdDate1">&emsp;~
-	  <input type="date" style="margin-bottom:20px;" id="mrAdDate2" name="mrAdDate2">
-	  </div>
-  
-<div>  
-  <label for="mrSearch" style="margin-left:180px; margin-bottom:20px;">자재명 :</label>
-  <input type="text" id="mrSearch" style="margin-left:20px; margin-bottom:20px; width:300px;">
- </div>
+					</div>
+					<div></div>
 
-	
-    <button type="button" id="searchQuery" class="btn btn-dark" style="margin-left:360px; margin-bottom:20px; ">검색</button>
-  		   
-  		   
-  		    
-  		   	<div id="grid7"></div>
-  		   	</div>
-  		   	 <div class="modal-footer">
-  		   <button type="button" id="adDelBtn" class="btn btn-danger" style="float:right; margin-right:10px;">취소</button>
-  		   	 </div>
-    </div>
-  </div>
-</div>
-	
-	
-	<div class="container-fluid page-body-wrapper">
- 			<div class="col-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-	
-	
-	<h3 style="font-weight:semi-bold; text-align:center; margin-bottom:20px;">자재 조정 관리</h3>
-	
-	
-<div class="p-2 row">
-				  <div class="col-sm-12">
-				    <div class="card">
-				      <div class="card-body">	
-	
-	<h5 class="page-title">데이터 누락 및 오입력</h5>
-	
-	<!-- 제목 -->
-	
-	
-	
-	<div>
-	
-	<!-- 조정 등록 버튼 -->
-	
-	<button type="button" class="btn btn-primary" id="insertBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top:10px;">등록</button>
-	
-	
-	</div>
-	
-	<!-- 조정 될 리스트 -->	
-	
-	<div id="grid1"></div>
-	
-	</div>
-	</div>
-	</div>
-	</div>
-	
-	
-	<div class="p-2 row">
-				  <div class="col-sm-12">
-				    <div class="card">
-				      <div class="card-body">
-	
-	
-	<h5 class="page-title">조정 리스트 및 등록</h5>
-	    
-	<div style="height:20px; margin-bottom:100px;">
-	<h6 class="page-title" style="margin-top:100px; float:left;margin-left:40px; margin-bottom:0px;">직접 등록 전용 버튼</h6>
-	
-	</div>
-	
-	    
-	
-	
-	
-	
-	<div>
-	
-	<!-- 출고 버튼 -->
-	
-	<button type="button" class="btn btn-primary" id="relBtn" style="float:right; height: 30px; width: 50px; padding:3px; margin-right: 20px; margin-top:30px; margin-bottom:10px; color:white">출고</button>
-	
-	<!-- 입고 버튼 -->
-	
-	<button type="button" class="btn btn-primary" id="storeBtn" style="float:right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top:30px; margin-bottom:10px;">입고</button>
-	
-	
-		
-			
-	
-	
-	<button type="button" class="btn btn-dark"  id="searchBtn" data-bs-toggle="modal" data-bs-target="#exampleModal" style="float:left; margin-top:30px; margin-bottom:10px; padding:3px; margin-left:20px;">찾기</button>
-	
-	<button type="button" class="btn btn-primary" id="realBtn" style="float:left; margin-top:30px; padding:3px; color:white; height:30px;  margin-bottom:10px; margin-left:10px;">직접 등록</button>
-	
-	<button type="button" class="btn btn-danger" id="gridDeleteBtn" style="float:left; margin-top:30px; padding:3px; color:white; height:30px;  margin-bottom:10px; margin-left:10px;">삭제</button>
-	
-	<button type="button" class="btn btn-success" id="changeBtn" style="float:left; margin-top:30px; padding:3px; margin-bottom:10px; margin-left:10px;">수량 변경</button>
-	
-	   
-	  
-	<p><span class="text-danger" style="float:right; margin-top:30px; margin-right:20px; font-weight:bold;"> ■ 데이터 오입력은 [입고,출고] 버튼을 통해 수정하시기 바랍니다.</span></p>
-	</div>
-	
-	<!--  조정 리스트  -->
-	
-	<div id="grid2" ></div>
-	<button type="button" class="btn btn-dark" id="searchDelBtn" data-bs-toggle="modal" data-bs-target="#modal3" style="float:right;  margin-top:5px; height: 30px; padding: 3px; padding-bottom:4px; color:white; margin-right:20px;">조정 확인 및 삭제</button>
-		
-	
+					<div class="modal-body">
+						<div>
+							<label for="lang"></label> <select name="process" id="process"
+								style="margin-left: 260px; margin-bottom: 20px;">
+								<option value="">--조정구분--</option>
+								<option value="등록">등록</option>
+								<option value="입고">입고</option>
+								<option value="출고">출고</option>
 
-  
+							</select> <label for="lang"></label> <select name="itemType" id="itemType"
+								style="margin-left: 30px; margin-bottom: 20px;">
+								<option value="">--자재구분--</option>
+								<option value="MAT">자재</option>
+								<option value="SAM">반제품</option>
+
+							</select>
+						</div>
+
+						<div>
+							<label for="adjustmentDate"
+								style="margin-left: 180px; margin-bottom: 20px;">조정일 :</label> <input
+								type="date" style="margin-left: 20px; margin-bottom: 20px;"
+								id="mrAdDate1" name="mrAdDate1">&emsp;~ <input
+								type="date" style="margin-bottom: 20px;" id="mrAdDate2"
+								name="mrAdDate2">
+						</div>
+
+						<div>
+							<label for="mrSearch"
+								style="margin-left: 180px; margin-bottom: 20px;">자재명 :</label> <input
+								type="text" id="mrSearch"
+								style="margin-left: 20px; margin-bottom: 20px; width: 300px;">
+						</div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel" style="margin-left:200px; font-weight:semi-bold;">lot별 조회</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      
-      <div class="modal-body">
-      		<label for="lang"></label>
-  <select name="mrLot" id="mrLot" style="margin-left:50px;margin-right:10px;" >
-   <option value="all">--전체--</option>
-    <option value="LOT">lot번호</option>
-    <option value="MAT">자재</option>
-  		</select>
-		<input type="text" id="itemName" Name="itemName" style="height:25px;">
-		<button type="button" id="mrLotSearch2" class="btn btn-dark" style="margin-left:15px; padding:3px;">검색</button>
-		
-       <div id="grid5" style="margin-top:10px;"></div>
-      </div>
-      
-      <div class="modal-footer">
-      	<button type="button" class="btn btn-secondary" id="chooseBtn" style="margin-right:210px;">등록</button>
- 
-        
-      </div>
-    </div>
-  </div>
-</div>	
-		
+						<button type="button" id="searchQuery" class="btn btn-dark"
+							style="margin-left: 360px; margin-bottom: 20px;">검색</button>
+
+
+
+						<div id="grid7"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="adDelBtn" class="btn btn-danger"
+							style="float: right; margin-right: 10px;">취소</button>
+					</div>
+				</div>
+			</div>
 		</div>
+
+
+		<div class="container-fluid page-body-wrapper">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+
+
+						<h3
+							style="font-weight: semi-bold; text-align: center; margin-bottom: 20px;">자재
+							조정 관리</h3>
+
+
+						<div class="p-2 row">
+							<div class="col-sm-12">
+								<div class="card">
+									<div class="card-body">
+
+										<h5 class="page-title">데이터 누락 및 오입력</h5>
+
+										<!-- 제목 -->
+
+
+
+										<div>
+
+											<!-- 조정 등록 버튼 -->
+
+											<button type="button" class="btn btn-primary" id="insertBtn"
+												style="float: right; height: 30px; width: 50px; padding: 3px; margin-bottom: 10px; margin-right: 20px; margin-top: 10px;">등록</button>
+
+
+										</div>
+
+										<!-- 조정 될 리스트 -->
+
+										<div id="grid1"></div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="p-2 row">
+							<div class="col-sm-12">
+								<div class="card">
+									<div class="card-body">
+
+
+										<h5 class="page-title">조정 리스트 및 등록</h5>
+
+										<div style="height: 20px; margin-bottom: 100px;">
+											<h6 class="page-title"
+												style="margin-top: 100px; float: left; margin-left: 40px; margin-bottom: 0px;">직접
+												등록 전용 버튼</h6>
+
+										</div>
+
+
+
+
+
+
+										<div>
+
+											<!-- 출고 버튼 -->
+
+											<button type="button" class="btn btn-primary" id="relBtn"
+												style="float: right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top: 30px; margin-bottom: 10px; color: white">출고</button>
+
+											<!-- 입고 버튼 -->
+
+											<button type="button" class="btn btn-primary" id="storeBtn"
+												style="float: right; height: 30px; width: 50px; padding: 3px; margin-right: 20px; margin-top: 30px; margin-bottom: 10px;">입고</button>
+
+
+
+
+
+
+											<button type="button" class="btn btn-dark" id="searchBtn"
+												data-bs-toggle="modal" data-bs-target="#exampleModal"
+												style="float: left; margin-top: 30px; margin-bottom: 10px; padding: 3px; margin-left: 20px;">찾기</button>
+
+											<button type="button" class="btn btn-primary" id="realBtn"
+												style="float: left; margin-top: 30px; padding: 3px; color: white; height: 30px; margin-bottom: 10px; margin-left: 10px;">직접
+												등록</button>
+
+											<button type="button" class="btn btn-danger"
+												id="gridDeleteBtn"
+												style="float: left; margin-top: 30px; padding: 3px; color: white; height: 30px; margin-bottom: 10px; margin-left: 10px;">삭제</button>
+
+											<button type="button" class="btn btn-success" id="changeBtn"
+												style="float: left; margin-top: 30px; padding: 3px; margin-bottom: 10px; margin-left: 10px;">수량
+												변경</button>
+
+
+
+											<p>
+												<span class="text-danger"
+													style="float: right; margin-top: 30px; margin-right: 20px; font-weight: bold;">
+													■ 데이터 오입력은 [입고,출고] 버튼을 통해 수정하시기 바랍니다.</span>
+											</p>
+										</div>
+
+										<!--  조정 리스트  -->
+
+										<div id="grid2"></div>
+										<button type="button" class="btn btn-dark" id="searchDelBtn"
+											data-bs-toggle="modal" data-bs-target="#modal3"
+											style="float: right; margin-top: 5px; height: 30px; padding: 3px; padding-bottom: 4px; color: white; margin-right: 20px;">조정
+											확인 및 삭제</button>
+
+
+
+
+
+
+										<!-- Modal -->
+										<div class="modal fade" id="exampleModal" tabindex="-1"
+											role="dialog" aria-labelledby="exampleModalLabel"
+											aria-hidden="true">
+											<div class="modal-dialog" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLabel"
+															style="margin-left: 200px; font-weight: semi-bold;">lot별
+															조회</h5>
+														<button type="button" class="close"
+															data-bs-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+
+													<div class="modal-body">
+														<label for="lang"></label> <select name="mrLot" id="mrLot"
+															style="margin-left: 50px; margin-right: 10px;">
+															<option value="all">--전체--</option>
+															<option value="LOT">lot번호</option>
+															<option value="MAT">자재</option>
+														</select> <input type="text" id="itemName" Name="itemName"
+															style="height: 25px;">
+														<button type="button" id="mrLotSearch2"
+															class="btn btn-dark"
+															style="margin-left: 15px; padding: 3px;">검색</button>
+
+														<div id="grid5" style="margin-top: 10px;"></div>
+													</div>
+
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary"
+															id="chooseBtn" style="margin-right: 210px;">등록</button>
+
+
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+			</div>
 		</div>
-		</div>
-		</div>
-		
-		
-		</div>
-		</div>
-		</div>
-		</div>
-		
-		
-		
-	
-	<script>
+
+
+
+
+		<script>
 	
 	 
-	
+	const swalWithBootstrapButtons = Swal.mixin({
+		  customClass: {
+		    confirmButton: 'm-2 btn btn-success ',
+		    cancelButton: 'm-2 btn btn-danger'
+		  },
+		  buttonsStyling: false
+	})
 	
 	
 	$(document).ready(function(){
 		
 		
-		const Toast = Swal.mixin({
-	         toast: true,
-	         position: "top-end",
-	         timer: 1500,
-	         customClass: { container: "swalAlert" },
-	         showConfirmButton: false,
-	       });
 		
 		
 		
@@ -537,6 +559,19 @@
 					hidden:true
 					
 					
+				},
+				{
+					header : '입고수량',
+					name : 'storeCount',
+					hidden:true
+					
+					
+				},{
+					header : '출고수량',
+					name : 'totalRel',
+					hidden:true
+					
+					
 				}
 				],
 				pageOptions: { 
@@ -636,7 +671,7 @@
 					},
 					success: function(result){
 						
-						Toast.fire({
+						Swal.fire({
 			                icon: "success", //success, error, warning, info, question
 			                title: "성공적으로 등록되었습니다.",
 			                width: 400,
@@ -792,13 +827,7 @@
 					
 					
 					
-					Toast.fire({
-		                icon: "success", //success, error, warning, info, question
-		                title: "성공적으로 등록되었습니다.",
-		                width: 400,
-		                
-		                
-		              });
+					
 					grid2.resetData(result);
 					setTimeout(()=> grid2.refreshLayout(),10);
 					
@@ -819,11 +848,28 @@
 	
 			
 			
-	// 입고 
-	
+	 
 		$('#storeBtn').on('click',function(){
 			
-			console.log(grid1.getCheckedRows()[0].error);
+			let result11 = grid2.getCheckedRows()[0].mrLotNumber;
+			
+			
+			$.ajax({
+				url:"/mrAdmInRel",
+				method:"POST",
+				contentType:"application/json",
+				data:result11,
+				success: function(result){
+					console.log(result.storeCount);
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+				
+			}) 
+			
+			
+			
 			
 			$.ajax({
 				url:"/mrAdmIn",
@@ -834,6 +880,16 @@
 					xhr.setRequestHeader(header, token);
 				},
 				success: function(result){
+						
+					
+					
+					Swal.fire({
+						  icon: 'success',
+						  title: '성공',
+						  text: '입고 성공하였습니다.',
+						 
+						})					
+					
 					
 					   $.ajax({
 							url : "/mrAdjustmentAjax",
@@ -846,7 +902,8 @@
 							console.log(grid2.getData());	
 								
 			 	grid2.getData().forEach((ele, index)=>{
-									
+			 		
+					
 							
 									
 										if(ele.admNote =='error') {
@@ -869,6 +926,7 @@
 							},
 							error:function(reject){
 								console.log(reject);
+							
 							
 							}
 
@@ -933,6 +991,13 @@
 							},
 							error:function(reject){
 								console.log(reject);
+								
+								Swal.fire({
+									  icon: 'error',
+									  title: 'Oops...',
+									  text: 'Something went wrong!',
+									  footer: '<a href="">Why do I have this issue?</a>'
+									})
 							
 							}
 
@@ -1088,13 +1153,7 @@
 						
 						
 						
-						Toast.fire({
-			                icon: "success", //success, error, warning, info, question
-			                title: "성공적으로 취소되었습니다.",
-			                width: 400,
-			                
-			                
-			              });
+					
 						
 					
 						
@@ -1223,7 +1282,7 @@
 		</script>
 
 
-</th:block>
+	</th:block>
 
 
 </body>

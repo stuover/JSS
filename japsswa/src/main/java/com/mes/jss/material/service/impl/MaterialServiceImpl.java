@@ -491,6 +491,12 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.mrAdmLot(vo);
 	}
 
+	@Override
+	public List<MrAdjustmentVO> admInRel(MrAdjustmentVO vo) {
+		
+		return materialMapper.mrAdmInRel(vo.getMrLotNumber());
+	}
+
 	
 	
 	
