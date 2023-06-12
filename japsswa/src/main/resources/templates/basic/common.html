@@ -94,7 +94,7 @@
 					rowHeaders : [ {type : 'checkbox', header:" "},{type :'rowNum'} ],
 					pageOptions : {
 						useClient : true,
-						perPage : 10
+						perPage : 14
 					},
 					columns : [ 
 					{
@@ -133,7 +133,8 @@
 						sortable : true
 					} ]
 				});
-				
+				grid.setBodyHeight(568);
+
 				grid.on('check', function (e) {
 	                var checkRows = grid.getCheckedRowKeys();
 	                checkRows.forEach(function( key, idx){                      
@@ -341,7 +342,7 @@
 					} ]
 				});
 	 	
-	  		
+	 		 detaGrid.setBodyHeight(50);
 	  		// 상세 코드 List
 			 var modalGrid = new tui.Grid({
 					el : document.getElementById('modalGrid'),
@@ -406,7 +407,7 @@
 						sortable : true
 					} ]
 			});
-	
+			 modalGrid.setBodyHeight(217);
 
 	 		var commCode = null;
 	 	

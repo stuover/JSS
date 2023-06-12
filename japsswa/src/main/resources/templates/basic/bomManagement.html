@@ -154,13 +154,7 @@
 	
 	var count = 0;  // LEVEL MAX 값에서 부터 카운트
 	
-	const swalWithBootstrapButtons = Swal.mixin({
-		  customClass: {
-		    confirmButton: 'm-2 btn btn-success ',
-		    cancelButton: 'm-2 btn btn-danger'
-		  },
-		  buttonsStyling: false
-	})
+
 // bom 그리드 
 var bomGrid = new tui.Grid({
 	el : document.getElementById('bomGrid'),
@@ -243,6 +237,7 @@ var modalGrid = new tui.Grid({
 	]
 });
 
+modalGrid.setBodyHeight(217);
 
 //아이템 목록 함수
 function itemList(){
@@ -397,6 +392,7 @@ var itemGrid = new tui.Grid({
 	}
 	]
 });
+itemGrid.setBodyHeight(217);
 
 // 품목정보 그리드
 var proGrid = new tui.Grid({
@@ -420,6 +416,7 @@ var proGrid = new tui.Grid({
 	]
 });
 
+proGrid.setBodyHeight(217);
 
 
 // bom 그리드 품목, 공정 정보 불러오기

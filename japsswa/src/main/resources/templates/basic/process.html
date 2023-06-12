@@ -88,7 +88,7 @@ var grid = new tui.Grid({
 	rowHeaders : [ {type : 'checkbox', header:" "},{type :'rowNum'} ],
 	pageOptions : {
 		useClient : true,
-		perPage : 10
+		perPage : 14
 	},
 	columns : [ 
 	{
@@ -115,7 +115,7 @@ var grid = new tui.Grid({
 	}
 	]
 });
-
+grid.setBodyHeight(577);
 grid.on('check', function (e) {
     var checkRows = grid.getCheckedRowKeys();
     checkRows.forEach(function( key, idx){                      
