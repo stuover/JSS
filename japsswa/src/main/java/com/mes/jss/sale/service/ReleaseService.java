@@ -13,6 +13,16 @@ public interface ReleaseService {
 
 	public void itemOut(ReleaseListVO rlist);
 
+	List<ReleaseVO> entRelease();
+
+	List<ReleaseVO> releaseCheck(ReleaseVO rvo);
+
+	List<ReleaseVO> relItemSearch(String itemName);
+
+	List<ReleaseVO> relCustSearch(String customerName);
+
+	List<ReleaseVO> relDetCheck(String fnReleaseId);
+
 
 
 

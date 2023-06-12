@@ -64,6 +64,78 @@
 		}
 	</select>
 	
+	<select id="entRelease" parameterType="ReleaseVO" resultType="ReleaseVO">
+		select distinct r.fn_release_id, 
+		                r.orddetail_id, 
+		                i.item_name, 
+		                r.fn_rel_count, 
+		                d.ord_count, 
+		                e.emp_name, 
+		                r.remain
+		from release r join orddetail d on(r.orddetail_id = r.orddetail_id)
+		               join itemlist i on(d.item_code = i.item_code)
+		               join emp e on(r.emp_no = e.emp_no)
+		where d.orddet_status = '출고완료' or d.orddet_status = '부분출고'
+	</select>
+	
+	<select id="releaseCheck" parameterType="ReleaseVO" resultType="ReleaseVO">
+		select distinct r.fn_release_id, 
+		                r.orddetail_id, 
+		                i.item_name, 
+		                r.fn_rel_count, 
+		                d.ord_count, 
+		                e.emp_name, 
+		                r.remain
+		from release r join orddetail d on(r.orddetail_id = r.orddetail_id)
+		               join itemlist i on(d.item_code = i.item_code)
+		               join emp e on(r.emp_no = e.emp_no)
+		               join release_detail rd on(r.fn_release_id = rd.fn_release_id )
+		<where>
+			<if test='end == "end"'>
+				and d.orddet_status = '출고완료'
+			</if>
+			<if test='end == "part"'>
+				and d.orddet_status = '부분출고'
+			</if>
+			<if test='itemName != null and itemName != ""'>
+				and i.item_name = #{itemName}
+			</if>
+			<if test='customerName != null and customerName != ""'>
+				and c.customer_name = #{customerName}
+			</if>
+			<if test='sDate != null and sDate != ""'>
+				and rd.rel_date >= #{sDate}
+			</if>
+			<if test='eDate != null and eDate != ""'>
+			<![CDATA[
+				and rd.rel_date <= #{eDate}
+			]]>	
+			</if>
+			and d.orddet_status = '출고완료' or d.orddet_status = '부분출고'
+		</where>
+	</select>
+	
+	<select id="relItemSearch" parameterType="ReleaseVO" resultType="ReleaseVO">
+		select item_code, item_name
+		from itemlist
+		where item_name like '%' || #{itemName} || '%' and item_type = 'FIN'
+	</select>
+	
+	<select id="relCustSearch" parameterType="ReleaseVO" resultType="ReleaseVO">
+		select customer_id, customer_name
+		from customer
+		where customer_name like '%' || #{customerName} || '%' and cust_part = 'SEL'
+	</select>
+	
+	<select id="relDetCheck" parameterType="ReleaseVO" resultType="ReleaseVO">
+		select d.rel_detail_id, 
+			   d.fn_lot_no, 
+			   d.rel_each_count, 
+			   d.rel_date
+		from release_detail d join release r on(d.fn_release_id = r.fn_release_id)
+		where d.fn_release_id = #{fnReleaseId}
+	</select>
+	
 	
 
 
