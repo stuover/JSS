@@ -379,6 +379,36 @@
 			});
 	
 	
+	 // 쿼리 검색
+	 
+	 $('#searchQuery').on('click', function(){
+		 
+		 let result5 = {
+				customerName : $('#customer').val(),
+				itemName : $('#material').val(),
+				mrOrderDate1 :$('#mrOrderDate1').val(),
+				mrOrderDate2 :$('#mrOrderDate2').val()
+		 }
+		 
+		 console.log(result5);
+		 
+		 $.ajax({
+			url:"/ordersQuerySearch",
+			method:"POST",
+			contentType:"application/json",
+			data:JSON.stringify(result5),
+			beforeSend: function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success: function(result){
+				grid1.resetData(result)
+			},
+			error: function(reject){
+				console.log(reject);
+			}
+			 
+		 })
+	 })
 	
 	
 	// 거래처 및 자재 찾기 버튼

@@ -39,4 +39,11 @@ public class MrAdjustmentVO {	// 자재 조정
 	@DateTimeFormat(pattern="YYYY-MM-dd" )
 	Date mrAdDate2;
 	String mrSearch;
+	String mrLot;
+	
+	
+	
+	
+	
+	
 }

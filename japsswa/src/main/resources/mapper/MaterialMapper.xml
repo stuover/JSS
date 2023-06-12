@@ -18,7 +18,7 @@
                      
                   </if>
                   
-                  <if test="storeDate1 != null and storeDate2 != null and storeDate1 != '' and storeDate2 != ''">
+                  <if test="storeDate1 != null and storeDate2 != null ">
                   	 and store_date between #{storeDate1} and #{storeDate2}
                   	 
                   </if>
@@ -47,7 +47,7 @@
                      
                   </if>
                   
-                  <if test="mrRealDate1 != null and mrRealDate2 != null and mrRealDate1 != '' and mrRealDate2 != ''">
+                  <if test="mrRealDate1 != null and mrRealDate2 != null ">
                   	 and MR_REAL_DATE between #{mrRealDate1} and #{mrRealDate2}
                   	 
                   </if>
@@ -76,6 +76,8 @@
    		
     </select>
   		
+  		
+  		
   	<!-- 출고 내역 검색 -->
   	
   	<select id="MrRelQuery" resultType="MrReleaseVO" parameterType="MrReleaseVO">
@@ -85,6 +87,8 @@
  		<include refid="searchRelease"></include> 	
   	
   	</select>	
+  		
+  		
   		
   		
   		
@@ -110,6 +114,8 @@
   		
   		
   		</select>  
+  	
+  	
   	
   	<!-- 자재 멀티 검색 -->
   	
@@ -144,6 +150,8 @@
   	
   	</select>
   		
+  		
+  		
   	<!-- 자재 조회 리스트(총) -->
   	<select id="mrInvenCount" resultType="MrVO">
   	
@@ -157,6 +165,7 @@
   		 group by item_code, item_name, item_type, save_material
   		 
   	</select>
+  	
   	
   	<!-- 반제품 조회 리스트 -->
   	<select id="halfInven" resultType="MrVO">
@@ -219,10 +228,38 @@
   	     sum(m.store_count) as total 
         from customer c join contract co on(c.CUSTOMER_ID = co.CUSTOMER_ID) join itemlist i 
           on(co.item_code = i.item_code)
-  		  join material m on(i.item_code = m.item_code) 
+  		  join material m on(i.item_code = m.item_code)
+  		   		 
   		 group by c.customer_id, c.customer_name, i.item_price, i.item_code, i.item_name, i.item_type, i.save_material
+  		 having i.save_material > sum(m.store_count)
   		
   		</select>
+  	
+  	
+  	<!-- 안전 재고 검색 -->	
+  	
+  		<select id="codeList" parameterType="MrVO" resultType="MrVO">
+  			
+  			select i.item_code, 
+  	   i.item_name, 
+       c.customer_id,
+       c.customer_name,
+       i.item_price,
+       GET_CODENAME(i.item_type) item_type, 
+       i.save_material, 
+  	     sum(m.store_count) as total 
+        from customer c join contract co on(c.CUSTOMER_ID = co.CUSTOMER_ID) join itemlist i 
+          on(co.item_code = i.item_code)
+  		  join material m on(i.item_code = m.item_code)
+  		 where i.item_name = #{keyword}  		 
+  		 group by c.customer_id, c.customer_name, i.item_price, i.item_code, i.item_name, i.item_type, i.save_material
+  		 having i.save_material > sum(m.store_count)
+  		
+  		</select>
+  		
+  		
+  		
+  		
   		 
   		 <!-- 자재 lot 재고 -->
   		 <select id="MrLotList" resultType="MrVO">
@@ -273,7 +310,7 @@
    		</sql>
   		
   		
-  		
+  	
   		
   		
   	
@@ -283,7 +320,7 @@
   		select m.mr_lot_number,i.item_code,i.item_name,e.emp_name,substr(to_char(m.store_date,'yy-MM-dd'),3,10),m.store_count,m.expire_date,m.store_reason_type
   		from material m join itemlist i on(m.item_code = i.item_code)
   		join emp e on(m.emp_no = e.emp_no) 
-  		where to_char(store_date,'yyMMdd') = to_char(sysdate,'yyMMdd')
+  		
   		
   		<include refid="searchInsert"></include> 
   			
@@ -432,7 +469,7 @@
   			p.worker
  			from material m 
  			right outer join performance p on(m.store_reason_code = p.performance_id) join itemlist i on(p.item_code=i.item_code)
- 			where m.store_reason_code is null and i.item_type ='반제품'
+ 			where m.store_reason_code is null and i.item_type ='SAM'
  
   			
   		
@@ -532,6 +569,48 @@
   			where c.customer_name = #{result}
   		</select>
   
+  
+  <!-- 발주 조회용 리스트 검색 -->
+  
+  <sql id="orderSearch1">
+  			<where>
+  			 
+  	           q.situation = '검사대기'
+  			<if test=" customerName != null and customerName != ''.toString()">
+                   and customer_name like '%'||#{customerName}||'%'
+                  </if>
+                 
+                  <if test="  mrOrderDate1 != null and mrOrderDate2 != null ">
+                  	 and mr_order_date between #{mrOrderDate1} and #{mrOrderDate2}
+                  	 
+                  </if>
+                  
+  			
+  			
+  			
+  			</where>
+  		
+  		
+  		
+  		</sql>
+  
+  <select id="orderBeforeDelete" parameterType="MrorderVO"  resultType="MrorderVO">
+  
+  select    o.mr_order_date,
+  			o.mr_order_code,
+  			c.customer_id,
+  			c.customer_name,
+  			e.emp_name,
+  			o.product_count,
+  			o.all_count 
+  			from customer c 
+  			join material_order o on(c.customer_id = o.customer_id) 
+  			join emp e on(o.emp_no=e.emp_no)
+  			join material_order_detail d on (o.mr_order_code = d.mr_order_code)
+  			join quality_test q on (d.mr_order_det_code = q.mr_order_det_code)
+            
+            <include refid="orderSearch1"></include>
+  </select>
   	
   <!-- 발주 상세 프로시저-->
   		<select id="orderInsert" statementType="CALLABLE">
@@ -599,9 +678,50 @@
   	
   	</select>
   	
+  	<!-- 발주 내역 검색 -->
+  	
+  	<sql id="ordersSearch1">		
+  	<where>
+  			<if test="customerName != null">
+  				and c.customer_name like '%'||#{customerName}||'%'
+  				
+  			
+  			</if>
+  			
+  			<if test="itemName != null">
+  				and i.item_name like '%'||#{itemName}||'%'
+  			</if>
+  			
+  			<if test="mrOrderDate1 != null and mrOrderDate2 != null">
+  			   
+  			   and o.mr_order_date between #{mrOrderDate1} and #{mrOrderDate2}
+  			
+  			</if>
+  		</where>
+  	
+  	</sql>	
+  	
+  	<select id="ordersSearch" parameterType="MrOrderVO" resultType="MrOrderVO">
+  	    
+  		select o.mr_order_date,
+  			o.mr_order_code,
+  			c.customer_id,
+  			c.customer_name,
+  			e.emp_no,
+  			e.emp_name,
+  			o.product_count,
+  			o.all_count 
+  			from customer c 
+  			join material_order o on(c.customer_id = o.customer_id) 
+  			join emp e on(o.emp_no=e.emp_no)
+  			join material_order_detail m on(o.mr_order_code = m.mr_order_code)
+  			join itemList i on(i.item_code = m.item_code)
+  			
+  			<include refid="ordersSearch1"></include> 
+  		
   	
   	
-  	
+  	</select>
   	
   	
   	<!-- 조정 될 리스트 -->	
@@ -654,11 +774,57 @@
   	<!-- 조정 찾기 리스트 -->
   		<select id="mrAdSearch" resultType="MrAdjustmentVO">
   		
-  			select m.mr_lot_number, i.item_code, i.item_type, i.item_name, m.store_count
+  			select m.mr_lot_number, i.item_code, GET_CODENAME(i.item_type) item_type, i.item_name, m.store_count
 			from material m join itemlist i on (m.item_code=i.item_code)
 			where i.item_type in('MAT','SAM')
   		
+  		
+  		
+  		
   		</select>
+  
+  	
+  	<!-- 조정 lot 검색 -->
+  	
+  		<sql id="lotSearch">
+  		
+  			<where>
+  			   i.item_type in('MAT','SAM')
+  			   <if test="mrLot = 'all'">
+  			   and (m.mr_lot_number like '%'||#{itemName}||'%'
+  			   or i.item_name like '%'||#{itemName}||'%')
+  			   
+  			   
+  			   </if>
+  				<if test="mrLot == 'LOT'">
+  				and m.mr_lot_number like '%'||#{itemName}||'%'
+  				
+  			
+  				</if>
+  			
+	  			<if test="mrLot == 'MAT'">
+	  				and i.item_name like '%'||#{itemName}||'%'
+	  			</if>
+	  			
+	  			
+  			
+  			
+  			
+  			</where>		
+  		
+  		
+  		
+  		</sql>
+  
+  	<select id="mrAdmLot" parameterType="MrAdjustmentVO" resultType="MrAdjustmentVO" >
+  		
+  			select m.mr_lot_number, i.item_code, GET_CODENAME(i.item_type) item_type, i.item_name, m.store_count
+			from material m join itemlist i on (m.item_code=i.item_code)
+			
+			
+			<include refid="lotSearch"></include>
+  	
+  	</select>
   
   
   
@@ -746,7 +912,7 @@
                      
                   </if>
                   
-                  <if test="mrAdDate1 != null and mrAdDate2 != null and mrAdDate1 != '' and mrAdDate2 !=''">
+                  <if test="mrAdDate1 != null and mrAdDate2 != null ">
                   	 and adjustment_date between #{mrAdDate1} and #{mrAdDate2}
                   	 
                   </if>
@@ -785,7 +951,6 @@
   			o.mr_order_code,
   			c.customer_id,
   			c.customer_name,
-  			e.emp_no,
   			e.emp_name,
   			o.product_count,
   			o.all_count 
@@ -799,6 +964,9 @@
   	
   	
   	</select>	
+  		
+  		
+  		
   		
   		
   <!-- 발주 리스트 -->		
@@ -816,6 +984,9 @@
   			join material_order o on(c.customer_id = o.customer_id) 
   			join emp e on(o.emp_no=e.emp_no) 
   		</select>
+  
+  
+  
   
   <!-- 발주 상세 리스트 -->		
   		<select id="OrdGetList" resultType="MrOrderDetailVO">
@@ -840,6 +1011,8 @@
          	where d.mr_order_code = #{keyword}
   		
   		</select>	
+  	
+  	
   	
   	<!-- 반품 품질 리스트 -->
   		<select id="retGetList" resultType="QualityVO">
@@ -866,6 +1039,8 @@
   		
   		</select>
   	
+  	
+  	
   	<!-- 반품 리스트 -->
   		<select id="returnGetList" resultType="MrReturnVO">
   			select r.mr_return_code,r.test_code,r.item_code,r.mr_return_count,r.mr_return_reason,r.mr_return_date,r.emp_no,c.customer_name,i.item_name
@@ -873,6 +1048,8 @@
   		
   		
   		</select>
+  
+  
   	
   	<!-- 반품 등록 -->	
   		<select id="returnInsert" statementType="CALLABLE">
@@ -885,6 +1062,8 @@
   			)
   		}
   		</select>
+  	
+  	
   		
   	<!-- 반품 취소 -->
   		<select id="returnDel" statementType="CALLABLE">
@@ -896,6 +1075,8 @@
   		}
   		
   		</select>	
+  
+  
   
   <!-- 반품 검색 조건 -->		
   		<sql id="returnSearch">

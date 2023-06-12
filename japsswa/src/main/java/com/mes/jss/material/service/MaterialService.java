@@ -206,6 +206,15 @@ public interface MaterialService {
 	// 거래처 자재 검색
 	public List<CustomerVO> cusListQuery(CustomerVO vo);
 	
+	// 발주 조회용 리스트 검색
+	public List<MrOrderVO> orderBeforeQuery(MrOrderVO vo);
+	
+	// 발주 내역 검색
+	public List<MrOrderVO> ordersQuery(MrOrderVO vo);
+	
+	// 자재 조정 lot 검색
+	public List<MrAdjustmentVO> mrLotSearch(MrAdjustmentVO vo);
+	
 	
 	
 	

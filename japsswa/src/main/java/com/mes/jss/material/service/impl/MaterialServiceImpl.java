@@ -469,6 +469,27 @@ public class MaterialServiceImpl implements MaterialService {
 		
 		return materialMapper.cusMrQuery(vo);
 	}
+	
+	//발주 조회용 리스트 검색
+	
+	@Override
+	public List<MrOrderVO> orderBeforeQuery(MrOrderVO vo) {
+		
+		return materialMapper.orderBeforeDelete(vo);
+	}
+	
+	//발주 내역 검색 
+	@Override
+	public List<MrOrderVO> ordersQuery(MrOrderVO vo) {
+		
+		return materialMapper.ordersSearch(vo);
+	}
+
+	@Override
+	public List<MrAdjustmentVO> mrLotSearch(MrAdjustmentVO vo) {
+		
+		return materialMapper.mrAdmLot(vo);
+	}
 
 	
 	

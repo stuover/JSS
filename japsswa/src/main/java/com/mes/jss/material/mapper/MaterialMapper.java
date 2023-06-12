@@ -161,7 +161,7 @@ public interface MaterialMapper {
 	public List<MrOrderDetailVO> MrOrmGetList();
 	
 	// 자재 출고내역 검색 쿼리
-	public List<MrReleaseVO> MrRelQuery(MrReleaseVO vo);
+	public List<MrReleaseVO> MrRelQuery(MrReleaseVO vo); 
 	
 	// 자재 반품내역 검색 쿼리
 	public List<MrReturnVO> MrRetQuery(MrReturnVO vo);
@@ -177,6 +177,15 @@ public interface MaterialMapper {
 	
 	// 거래처 자재 검색
 	public List<CustomerVO> cusMrQuery(CustomerVO vo);
+	
+	// 자재 발주 조회용 리스트
+	public List<MrOrderVO> orderBeforeDelete(MrOrderVO vo);
+	
+	// 자재 발주 내역 검색
+	public List<MrOrderVO> ordersSearch(MrOrderVO vo);
+	
+	// 자재 조정 lot 검색
+	public List<MrAdjustmentVO> mrAdmLot(MrAdjustmentVO vo);
 	
 	
 
