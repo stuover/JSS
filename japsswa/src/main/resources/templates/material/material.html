@@ -201,20 +201,21 @@
 		})
 	
 		
+		// 버튼 클릭 이벤트 
 		$('#multi').on('click',function(){
 			
-			
+		  // 검색 결과 아작스 실행
 			$.ajax({
 				url:"/multi",
 				method:"GET",
-				data:$('#search').serialize(),
+				data:$('#search').serialize(),   //폼안의 인풋 데이터를 모두 호출
 				success: function(result){
-					grid.resetData(result);
-					setTimeout(()=> grid.refreshLayout(),10);
+					grid.resetData(result);     // 그리드에 데이터 반영
+					setTimeout(()=> grid.refreshLayout(),10);  
 					
 	grid.getData().forEach((ele, index)=>{
 						
-				
+				     // 안전재고 보다 재고수가 적을 경우 빨간색 혹은 노란색으로 뜨도록 설정
 						
 						if( Number(ele.total) < Number(ele.saveMaterial)*0.7){
 							grid.addCellClassName(index,'itemType','redcolor');
@@ -231,13 +232,8 @@
 							
 							
 						}
-							
-			
-				
-					})
-					
-					
-					
+				})
+		
 				},
 				error: function(reject){
 					console.log(reject);
