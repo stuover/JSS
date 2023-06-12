@@ -16,6 +16,9 @@
         #insertBtn{
         	float: right;
         }
+        input{
+  	text-align: center;
+  }
     </style>
 
 </head>
@@ -226,7 +229,7 @@
                         facManager: gridData.facManager,
                         nameText : gridData.nameText,
                         facFunction: gridData.facFunction,
-                        text: gridData.text,
+                        text: gridData.text
                         
                     };
 
@@ -360,9 +363,17 @@
                 let objdate = obj.insCycle
                 
                 	
-                if(objdate && objdate.substr(-1) != '일'){                	
-    					alert("점검주기를 (일)로 입력해주세요")            			             			
-                    }else{
+                if(obj.facName == null || obj.facName == ''){
+                	alert("설비명을 입력하세요")
+                }else if(obj.proCode == null){
+                	alert("공정코드와 투입공정을 선택해주세요")
+                }else if(obj.nameText == null){
+                	alert("관리자를 선택해주세요")
+                }else if(obj.text == null){
+                	alert("설비기능을 선택해주세요")
+                }else if(objdate && objdate.substr(-1) != '일'){                	
+					alert("점검주기를 (일)로 입력해주세요")            			             			
+                }else{
                     	$.ajax({
                             url: "/modifyFacility",
                             method: "POST",

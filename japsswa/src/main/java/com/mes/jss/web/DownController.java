@@ -29,6 +29,7 @@ public class DownController {
 	public String  downtime(Model model) {
 						
 		model.addAttribute("downReason", service.getDetailList("dow"));
+		model.addAttribute("employee", service.getEmp("설비"));
 		
 		return "Facility/downtime";
 	}	

@@ -53,16 +53,13 @@
                             <div class="modal-dialog modal-lg modal-dialog-centered" style="width:650px" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">설비 비가동 등록</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <h5 class="modal-title" id="exampleModalLongTitle">설비 비가동 등록</h5>                                        
                                     </div>
                                     <div class="modal-body">
                                         <div id="modalgrid"></div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger"
+                                        <button class="btn btn-danger"
                                             data-dismiss="modal">닫기</button>
                                         <button type="button" id="insertBtn" class="btn btn-primary">저장</button>
                                     </div>
@@ -85,9 +82,7 @@
                                 style="width:1150px">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="downModalTitle">비가동 설비 정보</h5>
-                                        <button type="button" class="close" data-dismiss="downModal" aria-label="Close">
-                                        </button>
+                                        <h5 class="modal-title" id="downModalTitle">비가동 설비 정보</h5>                                        
                                     </div>
                                     <div class="modal-body">
                                         <!-- 모달 그리드 시작 -->
@@ -98,7 +93,7 @@
                                         <button id="modifyBtn" type="button" class="btn btn-success">수정</button>
                                         <button id="deleteBtn" type="button" class="btn btn-danger">삭제</button>
                                         <button id="closeBtn" type="button" class="btn btn-danger"
-                                            data-dismiss="downModal">닫기</button>
+                                            data-dismiss="modal">닫기</button>
                                     </div>
                                 </div>
                             </div>
@@ -107,6 +102,7 @@
 
                         <script th:inline="javascript">
                             var reasonList = [[${downReason}]];
+                            var manager = [[${employee}]];
 
                             window.onload = function () {
 
@@ -301,25 +297,23 @@
                                                 options: {
                                                     listItems: reasonList
                                                 }
-                                            },
-                                            rowSpan: true
+                                            }
                                         },
                                         {
                                             header: '관리자',
-                                            name: 'downManager',
+                                            name: 'nameText',
+                                            formatter: 'listItemText',
                                             editor: {
-                                                type: CustomTextEditor,
+                                                type: 'select',
                                                 options: {
-                                                    maxLength: 4
+                                                    listItems : manager
                                                 }
-                                            },
-                                            rowSpan: true
+                                            }
                                         },
                                         {
                                             header: '비고',
                                             name: 'remark',
                                             editor: 'text',
-                                            rowSpan: true,
                                             whiteSpace: 'pre-wrap'
                                         }
                                     ]
@@ -365,8 +359,8 @@
 
                                 $('#insertBtn').on('click', function () {
 
-                                    // 공통코드로 사유 불러오기 . 수정해야함
 
+                                    modalgrid.finishEditing();
                                     stopData = modalgrid.getData()[0];
                                     status = modalgrid.getData()[0].facStatus;
                                     console.log(stopData);
@@ -539,13 +533,20 @@
                                         },
                                         {
                                             header: '관리자',
-                                            name: 'downManager',
-                                            editor: 'text'
+                                            name: 'nameText',
+                                            formatter: 'listItemText',
+                                            editor: {
+                                                type: 'select',
+                                                options: {
+                                                    listItems : manager
+                                                }
+                                            }
                                         },
                                         {
                                             header: '비고',
                                             name: 'remark',
-                                            editor: 'text'
+                                            editor: 'text',
+                                            whiteSpace: 'pre-wrap'
                                         }
                                     ]
                                 });

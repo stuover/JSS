@@ -40,6 +40,9 @@
         #insertBtn{
         	float: right;
         }
+        input{
+  	text-align: center;
+  }
     </style>
 </head>
 
@@ -181,11 +184,10 @@
 
         <!-- 상세점검내역 모달 끝 -->
 
-
-
         <script th:inline="javascript">
         
         var insReasonList = [[${insReason}]];
+        var manager = [[${employee}]];
         
             // 비가동 설비중 사유가 점검인 리스트 조회 그리드    
             const grid = new tui.Grid({
@@ -276,11 +278,7 @@
                     {
                         header: '점검사유 ',
                         name: 'insReason'
-                    },
-                    {
-                        header: '점검내역 ',
-                        name: 'insHistory'
-                    },
+                    },                    
                     {
                         header: '적합판정',
                         name: 'judgment'
@@ -337,7 +335,7 @@
                     partHistory: insGridData.partHistory,
                     partReason: insGridData.partReason,
                     partDate: insGridData.partDate,
-                    insManager: insGridData.insManager
+                    nameText : insGridData.nameText                    
                 }
 
                 $('#detailModal').modal('show');
@@ -402,7 +400,8 @@
                 columns: [{
                         header: '점검내역  ',
                         name: 'insHistory',
-                        editor: 'text'
+                        editor: 'text',
+                        whiteSpace: 'pre-wrap'
                     },
                     {
                         header: '적합판정 ',
@@ -426,7 +425,8 @@
                     {
                         header: '부품교체사유 ',
                         name: 'partReason',
-                        editor: 'text'
+                        editor: 'text',
+                        whiteSpace: 'pre-wrap'
                     },
                     {
                         header: '부품교체일',
@@ -435,7 +435,14 @@
                     },
                     {
                         header: '관리자',
-                        name: 'insManager'
+                        name: 'nameText',
+                        formatter: 'listItemText',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems : manager
+                            }
+                        }
                     }
                 ]
             });
@@ -635,8 +642,14 @@
                     },
                     {
                         header: '관리자',
-                        name: 'insManager',
-                        editor: 'text'
+                        name: 'nameText',
+                        formatter: 'listItemText',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems : manager
+                            }
+                        }
                     }
                 ]
 
@@ -687,13 +700,18 @@
 
             	var currentDate = new Date();
             	currentDate.setHours(0, 0, 0, 0); // 현재 날짜의 시간을 00:00:00으로 설정
-
             	var selectedDate = obj.partDate ? new Date(obj.partDate) : null; // 선택한 날짜가 있을 경우에만 Date 객체로 변환
-
             	var currentDateString = currentDate.toISOString().slice(2, 10); // 현재 날짜를 YYMMDD 형식으로 변환
             	var selectedDateString = selectedDate ? selectedDate.toISOString().slice(2, 10) : null; // 선택한 날짜가 있을 경우에만 YYMMDD 형식으로 변환
-
-            	if (selectedDateString && selectedDateString < currentDateString) {
+            	console.log(obj);
+            	
+            	if(obj.facCode == null){
+            		alert("설비를 선택해주세요")
+            	}else if(obj.text == null){
+            		alert("점검사유를 선택해주세요")
+            	}else if(obj.nameText == null){
+            		alert("관리자를 선택해주세요")
+            	}else if(selectedDateString && selectedDateString < currentDateString) {
             	    alert("점검일보다 부품교체일이 빠릅니다");
             	} else {
             	    $.ajax({
@@ -717,7 +735,6 @@
             	        }
             	    });
             	}
-                
             }
             
             // facility 마지막 점검일 업데이트
@@ -821,8 +838,14 @@
                     },
                     {
                         header: '관리자',
-                        name: 'insManager',
-                        editor: 'text'
+                        name: 'nameText',
+                        formatter: 'listItemText',
+                        editor: {
+                            type: 'select',
+                            options: {
+                                listItems : manager
+                            }
+                        }
                     }
                 ]
 
