@@ -317,7 +317,7 @@
   	<!-- 입고 확인 검색 -->	
   		<select id="mrStoreQuery" resultType="MrVO">
   		
-  		select m.mr_lot_number,i.item_code,i.item_name,e.emp_name,substr(to_char(m.store_date,'yy-MM-dd'),3,10),m.store_count,m.expire_date,m.store_reason_type
+  		select m.mr_lot_number,i.item_code,i.item_name,e.emp_name,substr(to_char(m.store_date,'yy-MM-dd'),3,10),m.store_count,m.expire_date,m.store_reason_type,m.store_date
   		from material m join itemlist i on(m.item_code = i.item_code)
   		join emp e on(m.emp_no = e.emp_no) 
   		
