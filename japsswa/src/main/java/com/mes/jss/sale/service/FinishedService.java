@@ -22,6 +22,8 @@ public interface FinishedService {
 
 	List<FinishedVO> entStock();
 
+	List<FinishedVO> finStock(FinishedVO finVo);
+
 	
 
 }

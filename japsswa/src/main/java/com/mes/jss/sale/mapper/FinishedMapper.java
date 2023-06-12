@@ -22,6 +22,8 @@ public interface FinishedMapper {
 
 	List<FinishedVO> entStock();
 
+	List<FinishedVO> finStock(FinishedVO finVo);
+
 
 
 

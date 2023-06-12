@@ -54,8 +54,12 @@ public class ReleaseVO {
 	long fnCount;
 	long remain;
 	
-	String sDate;
-	String eDate;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date sDate;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date eDate;
 	String end;
 	
 }

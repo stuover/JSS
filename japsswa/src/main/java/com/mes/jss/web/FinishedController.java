@@ -113,5 +113,13 @@ public class FinishedController {
 		return eslist;
 	}
 	
+	//완제품 재고 조회
+	@RequestMapping("/finStock")
+	@ResponseBody
+	public List<FinishedVO> finStock(FinishedVO finVo){
+		List<FinishedVO> fslist = finishedService.finStock(finVo);
+		return fslist;
+	}
+	
 	
 }
