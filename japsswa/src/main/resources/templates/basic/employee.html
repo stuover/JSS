@@ -6,10 +6,10 @@
 
 <head lang="en">
 <meta charset="UTF-8">
-<style> 
-input:focus{
-	border-color:#0982f0;
-	ouline:none;
+<style>
+input:focus {
+	border-color: #0982f0;
+	ouline: none;
 }
 </style>
 </head>
@@ -19,10 +19,8 @@ input:focus{
 		<div class="col-12 grid-margin stretch-card">
 			<div class="card">
 				<div class="card-body">
-					<h1 >사원 정보</h1>
-					<br>
-					
-					<select id="searchSel" class="">
+					<h1>사원 정보</h1>
+					<br> <select id="searchSel" class="">
 						<option value="">부서별</option>
 						<option value="인사">인사</option>
 						<option value="영업">영업</option>
@@ -33,14 +31,16 @@ input:focus{
 					</select> <input id="searchInp" class="" type="text">
 					<button type="button" id="searchButton" class="btn btn-dark">사원검색</button>
 					<button type="button" id="allListBtn" class="btn btn-dark">전체보기</button>
-					
+
 					<form id="controller">
-					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-							<button type="button" id="modifyBtn" class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'EMP_ADMIN')">수정</button>
-							<button id="addEmpBtn" class="btn btn-primary" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'EMP_ADMIN')">등록</button>
-					</div>
+						<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
+							<button type="button" id="modifyBtn" class="btn btn-success"
+								sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'EMP_ADMIN')">수정</button>
+							<button id="addEmpBtn" class="btn btn-primary"
+								sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'EMP_ADMIN')">등록</button>
+						</div>
 						<div id="grid"></div>
-				
+
 					</form>
 				</div>
 			</div>
@@ -58,33 +58,37 @@ input:focus{
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-header">
-				<div><span>사원번호 :</span>	<span id="selNo">사원정보 조회</span></div><div> <span>이름 :</span> <span id="selName">사원정보 조회</span></div>
+					<div>
+						<span>사원번호 :</span> <span id="selNo">사원정보 조회</span>
+					</div>
+					<div>
+						<span>이름 :</span> <span id="selName">사원정보 조회</span>
+					</div>
 				</div>
 				<div class="modal-body">
 					<div class="h-auto d-md-flex justify-content-between">
 
-					 <span>부서 :</span>
-					  <select id="selDept">
-						<option value="null">선택해주세요</option>
-						<option value="인사">인사</option>
-						<option value="영업">영업</option>
-						<option value="품질">품질</option>
-						<option value="설비">설비</option>
-						<option value="생산">생산</option>
-						<option value="자재">자재</option>
-					</select>
-					
-					<span>직책 : </span> <select id="selPosi">
-						<option value="null">선택해주세요</option>
-						<option value="사원">사원</option>
-						<option value="관리자">관리자</option>
-					</select>
-					
+						<span>부서 :</span> <select id="selDept">
+							<option value="null">선택해주세요</option>
+							<option value="인사">인사</option>
+							<option value="영업">영업</option>
+							<option value="품질">품질</option>
+							<option value="설비">설비</option>
+							<option value="생산">생산</option>
+							<option value="자재">자재</option>
+						</select> <span>직책 : </span> <select id="selPosi">
+							<option value="null">선택해주세요</option>
+							<option value="사원">사원</option>
+							<option value="관리자">관리자</option>
+						</select>
+
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="finBtn" class="btn btn-success" sec:authorize="hasAnyRole('ROLE_ADMIN')">수정</button>
-					<button type="button" id="delBtn" class="btn btn-danger" sec:authorize="hasAnyRole('ROLE_ADMIN')">삭제</button>
+					<button type="button" id="finBtn" class="btn btn-success"
+						sec:authorize="hasAnyRole('ROLE_ADMIN')">수정</button>
+					<button type="button" id="delBtn" class="btn btn-danger"
+						sec:authorize="hasAnyRole('ROLE_ADMIN')">삭제</button>
 				</div>
 			</div>
 		</div>
@@ -94,13 +98,10 @@ input:focus{
 	<script>
 		// 사원정보 그리드
 		
-			const swalWithBootstrapButtons = Swal.mixin({
-					  customClass: {
-					    confirmButton: 'm-2 btn btn-success ',
-					    cancelButton: 'm-2 btn btn-danger'
-					  },
-					  buttonsStyling: false
-				})
+		
+			
+		
+		
 		var grid = new tui.Grid({
 			el : document.getElementById('grid'),
 			scrollX : true,

@@ -30,13 +30,13 @@
   		</select>
   		
   		<insert id="insertProcess" parameterType="ProcessVO">
-  			insert into process values(#{proCode}, #{proName}, to_date(sysdate, 'yyyy/MM/dd'),to_date(sysdate, 'yyyy/MM/dd'))
+  			insert into process values(#{proCode}, #{proName}, to_date(sysdate, 'rrrr/MM/dd'),to_date(sysdate, 'rrrr/MM/dd'))
   		</insert>
   		
   		<update id="updateProcess" parameterType="ProcessVO">
   			update process
   			set pro_name = #{proName},
-  				modify_date  = to_date(sysdate, 'yyyy/MM/dd')
+  				modify_date  = to_date(sysdate, 'rrrr/MM/dd')
   			where pro_code = #{proCode}
   		</update>
   		

@@ -323,9 +323,9 @@
 			 
 
 					
-		grid.on('dblclick',(ev) =>{
+		grid.on('dblclick',(ev) =>{    //더블 클릭시 클릭 이벤트
 		
-		let result5= grid.getRow(ev.rowKey);
+		let result5= grid.getRow(ev.rowKey);  // 클릭한 부분의 값을 가져온다.
 		
 		
 		
@@ -333,11 +333,11 @@
 			$.ajax({
 				url:"/mrLotList",
 				method:"GET",
-				data:{'itemName' : result5.itemName},
+				data:{'itemName' : result5.itemName},  // 값을 통해 리스트를 띄운다.
 				success: function(result){
 					
-					grid4.resetData(result);
-					$('#grid44').css('display','block');
+					grid4.resetData(result);  // 숨겨져 있던 그리드에 데이터를 초기화 한다.
+					$('#grid44').css('display','block');  // 숨겨져 있던 그리드를 다시 뜨게 한다.
 					
 					setTimeout(()=> grid4.refreshLayout(),10);
 				},

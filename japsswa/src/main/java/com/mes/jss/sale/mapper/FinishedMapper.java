@@ -16,6 +16,12 @@ public interface FinishedMapper {
 
 	List<FinishedVO> entStoreIn();
 
+	List<FinishedVO> storeIn(FinishedVO fvo);
+
+	List<FinishedVO> showSearItem(String itemName);
+
+	List<FinishedVO> entStock();
+
 
 
 

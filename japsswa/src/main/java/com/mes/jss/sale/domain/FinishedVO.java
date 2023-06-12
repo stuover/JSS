@@ -30,5 +30,6 @@ public class FinishedVO {
 	 String perStatus;
 	 String inDate1;
 	 String inDate2;
+	 String iname;
 	
 }
