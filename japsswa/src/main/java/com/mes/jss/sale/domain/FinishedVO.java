@@ -28,8 +28,21 @@ public class FinishedVO {
 	 String orddetStatus;
 	 String worker;
 	 String perStatus;
-	 String inDate1;
-	 String inDate2;
+	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 Date inDate1;
+	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 Date inDate2;
 	 String iname;
+	 String stockName;
+	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 Date storeIn1;
+	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 Date storeIn2;
+	 String perDate1;
+	 String perDate2;
 	
 }

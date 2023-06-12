@@ -61,7 +61,7 @@
 
 	</select>
 	
-	<!-- 조회페이지 -->
+	<!-- 완제품 입고 조회 -->
 	
 	<select id="entStoreIn" parameterType="FinishedVO" resultType="FinishedVO">
 		select p.performance_id, 
@@ -91,14 +91,10 @@
 			<if test='itemName != null and itemName != ""'>
 				and i.item_name = #{itemName}
 			</if>
-			<if test='inDate1 != null and inDate1 != ""'>
-				and f.fn_store_in >= #{inDate1}
+			<if test='inDate1 != null and inDate2 != null'>
+				and f.fn_store_in between #{inDate1} and #{inDate2}
 			</if>
-			<if test='inDate2 != null and inDate2 != ""'>
-			<![CDATA[
-				and f.fn_store_in <= #{inDate2}
-			]]>
-			</if>
+			
 			and p.per_status = '입고완료'
 		</where>
 		)
@@ -108,7 +104,49 @@
 		select item_code, item_name
 		from itemlist
 		where item_name like '%' || #{itemName} || '%' and item_type = 'FIN'
+		
 	</select> 
+	
+	<!-- 완제품 재고 조회 -->
+	<select id="entStock" parameterType="FinishedVO" resultType="FinishedVO">
+		select f.fn_lot_no, 
+				i.item_name, 
+				f.fn_count, 
+				f.fn_store_in, 
+				f.fn_expiration, 
+				p.end_time,
+				e.emp_name
+		from finished f join itemlist i on(f.item_code = i.item_code)
+                join emp e on(f.emp_no = e.emp_no)
+                join performance p on(p.performance_id = f.performance_id)
+	</select>
+	
+	<select id="finStock" parameterType="FinishedVO" resultType="FinishedVO">
+		select *
+		from(
+			select f.fn_lot_no, 
+				i.item_name, 
+				f.fn_count, 
+				f.fn_store_in, 
+				f.fn_expiration, 
+				p.end_time,
+				e.emp_name
+		    from finished f join itemlist i on(f.item_code = i.item_code)
+                			join emp e on(f.emp_no = e.emp_no)
+                			join performance p on(p.performance_id = f.performance_id)
+        <where>
+        	<if test='stockName != null and stockName != ""'>
+        		and i.item_name = #{itemName}
+        	</if>
+        	<if test='storeIn1 != null and storeIn2 != null'>
+        		and f.fn_store_in between #{storeIn1} and #{storeIn2}
+        	</if>
+        	<if test='perDate1 != null and perDate2 != null'>
+        		and p.end_time between #{perDate1} and #{perDate2}
+        	</if>
+        </where>
+		)
+	</select>
 
 
 </mapper>

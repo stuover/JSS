@@ -228,6 +228,29 @@
 			  
 		  })
 		  
+		  //품목검색결과
+		  iModalGrid.on('click', (e)=>{
+			  
+			if(e.columnName == 'itemName'){
+				
+				
+				var result2 = iModalGrid.getRow(e.rowKey);
+
+				
+				$('#iModal').modal('hide');
+
+				$('#iName').val(result2.itemName);
+				
+				
+	  			}; 
+				
+			}	
+		  
+			
+		)
+		  
+		  
+	
 		  
 		  
 		  

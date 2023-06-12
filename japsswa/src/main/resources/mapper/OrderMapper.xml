@@ -177,12 +177,12 @@
 		        	<if test='customerName != null and customerName != ""'>
 		        		and c.customer_name = #{customerName}
 		        	</if>
-		        	<if test='sOrdDate != null and sOrdDate != ""'>
+		        	<if test='sOrdDate != null'>
 		        		
 		        			and o.ord_date >= #{sOrdDate}
 		        		
 		        	</if>
-		        	<if test='eOrdDate != null and eOrdDate != ""'>
+		        	<if test='eOrdDate != null'>
 		        		
 		         <![CDATA[
 		        			and o.ord_date <= #{eOrdDate}

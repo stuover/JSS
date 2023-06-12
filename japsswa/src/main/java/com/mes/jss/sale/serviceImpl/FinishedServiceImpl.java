@@ -70,6 +70,12 @@ public class FinishedServiceImpl implements FinishedService{
 		return slist;
 	}
 
+	@Override
+	public List<FinishedVO> finStock(FinishedVO finVo) {
+		List<FinishedVO> fslist = finishedMapper.finStock(finVo);
+		return fslist;
+	}
+
 	
 
 }

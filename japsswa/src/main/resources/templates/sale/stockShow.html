@@ -106,6 +106,10 @@
 			      name : 'fnExpiration'
 			     },
 			     {
+				  header : '생산일자',
+				  name : 'endTime'
+				 },
+			     {
 			      header: '담당자',
 			      name: 'empName'
 			     }
@@ -165,6 +169,84 @@
           });
 		  
 		  
+		  //완제품 전체 재고 조회
+		  window.onload = function(){
+			  
+			  $('#stockModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					
+
+					
+					setTimeout(()=> stockModal.refreshLayout(), 200);
+	  			});
+			  
+			  $.ajax({
+				  url : "/entStock",
+				  method : "get",
+				  success : function(result){
+					  stockGrid.resetData(result);
+					  stockGrid.refreshLayout();
+				  }
+			  })
+			  
+		  }
+		  
+		  //완제품 재고 조회
+		  $('#submitBtn').on('click', function(){
+			  $.ajax({
+				  url : "/finStock",
+				  method : "get",
+				  data : $('#stockForm').serialize(),
+			  	  success : function(result){
+			  		  stockGrid.resetData(result);
+			  		  stockGrid.refreshLayout();
+			  	  }
+			  })
+		  })
+		  
+		  //품목검색
+		  $('#stockSearch').on('click', function(){
+			
+			  var sname = $('#sName').val();
+			  
+			  $('#sName').val('');
+			  
+			  $.ajax({
+				  url : "/showSearItem",
+				  method : "get",
+				  data : {itemName : sname},
+				  success : function(result){
+					  sModalGrid.resetData(result);
+					  sModalGrid.refreshLayout();
+				  },
+				  error : function(reject){
+					  console.log(reject);
+				  }
+			  })
+			  
+			  
+		  })
+		  
+		  //품목검색결과
+		  sModalGrid.on('click', (e)=>{
+			  
+			if(e.columnName == 'itemName'){
+				
+				
+				var result3 = sModalGrid.getRow(e.rowKey);
+
+				
+				$('#stockModal').modal('hide');
+
+				$('#sName').val(result3.itemName);
+				
+				
+	  			}; 
+				
+			}	
+		  
+			
+		)
 		
 		  
 		  

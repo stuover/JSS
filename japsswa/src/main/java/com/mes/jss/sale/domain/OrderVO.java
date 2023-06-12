@@ -35,6 +35,10 @@ public class OrderVO {
 	private String custTel;
 	private String itemName;
 	private String empName;
-	private String sOrdDate;
-	private String eOrdDate;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date sOrdDate;
+	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
+	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	Date eOrdDate;
 }
