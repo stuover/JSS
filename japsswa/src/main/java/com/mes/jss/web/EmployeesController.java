@@ -119,8 +119,9 @@ public class EmployeesController {
 	public String modifyPwd(@RequestBody EmpVO vo, Principal principal) {
 		BCryptPasswordEncoder scpwd = new BCryptPasswordEncoder();
 		System.err.println(vo);
-		boolean result = scpwd.matches(vo.getPassword(), empService.getPwd(principal.getName()));
 		
+		boolean result = scpwd.matches(vo.getPassword(), empService.getPwd(principal.getName()));
+		System.err.println(result);
 		if(result) {
 			if(vo.getNewPwd()!= null && vo.getNewPwd()!="".toString()) {
 				vo.setNewPwd(scpwd.encode(vo.getNewPwd()));
@@ -128,7 +129,7 @@ public class EmployeesController {
 			vo.setEmpNo(principal.getName());
 			empService.modifyPwd(vo);
 			return "success";
-		}else {
+		}else{
 			return "fail";
 		}
 		
