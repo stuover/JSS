@@ -189,7 +189,7 @@
   	<select id="getbeInsList" resultType="InspectionVO">
   		select f.fac_name, f.fac_code , d.down_code, GET_CODENAME(d.down_reason) downReason, d.stop_date
 		from facility f full outer join downtime d on(f.fac_code = d.fac_code) full outer join inspection i on(d.down_code = i.down_code)
-		where down_reason = 'DIN' and ins_code is null order by down_code desc
+		where down_reason = 'DIN' and ins_code is null and f.fac_code is not null order by down_code desc
   	</select>
   	
   	<select id="getInsList" resultType="InspectionVO">
