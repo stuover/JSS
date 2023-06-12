@@ -1,10 +1,463 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
-</body>
+
+
+</head>
+<th:block layout:fragment="content">
+
+
+	<div class="container-fluid page-body-wrapper">
+
+		<div class="col-12 grid-margin stretch-card">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="page-title">출고 조회</h4>
+					
+
+					<!-- <input id="name" type="hidden" th:value="${#authentication.principal.empName}">   -->
+				
+					<form id="releaseForm">
+					<div class = "row2">
+					<label>출고상태</label>
+					<input type="radio" id="endBtn" name="end" value="end" checked><label for="endBtn">출고완료</label>
+					<input type="radio" id="partBtn" name="end" value="part"><label for="partBtn">부분출고</label>
+					</div>
+					<div class="row"></div>
+					
+					<input name="itName" id="item" type="text" readonly>
+					<button id="itSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itModal">품목 찾기</button>
+					<input name="custName" id="cust" type="text" readonly>
+					<button id="cuSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cuModal">거래처 찾기</button>
+					<label>출고날짜</label><input name="sDate" id="dateStart" type="date"> - <input name="eDate" id="dateEnd" type="date">
+					<button id="searBtn" type="button" class="btn btn-dark">조회</button>
+					
+					<button id="relReset" type="reset" class="btn btn-dark">초기화</button>
+					</form>
+					<div id="relGrid"></div>
+					
+		
+
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+	
+	<div class="modal fade" id="relDetModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="detModalLabel">출고 상세 조회</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<div id="relModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="itModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="itModalLabel">품목 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="itInput" name="item">
+					<button id="itSearBtn" type="button" class="btn btn-dark">찾기</button>
+					<div id="itModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="cuModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="cuModalLabel">거래처 찾기</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="cuInput" name="cust">
+					<button id="cuSearBtn" type="button" class="btn btn-dark">찾기</button>
+					<div id="cuModalGrid"></div>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<script>
+
+	const Grid = tui.Grid;
+	
+	//주문(공통)조회 그리드
+	let relGridData = [];
+		const relGrid = new Grid({
+		  bodyHeight : 400,
+	      el: document.getElementById('relGrid'),
+	      data: relGridData,
+	      pageOptions: { 
+              useClient: true,
+              perPage:15  
+              },
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	    	     {
+				  header: '출고코드',
+				  name: 'fnReleaseId'
+				 },
+			     {
+				  header: '주문상세코드',
+				  name: 'ordDetailId'
+				 },
+				 {
+				  header: '품목명',
+				  name: 'itemName'
+			     },
+			     {
+				  header: '현재출고수량',
+				  name: 'fnRelCount'
+				 }, 
+			     {
+			      header: '전체출고수량',
+			      name: 'ordCount'
+			     },
+			     {
+				  header: '남은양',
+				  name: 'remain'
+				 },
+			     {
+				  header: '담당자',
+				  name: 'empName'
+				 }
+					 
+				 
+		      ],
+		      
+		        
+		    });
+
+		relGrid.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+		relGrid.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+		relGrid.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+		
+		
+		//주문 상세 모달 그리드
+		const relModalGrid = new Grid({
+            el: document.getElementById('relModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '출고상세코드',
+	            name: 'relDetailId'
+	          },
+              {
+                header: '완제품 lot번호',
+                name: 'fnLotNo'
+              },
+              {
+                header: 'lot별 출고수량',
+                name: 'relEachCount'
+              },
+              {
+                header: '출고날짜',
+                name: 'relDate'
+              }
+            ]
+          });
+
+		  relModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  relModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  relModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		
+		
+
+		
+		
+		//제품 찾기 모달
+		
+		const itModalGrid = new Grid({
+            el: document.getElementById('itModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '품목코드',
+	            name: 'itemCode'
+	          },
+              {
+                header: '품목명',
+                name: 'itemName'
+              }
+              
+            ]
+          });
+
+		  itModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  itModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  itModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		  
+		  
+		  //거래처 찾기 모달
+		  
+		  const cuModalGrid = new Grid({
+            el: document.getElementById('cuModalGrid'),
+            scrollX: false,
+            scrollY: false,
+           pageOptions: { 
+             useClient: true,
+             perPage: 5 
+             },
+            columns: [
+         	  {
+	            header: '거래처코드',
+	            name: 'customerId'
+	          },
+              {
+                header: '거래처명',
+                name: 'customerName'
+              }
+            ]
+          });
+
+		  cuModalGrid.on('check', ev => {
+            console.log('check!', ev);
+          });
+
+		  cuModalGrid.on('uncheck', ev => {
+            console.log('uncheck!', ev);
+          });
+
+		  cuModalGrid.on('focusChange', ev => {
+            console.log('change focused cell!', ev);
+          });
+		 
+		  
+		  window.onload = function(){
+			  
+			  $('#relDetModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					
+
+					
+					setTimeout(()=> relModalGrid.refreshLayout(), 200);
+	  			}); 
+				
+				$('#itModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					
+
+					
+					setTimeout(()=> itModalGrid.refreshLayout(), 200);
+	  			}); 
+				
+				$('#cuModal').on('shown.bs.modal', function (e) {
+					console.log('open');
+					
+
+					
+					setTimeout(()=> cuModalGrid.refreshLayout(), 200);
+	  			});
+				
+				//출고 전체 조회
+				$.ajax({
+					url : "/entRelease",
+					method : "get",
+					success : function(result){
+						relGrid.resetData(result);
+						relGrid.refreshLayout();
+					}
+				})
+			  
+		  }
+		  
+		  $('#searBtn').on('click', function(){
+			
+			  //출고조회
+			  $.ajax({
+				  url : "/releaseCheck",
+				  method : "GET",
+				  data : $('#releaseForm').serialize(),
+				  success : function(result){
+					  relGrid.resetData(result);
+					  relGrid.refreshLayout();
+				  }
+			  })
+			  
+		  })
+		  
+		  //모달 내 품목검색
+		  $('#itSearBtn').on('click', function(){
+			  
+			  var itemname = $('#itInput').val();
+			  $('#itInput').val('');
+			  
+			  $.ajax({
+				  url : "/relItemSearch",
+				  method : "get",
+				  data : { itemName : itemname },
+				  success : function(result){
+					  itModalGrid.resetData(result);
+					  itModalGrid.refreshLayout();
+				  }
+			  })
+		  })
+		  
+		  //품목 검사 결과
+		  itModalGrid.on('click', (e)=>{
+			
+			  if(e.columnName == 'itemName'){
+				  var iname = itModalGrid.getRow(e.rowKey);
+				  $('#itModal').modal('hide');
+				  $('#item').val(iname.itemName);
+			  }
+			  
+		  })
+		  
+		  //모달 내 거래처 검색
+		  $('#cuSearBtn').on('click', function(){
+			
+			  var cname = $('#cuInput').val();
+			  $('#cuInput').val('');
+			  
+			  $.ajax({
+				  url : "/relCustSearch",
+				  method : "get",
+				  data : {customerName : cname},
+				  success : function(result){
+					  cuModalGrid.resetData(result);
+					  cuModalGrid.refreshLayout();
+				  }
+			  })
+			  
+		  })
+		  
+		  //거래처 검색 결과
+		  cuModalGrid.on('click', (e)=>{
+			
+			  if(e.columnName == 'customerName'){
+				  
+				  var custname = cuModalGrid.getRow(e.rowKey);
+				  $('#cuModal').modal('hide');
+				  $('#cust').val(custname.customerName);
+				  
+			  }
+			  
+		  })
+		  
+		  //출고 상세 조회
+		  relGrid.on('click', (e)=>{
+			  if(e.columnName == 'fnReleaseId'){
+				  $('#relDetModal').modal('show');
+				  
+				  var results = relGrid.getRow(e.rowKey);
+				  
+				  $.ajax({
+					  url : "/relDetCheck",
+					  method : "get",
+					  data : {'fnReleaseId' : results.fnReleaseId},
+					  success : function(result){
+						  relModalGrid.resetData(result);
+						  relModalGrid.refreshLayout();
+					  }
+				  })
+			  }
+		  })
+		  
+		  
+		  
+		  
+		  
+			
+			  
+	
+		  
+
+		
+		
+		
+		
+		
+	
+		
+		           
+		           
+		           
+
+		           
+		           
+		           
+	
+		  
+				
+
+  			
+
+		
+  		</script>
+
+</th:block>
+
 </html>

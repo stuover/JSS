@@ -52,6 +52,24 @@ public class FinishedServiceImpl implements FinishedService{
 		return enlist;
 	}
 
+	@Override
+	public List<FinishedVO> storeIn(FinishedVO fvo) {
+		List<FinishedVO> stlist = finishedMapper.storeIn(fvo);
+		return stlist;
+	}
+
+	@Override
+	public List<FinishedVO> showSearItem(String itemName) {
+		List<FinishedVO> ilist = finishedMapper.showSearItem(itemName);
+		return ilist;
+	}
+
+	@Override
+	public List<FinishedVO> entStock() {
+		List<FinishedVO> slist = finishedMapper.entStock();
+		return slist;
+	}
+
 	
 
 }

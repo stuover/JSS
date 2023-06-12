@@ -58,4 +58,51 @@ public class ReleaseController {
 		return null;
 	}
 	
+	//출고 조회 화면
+	@RequestMapping("/relShow")
+	public String relShow() {
+		return "sale/releaseShow";
+	}
+	
+	//출고 전체 조회
+	@RequestMapping("/entRelease")
+	@ResponseBody
+	public List<ReleaseVO> entReleaseAjax(){
+		List<ReleaseVO> entRelList = releaseService.entRelease();
+		return entRelList;
+	}
+	
+	//출고 조회
+	@RequestMapping("/releaseCheck")
+	@ResponseBody
+	public List<ReleaseVO> releaseCheckAjax(ReleaseVO rvo){
+		List<ReleaseVO> rclist = releaseService.releaseCheck(rvo);
+		return rclist;
+	}
+	
+	//품목 검색
+	@RequestMapping("/relItemSearch")
+	@ResponseBody
+	public List<ReleaseVO> relItemSearchAjax(@RequestParam String itemName){
+		List<ReleaseVO> islist = releaseService.relItemSearch(itemName);
+		return islist;
+	}
+	
+	//거래처 검색
+	@RequestMapping("/relCustSearch")
+	@ResponseBody
+	public List<ReleaseVO> relCustSearchAjax(@RequestParam String customerName){
+		List<ReleaseVO> iclist = releaseService.relCustSearch(customerName);
+		return iclist;
+		
+	}
+	
+	//출고상세조회
+	@RequestMapping("/relDetCheck")
+	@ResponseBody
+	public List<ReleaseVO> relDetCheckAjax(@RequestParam String fnReleaseId){
+		List<ReleaseVO> rdlist = releaseService.relDetCheck(fnReleaseId);
+		return rdlist;
+	}
+	
 }

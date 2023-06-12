@@ -54,4 +54,8 @@ public class ReleaseVO {
 	long fnCount;
 	long remain;
 	
+	String sDate;
+	String eDate;
+	String end;
+	
 }

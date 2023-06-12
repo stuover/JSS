@@ -42,6 +42,36 @@ public class ReleaseServiceImpl implements ReleaseService {
 		 
 	}
 
+	@Override
+	public List<ReleaseVO> entRelease() {
+		List<ReleaseVO> erlist = releaseMapper.entRelease();
+		return erlist;
+	}
+
+	@Override
+	public List<ReleaseVO> releaseCheck(ReleaseVO rvo) {
+		List<ReleaseVO> checkList = releaseMapper.releaseCheck(rvo);
+		return checkList;
+	}
+
+	@Override
+	public List<ReleaseVO> relItemSearch(String itemName) {
+		List<ReleaseVO> rllist = releaseMapper.relItemSearch(itemName);
+		return rllist;
+	}
+
+	@Override
+	public List<ReleaseVO> relCustSearch(String customerName) {
+		List<ReleaseVO> rclist = releaseMapper.relCustSearch(customerName);
+		return rclist;
+	}
+
+	@Override
+	public List<ReleaseVO> relDetCheck(String fnReleaseId) {
+		List<ReleaseVO> rdlist = releaseMapper.relDetCheck(fnReleaseId);
+		return rdlist;
+	}
+
 
 
 
