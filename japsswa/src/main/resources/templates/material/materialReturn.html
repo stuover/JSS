@@ -80,7 +80,7 @@
 <!-- 반품 등록 버튼 -->	
 
 	<button type="button" id="insertBtn" class="btn btn-primary" style="float:right; margin-bottom:10px; margin-right:20px; margin-left:10px;width:60px; padding:3px;">등록</button>
-	<button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModalLong" style="float:right; color:white; padding:3px; ">반품 조회 및 취소</button>
+	<button type="button" id ="listBtn" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModalLong" style="float:right; color:white; padding:3px; ">반품 조회 및 취소</button>
 	<button type="button" class="btn btn-warning" onclick="location.href='http://localhost/mrOrder'" style="float:right; padding:3px; color:black; color:black; font-weight:bold; margin-right:10px; color:white;">발주 요청</button>
 	
 	</div>
@@ -219,7 +219,33 @@
 				}
 			});
 			
+		
+  // 조회 버튼
+  
+  $('#listBtn').on('click',function(){
+	  
+	  $.ajax({
 			
+			url : "/mrReturnAjax",
+
+			method : "GET",
+			
+
+			success : function(result) {
+				grid1.resetData(result);
+				grid3.resetData(result);
+				setTimeout(()=> grid1.refreshLayout(),100);
+				setTimeout(()=> grid3.refreshLayout(),100);
+			},
+			error: function(reject){
+				console.log(reject);
+			}
+		});
+  })
+
+
+
+
 // 반품 리스트 그리드			
 
 			var grid1 = new tui.Grid({
@@ -348,6 +374,25 @@
 			},
 				success : function(result){
 					
+					$.ajax({
+						
+						url : "/mrReturnAjax",
+
+						method : "GET",
+						
+
+						success : function(result) {
+							grid1.resetData(result);
+							grid3.resetData(result);
+							setTimeout(()=> grid1.refreshLayout(),100);
+							setTimeout(()=> grid3.refreshLayout(),100);
+						},
+						error: function(reject){
+							console.log(reject);
+						}
+					});
+					
+					
 					
 				},
 				error : function(reject){
@@ -366,6 +411,7 @@
 
 				success : function(result) {
 					grid1.resetData(result);
+					grid3.resetData(result);
 					setTimeout(()=> grid1.refreshLayout(),100);
 				},
 				error: function(reject){
@@ -425,10 +471,44 @@
 						xhr.setRequestHeader(header, token);
 							},
 					success: function(result){
-						grid3.resetData(result);
+						
 						grid3.removeCheckedRows(false);
+						
 						setTimeout(()=> grid3.refreshLayout(),100);
 						
+						
+						$.ajax({
+							url : "/mrReturnListAjax",
+
+							method : "GET",
+							dataType : "json",
+
+							success : function(result) {
+								grid.resetData(result);
+								setTimeout(()=> grid.refreshLayout(),100);
+								
+							}
+
+						});
+						
+						
+						$.ajax({
+							
+							url : "/mrReturnAjax",
+
+							method : "GET",
+							
+
+							success : function(result) {
+								grid1.resetData(result);
+								grid3.resetData(result);
+								setTimeout(()=> grid1.refreshLayout(),100);
+								setTimeout(()=> grid3.refreshLayout(),100);
+							},
+							error: function(reject){
+								console.log(reject);
+							}
+						});
 						
 					},
 					error: function(reject){

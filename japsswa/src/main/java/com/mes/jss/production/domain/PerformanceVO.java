@@ -13,7 +13,9 @@ public class PerformanceVO {
 	long output;
 	long passItem;
 	long failItem;
-
+	String itemType;
+	
+	
 	String startTime;
 	String endTime;
 	String worker;
