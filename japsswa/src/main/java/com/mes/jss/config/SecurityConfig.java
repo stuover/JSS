@@ -33,7 +33,11 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests((requests) -> 
 			requests.antMatchers("/top", "/login", "/logout").permitAll() // 공통 
-						//.antMatchers("/bomManager").hasAuthority("ROLE_ADMIN")
+						.antMatchers("/bomManager").hasAuthority("ROLE_ADMIN") // 전체 관리자
+						.antMatchers("/insertorder", "/finished", "/release", "/return").hasAnyAuthority("ROLE_ADMIN", "SAL_ADMIN") // 영업
+						.antMatchers("/facility", "/downtime", "/inspection").hasAnyAuthority("ROLE_ADMIN", "FAC_ADMIN") // 설비
+						.antMatchers("/planManage", "/workManage", "/performanceManage").hasAnyAuthority("ROLE_ADMIN", "PRO_ADMIN") // 생산
+						.antMatchers("/mrlist", "/mslist", "/mrOrder", "/mrReturn", "/mrAdjustment").hasAnyAuthority("ROLE_ADMIN", "PRO_ADMIN") // 자재
 						.anyRequest().authenticated())
 			     .formLogin(login-> login.loginPage("/login")
 			    		 							.usernameParameter("empNo")

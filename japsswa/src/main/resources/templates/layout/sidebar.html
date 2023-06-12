@@ -42,13 +42,13 @@
 				<div class="collapse" id="form-elements">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="insertorder">주문서 관리</a>
+							<a class="nav-link" href="insertorder" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'SAL_ADMIN')">주문서 관리</a>
 							<a class="nav-link" href="orderList">주문서 조회</a>
-							<a class="nav-link" href="finished">완제품 입고 관리</a>
+							<a class="nav-link" href="finished" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'SAL_ADMIN')">완제품 입고 관리</a>
 							<a class="nav-link" href="storeInShow">완제품 입고 조회</a>
-							<a class="nav-link" href="release">출고 관리</a>
+							<a class="nav-link" href="release" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'SAL_ADMIN')">출고 관리</a>
 							<a class="nav-link" href="releaseShow">출고 조회</a>
-							<a class="nav-link" href="return">반품 관리</a>
+							<a class="nav-link" href="return" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'SAL_ADMIN')">반품 관리</a>
 							<a class="nav-link" href="returnShow">반품 조회</a>
 							<a class="nav-link" href="saleShow">판매실적 조회</a>
 						</li>
@@ -65,7 +65,7 @@
 				<div class="collapse" id="tables">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="mrlist">자재 입고</a>
+							<a class="nav-link" href="mrlist" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'MAT_ADMIN')">자재 입고</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="mrStoreList">자재 입고 내역</a>
@@ -74,23 +74,23 @@
 							<a class="nav-link" href="mrReleaseList">자재 출고 내역</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="mslist">자재 재고</a>
+							<a class="nav-link" href="mslist" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'MAT_ADMIN')">자재 재고</a>
 						</li>
 						
 						<li class="nav-item">
-							<a class="nav-link" href="mrOrder">자재 발주</a>
+							<a class="nav-link" href="mrOrder" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'MAT_ADMIN')">자재 발주</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="mrOrderList">자재 발주 내역</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="mrReturn">자재 반품</a>
+							<a class="nav-link" href="mrReturn" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'MAT_ADMIN')">자재 반품</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="mrReturnList">자재 반품 내역</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="mrAdjustment">자재 조정 </a>
+							<a class="nav-link" href="mrAdjustment" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'MAT_ADMIN')">자재 조정 </a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="mrAdmDisplay">자재 조정 내역</a>
@@ -130,16 +130,16 @@
 				<div class="collapse" id="auth">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="facility"> 설비관리 </a>
+							<a class="nav-link" href="facility" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'FAC_ADMIN')"> 설비관리 </a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="downDetail"> 비가동 내역 조회 </a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="downtime"> 비가동 설비 관리 </a>
+							<a class="nav-link" href="downtime" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'FAC_ADMIN')"> 비가동 설비 관리 </a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="inspection"> 설비 점검 관리 </a>
+							<a class="nav-link" href="inspection" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'FAC_ADMIN')"> 설비 점검 관리 </a>
 						</li>
 					</ul>
 				</div>
@@ -155,13 +155,13 @@
 				<div class="collapse" id="error">
 					<ul class="nav flex-column sub-menu">
 						<li class="nav-item">
-							<a class="nav-link" href="planManage">생산계획 관리</a>
+							<a class="nav-link" href="planManage" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'PRO_ADMIN')">생산계획 관리</a>
 						</li>					
 						<li class="nav-item">
-							<a class="nav-link" href="workManage">작업지시 관리</a>
+							<a class="nav-link" href="workManage" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'PRO_ADMIN')">작업지시 관리</a>
 						</li>				
 						<li class="nav-item">
-							<a class="nav-link" href="performanceManage" target="_blank">생산실적 등록</a>
+							<a class="nav-link" href="performanceManage" target="_blank" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'PRO_ADMIN')">생산실적 등록</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="proOutput">공정 이동표 조회</a>
