@@ -72,7 +72,7 @@
 		                d.ord_count, 
 		                e.emp_name, 
 		                r.remain
-		from release r join orddetail d on(r.orddetail_id = r.orddetail_id)
+		from release r join orddetail d on(r.orddetail_id = d.orddetail_id)
 		               join itemlist i on(d.item_code = i.item_code)
 		               join emp e on(r.emp_no = e.emp_no)
 		where d.orddet_status = '출고완료' or d.orddet_status = '부분출고'
