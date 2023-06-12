@@ -96,16 +96,10 @@ input:focus {
 
 
 	<script>
+	
 		// 사원정보 그리드
-		
-		
-			
-		
-		
 		var grid = new tui.Grid({
 			el : document.getElementById('grid'),
-			scrollX : true,
-			scrollY : true,
 			rowHeaders : [ {
 				type : 'checkbox',
 				header : " "
@@ -114,7 +108,7 @@ input:focus {
 			} ],
 			pageOptions : {
 				useClient : true,
-				perPage : 10
+				perPage : 14
 			},
 			columns : [ {
 				header : '사원번호',

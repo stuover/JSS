@@ -116,7 +116,7 @@ input:focus{
 			rowHeaders: [{ type: 'checkbox', header: " " }, { type: 'rowNum' }],
 			pageOptions: {
 				useClient: true,
-				perPage: 10
+				perPage: 14
 			},
 			columns: [
 				{
@@ -163,6 +163,7 @@ input:focus{
 				}
 			]
 		});
+		grid.setBodyHeight(577);
 
 		grid.on('check', function (e) {
 			var checkRows = grid.getCheckedRowKeys();
@@ -210,6 +211,7 @@ input:focus{
 
 		var modalGrid = new tui.Grid({
 			el: document.getElementById('modalGrid'),
+			bodyHeight : 10,
 			columns: [
 				{
 					header: '품목코드',
@@ -291,9 +293,9 @@ input:focus{
 		});
 
 
-
 		var modModalGrid = new tui.Grid({
 			el: document.getElementById('modModalGrid'),
+			bodyHeight : 10,
 			columns: [
 				{
 					header: '품목코드',

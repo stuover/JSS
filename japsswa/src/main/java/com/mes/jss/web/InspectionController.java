@@ -83,6 +83,7 @@ public class InspectionController {
 	public InspectionVO modifyInspection(@RequestBody InspectionVO vo) {
 		
 		System.out.println(vo);
+		
 		service.modifyInspection(vo);
 		
 		return vo;

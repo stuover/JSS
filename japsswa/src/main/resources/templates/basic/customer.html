@@ -45,7 +45,7 @@ input:focus {
 					</div>
 				
 					<div class="card">
-						<div class="card-body">
+						<div class="card-body" style="z-index:999">
 
 							<div id="insertDiv">
 								<select id="item">
@@ -141,7 +141,7 @@ var cusGrid = new tui.Grid({
     rowHeaders: ['rowNum'],
     pageOptions: {
 		useClient: true,
-		perPage: 9
+		perPage: 8
 	},
 	columns : [ 
 	{
@@ -191,7 +191,7 @@ var cusGrid = new tui.Grid({
 	}
 	]
 });	
-
+cusGrid.setBodyHeight(337);
 // 거래처 등록 그리드
 var insertGrid = new tui.Grid({
 	el : document.getElementById('insertGrid'),
@@ -265,7 +265,7 @@ var insertGrid = new tui.Grid({
 });
 
 insertGrid.appendRow();
-insertGrid.setBodyHeight(100);
+insertGrid.setBodyHeight(10);
 
 
 if($('#roleid').val() == 'ROLE_ADMIN'){
@@ -382,6 +382,8 @@ var itemGrid = new tui.Grid({
 		sortable : true,
 	}]
 });
+
+itemGrid.setBodyHeight(217);
 // 거래처별 거래 품목 받아오기
 var rowKey = null;
 cusGrid.on('dblclick',function(e){
