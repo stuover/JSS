@@ -9,21 +9,21 @@
     	
     	<sql id="search">
     		<where>
-              	 <if test=" storeReasonType != null and storeReasonType != ''.toString()">
+              	 <if test=" storeReasonType != null and storeReasonType != ''.toString()">    <!-- 입고 구분 검색 -->
                   	store_reason_type like '%'||#{storeReasonType}||'%'
                   </if>
                   
-                  <if test="itemType != null and itemType != ''.toString()">
+                  <if test="itemType != null and itemType != ''.toString()">   <!-- 품목 종류별 검색  -->
                    	 and item_type like '%'||#{itemType}||'%'
                      
                   </if>
                   
-                  <if test="storeDate1 != null and storeDate2 != null ">
-                  	 and store_date between #{storeDate1} and #{storeDate2}
+                  <if test="storeDate1 != null and storeDate2 != null ">   <!-- 입고날짜 검색 -->
+                  	 and store_date between #{storeDate1} and #{storeDate2} 
                   	 
                   </if>
                   
-                   <if test="mrSearch != null and mrSearch != ''.toString()">
+                   <if test="mrSearch != null and mrSearch != ''.toString()">  <!-- 자재명으로 검색 -->
                    	 and item_name like '%'||#{mrSearch}||'%'
                      
                   </if>
@@ -69,9 +69,9 @@
    
     <select id="MrStoreList" resultType="MrVO" parameterType="MrVO">
     	select *
-    	from material m join itemlist i on (m.item_code = i.item_code) join emp e on(m.emp_no = e.emp_no)
+    	from material m join itemlist i on (m.item_code = i.item_code) join emp e on(m.emp_no = e.emp_no) 
     	
-    	<include refid="search"></include>
+    	<include refid="search"></include> <!-- 다중 검색 쿼리문 실행 -->
    		
    		
     </select>
@@ -123,12 +123,12 @@
   	
   		select i.item_code, 
   		       i.item_name, 
-  		       GET_CODENAME(i.item_type) item_type, 
+  		       GET_CODENAME(i.item_type) item_type,   <!-- 공통코드를 통해 데이터는 코드로 저장 되나 거기에 대한 내용이 보이도록  -->
   		       i.save_material, 
   		       sum(store_count) as total 
   		  from itemlist i join material m on(i.item_code = m.item_code)
   		<where>
-  			<if test="div ==''">
+  			<if test="div ==''">    <!-- 전체 검색 -->
   				(i.item_type ='MAT' or i.item_type ='SAM') and i.item_name like '%'||#{itemName}||'%'
   			
   			</if>
@@ -136,7 +136,7 @@
   			
   			
   			
-  			<if test="div =='MAT'">
+  			<if test="div =='MAT'">   <!-- 자재 검색 -->
   				i.item_type ='MAT' and i.item_name like '%'||#{itemName}||'%'
   			
   			</if>
