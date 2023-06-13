@@ -62,8 +62,8 @@ input:focus{
 	        </div>
 	        <div id="testGrid"></div>
 	        <div>
-	            <button id="modBtn" type="button"  class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">수정</button>
-	           	<button id="delBtn" type="button"  class="btn btn-danger" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">검사취소</button>     
+	            <button id="modBtn" type="button"  class="btn btn-success" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'QUA_ADMIN')">수정</button>
+	           	<button id="delBtn" type="button"  class="btn btn-danger" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'QUA_ADMIN')">검사취소</button>     
 	        </div>
 		</div>
 </div></div></div></div>

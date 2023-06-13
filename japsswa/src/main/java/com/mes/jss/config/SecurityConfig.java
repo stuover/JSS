@@ -37,7 +37,8 @@ public class SecurityConfig {
 						.antMatchers("/insertorder", "/finished", "/release", "/return").hasAnyAuthority("ROLE_ADMIN", "SAL_ADMIN") // 영업
 						.antMatchers("/facility", "/downtime", "/inspection").hasAnyAuthority("ROLE_ADMIN", "FAC_ADMIN") // 설비
 						.antMatchers("/planManage", "/workManage", "/performanceManage").hasAnyAuthority("ROLE_ADMIN", "PRO_ADMIN") // 생산
-						.antMatchers("/mrlist", "/mslist", "/mrOrder", "/mrReturn", "/mrAdjustment").hasAnyAuthority("ROLE_ADMIN", "PRO_ADMIN") // 자재
+						.antMatchers("/mrlist", "/mslist", "/mrOrder", "/mrReturn", "/mrAdjustment").hasAnyAuthority("ROLE_ADMIN", "MAT_ADMIN") // 자재
+						.antMatchers("/quality", "/errQuality", "/passQuality").hasAnyAuthority("ROLE_ADMIN", "QUA_ADMIN") // 품질
 						.anyRequest().authenticated())
 			     .formLogin(login-> login.loginPage("/login")
 			    		 							.usernameParameter("empNo")
