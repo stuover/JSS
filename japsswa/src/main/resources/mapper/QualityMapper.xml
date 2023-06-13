@@ -20,8 +20,8 @@
 	<select id="getList" resultType="QualityVO">
 
 		select q.test_code,
-		e.emp_name,q.item_code,q.mr_order_det_code,GET_CODENAME(i.item_type) item_type, i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity,((q.err_quantity/(q.test_quantity))*100)
-		error,q.test_note
+		e.emp_name,q.item_code,q.mr_order_det_code, GET_CODENAME(i.item_type) itemType, i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity
+		,ROUND(((q.err_quantity/(q.test_quantity))*100), 2), error,q.test_note
 		from itemlist i join quality_test q on(i.item_code = q.item_code) join emp
 		e on(q.emp_no=e.emp_no)
 		where q.situation ='검사완료' and q.test_note ='합격' and (q.err_quantity/q.test_quantity)*100 between 0
@@ -35,7 +35,7 @@
 
 	<select id="qualityList" parameterType = "SearchDTO" resultType="QualityVO">
 		select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,
-		situation, test_Quantity, test_Note, GET_CODENAME(item_type) item_type
+		situation, test_Quantity, test_Note, GET_CODENAME(item_type) itemType
 		from quality_test a join itemlist b
 		on a.item_code = b.item_code
 		where situation = '검사대기'
@@ -59,7 +59,7 @@
 		set end_date = sysdate,
 		err_quantity = #{errQuantity},
 		pass_quantity = #{testQuantity} - #{errQuantity},
-		defective_rate = #{errQuantity} / #{testQuantity}*100,
+		defective_rate = ROUND((#{errQuantity} / #{testQuantity}*100), 2),
 		situation = '검사완료',
 		test_note = '합격',
 		emp_no = #{empNo}
@@ -72,7 +72,7 @@
 		set end_date = sysdate,
 		err_Quantity = #{errQuantity},
 		pass_quantity = (#{testQuantity} - #{errQuantity}),
-		defective_rate = (#{errQuantity} / #{testQuantity} * 100),
+		defective_rate =ROUND((#{errQuantity} / #{testQuantity} * 100),2),
 		situation = '검사완료',
 		test_note = #{testNote},
 		emp_no = #{empNo}
@@ -89,7 +89,7 @@
 
 	<select id="getPassQualityList" parameterType = "SearchDTO"  resultType="QualityVO">
 		select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation,
-		test_Quantity, test_Note, GET_CODENAME(item_type) item_type,
+		test_Quantity, test_Note, GET_CODENAME(item_type) itemType,
 		PASS_QUANTITY,err_QUANTITY,DEFECTIVE_RATE, c.emp_name
 		from quality_test a full outer join itemlist b
 		on (a.item_code = b.item_code) join emp c
@@ -104,7 +104,7 @@
 
 	<select id="getErrQualityList" parameterType = "SearchDTO"  resultType="QualityVO">
 		select test_code, MR_ORDER_DET_CODE, a.item_Code, item_Name,situation,
-		test_Quantity, test_Note, GET_CODENAME(item_type),
+		test_Quantity, test_Note, GET_CODENAME(item_type) item_type,
 		PASS_QUANTITY,err_QUANTITY,DEFECTIVE_RATE, c.emp_name
 		from quality_test a full outer join itemlist b
 		on (a.item_code = b.item_code) join emp c

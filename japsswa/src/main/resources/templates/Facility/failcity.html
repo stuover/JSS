@@ -13,26 +13,28 @@
         .tui-grid-cell-content {
             text-align: center;
         }
-        #insertBtn{
-        	float: right;
+
+        #insertBtn {
+            float: right;
         }
-        input{
-  	text-align: center;
-  }
-  
-#grid{
-	margin-top: 20px;
-}
+
+        input {
+            text-align: center;
+        }
+
+        #grid {
+            margin-top: 20px;
+        }
     </style>
 
 </head>
 
-    <th:block layout:fragment="content">
+<th:block layout:fragment="content">
     <div>
- 			<div class="col-12 grid-margin stretch-card">
-              <div class="card">
+        <div class="col-12 grid-margin stretch-card">
+            <div class="card">
                 <div class="card-body">
-                <input id="name" type="hidden" th:value="${#authentication.principal.empName}">
+                    <input id="name" type="hidden" th:value="${#authentication.principal.empName}">
         <h2>설비 관리</h2>
         <div id="serarchDiv">
             <input type="text" id="searchInput" name="fac_code" placeholder="설비이름을 입력하세요">
@@ -333,11 +335,6 @@
                     ]
             });
             
-            
-            
-            
-
-
             // 객체 합치기(수정용)
             function mergeModFac(firstFac, secondFac) {
 
@@ -436,9 +433,7 @@
                                 console.log(reject);
                             }
                         });
-                    }
-
-                
+                    }                
             }
 
             $('#detailModBtn').on('click', function () {
@@ -447,7 +442,6 @@
                 detailDownGrid.finishEditing();
                 modifyFac();
             })
-
 
             // 설비 삭제 함수
             function delFac() {
@@ -459,26 +453,52 @@
                 console.log(secondFac.facStatus);
                 
                 if(firstFac.facStatus == 'N'){
-                $.ajax({
 
-                    url: "/RemoveFacility",
-                    method: "POST",
-                    data: JSON.stringify(firstFac),
-                    contentType: "application/json",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader(header, token);
-                    },
-                    success: function (result) {
-                        alert("삭제 되었습니다");
-                        $('#detailModal').modal('hide');
-                        getFacList();
+                	swalWithBootstrapButtons.fire({
+      				  title: '정말 삭제 하시겠습니까?',
+      				  icon: 'warning',
+      				  showCancelButton: true,
+      				  confirmButtonText: 'Delete',
+      				  cancelButtonText: 'Cancel',
+      				  reverseButtons: false
+      				}).then((result) => {
+      				  if (result.isConfirmed) {
+      				    swalWithBootstrapButtons.fire(
+      				     '성공적으로 삭제되었습니다!',
+      				     'Your file has been deleted.',
+      				     'success',
 
-                    },
-                    error: function (reject) {
-                        console.log("reject");
-                        console.log(reject);
-                    }
-                });
+      				   $.ajax({
+
+      	                    url: "/RemoveFacility",
+      	                    method: "POST",
+      	                    data: JSON.stringify(firstFac),
+      	                    contentType: "application/json",
+      	                    beforeSend: function (xhr) {
+      	                        xhr.setRequestHeader(header, token);
+      	                    },
+      	                    success: function (result) {
+      	                        $('#detailModal').modal('hide');
+      	                        getFacList();
+
+      	                    },
+      	                    error: function (reject) {
+      	                        console.log(reject);
+      	                    }
+      	                })
+      				    )
+      				    
+      				  } else if (
+      				    /* Read more about handling dismissals below */
+      				    result.dismiss === Swal.DismissReason.cancel
+      				  ) {
+      				    swalWithBootstrapButtons.fire(
+      				      '취소 되었습니다.',
+      				      'Your imaginary file is safe :)',
+      				      'error'
+      				    )
+      				  }
+      				})
                 }else if(firstFac.facStatus == 'Y'){
                 	alert("가동중인 설비는 삭제할 수 없습니다");
                 	$('#detailModal').modal('hide');
@@ -489,7 +509,6 @@
                 console.log("삭제");
                 delFac();
             })
-
 
             // 등록 모달 그리드
 
@@ -677,10 +696,7 @@
                 }
             })
             
-            
-
-            
-            
+  
             // 등록버튼 클릭시 , 오류있음 모달끄면 로우가 하나씩 계속 증가, 수정필요
             $('#insertBtn').on('click', function () {
 				
@@ -776,7 +792,14 @@
                         xhr.setRequestHeader(header, token);
                     },
                     success: function (result) {
-                        alert("등록되었습니다");
+                    	Swal.fire({
+             	           position: '',
+             	           icon: 'success',
+             	           title: '등록이 완료 되었습니다.',
+             	           showConfirmButton: false,
+             	           timer: 1500
+             			})
+                        
                         console.log(obj);
                         $('#insertModal').modal('hide');
                         getFacList();

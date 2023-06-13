@@ -218,13 +218,24 @@ qualityGrid.on('click', function(e){
 
 testGrid.on('editingFinish', function(e){
 	let row = testGrid.getRow(e.rowKey);
+	// 검사량 체크
 	if(qualityGrid.getRow(qualityKey).testQuantity < row.passQuantity){
-		alert('잘 못 입력!!')
+		Swal.fire({
+	           position: '',
+	           icon: 'warning',
+	           title: '검사량보다 많습니다.',
+	           showConfirmButton: false,
+	           timer: 1500
+			})
 		testGrid.setValue(e.rowKey, "passQuantity", "", false)
-	}else{
 		
+	}else {
+		// 불량률 계산
+		let result = ((qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100).toFixed(2); 
+		// 불량양 입력
 	    testGrid.setValue(e.rowKey, "mrCount", qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity, false)
-	    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100 + '%', false)
+	    // 불량률 입력
+	    testGrid.setValue(e.rowKey, "defectiveRate", result + '%', false)
 	    let str = testGrid.getRow(e.rowKey).defectiveRate;
 	    console.log(str.replace('%',''))
 	    if( str.replace('%','') == 0 ){
@@ -261,9 +272,6 @@ testGrid.on('editingFinish', function(e){
  				})
  			qualityGrid.removeRow(qualityKey);
  			testGrid.clear();
- 			getTestCode
- 			getItemName
- 			getItemCode
  			$('#getItemName').val('')
  			$('#getTestCode').val('')
  			$('#getItemCode').val('')
