@@ -620,7 +620,11 @@
 			        			   grids.resetData(gridsData);
 			        			   grid.resetData(gridData);
 			        			   grids.setValue(0, 'empName', $('#name').val(), false);
-			        			   alert('등록 완료 되었습니다')
+			        			   Swal.fire({
+			        				   icon: 'success',
+			        				   title: '주문서 등록 완료',
+			        				
+			        				 })
 			        			   } else {
 			        				   alert('값을 모두 입력해주세요')
 			        			   }
@@ -902,7 +906,11 @@
 							   
 		        			  if(changeGrid.getData() != null){
 			        			   grids.setValue(0, 'empName', $('#name').val(), false);
-			        			   alert('수정 완료 되었습니다')
+			        			   Swal.fire({
+			        				   icon: 'success',
+			        				   title: '주문서 수정 완료',
+			       
+			        				 })
 			        			   $.ajax({
 			        			   url : "/ordDetShow",
 			        			   method : "GET",
