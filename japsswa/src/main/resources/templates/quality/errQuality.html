@@ -228,9 +228,9 @@ testGrid.on('editingFinish', function(e){
 		alert('잘 못 입력!!')
 		testGrid.setValue(e.rowKey, "passQuantity", "", false)
 	}else{
-		
+		let result = ((qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100).toFixed(2);
 	    testGrid.setValue(e.rowKey, "mrCount", qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity, false)
-	    testGrid.setValue(e.rowKey, "defectiveRate", (qualityGrid.getRow(qualityKey).testQuantity-row.passQuantity)/qualityGrid.getRow(qualityKey).testQuantity*100+"%", false)
+	    testGrid.setValue(e.rowKey, "defectiveRate", result +"%", false)
 	    
 	}
 })
@@ -239,8 +239,6 @@ testGrid.on('editingFinish', function(e){
 
 
  $('#modBtn').on('click',function(){
- 	console.log(qualityGrid.getRow(qualityKey))
- 	console.log(testGrid.getData())
 		testGrid.finishEditing();
 
  	$.ajax({
