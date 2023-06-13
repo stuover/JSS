@@ -431,6 +431,8 @@ bomGrid.on('dblclick', function (e){
 	
 	bomKey = e.rowKey;
 	if(e.columnName == "ingCode" || e.columnName == "itemName" || e.columnName == "itemType"){
+		$('#option4').prop("checked", true)
+
 		console.log(e.rowKey)
 		$('#itemPix').modal('show');
 		$('#itemPix').on('shown.bs.modal', function (e) {
