@@ -69,13 +69,13 @@
 		             GROUP BY fac_code
 		            ),
 		     faclist AS(
-		                SELECT fac_code, fac_name
+		                SELECT fac_code, fac_name, fac_status
 		                FROM facility
 		                WHERE pro_code = #{proCode}
 		                )
 		SELECT a.fac_code, a.fac_name
 		FROM faclist a JOIN down b ON (a.fac_code = b.fac_code)	
-		WHERE fac_status = 'N'
+		WHERE a.fac_status = 'N'
 
 	</select>
 

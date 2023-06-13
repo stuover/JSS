@@ -380,7 +380,8 @@
 	<script>
 	const token = $("meta[name='_csrf']").attr("content")
 	const header = $("meta[name='_csrf_header']").attr("content");
-		
+	
+	var proCode = '';
 		// 초기화면 데이터 및 설정.
 		window.onload = function(){
 			
@@ -539,12 +540,14 @@
 		
 		// 선택 버튼 -> 모달창 닫기 -> 선택한 공정 정보 출력.
 		let processInfo = [];
-		let proCode = '';
+		
+		var pCode = '';
 		$('#selectProcessBtn').click(function () {
 			
-			proCode = processSearchGrid.getCheckedRows()[0].planId;
+			pCode = processSearchGrid.getCheckedRows()[0].proCode;
+			 
 			processInfo = [{proCode : processSearchGrid.getCheckedRows()[0].proCode ,proName : processSearchGrid.getCheckedRows()[0].proName}];
-			 console.log('proCode = ' + proCode);
+			 console.log('proCode = ' + pCode);
 			 console.log(processInfo);
  			
 			 // 공정 조회 모달창 그리드 초기화
@@ -740,7 +743,7 @@
 		let processData = [];		// 공정 정보
 		let workData = [];		// 작업지시 공통
 		let workDetailData = [];		// 작업지시 세부사항
-		var pCode = '';
+		
 		var pName = '';
 		$('#insertBtn').click(function(event) {
 			
@@ -751,13 +754,13 @@
 			// 작업지시 세부사항
 			workDetailData= workDetailGrid.getCheckedRows()[0];
 		
-			pName = processData.proName		// 생산실적관리 페이지에서 선택한 공정명
-			pCode = processData.proCode		// 생산실적관리 페이지에서 선택한 공정코드
-			let wName = workData.workName		// 생산실적관리 페이지에서 선택한 작업지시명
+			pName = processGrid.getData()[0].proName		// 생산실적관리 페이지에서 선택한 공정명
+			pCode = processGrid.getData()[0].proCode		// 생산실적관리 페이지에서 선택한 공정코드
+			let wName = workGrid.getData()[0].workName		// 생산실적관리 페이지에서 선택한 작업지시명
 			let iName = workDetailData.itemName		// 생산실적관리 페이지에서 선택한 제품명
-			let wdetailCode = workDetailData.wdetailId		// 생산실적관리 페이지에서 선택한 지시상세코드
-			let itCode = workDetailData.itemCode		// 생산실적관리 페이지에서 선택한 제품코드
-			let wAmount = workDetailData.workAmount		// 생산실적관리 페이지에서 선택한 작업지시량
+			let wdetailCode = workDetailGrid.getCheckedRows()[0].wdetailId		// 생산실적관리 페이지에서 선택한 지시상세코드
+			let itCode = workDetailGrid.getCheckedRows()[0].itemCode		// 생산실적관리 페이지에서 선택한 제품코드
+			let wAmount = workDetailGrid.getCheckedRows()[0].workAmount		// 생산실적관리 페이지에서 선택한 작업지시량
 		
 			// 모달창 띄울 때 값 넣어주기
 			$('#workName').val(wName);
