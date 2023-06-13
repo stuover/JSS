@@ -25946,6 +25946,11 @@ div.tagsinput span.tag a {
 .tui-grid-cell.cell-Red {
          background-color: #F5BCA9;
 }      
+.logoImage {
+	margin: 10% auto;
+	width: 50%;
+}
+
 
 
 /*pdf 양식*/

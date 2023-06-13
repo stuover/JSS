@@ -10,7 +10,14 @@
 <body>
 
 	<th:block layout:fragment="content">
-		<h1>꾸며줘!!!!!</h1>
+
+		<div class="h-100 d-inline-block">
+			<div class="align-self-centerf">
+				<div class="text-center">
+		  			<img src="/images/JapsswaLogo.png" class="logoImage" alt="로고">
+				</div>
+			</div>
+		</div>
 
 		<div sec:authorize="hasAnyRole('ROLE_ADMIN')"></div>
 		<div sec:authorize="hasRole('ROLE_USER')"></div>
