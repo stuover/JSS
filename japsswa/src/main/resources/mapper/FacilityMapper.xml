@@ -173,7 +173,7 @@
 					  		pro_code = #{proCode},
 					  		wash_cycle = #{washCycle} ,
 					  		ins_cycle = #{insCycle},
-					  		last_inspection = #{lastInspection}, 
+					  		last_inspection = TO_DATE(#{lastInspection}, 'yyyy-MM-dd'), 
 					  		fac_manager = #{nameText},
 					  		fac_function = #{text},
 							fac_picture = #{facPicture}		
