@@ -68,6 +68,13 @@
   					success : function(result){
   						console.log(result);
   						monitoringGrid.resetData(result);
+  						
+  						// 비가동중인  색 변화
+  						for(let i=0; i < monitoringGrid.getRowCount(); i++){
+  							if(monitoringGrid.getData()[i].downReason != 'STO' && monitoringGrid.getData()[i].downReason != '-' ){
+  								monitoringGrid.addRowClassName(i, 'cell-Red');
+  							}					
+  						}
   					},
   					error : function(reject){
   						console.log(reject);
@@ -125,7 +132,7 @@
 		   });
 		
 	
-			
+
 
 			
 			
