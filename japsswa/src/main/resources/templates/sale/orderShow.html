@@ -4,7 +4,11 @@
 	layout:decorate="~{layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-
+<style>
+.tui-grid-cell-content {
+            text-align: center;
+        }
+</style>
 
 
 </head>
@@ -24,16 +28,16 @@
 					<form id="orderForm">
 					<div class="row"></div>
 					
-					<input name="itemName" id="item" type="text" readonly>
-					<button id="itemSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemModal">품목 찾기</button>
-					<input name="customerName" id="cust" type="text" readonly>
-					<button id="custSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#custModal">거래처 찾기</button>
-					<label>주문날짜</label><input name="sOrdDate" id="oDateStart" type="date"> - <input name="eOrdDate" id="oDateEnd" type="date">
-					<button id="searchBtn" type="button" class="btn btn-dark">조회</button>
+					<input name="itemName" id="item" type="text" readonly style="margin-left : 190px; margin-right : 10px;">
+					<button id="itemSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemModal" style="margin-right : 10px;">품목 찾기</button>
+					<input name="customerName" id="cust" type="text" readonly style="margin-right : 10px;">
+					<button id="custSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#custModal" style="margin-right : 10px;">거래처 찾기</button>
+					<label style="margin-right : 10px;">주문날짜</label><input name="sOrdDate" id="oDateStart" type="date"> - <input name="eOrdDate" id="oDateEnd" type="date" style="margin-right : 10px;">
+					<button id="searchBtn" type="button" class="btn btn-dark" style="margin-right : 10px;">조회</button>
 					
 					<button id="ordReset" type="reset" class="btn btn-dark">초기화</button>
 					</form>
-					<div id="ordGrid"></div>
+					<div id="ordGrid" style="margin-top : 10px;"></div>
 					
 		
 

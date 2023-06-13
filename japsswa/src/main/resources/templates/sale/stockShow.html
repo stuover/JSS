@@ -4,7 +4,11 @@
 	layout:decorate="~{layout/index}"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-
+<style>
+.tui-grid-cell-content {
+            text-align: center;
+        }
+</style>
 
 
 </head>
@@ -25,15 +29,15 @@
 					<form id="stockForm">
 					<div class="row"></div>
 					
-					<input name="stockName" id="sName" type="text">
-					<button id="stockSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#iModal">품목 찾기</button>
-					<label>입고날짜</label><input name="storeIn1" id="storeInS" type="date">-<input name="storeIn2" id="storeInE" type="date">
-					<label>생산날짜</label><input name="perDate1" id="perStart" type="date">-<input name="perDate2" id="perEnd" type="date">
-					<button id="submitBtn" type="button" class="btn btn-dark">조회</button>
+					<input name="stockName" id="sName" type="text" style="margin-right : 10px; margin-left : 180px;">
+					<button id="stockSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#iModal" style="margin-right : 10px;">품목 찾기</button>
+					<label style="margin-right : 10px;">입고날짜</label><input name="storeIn1" id="storeInS" type="date">-<input name="storeIn2" id="storeInE" type="date" style="margin-right : 10px;">
+					<label style="margin-right : 10px;">생산날짜</label><input name="perDate1" id="perStart" type="date">-<input name="perDate2" id="perEnd" type="date" style="margin-right : 10px;">
+					<button id="submitBtn" type="button" class="btn btn-dark" style="margin-right : 10px;">조회</button>
 					
 					<button id="stockReset" type="reset" class="btn btn-dark">초기화</button>
 					</form>
-					<div id="stockGrid"></div>
+					<div id="stockGrid" style="margin-top : 10px;"></div>
 					
 		
 

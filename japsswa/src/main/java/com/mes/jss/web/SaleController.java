@@ -176,6 +176,7 @@ public class SaleController {
 	@RequestMapping("/orderCheck")
 	@ResponseBody
 	public List<OrderVO> orderCheckAjax(OrderVO cvo){
+		System.err.println(cvo);
 		List<OrderVO> checkList = saleService.orderCheck(cvo);
 		return checkList;
 	}

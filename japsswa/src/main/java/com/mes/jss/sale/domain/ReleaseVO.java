@@ -13,7 +13,7 @@ public class ReleaseVO {
 	String fnReleaseId;
 	long fnRelCount;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date fnRelDate;
 	String relDetailId;
 	long relEachCount;
@@ -23,14 +23,14 @@ public class ReleaseVO {
 	String ordDetailId;
 	long ordCount;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date outDate;
 	String orddetStatus;
 	
 	//주문
 	String ordId;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date ordDate;
 	String ordName;
 	
@@ -55,10 +55,10 @@ public class ReleaseVO {
 	long remain;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date sDate;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date eDate;
 	String end;
 	

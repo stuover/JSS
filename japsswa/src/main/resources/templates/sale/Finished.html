@@ -5,7 +5,11 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 
-
+<style>
+.tui-grid-cell-content {
+            text-align: center;
+        }
+</style>
 
 </head>
 <th:block layout:fragment="content">
@@ -28,7 +32,7 @@
 					<button id="inBtn" type="button" class="btn btn-primary">입고처리</button>
 					</div>
 					
-					<div id="topGrid"></div>
+					<div id="topGrid" style="margin-top : 10px;"></div>
 					
 					
 				
@@ -42,7 +46,7 @@
 						</form>
 							
 					</div>
-					<div id="botGrid"></div>
+					<div id="botGrid" style="margin-top : 10px;"></div>
 
 
 				</div>
