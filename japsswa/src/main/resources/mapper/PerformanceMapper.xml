@@ -74,14 +74,9 @@
 		                WHERE pro_code = #{proCode}
 		                )
 		SELECT a.fac_code, a.fac_name
-		FROM faclist a JOIN down b ON (a.fac_code = b.fac_code)
-		
-		UNION
-		
-		SELECT fac_code, fac_name
-		FROM facility
+		FROM faclist a JOIN down b ON (a.fac_code = b.fac_code)	
 		WHERE fac_status = 'N'
-		  AND pro_code = #{proCode}
+
 	</select>
 
 
