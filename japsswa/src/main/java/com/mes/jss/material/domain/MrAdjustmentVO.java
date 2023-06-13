@@ -17,12 +17,12 @@ public class MrAdjustmentVO {	// 자재 조정
 	String adjustmentCode;
 	String mrLotNumber;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date registerDate;
 	String process;
 	long change;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date adjustmentDate;
 	long empNo;
 	String itemCode;
@@ -33,10 +33,10 @@ public class MrAdjustmentVO {	// 자재 조정
 	String itemType;
 	String admNote;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date mrAdDate1;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date mrAdDate2;
 	String mrSearch;
 	String mrLot;

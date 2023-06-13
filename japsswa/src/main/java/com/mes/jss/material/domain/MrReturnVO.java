@@ -17,13 +17,13 @@ public class MrReturnVO {    // 자재 반품
 	long mrReturnCount;
 	String mrReturnReason;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date mrReturnDate;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date mrReturnDate1;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date mrReturnDate2;
 	long empNo;
 	String mrOrderDetCode;
