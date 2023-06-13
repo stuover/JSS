@@ -61,6 +61,7 @@
 				  )
 			WHERE 
 				 work_date <= (SYSDATE + 3)
+			ORDER BY work_date DESC
 		]]>
 	</select>
 	
