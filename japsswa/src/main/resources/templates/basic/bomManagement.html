@@ -218,22 +218,25 @@ var modalGrid = new tui.Grid({
 		perPage : 5
 	},
 	columns : [ 
-	{
-		header : '품목코드',
-		name : 'itemCode',
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '품목명',
-		name : 'itemName',
-		sortingType : 'desc',
-		sortable : true
-	}, {
-		header : '구분',
-		name : 'itemType',
-		sortingType : 'desc',
-		sortable : true
-	}
+		{
+			header : '품목코드',
+			name : 'itemCode',
+			width :  'auto',
+			sortingType : 'desc',
+			sortable : true
+		}, {
+			header : '품목명',
+			name : 'itemName',
+			width : "300",
+			sortingType : 'desc',
+			sortable : true
+		}, {
+			header : '구분',
+			name : 'itemType',
+			width : 100,
+			sortingType : 'desc',
+			sortable : true
+		}
 	]
 });
 
@@ -377,16 +380,19 @@ var itemGrid = new tui.Grid({
 	{
 		header : '품목코드',
 		name : 'itemCode',
+		width :  'auto',
 		sortingType : 'desc',
 		sortable : true
 	}, {
 		header : '품목명',
 		name : 'itemName',
+		width : "300",
 		sortingType : 'desc',
 		sortable : true
 	}, {
 		header : '구분',
 		name : 'itemType',
+		width : 100,
 		sortingType : 'desc',
 		sortable : true
 	}

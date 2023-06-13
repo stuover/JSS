@@ -261,21 +261,48 @@ testGrid.on('editingFinish', function(e){
 
  
  $('#delBtn').on('click', function(){
-	 
-		$.ajax({
-	 		url : "/removeTest",
-	 		method : "post",
-	 		contentType : "application/json",
-	 		data : JSON.stringify({list : testGrid.getData(), vo : qualityGrid.getRow(qualityKey)}),
-	 		beforeSend: function(xhr){
-				xhr.setRequestHeader(header, token);    
-			},
-	 		success : function(result) {
-				qualityGridList();
-	 		}, error : function (reject) {
-	 			console.log(reject)
-	 		}
-	 	})
+	 swalWithBootstrapButtons.fire({
+		  title: '정말 취소 하시겠습니까?',
+		  icon: 'warning',
+		  showCancelButton: true,
+		  confirmButtonText: 'Delete',
+		  cancelButtonText: 'Cancel',
+		  reverseButtons: false
+		}).then((result) => {
+			
+		  if (result.isConfirmed) {
+		    swalWithBootstrapButtons.fire(
+		     '검사가 취소 되었습니다.!',
+		     'Your file has been deleted.',
+		     'success',
+		     
+		     $.ajax({
+			 		url : "/removeTest",
+			 		method : "post",
+			 		contentType : "application/json",
+			 		data : JSON.stringify({list : testGrid.getData(), vo : qualityGrid.getRow(qualityKey)}),
+			 		beforeSend: function(xhr){
+						xhr.setRequestHeader(header, token);    
+					},
+			 		success : function(result) {
+						qualityGridList();
+			 		}, error : function (reject) {
+			 			console.log(reject)
+			 		}
+			 	})
+		    )
+		  } else if (
+		    /* Read more about handling dismissals below */
+		    result.dismiss === Swal.DismissReason.cancel
+		  ) {
+		    swalWithBootstrapButtons.fire(
+		      '취소 되었습니다.',
+		      'Your imaginary file is safe :)',
+		      'error'
+		    )
+		  }
+		})
+		
 
  })
  
