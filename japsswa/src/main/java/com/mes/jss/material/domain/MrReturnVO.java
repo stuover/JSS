@@ -26,6 +26,7 @@ public class MrReturnVO {    // 자재 반품
 	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date mrReturnDate2;
 	long empNo;
+	String empName;
 	String mrOrderDetCode;
 	String CustomerName;
 }

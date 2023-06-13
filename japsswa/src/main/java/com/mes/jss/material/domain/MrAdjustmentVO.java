@@ -25,6 +25,7 @@ public class MrAdjustmentVO {	// 자재 조정
 	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date adjustmentDate;
 	long empNo;
+	String empName;
 	String itemCode;
 	String itemName;
 	long storeCount;
