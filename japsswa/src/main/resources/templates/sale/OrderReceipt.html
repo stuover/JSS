@@ -36,7 +36,7 @@
 					<div id="grids"></div>
 					
 					<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-					<button id="addBtn" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
+					<button id="addBtn" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#itemSearModal">추가</button>
 					<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
 					</div>
 					
@@ -48,8 +48,8 @@
 						<form>
 						
 							<div class="m-2 d-grid gap-2 d-md-flex justify-content-md-end">
-							<button id="insertBtn" type="button" class="btn btn-dark">등록</button>
-							<button id="updateBtn" type="button" class="btn btn-dark">수정</button>
+							<button id="insertBtn" type="button" class="btn btn-primary">등록</button>
+							<button id="updateBtn" type="button" class="btn btn-success">수정</button>
 							<input id="sortBtn" type="hidden" value="insert">
 							</div>
 							
@@ -68,7 +68,7 @@
 
 	<div class="modal fade" id="searchModal" tabindex="-1"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="searchModalLabel">거래처 찾기</h5>
@@ -78,7 +78,7 @@
 				<div class="modal-body">
 					<input type="text" id="modalInput" name="cust">
 					<button id="custSearch" type="button" class="btn btn-dark">찾기</button>
-					<div id="modalGrid"></div>
+					<div id="modalGrid" style="margin-top : 10px;"></div>
 				</div>
 				<div class="modal-footer">
 					<button id="chooseBtn" type="button" class="btn btn-dark">선택</button>
@@ -99,7 +99,7 @@
 				<div class="modal-body">
 					<input type="text" id="itemInput" name="item">
 					<button id="itemSearch" type="button" class="btn btn-dark">찾기</button>
-					<div id="modalGrids"></div>
+					<div id="modalGrids" style="margin-top : 10px;"></div>
 				</div>
 				<div class="modal-footer">
 					<button id="itemChooseBtn" type="button" class="btn btn-dark">선택</button>
@@ -120,7 +120,7 @@
 				<div class="modal-body">
 					<input type="text" id="custShowInput" name="sCust">
 					<button id="showCustBtn" type="button" class="btn btn-dark">찾기</button>
-					<div id="CmodalGrid"></div>
+					<div id="CmodalGrid" style="margin-top : 10px;"></div>
 				</div>
 				<div class="modal-footer">
 					<button id="custChooseBtn" type="button" class="btn btn-dark">선택</button>
