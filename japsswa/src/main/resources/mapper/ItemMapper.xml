@@ -46,7 +46,7 @@
   		</delete>
   		
   		<select id="searchItem" resultType="ItemVO">
-  			select item_code,item_name,item_type, unit_price, item_price, standard, unit, save_material
+  			select item_code,item_name,GET_CODENAME(item_type) itemType, unit_price, item_price, standard, unit, save_material
   			from itemlist
   			where item_Name like '%'||#{itemName}||'%'
   			or item_code like '%'||#{itemName}||'%'
