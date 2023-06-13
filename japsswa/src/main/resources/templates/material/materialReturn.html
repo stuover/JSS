@@ -353,7 +353,7 @@
 		$('#insertBtn').on('click',function(){
 			
 			
-			
+		
 			
 			
 			
@@ -378,6 +378,10 @@
 				xhr.setRequestHeader(header, token);
 			},
 				success : function(result){
+						
+					
+					
+					
 					
 					$.ajax({
 						
@@ -392,17 +396,41 @@
 							grid3.resetData(result);
 							setTimeout(()=> grid1.refreshLayout(),100);
 							setTimeout(()=> grid3.refreshLayout(),100);
+							
+							
 						},
 						error: function(reject){
 							console.log(reject);
+							
+							
+						
 						}
 					});
-					
-					
+				
+				
 					
 				},
 				error : function(reject){
 					console.log(reject);
+					
+					$.ajax({
+						url : "/mrReturnListAjax",
+
+						method : "GET",
+						dataType : "json",
+
+						success : function(result) {
+							grid.resetData(result);
+							setTimeout(()=> grid.refreshLayout(),100);
+							
+						}
+
+					});
+					
+					
+					
+					
+					
 				}
 				
 			})
@@ -429,8 +457,8 @@
 		
 			swal.fire({
 				  icon: 'success',
-				  title: '반품 신청 완료'	})
-		
+				  title: '반품 등록 완료'	})
+		 
 			
 		})
 		
