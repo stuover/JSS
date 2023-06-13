@@ -24,8 +24,7 @@ public class InspectionController {
 	public String Inspection(Model model) {
 				model.addAttribute("facCode", service.getAllList());
 				model.addAttribute("insReason", service.getDetailList("ins"));
-				model.addAttribute("employee", service.getEmp("설비"));
-		
+				model.addAttribute("employee", service.getEmp("설비"));		
 		return "Facility/Inspection";
 	}
 	

@@ -249,7 +249,7 @@
                 i.ins_manager nameText, GET_EMPNAME(i.ins_manager) insManager
 		from facility f join inspection i on(f.fac_code = i.fac_code)
 		where ins_code is not null and f.fac_name like '%' || #{facName} || '%'
-         <if test="startDate != '' and stopDate != '' ">
+         <if test="startDate != '' and stopDate != '' ">	    	    	    
 	    and TRUNC(i.ins_date) between to_date(#{startDate}, 'yyyy-MM-dd') and to_date(#{stopDate}, 'yyyy-MM-dd')
 	    </if>
 	    order by i.ins_code desc
