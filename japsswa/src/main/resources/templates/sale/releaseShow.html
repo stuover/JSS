@@ -5,7 +5,11 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 
-
+<style>
+.tui-grid-cell-content {
+            text-align: center;
+        }
+</style>
 
 </head>
 <th:block layout:fragment="content">
@@ -23,22 +27,22 @@
 				
 					<form id="releaseForm">
 					<div class = "row2">
-					<label>출고상태</label>
-					<input type="radio" id="endBtn" name="end" value="end" checked><label for="endBtn">출고완료</label>
-					<input type="radio" id="partBtn" name="end" value="part"><label for="partBtn">부분출고</label>
+					<label style="margin-right : 10px; margin-left : 600px;">출고상태</label>
+					<input type="radio" id="endBtn" name="end" value="end" checked><label for="endBtn" style="margin-right : 10px;">출고완료</label>
+					<input type="radio" id="partBtn" name="end" value="part"><label for="partBtn" style="margin-right : 10px;">부분출고</label>
 					</div>
 					<div class="row"></div>
 					
-					<input name="itName" id="item" type="text" readonly>
-					<button id="itSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itModal">품목 찾기</button>
-					<input name="custName" id="cust" type="text" readonly>
-					<button id="cuSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cuModal">거래처 찾기</button>
-					<label>출고날짜</label><input name="sDate" id="dateStart" type="date"> - <input name="eDate" id="dateEnd" type="date">
-					<button id="searBtn" type="button" class="btn btn-dark">조회</button>
+					<input name="itName" id="item" type="text" readonly style="margin-right : 10px; margin-top : 10px; margin-left : 180px;">
+					<button id="itSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#itModal" style="margin-right : 10px;">품목 찾기</button>
+					<input name="custName" id="cust" type="text" readonly style="margin-right : 10px;">
+					<button id="cuSearch" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#cuModal" style="margin-right : 10px;">거래처 찾기</button>
+					<label style="margin-right : 10px;">출고날짜</label><input name="sDate" id="dateStart" type="date"> - <input name="eDate" id="dateEnd" type="date" style="margin-right : 10px;">
+					<button id="searBtn" type="button" class="btn btn-dark" style="margin-right : 10px;">조회</button>
 					
 					<button id="relReset" type="reset" class="btn btn-dark">초기화</button>
 					</form>
-					<div id="relGrid"></div>
+					<div id="relGrid" style="margin-top : 10px;"></div>
 					
 		
 

@@ -15,14 +15,14 @@ public class OrderVO {
 	private long totalPrice;
 	private String customerId;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	private Date ordDate;
 	private Long empNo;
 	
 	private String ordDetailId;
 	private long ordCount;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	private Date outDate;
 	private String itemCode;
 	private long unitPrice;
@@ -36,9 +36,9 @@ public class OrderVO {
 	private String itemName;
 	private String empName;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date sOrdDate;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date eOrdDate;
 }

@@ -5,7 +5,11 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 
-
+<style>
+.tui-grid-cell-content {
+            text-align: center;
+        }
+</style>
 
 </head>
 <th:block layout:fragment="content">
@@ -36,9 +40,9 @@
 					<button id="delBtn" type="button" class="btn btn-danger">품목 삭제</button>
 					</div>
 					
-					<div id="grid"></div>
+					<div id="grid" style="margin-top : 10px;"></div>
 					
-					<div id="changeGrid"></div>
+					<div id="changeGrid" style="margin-top : 10px;"></div>
 				
 					<div>
 						<form>
