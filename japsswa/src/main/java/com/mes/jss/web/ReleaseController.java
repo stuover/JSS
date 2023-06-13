@@ -47,13 +47,13 @@ public class ReleaseController {
 	//출고처리
 	@RequestMapping("/itemOut")
 	@ResponseBody
-	public ReleaseVO itemOutAjax(@RequestBody ReleaseListVO releaseList) {
+	public ReleaseVO itemOutAjax(@RequestBody ReleaseListVO vo) {
 		
 		
-		System.err.println(releaseList);
+		System.err.println(vo);
 		
 	
-		releaseService.itemOut(releaseList);
+		releaseService.itemOut(vo);
 		
 		return null;
 	}

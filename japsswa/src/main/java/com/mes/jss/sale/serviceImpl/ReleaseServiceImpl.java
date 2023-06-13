@@ -28,17 +28,17 @@ public class ReleaseServiceImpl implements ReleaseService {
 	}
 
 	@Override
-	public void itemOut(ReleaseListVO rlist) {
+	public void itemOut(ReleaseListVO vo) {
 		
 		
 		
-		releaseMapper.commOut(rlist.getReleaseList().get(0));
-		System.err.println(rlist.getReleaseList().get(0));
+		releaseMapper.commOut(vo.getReleaseList().get(0));
+		System.err.println(vo.getReleaseList().get(0));
 		
 		
-		  for(int i=0; i<rlist.getReleaseList2().size(); i++) {
-		  releaseMapper.itemOut(rlist.getReleaseList2().get(i));
-		  System.err.println(rlist.getReleaseList2().get(i)); }
+		  for(int i=0; i<vo.getReleaseList2().size(); i++) {
+		  releaseMapper.itemOut(vo.getReleaseList2().get(i));
+		  System.err.println(vo.getReleaseList2().get(i)); }
 		 
 	}
 

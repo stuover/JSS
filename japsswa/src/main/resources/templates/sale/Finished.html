@@ -183,7 +183,11 @@
      		   },
      		   success : function(result){
     			  
-				  alert("입고처리 되었습니다.")
+     			  Swal.fire({
+   				   icon: 'success',
+   				   title: '완제품 입고 완료',
+   				
+   				 })
 				  
 				  $.ajax({
 					  url : "/storeInItem",
