@@ -15,12 +15,12 @@ public class MrVO {              // 자재 vo
 	String itemCode;
 	long empNo; 
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date storeDate;
 	long storeCount;
 	long holdCount;
 	@JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	@DateTimeFormat(pattern="YYYY-MM-dd" )
+	@DateTimeFormat(pattern="yyyy-MM-dd" )
 	Date expireDate;
 	String storeReasonType;
 	String storeReasonCode;

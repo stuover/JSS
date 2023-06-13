@@ -21,13 +21,13 @@ public class MrReleaseVO {   // 자재 출고
 	 String itemType;
 	 String itemName;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	 Date mrRealDate;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	 Date mrRealDate1;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	 Date mrRealDate2;
 	 String mrSearch;
 	 

@@ -26,10 +26,10 @@ public class MrOrderDetailVO {	// 자재 발주 상세
 	 BigDecimal mrPrice;
 	 BigDecimal priceTotal;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	 Date deliveryDate;
 	 @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+9")
-	 @DateTimeFormat(pattern="YYYY-MM-dd" )
+	 @DateTimeFormat(pattern="yyyy-MM-dd" )
 	 Date mrOrderDate;
 	 String empName;
 	 
