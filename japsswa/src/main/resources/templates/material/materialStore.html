@@ -246,15 +246,33 @@
 					},
 					success : function(result) {
 						
-						
-						
-						
 						swal.fire({
 							  icon: 'success',
 							  title: '입고 성공'
 						
 							 
+							  
+							  
+							  
+							  
+							})
+							
+							$.ajax({
+								url:"/StoreList",
+								method:"GET",
+								success : function(result){
+								   modalgrid.resetData(result);
+									setTimeout(()=> modalgrid.refreshLayout(),10);
+								},
+								error : function(reject){
+									console.log(reject);
+								}
+								
+							
+									
 							})		
+							
+							
 					},
 					error : function(reject){
 						console.log(reject);
@@ -263,6 +281,7 @@
 				grid.removeCheckedRows(false);
 		    	setTimeout(()=> grid.refreshLayout(),100);
 
+		    	
 		    	
 		    })
 			
@@ -355,17 +374,7 @@
 		
 // 자재 입고 리스트 모달
 
-		$.ajax({
-			url : "/mslistAjax",
-			method : "GET",
-			dataType : "json",
-			success : function(result) {
-				modalgrid.resetData(result);
-				setTimeout(()=> modalgrid.refreshLayout(),100);
-			}
-
-		});
-			
+	
 		
 			$.ajax({
 				url:"/StoreList",
@@ -438,7 +447,22 @@
 	
 		
 		
+	$('#checkBtn').on('click',function(){
 		
+		$.ajax({
+				url:"/StoreList",
+				method:"GET",
+				success : function(result){
+				   modalgrid.resetData(result);
+					setTimeout(()=> modalgrid.refreshLayout(),10);
+				},
+				error : function(reject){
+					console.log(reject);
+				}
+					
+			})	
+			
+	})	
 		
 		
 // 입고 검색 클릭 이벤트		
