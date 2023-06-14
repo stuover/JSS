@@ -270,7 +270,17 @@ form:after {
   background-position: 0 -135px;
   color: #00aeef;
 }
+.loginBtn{
+	padding: 8px;
+	margin: 5px;
+	background-color:#868585;
+  color: #fff;
+
+}
+
 </style>
+
+
 
 </head>
 <body>
@@ -278,7 +288,7 @@ form:after {
 	  <section id="content">
 	    <form class="pt-3" th:action="|${#request.contextPath}/login|" method="post">
 	    	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">	
-	      <h1>Login Form</h1>
+	      <h1>Login</h1>
 	      <div>
 	        <input type="text"  required  name="empNo"class="form-control form-control-lg" placeholder="사원번호 입력"/>
 	      </div>
@@ -286,7 +296,7 @@ form:after {
 	        <input type="password" required name="password" class="form-control form-control-lg" placeholder="Password" />
 	      </div>
 	      <div>
-	        <button>Log in</button>
+	        <button class="loginBtn">Log in</button>
 	      </div>
 	    </form><!-- form -->
 	    
