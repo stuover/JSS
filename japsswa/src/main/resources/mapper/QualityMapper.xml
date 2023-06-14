@@ -21,7 +21,7 @@
 
 		select q.test_code,
 		e.emp_name,q.item_code,q.mr_order_det_code, GET_CODENAME(i.item_type) itemType, i.item_name,q.situation,q.end_date,q.test_quantity,q.err_quantity,q.pass_quantity
-		,ROUND(((q.err_quantity/(q.test_quantity))*100), 2), error,q.test_note
+		,ROUND(((q.err_quantity/(q.test_quantity))*100), 2) error,q.test_note
 		from itemlist i join quality_test q on(i.item_code = q.item_code) join emp
 		e on(q.emp_no=e.emp_no)
 		where q.situation ='검사완료' and q.test_note ='합격' and (q.err_quantity/q.test_quantity)*100 between 0
