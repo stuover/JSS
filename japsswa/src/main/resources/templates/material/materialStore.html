@@ -202,7 +202,32 @@
 		$(document).ready(function() {
 			
 
+			
+			$.ajax({
+				url : "/mrlistAjax",
+
+				method : "GET",
+				dataType : "json",
+
+				success : function(result) {
+					grid.resetData(result);
+					setTimeout(()=> grid.refreshLayout(),100);
+					
+				}
+
+			});
+			
+			
+			
+			
 // 입고 버튼 클릭 이벤트
+
+
+
+
+
+
+
 
 			$('#storeBtn').on('click',function(){
 		    	
@@ -255,19 +280,7 @@
 		    
 // 품질 리스트	아작스
 
-			$.ajax({
-				url : "/mrlistAjax",
-
-				method : "GET",
-				dataType : "json",
-
-				success : function(result) {
-					grid.resetData(result);
-					setTimeout(()=> grid.refreshLayout(),100);
-					
-				}
-
-			});
+			
 
 			var grid = new tui.Grid({
 				el : document.getElementById('grid'),

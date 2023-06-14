@@ -5,25 +5,25 @@
   
   <mapper namespace="com.mes.jss.material.mapper.MaterialMapper">
 	
-	<!-- 입고 다중 검색 조건 -->  		
+	 		
     	
     	<sql id="search">
     		<where>
-              	 <if test=" storeReasonType != null and storeReasonType != ''.toString()">    <!-- 입고 구분 검색 -->
+              	 <if test=" storeReasonType != null and storeReasonType != ''.toString()">    
                   	store_reason_type like '%'||#{storeReasonType}||'%'
                   </if>
                   
-                  <if test="itemType != null and itemType != ''.toString()">   <!-- 품목 종류별 검색  -->
+                  <if test="itemType != null and itemType != ''.toString()">   
                    	 and item_type like '%'||#{itemType}||'%'
                      
                   </if>
                   
-                  <if test="storeDate1 != null and storeDate2 != null ">   <!-- 입고날짜 검색 -->
+                  <if test="storeDate1 != null and storeDate2 != null ">   
                   	 and store_date between #{storeDate1} and #{storeDate2} 
                   	 
                   </if>
                   
-                   <if test="mrSearch != null and mrSearch != ''.toString()">  <!-- 자재명으로 검색 -->
+                   <if test="mrSearch != null and mrSearch != ''.toString()">  
                    	 and item_name like '%'||#{mrSearch}||'%'
                      
                   </if>
@@ -65,13 +65,13 @@
    
    
   		
-   <!-- 입고 내역 검색 -->
+   
    
     <select id="MrStoreList" resultType="MrVO" parameterType="MrVO">
     	select *
     	from material m join itemlist i on (m.item_code = i.item_code) join emp e on(m.emp_no = e.emp_no) 
     	
-    	<include refid="search"></include> <!-- 다중 검색 쿼리문 실행 -->
+    	<include refid="search"></include> 
    		
    		
     </select>
