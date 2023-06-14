@@ -48,9 +48,9 @@ public class QualityServiceImpl implements QualityService {
 		// 품질 업데이트
 		for (TestHistoryVO vo : data.getList()) {
 			vo.setTestCode(qt.getTestCode());
-
+			// 불합격 갯수 체크 
 			if (vo.getTestResult().equals("불합격")) {
-				count++;
+				count++; 
 			}
 			if(vo.getTestHistoryCode() == null) {
 				qualityMapper.insertHistory(vo);
@@ -62,14 +62,12 @@ public class QualityServiceImpl implements QualityService {
 		if (qt.getItemType().equals("자재")) { // 입고 자제검사
 			qt.setErrQuantity(data.getList().get(0).getMrCount());	
 			qualityMapper.updateQuality(qt);
+			
 		} else { // 반제품 검사
 			if (count > 0) {
 				qt.setTestNote("불합격");
-				System.err.println("ddddddddddddd");
 				qualityMapper.samUpdateQuality(qt);
 			} else {
-				System.err.println("aaaaaaaaaaa");
-
 				qt.setTestNote("합격");
 				qualityMapper.samUpdateQuality(qt);
 			}
